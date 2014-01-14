@@ -1,0 +1,14 @@
+# To create the directory for the first time
+git clone https://github.com/paktinat/STau MT2_Tau_V02-03-02
+
+# To update an existing directory
+git pull
+
+# To add a new file
+git add FILE_NAME
+
+#When you are done with the changes
+git commit -a
+
+#To send the modifications to github
+git push -u origin master
