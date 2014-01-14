@@ -8,8 +8,8 @@
 #include "TH2.h"
 //#include "helper/JetCorrectorParameters.h"
 //#include "helper/JetResolution.h"
-#include "/dataLOCAL/paktinat/Projects/CMSSW/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetResolution.h"
-//#include "CondFormats/JetMETObjects/interface/JetResolution.h"
+//#include "/dataLOCAL/paktinat/Projects/CMSSW/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetResolution.h"
+#include "CondFormats/JetMETObjects/interface/JetResolution.h"
 
 #include <TRandom3.h>
 #include "MT2Elec.hh"
