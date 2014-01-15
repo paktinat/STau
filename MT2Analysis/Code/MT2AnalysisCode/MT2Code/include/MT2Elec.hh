@@ -18,6 +18,7 @@ public:
   IDLoose       = -999;
   IDVeto        = -999;
 
+  PassEl0_EE = -999;
   }
   void SetLV(const TLorentzVector v){lv = v;}
 
@@ -30,6 +31,8 @@ public:
   Int_t    IDMedium;
   Int_t    IDLoose;
   Int_t    IDVeto;
+
+  Int_t PassEl0_EE;
 
   ClassDef(MT2Elec, 12)
 };
