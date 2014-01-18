@@ -14,6 +14,8 @@ public:
     Iso           = -9999.99;
     Iso04         = -9999.99;
     Charge        = -999;
+    IsTightMuon   = -999;
+    PassMu0_MuMu  = -999;
   }
   
   void SetLV(const TLorentzVector v){
@@ -26,6 +28,8 @@ public:
   Float_t  Iso;
   Float_t  Iso04;
   Int_t    Charge;
+  Int_t    IsTightMuon;
+  Int_t    PassMu0_MuMu;
 
   ClassDef(MT2Muon, 9)
 };
