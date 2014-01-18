@@ -4,7 +4,8 @@ void MT2Analysis::GetMuonIndices(){
 	// #--- muon loop
 	vector<float> muloose;
   	for(int muIndex=0;muIndex<fTR->NMus;muIndex++){
-		if(! IsGoodMT2Muon(muIndex)) continue;
+	  		if(! IsGoodMT2Muon(muIndex)) continue;
+	  if(!(fTR->MuIsGlobalMuon[muIndex]) || !(fTR->MuPt[muIndex] > 10) || !(fabs(fTR->MuD0PV[muIndex]) < 0.2 )) continue;
 		fMuons.push_back(muIndex);
 		muloose.push_back(fTR->MuPt[muIndex]);
 	}
@@ -22,6 +23,8 @@ void MT2Analysis::FillMT2Muons(){
 		fMT2tree->muo[i].Charge   = fTR->MuCharge[fMuons[i]];	
 		fMT2tree->muo[i].Iso      = MuPFIso(fMuons[i]);
 		fMT2tree->muo[i].Iso04    = MuPFIso04(fMuons[i]);
+  		fMT2tree->muo[i].IsTightMuon = IsGoodMT2Muon(fMuons[i]) ? 1 : 0;
+  		fMT2tree->muo[i].PassMu0_MuMu = (fTR->MuPt[fMuons[i]] > 20 && fabs(fTR->MuEta[fMuons[i]])<2.1 && MuPFIso04(fMuons[i]) < 0.15) ? 1 : 0;		
 		if(MuPFIso04(fMuons[i])<0.2) ++commonmuons;
 	}
 	fMT2tree->SetNMuonsCommonIso(commonmuons);
@@ -52,8 +55,8 @@ bool MT2Analysis::IsGoodMT2Muon(const int index){
 	// Vertex compatibility
 	if ( !(fabs(fTR->MuD0PV[index]) < 0.2 ) )  return false;
 	if ( !(fabs(fTR->MuDzPV[index]) < 0.5 ) )  return false;
-	// Isolation
-	if ( !(MuPFIso(index) < 0.2))              return false;
+// 	// Isolation
+// 	if ( !(MuPFIso(index) < 0.2))              return false;
 
 	return true;
 }
