@@ -26,6 +26,10 @@ public:
     isLooseID     = 0;
     isLooseID3Hits= 0;
     isLooseIDMVA  = 0;
+    PassTau0_TauTau = -9999;
+    PassTau1_TauTau = -9999;
+    PassTau_ElTau = -9999;
+    PassTau_MuTau = -9999;
   }
 
   void SetLV(const TLorentzVector v){
@@ -76,6 +80,12 @@ public:
   Bool_t   isLooseID;
   Bool_t   isLooseID3Hits;
   Bool_t   isLooseIDMVA;
+
+  Int_t PassTau0_TauTau;
+  Int_t PassTau1_TauTau;
+  Int_t PassTau_ElTau;
+  Int_t PassTau_MuTau;
+
   ClassDef(MT2Tau, 5)
     };
 #endif
