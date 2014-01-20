@@ -31,7 +31,7 @@ void MT2Analysis::FillMT2Muons(){
 
                 fMT2tree->muo[i].PassMu0_TauMu = fMT2tree->muo[i].PassMu0_MuMu;	
 
-		fMT2tree->muo[i].RejMu_TauTau = (fabs(fTR->MuEta[fMuons[i]])<2.4 && fTR->MuIsPFMuon[fMuons[i]] && MuPFIso04(fMuons[i]) < 0.3) ? 1 : 0;
+		fMT2tree->muo[i].RejMu_TauTau = (fabs(fTR->MuEta[fMuons[i]])<2.4 && fTR->MuIsPFMuon[fMuons[i]] && MuPFIso04(fMuons[i]) < 0.3) ? 1 : 0; //AN-13-189-v5
 
 		fMT2tree->muo[i].RejMu1_TauMu = (fMT2tree->muo[i].RejMu_TauTau  && fTR->MuPt[fMuons[i]] > 15) ? 1 : 0;
 
