@@ -755,6 +755,7 @@ bool MT2Analysis::FillMT2TreeBasics(){
 		// DiMuon triggers
 		string diMuonTriggers[100]; 
 		int diMuonTriggernumber=0;
+		int diMuonNonTkTriggernumber=0;
 		diMuonTriggers[diMuonTriggernumber++] = "HLT_Mu17_Mu8_v16";
 		diMuonTriggers[diMuonTriggernumber++] = "HLT_Mu17_Mu8_v17";
 		diMuonTriggers[diMuonTriggernumber++] = "HLT_Mu17_Mu8_v18";
@@ -762,6 +763,8 @@ bool MT2Analysis::FillMT2TreeBasics(){
 	//	diMuonTriggers[diMuonTriggernumber++] = "HLT_Mu17_Mu8_v20";//is not there?
 		diMuonTriggers[diMuonTriggernumber++] = "HLT_Mu17_Mu8_v21";
 		diMuonTriggers[diMuonTriggernumber++] = "HLT_Mu17_Mu8_v22";
+		diMuonNonTkTriggernumber = diMuonTriggernumber;
+
 		diMuonTriggers[diMuonTriggernumber++] = "HLT_Mu17_TkMu8_v9";
 		diMuonTriggers[diMuonTriggernumber++] = "HLT_Mu17_TkMu8_v10";
 		diMuonTriggers[diMuonTriggernumber++] = "HLT_Mu17_TkMu8_v11";
@@ -789,6 +792,8 @@ bool MT2Analysis::FillMT2TreeBasics(){
 		bool DiMuonFired(false);
 		for(int i=0; i<diMuonTriggernumber; ++i){
 			if(GetHLTResult(diMuonTriggers[i])) DiMuonFired=true;
+			if(i == (diMuonNonTkTriggernumber - 1) && DiMuonFired) fMT2tree->trigger.HLT_DiMuonsNonTk =true;
+			
 		}
 		if(DiMuonFired) fMT2tree->trigger.HLT_DiMuons =true;
 

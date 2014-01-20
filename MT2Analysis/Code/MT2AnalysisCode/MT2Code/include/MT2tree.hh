@@ -333,6 +333,7 @@ public:
 	// Dileptons
 	Bool_t HLT_DiElectrons;
 	Bool_t HLT_DiMuons;
+	Bool_t HLT_DiMuonsNonTk;
 	Bool_t HLT_EMu;
 	// Single Leptons
 	// please look at exact triggers (some are pfnopu, others not)

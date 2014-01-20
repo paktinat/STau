@@ -341,6 +341,7 @@ void MT2Trigger::Reset(){
 	// Dileptons
 	HLT_DiElectrons                 = false;
 	HLT_DiMuons                     = false;
+	HLT_DiMuonsNonTk                = false;
 	HLT_EMu                         = false;
 	// Single Leptons
 	// please look at exact triggers (some are pfnopu, others not)

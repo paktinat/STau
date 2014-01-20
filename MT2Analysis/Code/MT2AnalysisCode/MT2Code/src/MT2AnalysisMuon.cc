@@ -24,13 +24,19 @@ void MT2Analysis::FillMT2Muons(){
 		fMT2tree->muo[i].Iso      = MuPFIso(fMuons[i]);
 		fMT2tree->muo[i].Iso04    = MuPFIso04(fMuons[i]);
   		fMT2tree->muo[i].IsTightMuon = IsGoodMT2Muon(fMuons[i]) ? 1 : 0;
-  		fMT2tree->muo[i].PassMu0_MuMu = (fTR->MuPt[fMuons[i]] > 20 && fabs(fTR->MuEta[fMuons[i]])<2.1 && MuPFIso04(fMuons[i]) < 0.15) ? 1 : 0;	
-                fMT2tree->muo[i].PassMu1_MuMu = (fTR->MuPt[fMuons[i]] > 10 && fabs(fTR->MuEta[fMuons[i]])<2.4 && MuPFIso04(fMuons[i]) < 0.15 )? 1 : 0;
-                fMT2tree->muo[i].PassMu0_TauMu = (fTR->MuPt[fMuons[i]] > 20 && fabs(fTR->MuEta[fMuons[i]])<2.1 && MuPFIso04(fMuons[i]) < 0.1 && fMT2tree->GetMT(fMT2tree->muo[i].lv, fMT2tree->muo[i].lv.M(), METlv, 0.)< 30 ) ? 1 : 0;	
-                fMT2tree->muo[i].RejMu1_TauMu = (fTR->MuPt[fMuons[i]] > 15 && fabs(fTR->MuEta[fMuons[i]])<2.4 && MuPFIso04(fMuons[i]) < 0.3  ) ? 1 : 0;
-	        fMT2tree->muo[i].PassMu0_EleMu = (fTR->MuPt[fMuons[i]] > 20 && fabs(fTR->MuEta[fMuons[i]])<2.1 && MuPFIso04(fMuons[i]) < 0.1  ) ? 1 : 0;	
-                fMT2tree->muo[i].RejMu1_EleMu = (fTR->MuPt[fMuons[i]] > 10 && fabs(fTR->MuEta[fMuons[i]])<2.4 && MuPFIso04(fMuons[i]) < 0.3 && (fabs(fTR->MuD0PV[fMuons[i]]) < 0.5 )&& (fabs(fTR->MuDzPV[fMuons[i]]) < 2 )) ? 1 : 0;
-		
+
+  		fMT2tree->muo[i].PassMu0_MuMu = (fMT2tree->muo[i].IsTightMuon && fTR->MuPt[fMuons[i]] > 20 && fabs(fTR->MuEta[fMuons[i]])<2.1 && MuPFIso04(fMuons[i]) < 0.1) ? 1 : 0;	
+
+                fMT2tree->muo[i].PassMu1_MuMu = (fMT2tree->muo[i].PassMu0_MuMu || (fMT2tree->muo[i].IsTightMuon && fTR->MuPt[fMuons[i]] < 20 && fabs(fTR->MuEta[fMuons[i]])<2.1 && MuPFIso04(fMuons[i]) < 0.15 ))? 1 : 0;
+
+                fMT2tree->muo[i].PassMu0_TauMu = fMT2tree->muo[i].PassMu0_MuMu;	
+
+		fMT2tree->muo[i].RejMu_TauTau = (fabs(fTR->MuEta[fMuons[i]])<2.4 && fTR->MuIsPFMuon[fMuons[i]] && MuPFIso04(fMuons[i]) < 0.3) ? 1 : 0;
+
+		fMT2tree->muo[i].RejMu1_TauMu = (fMT2tree->muo[i].RejMu_TauTau  && fTR->MuPt[fMuons[i]] > 15) ? 1 : 0;
+
+	        fMT2tree->muo[i].PassMu0_EleMu = ((fMT2tree->muo[i].IsTightMuon && fabs(fTR->MuEta[fMuons[i]])<2.1 && fabs(fTR->MuEta[fMuons[i]]) > 1.479 && MuPFIso04(fMuons[i]) < 0.1) ||  (fMT2tree->muo[i].IsTightMuon && fabs(fTR->MuEta[fMuons[i]]) < 1.479 && MuPFIso04(fMuons[i]) < 0.15)) ? 1 : 0;
+	
               if(MuPFIso04(fMuons[i])<0.2) ++commonmuons;
 	}
 	fMT2tree->SetNMuonsCommonIso(commonmuons);
