@@ -16,6 +16,11 @@ public:
     Charge        = -999;
     IsTightMuon   = -999;
     PassMu0_MuMu  = -999;
+    PassMu1_MuMu  = -999;
+    PassMu0_TauMu = -999;
+    RejMu1_TauMu = -999;
+    PassMu0_EleMu = -999;
+    RejMu1_EleMu = -999;
   }
   
   void SetLV(const TLorentzVector v){
@@ -30,7 +35,11 @@ public:
   Int_t    Charge;
   Int_t    IsTightMuon;
   Int_t    PassMu0_MuMu;
-
+  Int_t    PassMu1_MuMu ;
+  Int_t    PassMu0_TauMu;
+  Int_t    RejMu1_TauMu;
+  Int_t    PassMu0_EleMu;
+  Int_t    RejMu1_EleMu;
   ClassDef(MT2Muon, 9)
 };
 #endif
