@@ -977,9 +977,13 @@ public:
   double pdfW[100];
   TopSearch * myTopSearch;
   
-  //chenarani
-  Int_t GetDoubleMu();
-  float GetMT2DoubleMu();
+  //chenarani   
+  std::pair<Int_t,Int_t>  GetMuMu();
+  float GetMT2MuMu();
+ // Int_t GetDoubleMu();
+  //float GetMT2DoubleMu();
+//  std::vector<int> MuMu2();
+ // float GetMT2MuMu2();
   Int_t GetDoubleElectron();
   float GetMT2DoubleElectron();
   Int_t GetMuEG();
@@ -989,9 +993,9 @@ public:
   Int_t GetTauEG();
   float GetMT2TauEG();
   Int_t GetTauMu();
-  float GetMT2TauMu();
+  float GetMT2TauMu();         
   //chenarani
-
+  
 
   ClassDef(MT2tree, 29)
 };
