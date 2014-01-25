@@ -799,6 +799,9 @@ public:
   void SetNTausIDLoose2    (int n);
   void SetNTops         (int n);
   void SetNTopsB        (int n);
+  //for TauPair making in diTau channel (Jafari-Zeinali)
+  std::pair<int,int> DoubleTauParing(std::vector<int> , std::vector<int> );
+
   //double corrMETPhi;
   double correctMETPhi(int mode = 0){
 	double ret = -1000.;
@@ -994,7 +997,7 @@ public:
   float GetMT2DoubleElectron();
   Int_t GetMuEG();
   float GetMT2MuEG();
-  Int_t GetDoubleTau();
+  bool GetDoubleTau();
   float GetMT2DoubleTau();
   Int_t GetTauEG();
   float GetMT2TauEG();
