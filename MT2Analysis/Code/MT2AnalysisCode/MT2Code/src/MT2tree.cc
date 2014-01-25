@@ -85,16 +85,6 @@ void MT2Misc::Reset() {
   TrackingTooManyStripClusFlag        = 0;
   TrackingLogErrorTooManyClustersFlag = 0;
 
-  //chenarani
-  has_mu0_MuMu            = -1;
-  has_mu1_MuMu            = -1;
-  charge_MuMu             = -10;
-  METImbalancedLeptons    = -99999.99;
-  METImbalancedLeptonsPhi = -99999.99;
-  MT2DoubleMu             = -99999.99;
-  MT2DoubleMuImbalancedLeptons = -99999.99;
-  //chenarani
-
 
 }
 
@@ -822,6 +812,7 @@ void MT2tree::Reset() {
   pileUp.Reset();
   trigger.Reset();
   SFWeight.Reset();
+  doubleMu.Reset();
 
   for (int i = 0; i < m_jetSize; ++i) {
     jet[i].Reset();
@@ -3170,3 +3161,4 @@ ClassImp(MT2SFWeight)
 ClassImp(MT2GenParticle)
 ClassImp(MT2tree)
 ClassImp(MT2Top)
+ClassImp(MT2DoubleMuon)

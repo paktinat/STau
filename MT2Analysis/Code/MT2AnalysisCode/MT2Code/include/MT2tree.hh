@@ -15,7 +15,7 @@
 #include "MT2Elec.hh"
 #include "MT2Muon.hh"
 #include "MT2Tau.hh"
-
+#include "MT2DoubleMuon.hh"
 
 
 enum {m_jetSize = 25, m_genjetSize = 20,  m_tauSize = 8, m_eleSize = 8, m_muoSize = 8, m_phoSize = 8, m_genleptSize=20, m_genparticleSize=30, m_hemiSize=8};
@@ -93,18 +93,6 @@ public:
   Bool_t   TrackingManyStripClusFlag;
   Bool_t   TrackingTooManyStripClusFlag;
   Bool_t   TrackingLogErrorTooManyClustersFlag;
-  //chenarani
-  Int_t    has_mu0_MuMu;
-  Int_t    has_mu1_MuMu;
-  Int_t    charge_MuMu;
-  Int_t    pass_OSMuMu;
-  Int_t    pass_SSMuMu;
-  Float_t  METImbalancedLeptons;
-  Float_t  METImbalancedLeptonsPhi;
-  Float_t  MT2DoubleMu;
-  Float_t  MT2DoubleMuImbalancedLeptons;
- //chenarani
-
 
   ClassDef(MT2Misc, 37)
 };
@@ -993,7 +981,8 @@ public:
   TopSearch * myTopSearch;
   
   //chenarani   
-  void   FillDoubleMu();
+  MT2DoubleMuon doubleMu;
+  void  FillDoubleMu();
   Int_t GetDoubleElectron();
   float GetMT2DoubleElectron();
   Int_t GetMuEG();

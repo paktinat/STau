@@ -8,6 +8,7 @@
 #pragma link C++ class MT2PileUp;
 #pragma link C++ class MT2Trigger;
 #pragma link C++ class MT2Tau;
+#pragma link C++ class MT2DoubleMuon;
 #pragma link C++ class MT2Top;
 #pragma link C++ class MT2Jet;
 #pragma link C++ class MT2Elec;
