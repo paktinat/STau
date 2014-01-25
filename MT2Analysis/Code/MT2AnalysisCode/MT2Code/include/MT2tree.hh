@@ -99,8 +99,10 @@ public:
   Int_t    charge_MuMu;
   Int_t    pass_OSMuMu;
   Int_t    pass_SSMuMu;
-  float    MT2DoubleMu;
-   float    MT2DoubleMuImbalanceLeptons;
+  Float_t  METImbalancedLeptons;
+  Float_t  METImbalancedLeptonsPhi;
+  Float_t  MT2DoubleMu;
+  Float_t  MT2DoubleMuImbalancedLeptons;
  //chenarani
 
 
@@ -991,10 +993,7 @@ public:
   TopSearch * myTopSearch;
   
   //chenarani   
-  std::pair<Int_t,Int_t>GetDoubleMu();
-  float GetMT2DoubleMu();
-  float GetMT2DoubleMuImbalanceLeptons();
-
+  void   FillDoubleMu();
   Int_t GetDoubleElectron();
   float GetMT2DoubleElectron();
   Int_t GetMuEG();

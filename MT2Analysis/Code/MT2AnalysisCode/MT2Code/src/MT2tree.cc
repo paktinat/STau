@@ -88,11 +88,11 @@ void MT2Misc::Reset() {
   //chenarani
   has_mu0_MuMu            = -1;
   has_mu1_MuMu            = -1;
-  pass_OSMuMu             = 0;
-  pass_SSMuMu             = 0;
   charge_MuMu             = -10;
+  METImbalancedLeptons    = -99999.99;
+  METImbalancedLeptonsPhi = -99999.99;
   MT2DoubleMu             = -99999.99;
-  MT2DoubleMuImbalanceLeptons = -99999.99;
+  MT2DoubleMuImbalancedLeptons = -99999.99;
   //chenarani
 
 
