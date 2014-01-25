@@ -1023,6 +1023,10 @@ void MT2Analysis::FillMT2treeCalculations(){
 	fMT2tree->FillDoubleMu();
 	//Saeid
 
+	//nadjieh
+        fMT2tree->FillDoubleTau();	
+	//nadjieh
+
 	if(fMT2tree->NJets > 0) {
 		fMT2tree->misc.Jet0Pass      = (Int_t) fMT2tree->jet[0].IsGoodPFJet(100,2.4,1);
 	} else  fMT2tree->misc.Jet0Pass      = 0; 
