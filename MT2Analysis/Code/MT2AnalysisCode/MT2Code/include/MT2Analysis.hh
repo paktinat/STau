@@ -225,8 +225,26 @@ private:
 	float MuPFIso04(const int index);
 	// Electrons
 	bool IsGoodMT2ElectronVetoID(const int index);
-	bool IsGoodMT2ElectronLooseID(const int index);
-	bool IsGoodMT2ElectronMediumID(const int index);
+  //bool IsGoodMT2ElectronLooseID(const int index);
+  //bool IsGoodMT2ElectronMediumID(const int index);
+
+  //bool IsGoodMT2ElectronVetoIDforEleEle(const int index);
+	bool IsGoodMT2ElectronSelIDforEleEle(const int index);
+
+	bool IsGoodMT2ElectronVetoIDforEleMu(const int index);
+	bool IsGoodMT2ElectronSelIDforEleMu(const int index);
+
+	bool IsGoodMT2ElectronVetoIDforEleTau(const int index);
+	bool IsGoodMT2ElectronSelIDforEleTau(const int index);
+
+        bool IsGoodMT2ElectronVetoIDforMuTau(const int index);
+        bool IsGoodMT2ElectronVetoIDforTauTau(const int index);
+
+        bool IsGoodMT2ElectronMVANoTrigLoose(const int index);
+        bool IsGoodMT2ElectronMVANoTrigTight(const int index);
+
+
+
 	const float EffArea(float abseta);
 	const float EffArea04(float abseta);
 	float ElePFIso(const int index);

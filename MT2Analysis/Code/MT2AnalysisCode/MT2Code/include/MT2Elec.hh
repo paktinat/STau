@@ -17,8 +17,20 @@ public:
   IDMedium      = -999;
   IDLoose       = -999;
   IDVeto        = -999;
+  //IDVetoEE      = -999;
+  IDSelEE       = -999;
 
-  PassEl0_EE = -999;
+  IDVetoEMU     = -999;
+  IDSelEMU      = -999;
+
+  IDVetoETau    = -999; 
+  IDSelETau     = -999;
+
+
+  IDVetoMuTau  = -999;
+  IDVetoTauTau = -999;
+
+  PassEl0_EE    = -999;
   }
   void SetLV(const TLorentzVector v){lv = v;}
 
@@ -31,6 +43,18 @@ public:
   Int_t    IDMedium;
   Int_t    IDLoose;
   Int_t    IDVeto;
+
+  //Int_t    IDVetoEE;
+  Int_t    IDSelEE;
+
+  Int_t    IDVetoEMU;
+  Int_t    IDSelEMU;
+
+  Int_t    IDVetoETau;
+  Int_t    IDSelETau;
+
+  Int_t    IDVetoMuTau;
+  Int_t    IDVetoTauTau;
 
   Int_t PassEl0_EE;
 
