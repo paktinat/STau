@@ -14,6 +14,8 @@ std::pair<int,int> MT2tree::DoubleTauParing(std::vector<int> GoodTau0, std::vect
 		int index1 = GoodTau1[i1];
 		if(index1 <= index0)
 			continue;
+		if(tau[index1].Charge == tau[index0].Charge)
+			continue;
 		allPairs.push_back(make_pair((tau[index0].Isolation3Hits + tau[index1].Isolation3Hits), make_pair(index0,index1)));
 	}
   }
@@ -38,7 +40,7 @@ std::pair<int,int> MT2tree::DoubleTauParing(std::vector<int> GoodTau0, std::vect
   return ret;	
 }
 
-bool MT2tree::GetDoubleTau(){
+std::pair<int,int> MT2tree::GetDoubleTau(){//default -1,-1
   std::vector<int> GoodTau0;
   std::vector<int> GoodTau1;
 
@@ -48,11 +50,12 @@ bool MT2tree::GetDoubleTau(){
 	if(tau[i].PassTau1_TauTau)
                 GoodTau1.push_back(i);
   }
-  std::pair<int,int> tau_pair = DoubleTauParing(GoodTau0,GoodTau1);
-  return ((tau_pair.first != -1) && (tau_pair.second != -1));
+  return (DoubleTauParing(GoodTau0,GoodTau1));
 }
 
 float MT2tree::GetMT2DoubleTau(){
-  //Float_t MT2tree::CalcMT2(float testmass, bool massive, TLorentzVector visible1, TLorentzVector visible2, TLorentzVector MET ){
-  return 1.0;
+  std::pair<int,int> pair = this->GetDoubleTau();
+  if(pair.first != -1 && pair.second != -1)
+  	return this->CalcMT2(0, false, tau[pair.first].lv, tau[pair.second].lv, pfmet[0] );
+  return -1.;
 }
