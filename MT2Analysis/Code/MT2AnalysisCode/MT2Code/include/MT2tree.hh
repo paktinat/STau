@@ -100,7 +100,8 @@ public:
   Int_t    pass_OSMuMu;
   Int_t    pass_SSMuMu;
   float    MT2DoubleMu;
-  //chenarani
+   float    MT2DoubleMuImbalanceLeptons;
+ //chenarani
 
 
   ClassDef(MT2Misc, 37)
@@ -992,6 +993,7 @@ public:
   //chenarani   
   std::pair<Int_t,Int_t>GetDoubleMu();
   float GetMT2DoubleMu();
+  float GetMT2DoubleMuImbalanceLeptons();
 
   Int_t GetDoubleElectron();
   float GetMT2DoubleElectron();

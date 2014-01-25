@@ -91,7 +91,8 @@ void MT2Misc::Reset() {
   pass_OSMuMu             = 0;
   pass_SSMuMu             = 0;
   charge_MuMu             = -10;
-  MT2DoubleMu      = -99999.99;
+  MT2DoubleMu             = -99999.99;
+  MT2DoubleMuImbalanceLeptons = -99999.99;
   //chenarani
 
 
