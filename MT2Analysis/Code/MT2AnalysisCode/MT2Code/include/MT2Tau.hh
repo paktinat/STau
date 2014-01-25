@@ -30,6 +30,8 @@ public:
     PassTau1_TauTau = -9999;
     PassTau_ElTau = -9999;
     PassTau_MuTau = -9999;
+    PassQCDTau0_TauTau = -9999;
+    PassQCDTau1_TauTau = -9999;
   }
 
   void SetLV(const TLorentzVector v){
@@ -85,6 +87,9 @@ public:
   Int_t PassTau1_TauTau;
   Int_t PassTau_ElTau;
   Int_t PassTau_MuTau;
+
+  Int_t PassQCDTau0_TauTau;
+  Int_t PassQCDTau1_TauTau;
 
   ClassDef(MT2Tau, 5)
     };
