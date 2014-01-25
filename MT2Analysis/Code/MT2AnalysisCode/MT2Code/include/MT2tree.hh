@@ -997,7 +997,7 @@ public:
   float GetMT2DoubleElectron();
   Int_t GetMuEG();
   float GetMT2MuEG();
-  bool GetDoubleTau();
+  std::pair<int,int> GetDoubleTau();
   float GetMT2DoubleTau();
   Int_t GetTauEG();
   float GetMT2TauEG();
