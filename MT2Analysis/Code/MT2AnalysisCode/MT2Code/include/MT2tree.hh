@@ -17,11 +17,17 @@
 #include "MT2Tau.hh"
 #include "MT2DoubleMuon.hh"
 #include "MT2DoubleTau.hh"
+#include "MT2MuTau.hh"
+#include "MT2EleTau.hh"
 
 
 enum {m_jetSize = 25, m_genjetSize = 20,  m_tauSize = 8, m_eleSize = 8, m_muoSize = 8, m_phoSize = 8, m_genleptSize=20, m_genparticleSize=30, m_hemiSize=8};
 
 
+struct PtSumSort{
+  bool operator() (std::pair <double, std::pair<int,int> > comb1, std::pair <double, std::pair<int,int> > comb2) 
+  { return (comb1.first > comb2.first);}
+};
 
 // MT2Misc ----------------------------------
 class MT2Misc : public TObject {
@@ -793,10 +799,18 @@ public:
   void SetNTopsB        (int n);
   //for TauPair making in diTau channel (Jafari-Zeinali)
   std::pair<int,int> DoubleTauParing(std::vector<int> , std::vector<int> );
+  std::pair<int,int> MuTauParing(std::vector<int> , std::vector<int> );
+  std::pair<int,int> EleTauParing(std::vector<int> , std::vector<int> );
   bool HasNoVetoMuForDoubleTau();
   bool HasNoVetoElecForDoubleTau();
+  bool HasNoVetoMuForMuTau();
+  bool HasNoVetoElecForMuTau();
+  bool HasNoVetoMuForEleTau();
+  bool HasNoVetoElecForEleTau();
   std::pair<int,int> GetQCDDoubleTau();
   std::pair<int,int> GetSignalDoubleTau();
+  std::pair<int,int> GetTauMu();
+  std::pair<int,int> GetTauEG();
   //double corrMETPhi;
   double correctMETPhi(int mode = 0){
 	double ret = -1000.;
@@ -988,16 +1002,16 @@ public:
   MT2DoubleMuon doubleMu;
   //Jafari
   MT2DoubleTau doubleTau;	
+  MT2MuTau muTau;	
+  MT2EleTau eleTau;	
   void  FillDoubleMu();
   void  FillDoubleTau();
+  void  FillMuTau();
+  void  FillEleTau();
   Int_t GetDoubleElectron();
   float GetMT2DoubleElectron();
   Int_t GetMuEG();
   float GetMT2MuEG();
-  Int_t GetTauEG();
-  float GetMT2TauEG();
-  Int_t GetTauMu();
-  float GetMT2TauMu();         
   //chenarani
   
 

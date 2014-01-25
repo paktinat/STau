@@ -76,11 +76,11 @@ bool MT2tree::HasNoVetoElecForDoubleTau(){
 
 bool MT2tree::HasNoVetoMuForDoubleTau(){
         bool ret = true;
-        for(int i = 0; i < NMuons; i++){ /** To be provided by Muon experts **/
-                /*if(muo[i].IDVetoTauTau){
+        for(int i = 0; i < NMuons; i++){ 
+                if(muo[i].RejMu_TauTau){
                         ret = false;
                         break;
-                }*/
+                }
         }
         return ret;
 }
@@ -100,7 +100,7 @@ void MT2tree::FillDoubleTau(){
 		doubleTau.SetTauIndex1(tauIndecies.second);
 		doubleTau.SetSumCharge(tau[tauIndecies.first].Charge + tau[tauIndecies.second].Charge);
 		doubleTau.SetMT2(this->CalcMT2(0, false, tau[tauIndecies.first].lv, tau[tauIndecies.second].lv, pfmet[0]));
-		TLorentzVector met = -(muo[tauIndecies.first].lv + muo[tauIndecies.second].lv);
+		TLorentzVector met = -(tau[tauIndecies.first].lv + tau[tauIndecies.second].lv);
 		doubleTau.SetMT2Imbalance(this->CalcMT2(0, false, tau[tauIndecies.first].lv, tau[tauIndecies.second].lv, met));
 		if(!isSignal){
 			doubleTau.SetTau0NonIso(true);

@@ -10,6 +10,8 @@
 #pragma link C++ class MT2Tau;
 #pragma link C++ class MT2DoubleMuon;
 #pragma link C++ class MT2DoubleTau;
+#pragma link C++ class MT2MuTau;
+#pragma link C++ class MT2EleTau;
 #pragma link C++ class MT2Top;
 #pragma link C++ class MT2Jet;
 #pragma link C++ class MT2Elec;
