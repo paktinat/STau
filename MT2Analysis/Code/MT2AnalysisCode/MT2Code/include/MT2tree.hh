@@ -93,7 +93,16 @@ public:
   Bool_t   TrackingManyStripClusFlag;
   Bool_t   TrackingTooManyStripClusFlag;
   Bool_t   TrackingLogErrorTooManyClustersFlag;
-  
+  //chenarani
+  Int_t    has_mu0_MuMu;
+  Int_t    has_mu1_MuMu;
+  Int_t    charge_MuMu;
+  Int_t    pass_OSMuMu;
+  Int_t    pass_SSMuMu;
+  float    MT2DoubleMu;
+  //chenarani
+
+
   ClassDef(MT2Misc, 37)
 };
 
@@ -978,12 +987,9 @@ public:
   TopSearch * myTopSearch;
   
   //chenarani   
-  std::pair<Int_t,Int_t>  GetMuMu();
-  float GetMT2MuMu();
- // Int_t GetDoubleMu();
-  //float GetMT2DoubleMu();
-//  std::vector<int> MuMu2();
- // float GetMT2MuMu2();
+  std::pair<Int_t,Int_t>GetDoubleMu();
+  float GetMT2DoubleMu();
+
   Int_t GetDoubleElectron();
   float GetMT2DoubleElectron();
   Int_t GetMuEG();

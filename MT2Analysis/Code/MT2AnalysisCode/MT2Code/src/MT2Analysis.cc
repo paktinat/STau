@@ -1018,6 +1018,9 @@ void MT2Analysis::FillMT2treeCalculations(){
 	fMT2tree->misc.PassJetID           = fMT2tree->PassJetID(50,2.4,1);
 	fMT2tree->misc.PassJet40ID         = fMT2tree->PassJetID(40,2.4,1);
 	fMT2tree->misc.PassJet30ID         = fMT2tree->PassJetID(30,2.4,1);
+
+	fMT2tree->misc.MT2DoubleMu     = fMT2tree->GetMT2DoubleMu();
+
 	if(fMT2tree->NJets > 0) {
 		fMT2tree->misc.Jet0Pass      = (Int_t) fMT2tree->jet[0].IsGoodPFJet(100,2.4,1);
 	} else  fMT2tree->misc.Jet0Pass      = 0; 

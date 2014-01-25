@@ -85,6 +85,16 @@ void MT2Misc::Reset() {
   TrackingTooManyStripClusFlag        = 0;
   TrackingLogErrorTooManyClustersFlag = 0;
 
+  //chenarani
+  has_mu0_MuMu            = -1;
+  has_mu1_MuMu            = -1;
+  pass_OSMuMu             = 0;
+  pass_SSMuMu             = 0;
+  charge_MuMu             = -10;
+  MT2DoubleMu      = -99999.99;
+  //chenarani
+
+
 }
 
 // MT2Top -----------------------------------
@@ -1004,52 +1014,6 @@ Int_t MT2tree::GetJetIndexByEta(int ijet, int PFJID, float minJPt, float maxJEta
   indx = Util::VSort(indices,etas,true);
   return indx[ijet];
 }
-
-//--------------------------------------------------------------------
-      /*   std::pair<Int_t,Int_t>MT2tree::GetMuMu(){
-//-10 is :Default value. no mu is found or they have the same charge.
-   
-         int GoodEvent[2] = {-10,-10};
-         for(int i=0; i<NMuons; ++i){
-
-       if ( muo[i].IsTightMuon && muo[i].lv.Pt()>20  && fabs(muo[i].lv.Eta())<2.1  && MuPFIso04(muo[i]) < 0.1   )
-         		if (GoodEvent[0]==-10)
-                         {   
-			    GoodEvent[0]=i; 
-				continue;
-                          } //one good muon
-   if (( muo[i].IsTightMuon && muo[i].lv.Pt()>20  && fabs(muo[i].lv.Eta())<2.1  && MuPFIso04(muo[i]) < 0.1   ) ||
-   (muo[i].IsTightMuon  && muo[i].lv.Pt()< 20 && fabs(muo[i].lv.Eta())<2.1  && MuPFIso04(muo[i]) < 0.15 ))			
-        		
-                        if (GoodEvent[1]==-10)
-                        {
-				GoodEvent[1]=i; 
-				continue;
-                         } //second good muon
-                         
-  else
-                      { 
-                          GoodEvent[0]=-10;
-                          GoodEvent[1]=-10; break;}   }    
-
-             if  (GoodEvent[1]==-10)
-             return (make_pair(GoodEvent[0],GoodEvent[1]));
-             
-             if  (( muo[GoodEvent[0]].Charge + muo[GoodEvent[1]].Charge)!=0) {
-			GoodEvent[0] = -10;
-			GoodEvent[1] = -10;
-      	 	}
-         }
-
-
-               float MT2tree::GetMT2MuMu(){  
-           	std::pair<Int_t,Int_t> GoodEvent = MT2tree::GetMuMu();
-		
-	           	return CalcMT2(0, 0,muo[GoodEvent.first].lv,muo[GoodEvent.second].lv, pfmet[0]);
-           } */
-
-//------------------------------------------------------------------------------------
-
 
 
 Int_t MT2tree::GetNTaus(float minJPt, float maxJEta, int iso, int elerej, int muorej){
