@@ -66,12 +66,25 @@ void MT2Analysis::FillMT2Taus(){
 
     //isolation with slightly smaller efficiency but much smaller fake rate
     fMT2tree->tau[i].Isolation3Hits = 0;
+    /*
     if(fTR->TauLooseCombinedIsoDBSumPtCorr3Hits[fTaus[i]]  > 0.5)
       fMT2tree->tau[i].Isolation3Hits = 2;
     if(fTR->TauMediumCombinedIsoDBSumPtCorr3Hits[fTaus[i]] > 0.5)
       fMT2tree->tau[i].Isolation3Hits = 3;
     if(fTR->TauTightCombinedIsoDBSumPtCorr3Hits[fTaus[i]]  > 0.5)
       fMT2tree->tau[i].Isolation3Hits = 4;
+    */
+    /*
+     * Change in Isolation defaults to preserve the pairing priorities
+    */
+    
+    if(fTR->TauLooseCombinedIsoDBSumPtCorr3Hits[fTaus[i]]  > 0.5)
+      fMT2tree->tau[i].Isolation3Hits = 7;
+    if(fTR->TauMediumCombinedIsoDBSumPtCorr3Hits[fTaus[i]] > 0.5)
+      fMT2tree->tau[i].Isolation3Hits = 3;
+    if(fTR->TauTightCombinedIsoDBSumPtCorr3Hits[fTaus[i]]  > 0.5)
+      fMT2tree->tau[i].Isolation3Hits = 1;
+    
 
     //isolation based on (improved) mva
     fMT2tree->tau[i].IsolationMVA2 = 0;
