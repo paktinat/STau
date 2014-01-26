@@ -30,4 +30,8 @@ git push -u origin master
 
 
 
+#To run on signal samples
+./RunMT2Analyzer -d . -i 4 -t mc -m MC -e -E /dataLOCAL/MT2Tau/RootFiles/TChipChimSTauSnu_NTupleProducer_53X_MC/TChipChimSTauSnu_250_0_NTupleProducer_53X_MC_9.root
 
+#Or
+./RunMT2Analyzer -d . -i 4 -t mc -m MC -e -E /dataLOCAL/MT2Tau/RootFiles/TStauStau_NTupleProducer_53X_MC/NTupleProducer_53X_MC1_TStauStau_250_1.root
