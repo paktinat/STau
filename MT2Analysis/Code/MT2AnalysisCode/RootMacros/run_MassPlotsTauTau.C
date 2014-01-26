@@ -55,7 +55,7 @@
 			  // bool stacked, bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos)
 //  tA->makePlot("NBJetsCSVM",          cuts,    -10,  -10 , -10 ,   trigger , "NBJetsCSVM"     ,10,0,10,        false,        true ,  true,   true,  true,  true, 1, 1);
 ///  tA->makePlot("GetMT2MuEG()",     cuts,    -10,  -10 , -10 ,   trigger , "MT2"            ,20,0,400,        false,        true ,  true,   true,  true,  true, 1, 1);
-  tA->makePlot("muTau.tau0Ind",     cuts,    -10,  -10 , -10 ,   trigger , "MT2"            ,20,-5,5,        false,        true ,  true,   true,  true,  true, 1, 1);     
+  tA->makePlot("tau[0].ElectronRejMVA3",     cuts,    -10,  -10 , -10 ,   trigger , "MT2"            ,20,-5,5,        false,        true ,  true,   true,  true,  true, 1, 1);     
   // tA->makePlot("GetMT2DoubleMu()",     cuts,    -10,  -10 , -10 ,   trigger , "MT2"            ,20,0,400,        false,        true ,  true,   true,  true,  true, 1, 1); 
 
 

@@ -774,7 +774,7 @@ public:
   virtual ~MT2tree();
 
   void Reset();
-
+  void SetVerbosity        (int n);
   void SetNJets            (int n);
   void SetNGenJets         (int n);
   void SetNJetsIDLoose     (int n);
@@ -1012,6 +1012,7 @@ public:
   float GetMT2DoubleElectron();
   Int_t GetMuEG();
   float GetMT2MuEG();
+  int fVerbose;
   //chenarani
   
 

@@ -34,39 +34,50 @@ std::pair<int,int> MT2tree::GetTauMu(){
 
 
 bool MT2tree::HasNoVetoElecForMuTau(){
-	bool ret = true;
+	int nVeto = 0;
 	for(int i = 0; i < NEles; i++){
 		if(ele[i].IDVetoMuTau){
-			ret = false;
-			break;
+			nVeto++;
 		}
 	}
-	return ret;
+	if(nVeto == 0)
+		return true;
+	return false;
 }
 
 bool MT2tree::HasNoVetoMuForMuTau(){
-        bool ret = true;
-        for(int i = 0; i < NMuons; i++){ 
+	int nVeto = 0;
+	for(int i = 0; i < NMuons; i++){
                 if(muo[i].RejMu1_TauMu){
-                        ret = false;
-                        break;
-                }
-        }
-        return ret;
+			nVeto++;
+		}
+	}
+	if(nVeto == 0)
+		return true;
+	return false;
 }
 
 void MT2tree::FillMuTau(){
 	muTau.Reset();	
 	std::pair<int,int> indecies = this->GetTauMu();
-
+	if(this->fVerbose > 3 ){
+		std::cout<<"tau index: "<<indecies.first<<", mu index: "<<indecies.second<<endl;
+	}
 	if(indecies.first != -1 && indecies.second != -1){
 		muTau.SetTauIndex0(indecies.first);
 		muTau.SetMuIndex0(indecies.second);
 		muTau.SetSumCharge(tau[indecies.first].Charge + muo[indecies.second].Charge);
 		muTau.SetMT2(this->CalcMT2(0, false, tau[indecies.first].lv, muo[indecies.second].lv, pfmet[0]));
 		TLorentzVector met = -(tau[indecies.first].lv + muo[indecies.second].lv);
+		muTau.SetMETImbalanced(met.Pt());
+		muTau.SetMETImbalancedPhi(met.Phi());
 		muTau.SetMT2Imbalanced(this->CalcMT2(0, false, tau[indecies.first].lv, muo[indecies.second].lv, met));
 		muTau.SetElecVeto(this->HasNoVetoElecForMuTau());
 		muTau.SetMuVeto(this->HasNoVetoMuForMuTau());
+		muTau.SetBeingSignal((muTau.isDesirableEvent() && muTau.GetSumCharge() == 0));
+		muTau.SetBeingQCD((muTau.isDesirableEvent() && muTau.GetSumCharge() != 0));
+		if(this->fVerbose > 3 ){
+			muTau.printObject();
+		}
 	}
 }

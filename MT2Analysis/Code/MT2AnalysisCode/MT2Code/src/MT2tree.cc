@@ -776,6 +776,7 @@ MT2tree::~MT2tree(){
 }
 
 void MT2tree::Reset() {
+  fVerbose	   = 0;
   NJets            = 0;
   NJetsIDLoose     = 0;
   NJetsIDLoose40   = 0;
@@ -846,7 +847,9 @@ void MT2tree::Reset() {
   GenZ      [0].SetPxPyPzE(0., 0., 0., 0.);
   GenPhoton [0].SetPxPyPzE(0., 0., 0., 0.);
 }
-
+void MT2tree::SetVerbosity(int n) {
+  fVerbose = n;
+}
 void MT2tree::SetNJets(int n) {
   NJets = n;
 }

@@ -382,6 +382,7 @@ void MT2Analysis::BookTree(){
 
 void MT2Analysis::ResetTree(){
         fMT2tree->Reset();
+	fMT2tree->SetVerbosity(4);
 }
 
 void MT2Analysis::FillTree(){

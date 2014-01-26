@@ -2890,7 +2890,7 @@ void MassPlotter::loadSamples(const char* filename){
 			IN.getline(buffer, 200, '\n');
 			sscanf(buffer, "Path\t%s", StringValue);
 			fPath = StringValue;	
-			cout << fPath << endl;
+			cout <<"My path: " <<fPath << endl;
 			
 			if(fVerbose >0){
 				cout << " ----  " << endl;
@@ -2918,6 +2918,7 @@ void MassPlotter::loadSamples(const char* filename){
 			IN.getline(buffer, 400, '\n');
 			sscanf(buffer, "File\t%s", StringValue);
 			TString file =fPath+StringValue;
+			cout<<"my file: "<<file<<endl;
 			TFile *f = TFile::Open(file);
 			s.file = f;
 		

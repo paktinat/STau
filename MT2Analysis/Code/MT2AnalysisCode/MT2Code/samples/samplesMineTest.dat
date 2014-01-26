@@ -1,27 +1,28 @@
 ############################################################################################
 GENERAL
-Path           ///dataLOCAL/paktinat/Projects/MT2/MT2_Tau_V02-03-02/MT2Analysis/Code/MT2AnalysisCode/MT2Code/
+Path           ///dataLOCAL/ajafari/STau/CMSSW_5_3_7_patch1/src/MT2_Tau_V02_03_02/MT2Analysis/Code/MT2AnalysisCode/MT2Code/
 ________________________________________________________________________________________
 # list of samples
 #
 ## -------- SMS --------
      
 SAMPLE
-Name            TStau
-SName           SUSY
-ShapeName       Signal
-File            MassTree.root
-Xsection        0.152 pb
-Kfact           1.
-Lumi            19600.0
-Type            susy
-Color           1
+Name	TStau
+SName	SUSY
+ShapeName	Signal
+File	MassTree.root
+Xsection	0.152 pb
+Kfact	1.
+Lumi	19600.0
+Type	susy
+Color	1
 
 SAMPLE
 Name		QCD_HT_1000ToInf
 SName		QCD
 ShapeName	QCD
-File            MassTree.root
+File	MassTree.root
+#File            MassTree.root
 Xsection  	204.0 pb
 Kfact           1.59
 Lumi            19600.0
@@ -32,7 +33,8 @@ SAMPLE
 Name		Run2012D_DoubleMuParked
 SName		DoubleMu-Data
 ShapeName	Data
-File            MassTree.root
+File	MassTree.root
+#File            MassTree.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.
