@@ -128,14 +128,14 @@ void MT2Analysis::FillMT2Taus(){
     fMT2tree->tau[i].isLooseID3Hits = fMT2tree->tau[i].IsGoodTau(20, 2.3,  -2, 1, -3);
     fMT2tree->tau[i].isLooseIDMVA   = fMT2tree->tau[i].IsGoodTau(20, 2.3, -12, 1, -3);
 
-//    if(fVerbose > 3){ 
+    if(fVerbose > 3){ 
 	cout<<i<<"'th tau properties:\n\tPt: "<<fMT2tree->tau[i].lv.Pt()<<"\tEta: "<<fMT2tree->tau[i].lv.Eta()<<endl;
 	cout<<"Charge: "<<fMT2tree->tau[i].Charge<<",\tIsolation3Hits: "<<fMT2tree->tau[i].Isolation3Hits<<",\tElectronRejMVA3: "
 	<<fMT2tree->tau[i].ElectronRejMVA3<<endl;
 	cout<<"\tPassTau0_TauTau: "<<fMT2tree->tau[i].PassTau0_TauTau<<"\tPassTau1_TauTau: "<<fMT2tree->tau[i].PassTau1_TauTau<<endl;
 	cout<<"\tPassTau_ElTau: "<<fMT2tree->tau[i].PassTau_ElTau<<"\tPassTau_MuTau: "<<fMT2tree->tau[i].PassTau_MuTau<<endl;
         cout<<"\tPassQCDTau0_TauTau:"<<fMT2tree->tau[i].PassQCDTau0_TauTau<<"\tPassQCDTau1_TauTau: "<<fMT2tree->tau[i].PassQCDTau1_TauTau<<endl;
-//    }
+    }
   }
   fMT2tree->SetNTausIDLoose     (fMT2tree->GetNTaus(20,2.3,  2,1,-3));
   fMT2tree->SetNTausIDLoose3Hits(fMT2tree->GetNTaus(20,2.3, -2,1,-3));
