@@ -115,8 +115,11 @@ void MT2tree::FillDoubleTau(){
         	        ret = ret && doubleTau.HasNoVetoElec();
 			doubleTau.SetBeingSignal(ret);
 		} else {
-			doubleTau.SetTau0NonIso(true);
-			doubleTau.SetTau1NonIso(true);
+			if(!(this->tau[tauIndecies.first].Isolation3Hits <= 3 && 
+			     this->tau[tauIndecies.second].Isolation3Hits <= 3)){
+				doubleTau.SetTau0NonIso(true);
+				doubleTau.SetTau1NonIso(true);
+			}
 			int cat = -1;
 			if(doubleTau.HasNoVetoMu() && doubleTau.HasNoVetoElec()){ //QCD event is vetoed against additional e/mu
 				if(doubleTau.GetSumCharge() != 0 && !doubleTau.IsTau0NonIso() && !doubleTau.IsTau1NonIso())

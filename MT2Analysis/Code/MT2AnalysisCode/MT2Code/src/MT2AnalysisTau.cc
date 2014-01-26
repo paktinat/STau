@@ -39,12 +39,11 @@ void MT2Analysis::FillMT2Taus(){
     if((fTR->TauPt[fTaus[i]]>20) && (fabs(fTR->TauEta[fTaus[i]])<2.3) && (fTR->TauLooseCombinedIsoDBSumPtCorr3Hits[fTaus[i]]>0.5) && (fTR->TauLooseElectronRejection[fTaus[i]]>0.5) && (fTR->TauTightMuon2Rejection[fTaus[i]]>0.5)) fMT2tree->tau[i].PassTau_MuTau=1;
 
     fMT2tree->tau[i].PassQCDTau0_TauTau= 0;
-    if((fTR->TauPt[fTaus[i]]>45) && (fabs(fTR->TauEta[fTaus[i]])<2.1) && (fTR->TauMediumCombinedIsoDBSumPtCorr3Hits[fTaus[i]]<0.5) && 
-       (fTR->TauLooseCombinedIsoDBSumPtCorr3Hits[fTaus[i]]>0.5)) fMT2tree->tau[i].PassQCDTau0_TauTau=1;
+    if((fTR->TauPt[fTaus[i]]>45) && (fabs(fTR->TauEta[fTaus[i]])<2.1) && (fTR->TauLooseCombinedIsoDBSumPtCorr3Hits[fTaus[i]]>0.5)) 
+	fMT2tree->tau[i].PassQCDTau0_TauTau=1;
     fMT2tree->tau[i].PassQCDTau1_TauTau= 0;
-    if((fTR->TauPt[fTaus[i]]>45) && (fabs(fTR->TauEta[fTaus[i]])<2.1) && (fTR->TauMediumCombinedIsoDBSumPtCorr3Hits[fTaus[i]]<0.5) && 
-       (fTR->TauLooseCombinedIsoDBSumPtCorr3Hits[fTaus[i]]>0.5) && (fTR->TauLooseElectronMVA3Rejection[fTaus[i]]>0.5)) fMT2tree->tau[i].PassTau1_TauTau=1;
-
+    if((fTR->TauPt[fTaus[i]]>45) && (fabs(fTR->TauEta[fTaus[i]])<2.1) && (fTR->TauLooseCombinedIsoDBSumPtCorr3Hits[fTaus[i]]>0.5) && (fTR->TauLooseElectronMVA3Rejection[fTaus[i]]>0.5)) fMT2tree->tau[i].PassTau1_TauTau=1;
+    
 
     fMT2tree->tau[i].Isolation= 0;
     if(fTR->TauVLooseCombinedIsoDBSumPtCorr[fTaus[i]] > 0.5)
