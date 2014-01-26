@@ -1,8 +1,9 @@
 {
    TString outputdir = "../MassPlots/";
    // TString samples   = "./samples/samplesMineDoubleMu.dat"; Int_t channel = 26; //2* 13 (Muon PDG Id)
-   TString samples   = "./samples/samplesMineDoubleElectron.dat";  Int_t channel = 22; //2* 11 (Electron PDG Id)
+   //TString samples   = "./samples/samplesMineDoubleElectron.dat";  Int_t channel = 22; //2* 11 (Electron PDG Id)
   //  TString samples   = "./samples/samplesMineMuEG.dat"; //MuEG datasets  Int_t channel = 24; //11 + 13 
+    TString samples   = "./samples/samplesMineTest.dat"; 
   int verbose =3;
 
   gSystem->CompileMacro("../MT2Code/src/MassPlotter.cc", "kf");//"k", "f"
@@ -26,8 +27,9 @@
   std::ostringstream cutStream;
   cutStream << " " 
     //	    << "( GetDoubleMu()>=0 )" <<"&&"  
- 	    << "( GetDoubleElectron()>=0   )" <<"&&"
+    // 	    << "( GetDoubleElectron()>=0   )" <<"&&"
 // 	    << "( GetMuEG()>=0  )" <<"&&"  //MuEG selections  
+//	    << "( muTau.isSignalMuTau()  )" <<"&&"
               <<"0==0";
    
 
@@ -53,7 +55,7 @@
 			  // bool stacked, bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos)
 //  tA->makePlot("NBJetsCSVM",          cuts,    -10,  -10 , -10 ,   trigger , "NBJetsCSVM"     ,10,0,10,        false,        true ,  true,   true,  true,  true, 1, 1);
 ///  tA->makePlot("GetMT2MuEG()",     cuts,    -10,  -10 , -10 ,   trigger , "MT2"            ,20,0,400,        false,        true ,  true,   true,  true,  true, 1, 1);
-  tA->makePlot("GetMT2DoubleElectron()",     cuts,    -10,  -10 , -10 ,   trigger , "MT2"            ,20,0,400,        false,        true ,  true,   true,  true,  true, 1, 1);     
+  tA->makePlot("muTau.tau0Ind",     cuts,    -10,  -10 , -10 ,   trigger , "MT2"            ,20,-5,5,        false,        true ,  true,   true,  true,  true, 1, 1);     
   // tA->makePlot("GetMT2DoubleMu()",     cuts,    -10,  -10 , -10 ,   trigger , "MT2"            ,20,0,400,        false,        true ,  true,   true,  true,  true, 1, 1); 
 
 

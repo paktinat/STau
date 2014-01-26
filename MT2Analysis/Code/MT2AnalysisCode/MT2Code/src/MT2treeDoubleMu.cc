@@ -20,16 +20,16 @@ void MT2tree::FillDoubleMu(){
  
   if  (doubleMu.mu0Ind!=-1 && doubleMu.mu1Ind!=-1){
     
-    doubleMu.charge = muo[doubleMu.mu0Ind].Charge + muo[doubleMu.mu1Ind].Charge;//check two good muon charge
+    doubleMu.chargeSum = muo[doubleMu.mu0Ind].Charge + muo[doubleMu.mu1Ind].Charge;//check two good muon charge
   
     //cout<<" Indices for Double Muon "<<doubleMu.mu0Ind<<" "<<doubleMu.mu1Ind<<endl;
   
-    doubleMu.MT2DoubleMu     = CalcMT2(0, 0,muo[doubleMu.mu0Ind].lv,muo[doubleMu.mu1Ind].lv, pfmet[0]);
+    doubleMu.MT2     = CalcMT2(0, 0,muo[doubleMu.mu0Ind].lv,muo[doubleMu.mu1Ind].lv, pfmet[0]);
  
     TLorentzVector met = -(muo[doubleMu.mu0Ind].lv + muo[doubleMu.mu1Ind].lv);
     //cout<<"met.Pt() "<<met.Pt()<<endl;
-    doubleMu.METImbalancedLeptons = met.Pt();
-    doubleMu.METImbalancedLeptonsPhi = met.Phi();
-    doubleMu.MT2DoubleMuImbalancedLeptons = CalcMT2(0, 0,muo[doubleMu.mu0Ind].lv,muo[doubleMu.mu1Ind].lv, met);
+    doubleMu.METImbalanced = met.Pt();
+    doubleMu.METImbalancedPhi = met.Phi();
+    doubleMu.MT2Imbalanced = CalcMT2(0, 0,muo[doubleMu.mu0Ind].lv,muo[doubleMu.mu1Ind].lv, met);
   }
 }

@@ -19,7 +19,7 @@
 void MT2Analysis::FillMT2Muons(){
 	TLorentzVector METlv;
 	METlv.SetPtEtaPhiM(MET().Pt(), 0., MET().Phi(), 0.);
-	//cout<<"This event has "<<fMuons.size()<<" Muon"<<endl;
+	if(fVerbose > 3) cout<<"This event has "<<fMuons.size()<<" Muon"<<endl;
 	int commonmuons = 0;
 	for(int i=0; i<fMuons.size(); ++i) {
 	  	fMT2tree->muo[i].lv.SetPtEtaPhiM(fTR->MuPt [fMuons[i]], fTR->MuEta[fMuons[i]], fTR->MuPhi[fMuons[i]], 0.106); 
@@ -31,11 +31,11 @@ void MT2Analysis::FillMT2Muons(){
 
   		fMT2tree->muo[i].PassMu0_MuMu = (fMT2tree->muo[i].IsTightMuon && fTR->MuPt[fMuons[i]] > 20 && fabs(fTR->MuEta[fMuons[i]])<2.1 && MuPFIso04(fMuons[i]) < 0.1) ? 1 : 0;	
 
-		//cout<<"Muo "<<i<<" PassMu0_MuMu "<<fMT2tree->muo[i].PassMu0_MuMu<<" charge "<<fMT2tree->muo[i].Charge<<endl;
+		if(fVerbose > 3) cout<<"Muo "<<i<<" PassMu0_MuMu "<<fMT2tree->muo[i].PassMu0_MuMu<<" charge "<<fMT2tree->muo[i].Charge<<endl;
 
                 fMT2tree->muo[i].PassMu1_MuMu = (fMT2tree->muo[i].PassMu0_MuMu || (fMT2tree->muo[i].IsTightMuon && fTR->MuPt[fMuons[i]] < 20 && fabs(fTR->MuEta[fMuons[i]])<2.1 && MuPFIso04(fMuons[i]) < 0.15 ))? 1 : 0;
 
-		//cout<<"Muo "<<i<<" PassMu1_MuMu "<<fMT2tree->muo[i].PassMu1_MuMu<<endl;
+		if(fVerbose > 3) cout<<"Muo "<<i<<" PassMu1_MuMu "<<fMT2tree->muo[i].PassMu1_MuMu<<endl;
 
                 fMT2tree->muo[i].PassMu0_TauMu = fMT2tree->muo[i].PassMu0_MuMu;	
 

@@ -2514,6 +2514,8 @@ deps: $(SRCS)
 src/MT2tree.o: ./include/MT2tree.hh ../TESCO/include/helper/TopSearch.h
 src/MT2tree.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetResolution.h
 src/MT2tree.o: ./include/MT2Elec.hh ./include/MT2Muon.hh ./include/MT2Tau.hh
+src/MT2tree.o: ./include/MT2DoubleMuon.hh ./include/MT2DoubleTau.hh
+src/MT2tree.o: ./include/MT2MuTau.hh ./include/MT2EleTau.hh
 src/MT2tree.o: ../TESCO/include/helper/Davismt2.h /usr/include/math.h
 src/MT2tree.o: /usr/include/features.h /usr/include/sys/cdefs.h
 src/MT2tree.o: /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h
@@ -2534,29 +2536,41 @@ src/MT2treeDoubleMu.o: ./include/MT2tree.hh
 src/MT2treeDoubleMu.o: ../TESCO/include/helper/TopSearch.h
 src/MT2treeDoubleMu.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetResolution.h
 src/MT2treeDoubleMu.o: ./include/MT2Elec.hh ./include/MT2Muon.hh
-src/MT2treeDoubleMu.o: ./include/MT2Tau.hh
+src/MT2treeDoubleMu.o: ./include/MT2Tau.hh ./include/MT2DoubleMuon.hh
+src/MT2treeDoubleMu.o: ./include/MT2DoubleTau.hh ./include/MT2MuTau.hh
+src/MT2treeDoubleMu.o: ./include/MT2EleTau.hh
 src/MT2treeDoubleElectron.o: ./include/MT2tree.hh
 src/MT2treeDoubleElectron.o: ../TESCO/include/helper/TopSearch.h
 src/MT2treeDoubleElectron.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetResolution.h
 src/MT2treeDoubleElectron.o: ./include/MT2Elec.hh ./include/MT2Muon.hh
-src/MT2treeDoubleElectron.o: ./include/MT2Tau.hh
+src/MT2treeDoubleElectron.o: ./include/MT2Tau.hh ./include/MT2DoubleMuon.hh
+src/MT2treeDoubleElectron.o: ./include/MT2DoubleTau.hh ./include/MT2MuTau.hh
+src/MT2treeDoubleElectron.o: ./include/MT2EleTau.hh
 src/MT2treeMuEG.o: ./include/MT2tree.hh ../TESCO/include/helper/TopSearch.h
 src/MT2treeMuEG.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetResolution.h
 src/MT2treeMuEG.o: ./include/MT2Elec.hh ./include/MT2Muon.hh
-src/MT2treeMuEG.o: ./include/MT2Tau.hh
+src/MT2treeMuEG.o: ./include/MT2Tau.hh ./include/MT2DoubleMuon.hh
+src/MT2treeMuEG.o: ./include/MT2DoubleTau.hh ./include/MT2MuTau.hh
+src/MT2treeMuEG.o: ./include/MT2EleTau.hh
 src/MT2treeTauMu.o: ./include/MT2tree.hh ../TESCO/include/helper/TopSearch.h
 src/MT2treeTauMu.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetResolution.h
 src/MT2treeTauMu.o: ./include/MT2Elec.hh ./include/MT2Muon.hh
-src/MT2treeTauMu.o: ./include/MT2Tau.hh
+src/MT2treeTauMu.o: ./include/MT2Tau.hh ./include/MT2DoubleMuon.hh
+src/MT2treeTauMu.o: ./include/MT2DoubleTau.hh ./include/MT2MuTau.hh
+src/MT2treeTauMu.o: ./include/MT2EleTau.hh
 src/MT2treeTauEG.o: ./include/MT2tree.hh ../TESCO/include/helper/TopSearch.h
 src/MT2treeTauEG.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetResolution.h
 src/MT2treeTauEG.o: ./include/MT2Elec.hh ./include/MT2Muon.hh
-src/MT2treeTauEG.o: ./include/MT2Tau.hh
+src/MT2treeTauEG.o: ./include/MT2Tau.hh ./include/MT2DoubleMuon.hh
+src/MT2treeTauEG.o: ./include/MT2DoubleTau.hh ./include/MT2MuTau.hh
+src/MT2treeTauEG.o: ./include/MT2EleTau.hh
 src/MT2treeDoubleTau.o: ./include/MT2tree.hh
 src/MT2treeDoubleTau.o: ../TESCO/include/helper/TopSearch.h
 src/MT2treeDoubleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetResolution.h
 src/MT2treeDoubleTau.o: ./include/MT2Elec.hh ./include/MT2Muon.hh
-src/MT2treeDoubleTau.o: ./include/MT2Tau.hh
+src/MT2treeDoubleTau.o: ./include/MT2Tau.hh ./include/MT2DoubleMuon.hh
+src/MT2treeDoubleTau.o: ./include/MT2DoubleTau.hh ./include/MT2MuTau.hh
+src/MT2treeDoubleTau.o: ./include/MT2EleTau.hh
 src/MT2Analysis.o: ../TESCO/include/helper/Utilities.hh /usr/include/stdio.h
 src/MT2Analysis.o: /usr/include/stdlib.h /usr/include/features.h
 src/MT2Analysis.o: /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h
@@ -3173,7 +3187,9 @@ src/MT2Analysis.o: ./include/BTagSFWeight.hh ./include/MT2tree.hh
 src/MT2Analysis.o: ../TESCO/include/helper/TopSearch.h
 src/MT2Analysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetResolution.h
 src/MT2Analysis.o: ./include/MT2Elec.hh ./include/MT2Muon.hh
-src/MT2Analysis.o: ./include/MT2Tau.hh
+src/MT2Analysis.o: ./include/MT2Tau.hh ./include/MT2DoubleMuon.hh
+src/MT2Analysis.o: ./include/MT2DoubleTau.hh ./include/MT2MuTau.hh
+src/MT2Analysis.o: ./include/MT2EleTau.hh
 src/MT2Analysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h
 src/MT2Analysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetCorrectorParameters.h
 src/MT2Analysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h
@@ -3796,7 +3812,9 @@ src/MT2AnalysisElec.o: ./include/BTagSFWeight.hh ./include/MT2tree.hh
 src/MT2AnalysisElec.o: ../TESCO/include/helper/TopSearch.h
 src/MT2AnalysisElec.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetResolution.h
 src/MT2AnalysisElec.o: ./include/MT2Elec.hh ./include/MT2Muon.hh
-src/MT2AnalysisElec.o: ./include/MT2Tau.hh
+src/MT2AnalysisElec.o: ./include/MT2Tau.hh ./include/MT2DoubleMuon.hh
+src/MT2AnalysisElec.o: ./include/MT2DoubleTau.hh ./include/MT2MuTau.hh
+src/MT2AnalysisElec.o: ./include/MT2EleTau.hh
 src/MT2AnalysisElec.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h
 src/MT2AnalysisElec.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetCorrectorParameters.h
 src/MT2AnalysisElec.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h
@@ -4419,7 +4437,9 @@ src/MT2AnalysisMuon.o: ./include/BTagSFWeight.hh ./include/MT2tree.hh
 src/MT2AnalysisMuon.o: ../TESCO/include/helper/TopSearch.h
 src/MT2AnalysisMuon.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetResolution.h
 src/MT2AnalysisMuon.o: ./include/MT2Elec.hh ./include/MT2Muon.hh
-src/MT2AnalysisMuon.o: ./include/MT2Tau.hh
+src/MT2AnalysisMuon.o: ./include/MT2Tau.hh ./include/MT2DoubleMuon.hh
+src/MT2AnalysisMuon.o: ./include/MT2DoubleTau.hh ./include/MT2MuTau.hh
+src/MT2AnalysisMuon.o: ./include/MT2EleTau.hh
 src/MT2AnalysisMuon.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h
 src/MT2AnalysisMuon.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetCorrectorParameters.h
 src/MT2AnalysisMuon.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h
@@ -5042,7 +5062,9 @@ src/MT2AnalysisTau.o: ./include/BTagSFWeight.hh ./include/MT2tree.hh
 src/MT2AnalysisTau.o: ../TESCO/include/helper/TopSearch.h
 src/MT2AnalysisTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetResolution.h
 src/MT2AnalysisTau.o: ./include/MT2Elec.hh ./include/MT2Muon.hh
-src/MT2AnalysisTau.o: ./include/MT2Tau.hh
+src/MT2AnalysisTau.o: ./include/MT2Tau.hh ./include/MT2DoubleMuon.hh
+src/MT2AnalysisTau.o: ./include/MT2DoubleTau.hh ./include/MT2MuTau.hh
+src/MT2AnalysisTau.o: ./include/MT2EleTau.hh
 src/MT2AnalysisTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h
 src/MT2AnalysisTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetCorrectorParameters.h
 src/MT2AnalysisTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h
@@ -5822,7 +5844,9 @@ src/MT2Analyzer.o: ./include/BTagSFWeight.hh ./include/MT2tree.hh
 src/MT2Analyzer.o: ../TESCO/include/helper/TopSearch.h
 src/MT2Analyzer.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetResolution.h
 src/MT2Analyzer.o: ./include/MT2Elec.hh ./include/MT2Muon.hh
-src/MT2Analyzer.o: ./include/MT2Tau.hh
+src/MT2Analyzer.o: ./include/MT2Tau.hh ./include/MT2DoubleMuon.hh
+src/MT2Analyzer.o: ./include/MT2DoubleTau.hh ./include/MT2MuTau.hh
+src/MT2Analyzer.o: ./include/MT2EleTau.hh
 src/MT2Analyzer.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h
 src/MT2Analyzer.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetCorrectorParameters.h
 src/MT2Analyzer.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h
@@ -5830,7 +5854,10 @@ src/MassPlotter.o: ./include/MassPlotter.hh ./include/MT2tree.hh
 src/MassPlotter.o: ../TESCO/include/helper/TopSearch.h
 src/MassPlotter.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetResolution.h
 src/MassPlotter.o: ./include/MT2Elec.hh ./include/MT2Muon.hh
-src/MassPlotter.o: ./include/MT2Tau.hh ../TESCO/include/helper/Hemisphere.hh
+src/MassPlotter.o: ./include/MT2Tau.hh ./include/MT2DoubleMuon.hh
+src/MassPlotter.o: ./include/MT2DoubleTau.hh ./include/MT2MuTau.hh
+src/MassPlotter.o: ./include/MT2EleTau.hh
+src/MassPlotter.o: ../TESCO/include/helper/Hemisphere.hh
 src/MassPlotter.o: ../TESCO/include/helper/Utilities.hh /usr/include/stdio.h
 src/MassPlotter.o: /usr/include/stdlib.h /usr/include/features.h
 src/MassPlotter.o: /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h
@@ -7055,7 +7082,9 @@ src/MT2Shapes.o: ./include/MT2Shapes.hh ./include/MT2tree.hh
 src/MT2Shapes.o: ../TESCO/include/helper/TopSearch.h
 src/MT2Shapes.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch1/src/CondFormats/JetMETObjects/interface/JetResolution.h
 src/MT2Shapes.o: ./include/MT2Elec.hh ./include/MT2Muon.hh
-src/MT2Shapes.o: ./include/MT2Tau.hh ../TESCO/include/helper/Utilities.hh
+src/MT2Shapes.o: ./include/MT2Tau.hh ./include/MT2DoubleMuon.hh
+src/MT2Shapes.o: ./include/MT2DoubleTau.hh ./include/MT2MuTau.hh
+src/MT2Shapes.o: ./include/MT2EleTau.hh ../TESCO/include/helper/Utilities.hh
 src/MT2Shapes.o: /usr/include/stdio.h /usr/include/stdlib.h
 src/MT2Shapes.o: /usr/include/features.h /usr/include/sys/cdefs.h
 src/MT2Shapes.o: /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h

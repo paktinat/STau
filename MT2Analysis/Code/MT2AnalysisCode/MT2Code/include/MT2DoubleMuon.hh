@@ -11,20 +11,24 @@ public:
   void Reset(){
     mu0Ind            = -1;
     mu1Ind            = -1;
-    charge            = -10;
-    METImbalancedLeptons    = -99999.99;
-    METImbalancedLeptonsPhi = -99999.99;
-    MT2DoubleMu             = -99999.99;
-    MT2DoubleMuImbalancedLeptons = -99999.99;
+    chargeSum            = -1;
+    METImbalanced    = -1;
+    METImbalancedPhi = -10;
+    MT2            = -1;
+    MT2Imbalanced = -1;
+    hasNoVetoElec = true; //should be fixed, just a placeholder for now
+    hasNoVetoMu   = true; //should be fixed, just a placeholder for now
   }
 
   Int_t    mu0Ind;
   Int_t    mu1Ind;
-  Int_t    charge;
-  Float_t  METImbalancedLeptons;
-  Float_t  METImbalancedLeptonsPhi;
-  Float_t  MT2DoubleMu;
-  Float_t  MT2DoubleMuImbalancedLeptons;
+  Int_t    chargeSum;
+  Float_t  METImbalanced;
+  Float_t  METImbalancedPhi;
+  Float_t  MT2;
+  Float_t  MT2Imbalanced;
+  bool     hasNoVetoElec;
+  bool     hasNoVetoMu;
 
   ClassDef(MT2DoubleMuon, 1)
     };

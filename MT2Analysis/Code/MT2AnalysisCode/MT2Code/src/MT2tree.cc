@@ -3162,3 +3162,7 @@ ClassImp(MT2GenParticle)
 ClassImp(MT2tree)
 ClassImp(MT2Top)
 ClassImp(MT2DoubleMuon)
+ClassImp(MT2DoubleTau)
+ClassImp(MT2MuTau)
+ClassImp(MT2EleTau)
+
