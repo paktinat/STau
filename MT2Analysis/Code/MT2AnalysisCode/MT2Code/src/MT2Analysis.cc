@@ -382,7 +382,7 @@ void MT2Analysis::BookTree(){
 
 void MT2Analysis::ResetTree(){
         fMT2tree->Reset();
-	//fMT2tree->SetVerbosity(4);
+//	fMT2tree->SetVerbosity(4);
 }
 
 void MT2Analysis::FillTree(){
@@ -1026,6 +1026,8 @@ void MT2Analysis::FillMT2treeCalculations(){
 
 	//nadjieh
         fMT2tree->FillDoubleTau();	
+	fMT2tree->FillEleTau();	
+        fMT2tree->FillMuTau();	
 	//nadjieh
 
 	if(fMT2tree->NJets > 0) {

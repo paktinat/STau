@@ -2953,6 +2953,10 @@ void MassPlotter::loadSamples(const char* filename){
 			  }
 			  s.type!="data" ? s.PU_avg_weight = h_PUWeights->GetMean()    : s.PU_avg_weight =1;
 			  s.type!="data" ? s.nevents       = h_Events   ->GetEntries() : s.nevents       =1;
+			  //Test Nadjieh
+			  s.PU_avg_weight =1;
+                          s.nevents       =1;	
+			  // End Test Nadjieh		
 			  delete h_PUWeights;
 			  delete h_Events;
 			} else{
