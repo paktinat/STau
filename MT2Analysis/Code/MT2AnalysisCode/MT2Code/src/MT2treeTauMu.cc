@@ -45,9 +45,11 @@ bool MT2tree::HasNoVetoElecForMuTau(){
 	return false;
 }
 
-bool MT2tree::HasNoVetoMuForMuTau(){
+bool MT2tree::HasNoVetoMuForMuTau(int signalIndex){
 	int nVeto = 0;
 	for(int i = 0; i < NMuons; i++){
+		if(i == signalIndex)
+			continue;
                 if(muo[i].RejMu1_TauMu){
 			nVeto++;
 		}
@@ -60,9 +62,8 @@ bool MT2tree::HasNoVetoMuForMuTau(){
 void MT2tree::FillMuTau(){
 	muTau.Reset();	
 	std::pair<int,int> indecies = this->GetTauMu();
-	if(this->fVerbose > 3 ){
-		std::cout<<"tau index: "<<indecies.first<<", mu index: "<<indecies.second<<endl;
-	}
+	if(this->fVerbose > 3 )
+		std::cout<<"muTau: tau index: "<<indecies.first<<", mu index: "<<indecies.second<<endl;
 	if(indecies.first != -1 && indecies.second != -1){
 		muTau.SetTauIndex0(indecies.first);
 		muTau.SetMuIndex0(indecies.second);
@@ -73,11 +74,10 @@ void MT2tree::FillMuTau(){
 		muTau.SetMETImbalancedPhi(met.Phi());
 		muTau.SetMT2Imbalanced(this->CalcMT2(0, false, tau[indecies.first].lv, muo[indecies.second].lv, met));
 		muTau.SetElecVeto(this->HasNoVetoElecForMuTau());
-		muTau.SetMuVeto(this->HasNoVetoMuForMuTau());
+		muTau.SetMuVeto(this->HasNoVetoMuForMuTau(indecies.second));
 		muTau.SetBeingSignal((muTau.isDesirableEvent() && muTau.GetSumCharge() == 0));
 		muTau.SetBeingQCD((muTau.isDesirableEvent() && muTau.GetSumCharge() != 0));
-		if(this->fVerbose > 3 ){
+		if(this->fVerbose > 3 )
 			muTau.printObject();
-		}
 	}
 }

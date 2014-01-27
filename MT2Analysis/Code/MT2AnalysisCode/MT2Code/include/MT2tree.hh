@@ -803,10 +803,10 @@ public:
   std::pair<int,int> EleTauParing(std::vector<int> , std::vector<int> );
   bool HasNoVetoMuForDoubleTau();
   bool HasNoVetoElecForDoubleTau();
-  bool HasNoVetoMuForMuTau();
+  bool HasNoVetoMuForMuTau(int);
   bool HasNoVetoElecForMuTau();
   bool HasNoVetoMuForEleTau();
-  bool HasNoVetoElecForEleTau();
+  bool HasNoVetoElecForEleTau(int);
   std::pair<int,int> GetQCDDoubleTau();
   std::pair<int,int> GetSignalDoubleTau();
   std::pair<int,int> GetTauMu();
