@@ -37,6 +37,16 @@ void MT2Analysis::FillMT2Elecs(){
 
 		fMT2tree->ele[i].IDVetoMuTau   = IsGoodMT2ElectronVetoIDforMuTau(fElecs[i]);
 		fMT2tree->ele[i].IDVetoTauTau   = IsGoodMT2ElectronVetoIDforTauTau(fElecs[i]);
+
+                fMT2tree->ele[i].PassE0_EE = 0;
+                if (fTR->ElPt [fElecs[i]] > 20 && fTR->ElEta[fElecs[i]] < 2.3 && IsGoodMT2ElectronSelIDforEleEle(fElecs[i]))
+                fMT2tree->ele[i].PassE0_EE=1;
+               
+                fMT2tree->ele[i].PassE1_EE = 0;
+                if (fTR->ElEta[fElecs[i]] < 2.3 && IsGoodMT2ElectronSelIDforEleEle(fElecs[i]))
+                fMT2tree->ele[i].PassE0_EE=1;
+
+
 	}
 }
 

@@ -30,7 +30,8 @@ public:
   IDVetoMuTau  = -999;
   IDVetoTauTau = -999;
 
-  PassEl0_EE    = -999;
+  PassE0_EE    = -999;
+  PassE1_EE    = -999;
   }
   void SetLV(const TLorentzVector v){lv = v;}
 
@@ -56,7 +57,8 @@ public:
   Int_t    IDVetoMuTau;
   Int_t    IDVetoTauTau;
 
-  Int_t PassEl0_EE;
+  Int_t PassE0_EE;
+  Int_t PassE1_EE;
 
   ClassDef(MT2Elec, 12)
 };

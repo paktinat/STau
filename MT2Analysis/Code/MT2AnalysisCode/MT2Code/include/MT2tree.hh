@@ -997,9 +997,19 @@ public:
                               // identical to pfmet unless met is JEScales or modified in data-driven estimates
   double pdfW[100];
   TopSearch * myTopSearch;
-  
+ 
+
+  //Eskandari   
+//  MT2DoubleEle doubleEle; 
+
+  void  DoubleEle();
+ // float GetMT2DoubleEle();
+ // float GetMT2DoubleEleImbalanceLeptons();
+
+
   //chenarani   
   MT2DoubleMuon doubleMu;
+
   //Jafari
   MT2DoubleTau doubleTau;	
   MT2MuTau muTau;	
@@ -1008,13 +1018,12 @@ public:
   void  FillDoubleTau();
   void  FillMuTau();
   void  FillEleTau();
-  Int_t GetDoubleElectron();
-  float GetMT2DoubleElectron();
   Int_t GetMuEG();
   float GetMT2MuEG();
   int fVerbose;
   //chenarani
   
+
 
   ClassDef(MT2tree, 29)
 };
