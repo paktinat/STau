@@ -1,6 +1,6 @@
 ############################################################################################
 GENERAL
-Path           ///dataLOCAL/ajafari/STau/CMSSW_5_3_7_patch1/src/MT2_Tau_V02_03_02/MT2Analysis/Code/MT2AnalysisCode/MT2Code/
+Path           ///home/chenarani/CMSSW_5_3_7_patch1/src/MT2_Tau_V02-03-02/MT2Analysis/Code/MT2AnalysisCode/MT2Code/
 ________________________________________________________________________________________
 # list of samples
 #
@@ -22,7 +22,6 @@ Name		QCD_HT_1000ToInf
 SName		QCD
 ShapeName	QCD
 File	MassTree.root
-#File            MassTree.root
 Xsection  	204.0 pb
 Kfact           1.59
 Lumi            19600.0
@@ -34,7 +33,6 @@ Name		Run2012D_DoubleMuParked
 SName		DoubleMu-Data
 ShapeName	Data
 File	MassTree.root
-#File            MassTree.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.

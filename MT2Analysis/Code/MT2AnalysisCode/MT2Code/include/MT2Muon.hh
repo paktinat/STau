@@ -10,17 +10,17 @@ public:
 
   void Reset(){
     lv.SetPxPyPzE(0, 0, 0, 0);
-    MT            = -9999.99;
-    Iso           = -9999.99;
-    Iso04         = -9999.99;
-    Charge        = -999;
-    IsTightMuon   = -999;
-    PassMu0_MuMu  = -999;
-    PassMu1_MuMu  = -999;
-    PassMu0_TauMu = -999;
-    RejMu1_TauMu = -999;
-    PassMu0_EleMu = -999;
-    RejMu_TauTau = -999;
+    MT            = -1;
+    Iso           = -1;
+    Iso04         = -1;
+    Charge        = -10;
+    IsTightMuon   = -1;
+    PassMu0_MuMu  = -1;
+    PassMu1_MuMu  = -1;
+    PassMu0_TauMu = -1;
+    RejMu1_TauMu = -1;
+    PassMu0_EleMu = -1;
+    RejMu_TauTau = -1;
   }
   
   void SetLV(const TLorentzVector v){

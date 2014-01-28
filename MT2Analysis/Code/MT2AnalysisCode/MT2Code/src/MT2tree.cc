@@ -39,35 +39,35 @@ void MT2Misc::Reset() {
   PassJet30ID             = -1;
   Jet0Pass                = -1;
   Jet1Pass                = -1;
-  MT2                     = -99999.99;
-  MT2jet40                = -99999.99;
-  MT2Top                  = -99999.99;
-  MCTTop                  = -99999.99;
-  MT2MassiveTop           = -99999.99;
-  MCTMassiveTop           = -99999.99;
-  MT2MassiveOnlyTop       = -99999.99;
-  MCTMassiveOnlyTop       = -99999.99;
-  MCT                     = -99999.99;
-  MET                     = -99999.99;
-  METPhi                  = -99999.99;
-  LeadingJPt              = -99999.99;
-  SecondJPt               = -99999.99;
-  J3Pt                    = -99999.99;
-  J4Pt                    = -99999.99;
-  Vectorsumpt		  = -99999.99;
-  HT			  = -99999.99;
-  QCDPartonicHT		  = -99999.99;
-  pfHT30                  = -99999.99;
-  pfHT35                  = -99999.99;
-  pfHT40                  = -99999.99;
-  pfHT45                  = -99999.99;
-  pfHT50                  = -99999.99;
-  MinMetJetDPhi           = -99999.99;
-  MinMetJetDPhi4          = -99999.99;
-  MinMetJetDPhiPt40       = -99999.99;
-  MinMetJetDPhi4Pt40      = -99999.99;
+  MT2                     = -9.99;
+  MT2jet40                = -9.99;
+  MT2Top                  = -9.99;
+  MCTTop                  = -9.99;
+  MT2MassiveTop           = -9.99;
+  MCTMassiveTop           = -9.99;
+  MT2MassiveOnlyTop       = -9.99;
+  MCTMassiveOnlyTop       = -9.99;
+  MCT                     = -9.99;
+  MET                     = -9.99;
+  METPhi                  = -9.99;
+  LeadingJPt              = -9.99;
+  SecondJPt               = -9.99;
+  J3Pt                    = -9.99;
+  J4Pt                    = -9.99;
+  Vectorsumpt		  = -9.99;
+  HT			  = -9.99;
+  QCDPartonicHT		  = -9.99;
+  pfHT30                  = -9.99;
+  pfHT35                  = -9.99;
+  pfHT40                  = -9.99;
+  pfHT45                  = -9.99;
+  pfHT50                  = -9.99;
+  MinMetJetDPhi           = -9.99;
+  MinMetJetDPhi4          = -9.99;
+  MinMetJetDPhiPt40       = -9.99;
+  MinMetJetDPhi4Pt40      = -9.99;
   MinMetJetDPhiIndex      = -1;
-  MinMetBJetDPhi          = -99999.99;
+  MinMetBJetDPhi          = -9.99;
   WDecayMode              = -1;
   TopDecayMode            = -1;
 
@@ -120,15 +120,15 @@ MT2Susy::~MT2Susy(){
 }
 
 void MT2Susy::Reset(){
-  MassGlu = -999.99;
-  MassChi= -999.99;
-  MassLSP= -999.99;
-  M0= -999.99;
-  M12= -999.99;
-  A0= -999.99;
-  Mu= -999.99;
-  XSec= -999.99;
-  TanBeta= -999.99;
+  MassGlu = -9.99;
+  MassChi= -9.99;
+  MassLSP= -9.99;
+  M0= -9.99;
+  M12= -9.99;
+  A0= -9.99;
+  Mu= -9.99;
+  XSec= -9.99;
+  TanBeta= -9.99;
 }
 
 // ------------------------------------------------------------
@@ -141,14 +141,14 @@ MT2PileUp::~MT2PileUp(){
 }
 
 void MT2PileUp::Reset(){
-  PUnumInt       = -999;
-  PUnumIntEarly  = -999;
-  PUnumIntLate   = -999;
-  PUtrueNumInt   = -999;
+  PUnumInt       = -9;
+  PUnumIntEarly  = -9;
+  PUnumIntLate   = -9;
+  PUtrueNumInt   = -9;
   PUScenario     = -1;
-  PtHat          = -999.99;
-  Weight         = -999.99;
-  Rho            = -999.99;
+  PtHat          = -9.99;
+  Weight         = -9.99;
+  Rho            = -9.99;
   NVertices      = -1;
 }
 
@@ -365,35 +365,35 @@ MT2Jet::~MT2Jet(){
 
 void MT2Jet::Reset() {
   lv.SetPxPyPzE(0, 0, 0, 0);
-  bTagProbTCHE  = -99999.99;
-  bTagProbTCHP  = -99999.99;
-  bTagProbSSVHE = -99999.99;
-  bTagProbSSVHP = -99999.99;
-  bTagProbJProb = -99999.99;
-  bTagProbCSV   = -99999.99;
+  bTagProbTCHE  = -9.99;
+  bTagProbTCHP  = -9.99;
+  bTagProbSSVHE = -9.99;
+  bTagProbSSVHP = -9.99;
+  bTagProbJProb = -9.99;
+  bTagProbCSV   = -9.99;
 
   isPFIDLoose   = 0;
   isPFIDMedium  = 0;
   isPFIDTight   = 0;
-  ChHadFrac     = -99999.99; 
-  NeuHadFrac    = -99999.99; 
-  ChEmFrac      = -99999.99;
-  NeuEmFrac     = -99999.99; 
-  ChMuFrac      = -99999.99; 
+  ChHadFrac     = -9.99; 
+  NeuHadFrac    = -9.99; 
+  ChEmFrac      = -9.99;
+  NeuEmFrac     = -9.99; 
+  ChMuFrac      = -9.99; 
   ChMult        = -1; 
   NeuMult       = -1; 
   NConstituents = -1;
 
-  Scale         = -99999.99; // correction factor
-  L1FastJetScale= -99999.99; // correction factor from raw to L1FastJetcorrected
-  Area          = -99999.99;
+  Scale         = -9.99; // correction factor
+  L1FastJetScale= -9.99; // correction factor from raw to L1FastJetcorrected
+  Area          = -9.99;
 
-  Flavour       = -9999;
+  Flavour       = -99;
   
   //  isTauMatch    = 0;  // tell you if the jet is matched to a tau.
   isTauMatch    = -1;  // tell you if the jet is matched to a tau. -1 not matched, >= 0 gives the tau index in the tau collection
-  TauDR         = -99999.99;
-  TauDPt        = -99999.99;
+  TauDR         = -9.99;
+  TauDPt        = -9.99;
   NTauMatch     = 0;
 }
 
@@ -478,7 +478,7 @@ MT2GenJet::~MT2GenJet(){
 }
 
 void MT2GenJet::Reset(){
-  DeltaR             = -9999.99;
+  DeltaR             = -99.99;
   JetMatchIndex      = -1;
   
   lv.SetPxPyPzE(0, 0, 0, 0);
@@ -496,12 +496,12 @@ void MT2Hemi::Reset(){
   seed_method    = -1;
   assoc_method   = -1;
   NHemiIter      = -1;
-  MT2            = -99999.99;
-  MCT            = -99999.99;
-  AlphaT         = -99999.99;
-  minDHT         = -99999.99;
-  maxDR          = -99999.99;
-  dPhi           = -99999.99;
+  MT2            = -9.99;
+  MCT            = -9.99;
+  AlphaT         = -9.99;
+  minDHT         = -9.99;
+  maxDR          = -9.99;
+  dPhi           = -9.99;
   for(int i=0; i<m_jetSize; ++i){
   	jindices1[i]  =-1;
   	jindices2[i]  =-1;
@@ -531,10 +531,10 @@ MT2GenParticle::~MT2GenParticle(){
 void MT2GenParticle::Reset(){
   lv.  SetPxPyPzE(0, 0, 0, 0);
 
-  ID         = -999;
-  Index      = -999;
-  MIndex     = -999;
-  GMIndex    = -999;
+  ID         = -9;
+  Index      = -9;
+  MIndex     = -9;
+  GMIndex    = -9;
 }
 
 MT2GenParticle* MT2GenParticle::GetMother( MT2GenParticle allParticles[] , int nGenParticles){
@@ -567,12 +567,12 @@ void MT2GenLept::Reset(){
   Mlv. SetPxPyPzE(0, 0, 0, 0);
   GMlv.SetPxPyPzE(0, 0, 0, 0);
 
-  ID          = -999;
-  MID         = -999;
-  MStatus     = -999;
-  GMID        = -999;
-  GMStatus    = -999;
-  MT          = -9999.99;
+  ID          = -9;
+  MID         = -9;
+  MStatus     = -9;
+  GMID        = -9;
+  GMStatus    = -9;
+  MT          = -99.99;
 }
 
 
@@ -586,17 +586,17 @@ MT2Photon::~MT2Photon(){
 
 void MT2Photon::Reset() {
   lv.SetPxPyPzE(0, 0, 0, 0);
-  TrkIso          = -999.99;
-  EcalIso         = -999.99;
-  HcalIso         = -999.99;
-  SigmaIEtaIEta   = -999.99;
-  HoverE          = -999.99; 
-  HoverE2012      = -999.99;
-  ChargedHadIso   = -999.99;
-  NeutralHadIso   = -999.99;
-  PhotonIso       = -999.99;
-  GenJetMinDR     = -999.99;
-  MCmatchexitcode = -999;
+  TrkIso          = -9.99;
+  EcalIso         = -9.99;
+  HcalIso         = -9.99;
+  SigmaIEtaIEta   = -9.99;
+  HoverE          = -9.99; 
+  HoverE2012      = -9.99;
+  ChargedHadIso   = -9.99;
+  NeutralHadIso   = -9.99;
+  PhotonIso       = -9.99;
+  GenJetMinDR     = -9.99;
+  MCmatchexitcode = -9;
   JetRemoved      = 0;
   isLooseID       = 0;//contains Iso
   isMediumID      = 0;//contains Iso
@@ -814,6 +814,10 @@ void MT2tree::Reset() {
   trigger.Reset();
   SFWeight.Reset();
   doubleMu.Reset();
+  eleMu.Reset();
+  muTau.Reset();
+  doubleTau.Reset();
+  eleTau.Reset();
 
   for (int i = 0; i < m_jetSize; ++i) {
     jet[i].Reset();
@@ -983,7 +987,7 @@ Int_t MT2tree::GetNBtags (int algo, float value, float minJPt, float maxJEta, in
 
 Float_t MT2tree::JetPt(int ijet, int PFJID, float minJPt, float maxJEta) {
   int index = GetJetIndex(ijet, PFJID,minJPt,maxJEta);
-  if ( index < 0 )       return -999.;
+  if ( index < 0 )       return -9.;
   return jet[index].lv.Pt();
 }
 
@@ -1057,7 +1061,7 @@ Float_t MT2tree::GetMinR12R21(int PFJID, float minJPt, float maxJEta, int met){
 		if( jet[i].IsGoodPFJet(minJPt, maxJEta, PFJID)==false) continue;
 		indices.push_back(i);
 	}
-	if(indices.size()<2) return -999;
+	if(indices.size()<2) return -9;
 	float d_phi1 = fabs(Util::DeltaPhi(jet[indices[0]].lv.Phi(), MET.Phi()));	
 	float d_phi2 = fabs(Util::DeltaPhi(jet[indices[1]].lv.Phi(), MET.Phi()));	
 	float R12    = sqrt( d_phi1*d_phi1 + (TMath::Pi()-d_phi2)*(TMath::Pi()-d_phi2) );
@@ -1077,7 +1081,7 @@ Bool_t MT2tree::PassJetID(float minJPt, float maxJEta, int PFJID) {
 }
 
 Float_t MT2tree::JetsInvMass(int j1, int j2){
-	if(NJets < 2) return -999.99;
+	if(NJets < 2) return -9.99;
 	TLorentzVector sum = jet[j1].lv + jet[j2].lv;
 	return sum.M();
 }
@@ -1090,7 +1094,7 @@ Float_t MT2tree::JetsDPhi(int j1, int j2, int PFJID){
   	if(jet[i].isPFIDTight ==false && PFJID==3  )continue;
 	indices.push_back(i);
   }
-  if (j1>=indices.size() || j2>=indices.size())  return -999;
+  if (j1>=indices.size() || j2>=indices.size())  return -9;
   return TMath::Abs(jet[indices[j1]].lv.DeltaPhi(jet[indices[j2]].lv));
 }
 
@@ -1098,7 +1102,7 @@ Float_t MT2tree::MetJetDPhi(int ijet, int PFJID, int met) {
   TLorentzVector MET(0., 0., 0., 0.);
   if(met==1)      MET = pfmet[0];
   else if(met==2) MET = MHT[0];
-  else            return -999;
+  else            return -9;
 
   std::vector<int> indices;
   for(int i = 0; i<NJets; ++i){
@@ -1107,7 +1111,7 @@ Float_t MT2tree::MetJetDPhi(int ijet, int PFJID, int met) {
   	if(jet[i].isPFIDTight ==false && PFJID==3  )continue;
 	indices.push_back(i);
   }
-  if (ijet>=indices.size())  return -999;
+  if (ijet>=indices.size())  return -9;
   return TMath::Abs(jet[indices[ijet]].lv.DeltaPhi(MET));
 }
 
@@ -1128,12 +1132,12 @@ Float_t MT2tree::MinMetJetDPhi(int PFJID, float minJPt, float maxJEta, int met, 
 	for(int i=0; i<NMuons; ++i){
 		MET = MET + muo[i].lv;
 	}
-  } else         return -999;
+  } else         return -9;
 
   int index = MinMetJetDPhiIndex(PFJID, minJPt, maxJEta, met, njets, onlyCrack);
   if(index >=0) {
 	  return TMath::Abs(jet[index].lv.DeltaPhi(MET));
-  } else  return -999.99;
+  } else  return -9.99;
 }
 
 Int_t MT2tree::MinMetJetDPhiIndex(int PFJID, float minJPt, float maxJEta, int met, int njets, bool onlyCrack) {
@@ -1153,7 +1157,7 @@ Int_t MT2tree::MinMetJetDPhiIndex(int PFJID, float minJPt, float maxJEta, int me
 	for(int i=0; i<NMuons; ++i){
 		MET = MET + muo[i].lv;
 	}
-  } else    return -999;
+  } else    return -9;
 
   std::vector<int> indices;
   if ( njets==0 || njets>NJets ) njets=NJets;  // option 0: all jets & protection against less than njets
@@ -1162,7 +1166,7 @@ Int_t MT2tree::MinMetJetDPhiIndex(int PFJID, float minJPt, float maxJEta, int me
 	if(onlyCrack && ( (fabs(jet[i].lv.Eta())>0.3 && fabs(jet[i].lv.Eta())<1.15) || fabs(jet[i].lv.Eta())>1.85 ) ) continue;
 	indices.push_back(i);
   }
-  if(indices.size()<1)  return -999;
+  if(indices.size()<1)  return -9;
   Float_t minDPhi=10;
   Int_t    imin;
   for (int i=0; i<indices.size(); i++){
@@ -1197,7 +1201,7 @@ Float_t MT2tree::MaxMetJetDPhi(int PFJID, float minJPt, float maxJEta, int met) 
   TLorentzVector MET(0., 0., 0., 0.);
   if(met==1)      MET = pfmet[0];
   else if(met==2) MET = MHT[0];
-  else            return -999;
+  else            return -9;
 
   int index = MaxMetJetDPhiIndex(PFJID, minJPt, maxJEta, met);
   return TMath::Abs(jet[index].lv.DeltaPhi(MET));
@@ -1208,14 +1212,14 @@ Int_t MT2tree::MaxMetJetDPhiIndex(int PFJID, float minJPt, float maxJEta, int me
   TLorentzVector MET(0., 0., 0., 0.);
   if(met==1)      MET = pfmet[0];
   else if(met==2) MET = MHT[0];
-  else            return -999;
+  else            return -9;
 
   std::vector<int> indices;
   for(int i = 0; i<NJets; ++i){
 	if(jet[i].IsGoodPFJet(minJPt,maxJEta,PFJID)==false) continue;
 	indices.push_back(i);
   }
-  if(indices.size()<1)  return -999;
+  if(indices.size()<1)  return -9;
   Float_t maxDPhi=0.;
   Int_t    imax;
   for (int i=0; i<indices.size(); i++){
@@ -1234,7 +1238,7 @@ Int_t MT2tree::BiasedDPhiIndex(int PFJID, float minJPt, float maxJEta){
 	if(jet[i].IsGoodPFJet(minJPt,maxJEta,PFJID)==false) continue;
 	indices.push_back(i);
   }
-  if(indices.size()<2)  return -999;
+  if(indices.size()<2)  return -9;
   Float_t minDPhi=10.;
   Int_t    imin;
   for (int i=0; i<indices.size(); i++){
@@ -1255,7 +1259,7 @@ Int_t MT2tree::BiasedDPhiIndex(int PFJID, float minJPt, float maxJEta){
 Float_t MT2tree::BiasedDPhi(int PFJID, float minJPt, float maxJEta) {
   int index = BiasedDPhiIndex(PFJID, minJPt, maxJEta);
   TLorentzVector recoil(0,0,0,0);
-  if(index <0) return -999.99;
+  if(index <0) return -9.99;
   for(int i = 0; i<NJets; ++i){
 	if(jet[i].IsGoodPFJet(minJPt,maxJEta,PFJID)==false) continue;
 	if(i== index) continue;
@@ -1290,12 +1294,12 @@ Float_t MT2tree::GetPseudoJetMetDPhi(int hemi_index, int pj, int whichmet, float
 		if(whichmet==1)        return TMath::Abs(hemi[hemi_index].lv2.DeltaPhi(pfmet[0]));
 		else if (whichmet ==2) return TMath::Abs(hemi[hemi_index].lv2.DeltaPhi(-hemi[hemi_index].lv1 -hemi[hemi_index].lv2));
 		else                   return -111;       
-	}else {return -999.99;}
+	}else {return -9.99;}
 }
 
 // Pseudojet-met-DPhi ------------------------------------------------------------
 Float_t MT2tree::PseudoJetMetDPhi(){
-	if(hemi[0].MT2 <0) return -999;
+	if(hemi[0].MT2 <0) return -9;
 	float dPhi1 = hemi[0].lv1.DeltaPhi(pfmet[0]);
 	float dPhi2 = hemi[0].lv2.DeltaPhi(pfmet[0]);
 	return (fabs(dPhi1) < fabs(dPhi2)) ? fabs(dPhi1) : fabs(dPhi2);
@@ -1311,7 +1315,7 @@ Float_t MT2tree::GetPseudoJetsdPhi(int hemi_seed, int hemi_association, int PFJI
 	pz.push_back(jet[i].lv.Pz());
 	 E.push_back(jet[i].lv.E());
   }
-  if (px.size()<2) return -999;
+  if (px.size()<2) return -9;
 
   // get hemispheres (seed 2: max inv mass, association method: default 3 = minimal lund distance)
   Hemisphere* hemi = new Hemisphere(px, py, pz, E, hemi_seed, hemi_association);
@@ -1438,7 +1442,7 @@ Float_t MT2tree::GetBJetDR(int algo, float value, float minJPt, float maxJEta, i
 		}
 		if(jet[i].lv.Pt()>jpt) jindex=i;
 	}
-	if(jindex==-1) return -999.99;
+	if(jindex==-1) return -9.99;
 
 	// get dR to closest Jet
 	float minDR=100;
@@ -1448,7 +1452,7 @@ Float_t MT2tree::GetBJetDR(int algo, float value, float minJPt, float maxJEta, i
 		float dR=TMath::Abs(jet[jindex].lv.DeltaR(jet[i].lv));
 		if(dR < minDR) minDR=dR;
 	}
-	if(minDR==100) return -999.99;
+	if(minDR==100) return -9.99;
 	else           return minDR;
 }
 
@@ -1482,7 +1486,7 @@ Float_t MT2tree::BJetMETdPhi(int algo, float value, float minJPt, float maxJEta,
 		Float_t dPhi =TMath::Abs(jet[i].lv.DeltaPhi(pfmet[0]));
 		if(dPhi < minDPhi) minDPhi = dPhi;
 	}
-	if(minDPhi==10) return -999.99;
+	if(minDPhi==10) return -9.99;
 	else            return minDPhi;
 
 }
@@ -1565,7 +1569,7 @@ Float_t MT2tree::GetMT2(Float_t testmass, bool massive, Int_t PFJID, Float_t min
 	pz.push_back(muo[i].lv.Pz());
 	E .push_back(muo[i].lv.E ());
   }
-  if (px.size()<2) return -999.99;
+  if (px.size()<2) return -9.99;
   
 
   // get hemispheres (seed 2: max inv mass, association method: default 3 = minimal lund distance)
@@ -1607,7 +1611,7 @@ Float_t MT2tree::GetMT2(Float_t testmass, bool massive, Int_t PFJID, Float_t min
 		MET = MET + muo[i].lv;
 	}
   } else if(met==4) {MET = -pseudojet1 - pseudojet2;}
-  else return -999.99;
+  else return -9.99;
 
   Float_t MT2 = CalcMT2(testmass, massive, pseudojet1, pseudojet2, MET);
 
@@ -1634,7 +1638,7 @@ Float_t MT2tree::GetMT2MinDHT(Float_t testmass, bool massive, Int_t PFJID, Float
 	if(met==1113) continue; 
 	p4s.push_back(muo[i].lv);
   }
-  if (p4s.size()<2) return -999.99;
+  if (p4s.size()<2) return -9.99;
   
 
   // grouping according to minimal dHT
@@ -1675,7 +1679,7 @@ Float_t MT2tree::GetMT2MinDHT(Float_t testmass, bool massive, Int_t PFJID, Float
 		MET = MET + muo[i].lv;
 	}
   } else if(met==4) {MET = -pseudojet1 - pseudojet2;}
-  else return -999.99;
+  else return -9.99;
 
   Float_t MT2 = CalcMT2(testmass, massive, pseudojet1, pseudojet2, MET);
 
@@ -1883,8 +1887,8 @@ Bool_t MT2tree::FillMT2Hemi(Float_t testmass, bool massive, Int_t PFJID, Float_t
 	  hemi[hemi_nr].MT2          = MT2;
 	  hemi[hemi_nr].dPhi         = Util::DeltaPhi(pseudojet1.Phi(), pseudojet2.Phi());
 	  hemi[hemi_nr].minDHT       = dHT;
-	  hemi[hemi_nr].maxDR        = -999.99; // option not implemented
-	  hemi[hemi_nr].AlphaT       = -999.99; // only implemented for minimized DHT
+	  hemi[hemi_nr].maxDR        = -9.99; // option not implemented
+	  hemi[hemi_nr].AlphaT       = -9.99; // only implemented for minimized DHT
 	  hemi[hemi_nr].UTM          = - MET - pseudojet1 - pseudojet2;
 	  hemi[hemi_nr].lv1          = pseudojet1;
 	  hemi[hemi_nr].lv2          = pseudojet2;
@@ -2000,7 +2004,7 @@ Bool_t MT2tree::FillMT2HemiMinDHT(Float_t testmass, bool massive, Int_t PFJID, F
 	  hemi[hemi_nr].MT2          = CalcMT2(testmass, massive, pseudojet1, pseudojet2, MET);
 	  hemi[hemi_nr].dPhi         = Util::DeltaPhi(pseudojet1.Phi(), pseudojet2.Phi());
 	  hemi[hemi_nr].minDHT       = mDHT;
-	  hemi[hemi_nr].maxDR        = -999.99; // option not implemented
+	  hemi[hemi_nr].maxDR        = -9.99; // option not implemented
 	  hemi[hemi_nr].AlphaT       = alphaT;  // only implemented for minimized DHT
 	  hemi[hemi_nr].UTM          = - MET - pseudojet1 - pseudojet2;
 	  hemi[hemi_nr].lv1          = pseudojet1;
@@ -2044,7 +2048,7 @@ Float_t MT2tree::CalcMT2(float testmass, bool massive, TLorentzVector visible1, 
 
 Float_t MT2tree::SimpleMT2(bool pseudo, int heminr){
   if (!pseudo){
-    if(NJets < 2) return -999.99;
+    if(NJets < 2) return -9.99;
     return sqrt(2*jet[0].lv.Pt()*jet[1].lv.Pt()*(1+TMath::Cos(jet[0].lv.DeltaPhi(jet[1].lv))));
   }
   else{
@@ -2081,7 +2085,7 @@ Float_t MT2tree::GetSqrtS(float testmass, bool massive, int PFJID, float minJPt,
   TLorentzVector MET(0., 0., 0., 0.);
   if(met==1)      MET = pfmet[0];
   else if(met==2) MET = MHT[0];
-  else            return -999;
+  else            return -9;
 
   TLorentzVector obj(0,0,0,0);
   TLorentzVector vis(0,0,0,0);
@@ -2297,13 +2301,13 @@ Int_t   MT2tree::GetGenLeptIndex(int which, int pid, int mother, float pt, float
 
 Float_t MT2tree::GetGenLeptEta(int which, int pid, int mother, float pt, float eta){
 	Int_t index = GetGenLeptIndex(which, pid, mother, pt, eta);	
-	if(index ==-1) return -999.99;
+	if(index ==-1) return -9.99;
 	else           return genlept[index].lv.Eta();	
 }
 
 Float_t MT2tree::GetGenLeptPt(int which, int pid, int mother, float pt, float eta){
 	Int_t index = GetGenLeptIndex(which, pid, mother, pt, eta);	
-	if(index ==-1) return -999.99;
+	if(index ==-1) return -9.99;
 	else           return genlept[index].lv.Pt();	
 }
 
@@ -2329,13 +2333,13 @@ Int_t   MT2tree::GetGenLeptIndex2(int which, int pid, int mother, int gmother, f
 
 Float_t MT2tree::GetGenLeptEta2(int which, int pid, int mother, int gmother, float pt, float eta){
 	Int_t index = GetGenLeptIndex2(which, pid, mother, gmother, pt, eta);	
-	if(index ==-1) return -999.99;
+	if(index ==-1) return -9.99;
 	else           return genlept[index].lv.Eta();	
 }
 
 Float_t MT2tree::GetGenLeptPt2(int which, int pid, int mother, int gmother, float pt, float eta){
 	Int_t index = GetGenLeptIndex2(which, pid, mother, gmother, pt, eta);	
-	if(index ==-1) return -999.99;
+	if(index ==-1) return -9.99;
 	else           return genlept[index].lv.Pt();
 }
 
@@ -2383,7 +2387,7 @@ Int_t MT2tree::GenNumLeptFromMID(int mid, int pid, float pt, float eta, bool inc
 }
 
 Float_t MT2tree::GetLeptPt(int index){
-	if(NEles + NMuons ==0) return -999;
+	if(NEles + NMuons ==0) return -9;
 	float pt_0 =0;
 	float pt_1 =0;
 	for(int i=0; i<NEles; ++i){
@@ -2546,7 +2550,7 @@ Float_t MT2tree::SLTopEta(float pt){
 		if( ! (abs(genlept[i].MID) ==15 && abs(genlept[i].GMID)==24 || abs(genlept[i].MID) ==24 )) continue;
 		if(genlept[i].lv.Pt()>pt)      return genlept[i].lv.Eta();	
 	}
-	return -999.99;
+	return -9.99;
 }
 
 
@@ -2719,7 +2723,7 @@ Int_t MT2tree::PhotonJetDRJIndex(int ph_index, float minJPt, float maxJEta, int 
 Float_t MT2tree::PhotonJetDR(int ph_index, float minJPt, float maxJEta, int PFJID ){
 	Int_t index = PhotonJetDRJIndex(ph_index, minJPt, maxJEta, PFJID);
 	if(index >=0) return photon[ph_index].lv.DeltaR(jet[index].lv);
-	else          return -999.99;
+	else          return -9.99;
 }
 
 Int_t MT2tree::PhotonEleDREIndex(int ph_index, float minEPt, float maxEEta){
@@ -2739,7 +2743,7 @@ Int_t MT2tree::PhotonEleDREIndex(int ph_index, float minEPt, float maxEEta){
 Float_t MT2tree::PhotonEleDR(int ph_index, float minEPt, float maxEEta){
 	Int_t index = PhotonEleDREIndex(ph_index, minEPt, maxEEta);
 	if(index >=0) return photon[ph_index].lv.DeltaR(ele[index].lv);
-	else          return -999.99;
+	else          return -9.99;
 }
 
 Int_t MT2tree::GenPhotonGenJetDRJIndex(float minJPt, float maxJEta, int PFJID ){
@@ -2759,7 +2763,7 @@ Int_t MT2tree::GenPhotonGenJetDRJIndex(float minJPt, float maxJEta, int PFJID ){
 Float_t MT2tree::GenPhotonGenJetDR(float minJPt, float maxJEta, int PFJID ){
 	Int_t index = GenPhotonGenJetDRJIndex(minJPt, maxJEta, PFJID);
 	if(index >=0) return GenPhoton[0].DeltaR(genjet[index].lv);
-	else          return -999.99;
+	else          return -9.99;
 }
 
 Float_t MT2tree::GenPhotonAndLeadingJetPt(){
@@ -3139,7 +3143,7 @@ Float_t MT2tree::MinGenBosonJetsDR(){
 		}
 		return minDR;
 	}else{
-		return -999;
+		return -9;
 	}
 }
 Float_t MT2tree::MHTMETDPhi(){
@@ -3169,4 +3173,5 @@ ClassImp(MT2DoubleMuon)
 ClassImp(MT2DoubleTau)
 ClassImp(MT2MuTau)
 ClassImp(MT2EleTau)
+
 

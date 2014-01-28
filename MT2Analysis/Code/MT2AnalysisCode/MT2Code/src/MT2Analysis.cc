@@ -1030,6 +1030,10 @@ void MT2Analysis::FillMT2treeCalculations(){
         fMT2tree->FillMuTau();	
 	//nadjieh
 
+	//chenarani
+	fMT2tree->FillEleMu();
+	//chenarani
+
 	if(fMT2tree->NJets > 0) {
 		fMT2tree->misc.Jet0Pass      = (Int_t) fMT2tree->jet[0].IsGoodPFJet(100,2.4,1);
 	} else  fMT2tree->misc.Jet0Pass      = 0; 
@@ -1661,6 +1665,8 @@ void MT2Analysis::GetLeptonJetIndices(){
 	  vector<float> jpt;
 	  vector<int>   fJets;
 	  TFile *Lutfile = new TFile("/dataLOCAL/MT2Top/JetResolutions/pfJetResolutionMCtoDataCorrLUT.root","READ");
+	  //	  TFile *Lutfile = new TFile("/shome/paktinat/Top/CMSSW_5_3_7_patch5/src/MT2Analysis_V02-03-02/Code/MT2AnalysisCode/MT2Code/pfJetResolutionMCtoDataCorrLUT.root","READ");
+
 	  TH2F* lutHisto = (TH2F*) Lutfile->Get("pfJetResolutionMCtoDataCorrLUT");
 	  
 	  for(unsigned int iJet = 0; iJet < Jets.size(); iJet++) {
@@ -2104,6 +2110,9 @@ void MT2Analysis::Initialize_JetCorrectionUncertainty(){
 	string PF  ="/dataLOCAL/MT2Top/JetEnergyCorrection/"+fJEC+"/"+fJEC+ (fisCHSJets?"_Uncertainty_AK5PFchs.txt":"_Uncertainty_AK5PF.txt");
 	string Calo="/dataLOCAL/MT2Top/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_Uncertainty_AK5Calo.txt";
 
+	//string PF  ="/shome/haweber/MT2Analysis_8TeV/Code/JetEnergyCorrection/"+fJEC+"/"+fJEC+ (fisCHSJets?"_Uncertainty_AK5PFchs.txt":"_Uncertainty_AK5PF.txt");
+        //string Calo="/shome/haweber/MT2Analysis_8TeV/Code/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_Uncertainty_AK5Calo.txt";
+
 	ifstream fileCalo(Calo.c_str());
 	ifstream filePF  (PF.c_str());
 	if(! filePF   ) {cout << "ERROR: cannot open file " << PF     << endl; exit(1); }
@@ -2127,6 +2136,19 @@ void MT2Analysis::Initialize_JetEnergyCorrection(){
 	string rawPF_L2 ="/dataLOCAL/MT2Top/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_L2Relative_AK5PF.txt";
 	string rawPF_L3 ="/dataLOCAL/MT2Top/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_L3Absolute_AK5PF.txt";
 	string rawPF_RES="/dataLOCAL/MT2Top/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_L2L3Residual_AK5PF.txt";
+	/*
+        string Calo_L2  ="/shome/haweber/MT2Analysis_8TeV/Code/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_L2Relative_AK5Calo.txt";
+        string Calo_L3  ="/shome/haweber/MT2Analysis_8TeV/Code/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_L3Absolute_AK5Calo.txt";
+        string Calo_RES ="/shome/haweber/MT2Analysis_8TeV/Code/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_L2L3Residual_AK5Calo.txt";
+        string PF_L1    ="/shome/haweber/MT2Analysis_8TeV/Code/JetEnergyCorrection/"+fJEC+"/"+fJEC+(fisCHSJets?"_L1FastJet_AK5PFchs.txt"    :"_L1FastJet_AK5PF.txt");
+        string PF_L2    ="/shome/haweber/MT2Analysis_8TeV/Code/JetEnergyCorrection/"+fJEC+"/"+fJEC+(fisCHSJets?"_L2Relative_AK5PFchs.txt"   :"_L2Relative_AK5PF.txt");
+        string PF_L3    ="/shome/haweber/MT2Analysis_8TeV/Code/JetEnergyCorrection/"+fJEC+"/"+fJEC+(fisCHSJets?"_L3Absolute_AK5PFchs.txt"   :"_L3Absolute_AK5PF.txt");
+        string PF_RES   ="/shome/haweber/MT2Analysis_8TeV/Code/JetEnergyCorrection/"+fJEC+"/"+fJEC+(fisCHSJets?"_L2L3Residual_AK5PFchs.txt" :"_L2L3Residual_AK5PF.txt");
+        string rawPF_L1 ="/shome/haweber/MT2Analysis_8TeV/Code/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_L1FastJet_AK5PF.txt";
+        string rawPF_L2 ="/shome/haweber/MT2Analysis_8TeV/Code/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_L2Relative_AK5PF.txt";
+        string rawPF_L3 ="/shome/haweber/MT2Analysis_8TeV/Code/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_L3Absolute_AK5PF.txt";
+        string rawPF_RES="/shome/haweber/MT2Analysis_8TeV/Code/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_L2L3Residual_AK5PF.txt";
+	*/
 
 	ifstream fileCaloL2  (Calo_L2.c_str());
 	ifstream fileCaloL3  (Calo_L3.c_str());

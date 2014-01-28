@@ -150,6 +150,34 @@ int main(int argc, char* argv[]) {
 	if(btagFileName.length() !=0 ){btagFileName="/dataLOCAL/MT2Top/Efficiencies/"            + btagFileName;}
 	if(htauFileName.length() !=0 ){htauFileName="/dataLOCAL/MT2Top/Efficiencies/"            + htauFileName;}
 
+
+
+	/*
+
+	//      setofcuts   ="/shome/haweber/MT2Analysis_8TeV/Code/CutsMT2/"+setofcuts+".dat";                                                      
+        setofcuts = "/shome/paktinat/Top/CMSSW_5_3_7_patch5/src/MT2Analysis_V02-03-02/Code/MT2_Cuts/"+setofcuts+".dat";
+        if(data_PileUp.length()!=0   ){data_PileUp ="/shome/haweber/MT2Analysis_8TeV/Code/Certification/pileUp_data/"+ data_PileUp;}
+        if(mc_PileUp.length()  !=0   ){mc_PileUp   ="/shome/haweber/MT2Analysis_8TeV/Code/Certification/pileUp_mc/"  +   mc_PileUp;}
+        //      if(jsonFileName.length() !=0 ){jsonFileName="/shome/haweber/MT2Analysis_8TeV/Code/Certification/JSONfiles/"  +jsonFileName;}        
+        if(jsonFileName.length() !=0 ){jsonFileName="/shome/paktinat/Top/CMSSW_5_3_7_patch5/src/MT2Analysis_V02-03-02/Code/MT2_Cuts/" +jsonFileName\
+;}
+
+//      setofcuts   ="/shome/pnef/Projects/CMSAnalysis/MT2Analysis/Code/MT2_cuts/"+setofcuts+".dat";                                                
+//      if(data_PileUp.length()!=0   ){data_PileUp ="/shome/pnef/Projects/CMSAnalysis/MT2Analysis/Code/Certification/pileUp_data/"+data_PileUp;}    
+//      if(mc_PileUp.length()  !=0   ){mc_PileUp   ="/shome/pnef/Projects/CMSAnalysis/MT2Analysis/Code/Certification/pileUp_mc/"  + mc_PileUp;}     
+//      if(jsonFileName.length() !=0 ){jsonFileName="/shome/pnef/Projects/CMSAnalysis/MT2Analysis/Code/Certification/"            +jsonFileName;}   
+	if(btagFileName.length() !=0 ){btagFileName="/shome/haweber/MT2Analysis_8TeV/Code/Efficiencies/"            + btagFileName;}
+        if(htauFileName.length() !=0 ){htauFileName="/shome/haweber/MT2Analysis_8TeV/Code/Efficiencies/"            + htauFileName;}
+
+	*/
+
+
+
+
+
+
+
+
 	std::vector<std::string> fileList;
 	for(int i = 0; i < argc; i++){
 		if( !isList ){
