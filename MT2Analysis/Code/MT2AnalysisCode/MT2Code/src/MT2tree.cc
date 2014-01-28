@@ -814,6 +814,10 @@ void MT2tree::Reset() {
   trigger.Reset();
   SFWeight.Reset();
   doubleMu.Reset();
+  eleMu.Reset();
+  muTau.Reset();
+  doubleTau.Reset();
+  eleTau.Reset();
 
   for (int i = 0; i < m_jetSize; ++i) {
     jet[i].Reset();
@@ -3168,4 +3172,5 @@ ClassImp(MT2DoubleMuon)
 ClassImp(MT2DoubleTau)
 ClassImp(MT2MuTau)
 ClassImp(MT2EleTau)
+
 

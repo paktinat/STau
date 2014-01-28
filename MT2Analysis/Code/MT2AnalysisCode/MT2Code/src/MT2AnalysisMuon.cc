@@ -45,7 +45,10 @@ void MT2Analysis::FillMT2Muons(){
 
 	        fMT2tree->muo[i].PassMu0_EleMu = ((fMT2tree->muo[i].IsTightMuon && fabs(fTR->MuEta[fMuons[i]])<2.1 && fabs(fTR->MuEta[fMuons[i]]) > 1.479 && MuPFIso04(fMuons[i]) < 0.1) ||  (fMT2tree->muo[i].IsTightMuon && fabs(fTR->MuEta[fMuons[i]]) < 1.479 && MuPFIso04(fMuons[i]) < 0.15)) ? 1 : 0;
 	
-              if(MuPFIso04(fMuons[i])<0.2) ++commonmuons;
+		if(fVerbose > 3)
+		  cout<<"Muo "<<i<<" PassMu0_EleMu "<<fMT2tree->muo[i].PassMu0_EleMu<<endl;
+             
+		if(MuPFIso04(fMuons[i])<0.2) ++commonmuons;
 	}
 	fMT2tree->SetNMuonsCommonIso(commonmuons);
 }

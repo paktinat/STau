@@ -44,8 +44,8 @@
   
     //	<< "(trigger.HLT_EMu)"         << ")))";
     //   << "(trigger.HLT_DiMuons) "     << ")))";
-  //            << "(trigger.HLT_DiElectrons) " << ")))";
-              <<"0==0";
+              << "(trigger.HLT_DiElectrons) " << ")))";
+            
   TString trigger = triggerStream.str().c_str();
   TString cuts = cutStream.str().c_str();
  
@@ -56,9 +56,9 @@
 			  // bool stacked, bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos)
 //  tA->makePlot("NBJetsCSVM",          cuts,    -10,  -10 , -10 ,   trigger , "NBJetsCSVM"     ,10,0,10,        false,        true ,  true,   true,  true,  true, 1, 1);
 ///  tA->makePlot("GetMT2MuEG()",     cuts,    -10,  -10 , -10 ,   trigger , "MT2"            ,20,0,400,        false,        true ,  true,   true,  true,  true, 1, 1);
-  tA->makePlot("doubleTau.signalDoubleTau",     cuts,    -10,  -10 , -10 ,   trigger , "doubleTau"            ,5,-2.5,2.5,        false,        true ,  true,   true,  true,  true, 1, 1);     
-  tA->makePlot("muTau.signalMuTau",     cuts,    -10,  -10 , -10 ,   trigger , "muTau"            ,5,-2.5,2.5,        false,        true ,  true,   true,  true,  true, 1, 1);     
-  tA->makePlot("eleTau.signalEleTau",     cuts,    -10,  -10 , -10 ,   trigger , "eleTau"            ,5,-2.5,2.5,        false,        true ,  true,   true,  true,  true, 1, 1);     
+//  tA->makePlot("doubleTau.signalDoubleTau",     cuts,    -10,  -10 , -10 ,   trigger , "doubleTau"            ,5,-2.5,2.5,        false,        true ,  true,   true,  true,  true, 1, 1);     
+//  tA->makePlot("muTau.signalMuTau",     cuts,    -10,  -10 , -10 ,   trigger , "muTau"            ,5,-2.5,2.5,        false,        true ,  true,   true,  true,  true, 1, 1);     
+  tA->makePlot("eleMu.mu0Ind",     cuts,    -10,  -10 , -10 ,   trigger , "eleTau"            ,5,-2.5,2.5,        false,        true ,  true,   true,  true,  true, 1, 1);     
   // tA->makePlot("GetMT2DoubleMu()",     cuts,    -10,  -10 , -10 ,   trigger , "MT2"            ,20,0,400,        false,        true ,  true,   true,  true,  true, 1, 1); 
 
 

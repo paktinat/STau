@@ -19,7 +19,7 @@
 #include "MT2DoubleTau.hh"
 #include "MT2MuTau.hh"
 #include "MT2EleTau.hh"
-
+#include "MT2EleMu.hh"
 
 enum {m_jetSize = 25, m_genjetSize = 20,  m_tauSize = 8, m_eleSize = 8, m_muoSize = 8, m_phoSize = 8, m_genleptSize=20, m_genparticleSize=30, m_hemiSize=8};
 
@@ -1009,6 +1009,7 @@ public:
 
   //chenarani   
   MT2DoubleMuon doubleMu;
+  MT2EleMu      eleMu;
 
   //Jafari
   MT2DoubleTau doubleTau;	
@@ -1018,8 +1019,7 @@ public:
   void  FillDoubleTau();
   void  FillMuTau();
   void  FillEleTau();
-  Int_t GetMuEG();
-  float GetMT2MuEG();
+  void  FillEleMu();
   int fVerbose;
   //chenarani
   
