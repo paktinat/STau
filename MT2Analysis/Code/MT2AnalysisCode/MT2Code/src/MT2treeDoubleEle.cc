@@ -4,6 +4,8 @@
   
 void  MT2tree::FillDoubleEle(){
 
+  doubleEle.Reset();
+
   for (int i=0 ; i < NEles ; i++){
 
     if  (ele[i].PassE0_EE) 
@@ -12,7 +14,7 @@ void  MT2tree::FillDoubleEle(){
 	break;
       }
   }
-    for (int j = Ele0Ind+1 ; j < NEles ; j++){
+    for (int j = doubleEle.Ele0Ind+1 ; j < NEles ; j++){
 
       if  (ele[j].PassE1_EE) 
 	{

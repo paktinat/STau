@@ -22,7 +22,7 @@ GLIBS          = $(filter-out -lNew, $(NGLIBS))
 GLIBS         += -L$(CMSSW_RELEASE_BASE)/lib/$(SCRAM_ARCH) -L$(VO_CMS_SW_DIR)/slc5_amd64_gcc462/cms/cmssw/$(CMSSW_BASE_VERSION)/lib/$(SCRAM_ARCH) -lFWCoreFWLite -lFWCoreUtilities -lDataFormatsCommon -lDataFormatsFWLite -lCondFormatsJetMETObjects -L${CMS_PATH}/${SCRAM_ARCH}/external/zlib/1.2.3/lib -lz
 
 SRCS           = ../TESCO/src/base/TreeClassBase.cc ../TESCO/src/base/TreeReader.cc ../TESCO/src/base/TreeAnalyzerBase.cc ../TESCO/src/base/UserAnalysisBase.cc \
-                 src/MT2tree.cc src/MT2treeDoubleMu.cc src/MT2treeDoubleElectron.cc src/MT2treeEleMu.cc \
+                 src/MT2tree.cc src/MT2treeDoubleMu.cc src/MT2treeDoubleEle.cc src/MT2treeEleMu.cc \
 		 src/MT2treeTauMu.cc src/MT2treeTauEG.cc src/MT2treeDoubleTau.cc  \
 		 src/MT2Analysis.cc src/MT2AnalysisElec.cc src/MT2AnalysisMuon.cc src/MT2AnalysisTau.cc \
                  ../TESCO/src/helper/TMctLib.cc ../TESCO/src/helper/mctlib.cc ../TESCO/src/helper/OnTheFlyCorrections.cc \
