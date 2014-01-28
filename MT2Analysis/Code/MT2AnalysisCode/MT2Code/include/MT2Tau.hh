@@ -10,28 +10,28 @@ public:
 
   void Reset(){
     lv.SetPxPyPzE(0, 0, 0, 0);
-    MT            = -9999.99;
-    Charge        = -9999;
-    JetPt         = -9999.99;
-    JetEta        = -9999.99;
-    JetPhi        = -9999.99;
-    JetMass       = -9999.99;
-    Isolation     = -9999;
-    ElectronRej   = -9999;
-    MuonRej       = -9999;
-    Isolation3Hits= -9999;
-    IsolationMVA2 = -9999;
-    ElectronRejMVA3=-9999;
-    MuonRej2      = -9999;
+    MT            = -1;
+    Charge        = -1;
+    JetPt         = -1;
+    JetEta        = -9.99;
+    JetPhi        = -9.99;
+    JetMass       = -1;
+    Isolation     = -1;
+    ElectronRej   = -1;
+    MuonRej       = -1;
+    Isolation3Hits= -1;
+    IsolationMVA2 = -1;
+    ElectronRejMVA3=-1;
+    MuonRej2      = -1;
     isLooseID     = 0;
     isLooseID3Hits= 0;
     isLooseIDMVA  = 0;
-    PassTau0_TauTau = -9999;
-    PassTau1_TauTau = -9999;
-    PassTau_ElTau = -9999;
-    PassTau_MuTau = -9999;
-    PassQCDTau0_TauTau = -9999;
-    PassQCDTau1_TauTau = -9999;
+    PassTau0_TauTau = -1;
+    PassTau1_TauTau = -1;
+    PassTau_ElTau = -1;
+    PassTau_MuTau = -1;
+    PassQCDTau0_TauTau = -1;
+    PassQCDTau1_TauTau = -1;
   }
 
   void SetLV(const TLorentzVector v){

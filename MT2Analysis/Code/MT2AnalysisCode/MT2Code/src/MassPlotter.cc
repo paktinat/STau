@@ -5691,7 +5691,7 @@ void MassPlotter::GetGenInfo(MT2GenParticle *T1, MT2GenParticle *T2, MT2GenParti
     Mo  = fMT2tree->genparticle[i].GetMother(fMT2tree->genparticle, fMT2tree->NGenParticles);
 
     if(abs(fMT2tree->genparticle[i].ID) == 6){
-      if(T1->Index == -999)
+      if(T1->Index == -9)
 	*T1 = fMT2tree->genparticle[i];
       else
 	*T2 = fMT2tree->genparticle[i];
@@ -5714,12 +5714,12 @@ void MassPlotter::GetGenInfo(MT2GenParticle *T1, MT2GenParticle *T2, MT2GenParti
 
     if(abs(fMT2tree->genparticle[i].ID) < 6 && abs(Mo->ID) == 24){
       if(Mo->Index == W1->Index){
-	if(U1->Index == -999)
+	if(U1->Index == -9)
 	  *U1 =  fMT2tree->genparticle[i];
 	else 
 	  *D1 =  fMT2tree->genparticle[i];
       }else{
-	if(U2->Index == -999)
+	if(U2->Index == -9)
 	  *U2 =  fMT2tree->genparticle[i];
 	else 
 	  *D2 =  fMT2tree->genparticle[i];
@@ -6072,7 +6072,7 @@ void MassPlotter::TopStudy(TString mySample, Long64_t nevents){
 
      float MaxDR = 0.0;
      
-     if(B1.Index != -999 && B2.Index != -999 && U1.Index != -999 && U2.Index != -999 && D1.Index != -999 && D2.Index != -999){
+     if(B1.Index != -9 && B2.Index != -9 && U1.Index != -9 && U2.Index != -9 && D1.Index != -9 && D2.Index != -9){
        // hMinDR->Fill(MatchedJets(B1, b1));
        // hMinDR->Fill(MatchedJets(B2, b2));
        // hMinDR->Fill(MatchedJets(U1, u1));

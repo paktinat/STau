@@ -10,28 +10,28 @@ public:
 
   void Reset(){
   lv.SetPxPyPzE(0, 0, 0, 0);
-  MT            = -9999.99;
-  Iso           = -9999.99;
-  Iso04         = -9999.99;
-  Charge        = -999;
-  IDMedium      = -999;
-  IDLoose       = -999;
-  IDVeto        = -999;
-  //IDVetoEE      = -999;
-  IDSelEE       = -999;
+  MT            = -1;
+  Iso           = -1;
+  Iso04         = -1;
+  Charge        = -10;
+  IDMedium      = -1;
+  IDLoose       = -1;
+  IDVeto        = -1;
+  //IDVetoEE      = -1;
+  IDSelEE       = -1;
 
-  IDVetoEMU     = -999;
-  IDSelEMU      = -999;
+  IDVetoEMU     = -1;
+  IDSelEMU      = -1;
 
-  IDVetoETau    = -999; 
-  IDSelETau     = -999;
+  IDVetoETau    = -1; 
+  IDSelETau     = -1;
 
 
-  IDVetoMuTau  = -999;
-  IDVetoTauTau = -999;
+  IDVetoMuTau  = -1;
+  IDVetoTauTau = -1;
 
-  PassE0_EE    = -999;
-  PassE1_EE    = -999;
+  PassE0_EE    = -1;
+  PassE1_EE    = -1;
   }
   void SetLV(const TLorentzVector v){lv = v;}
 
