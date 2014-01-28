@@ -514,7 +514,8 @@ public:
 
 	//http://cmssw.cvs.cern.ch/cgi-bin/cmssw.cgi/CMSSW/CondFormats/JetMETObjects/data/Spring10_PtResolution_AK5PF.txt
 	PFJetResolutionParam myPar = PFJetResolutionParam("/dataLOCAL/MT2Top/JetResolutions/Spring10_PtResolution_AK5PF.txt");
-	
+	//PFJetResolutionParam myPar = PFJetResolutionParam("/shome/paktinat/Top/CMSSW_5_3_7_patch5/src/MT2Analysis_V02-03-02/Code/MT2AnalysisCode/MT2Code/Spring10_PtResolution_AK5PF.txt");
+
         double sigmaEn = myPar.EvalPFJetSigma(lv)*TMath::Sqrt(smearFactor*smearFactor - 1.);
 	//cout<<"Parameter output: "<< myPar.EvalPFJetSigma(lv)<<endl;
 	//cout<<"Sigma: "<<sigmaEn<<endl;
