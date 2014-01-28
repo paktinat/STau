@@ -15,6 +15,7 @@
 #include "MT2Elec.hh"
 #include "MT2Muon.hh"
 #include "MT2Tau.hh"
+#include "MT2DoubleEle.hh"
 #include "MT2DoubleMuon.hh"
 #include "MT2DoubleTau.hh"
 #include "MT2MuTau.hh"
@@ -1000,9 +1001,9 @@ public:
  
 
   //Eskandari   
-//  MT2DoubleEle doubleEle; 
+  MT2DoubleEle doubleEle; 
 
-  void  DoubleEle();
+  void  FillDoubleEle();
  // float GetMT2DoubleEle();
  // float GetMT2DoubleEleImbalanceLeptons();
 
