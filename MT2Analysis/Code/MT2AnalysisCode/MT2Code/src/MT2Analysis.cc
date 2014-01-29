@@ -464,13 +464,24 @@ bool MT2Analysis::FillMT2TreeBasics(){
 		fMT2tree->photon[i].isMediumIso         = IsGoodPhotonIsoMedium(fPhotons[i]);
 		fMT2tree->photon[i].isTightIso          = IsGoodPhotonIsoTight(fPhotons[i]);
 		fMT2tree->photon[i].JetRemoved          = fPhotonJetOverlapRemoved[i];
-		if(!fisData){
-			fMT2tree->photon[i].MCmatchexitcode     =fTR->PhoMCmatchexitcode[fPhotons[i]]; 
-			if(fTR->PhoMCmatchindex[fPhotons[i]]>=0){
-				int index=fTR->PhoMCmatchindex[fPhotons[i]];
-				fMT2tree->photon[i].GenJetMinDR= fTR->GenPhotonPartonMindR[index];
-			}
+
+		if(!fisData && fTR->PhoMCmatchexitcode.size() > 0){
+
+                  fMT2tree->photon[i].MCmatchexitcode     =fTR->PhoMCmatchexitcode[fPhotons[i]];
+
+                  if(fTR->PhoMCmatchindex[fPhotons[i]]>=0){
+                    int index=fTR->PhoMCmatchindex[fPhotons[i]];
+		    //                    cout<<"index "<<index<<endl;
+                    fMT2tree->photon[i].GenJetMinDR= fTR->GenPhotonPartonMindR[index];
+                  }
 		}
+	// 	if(!fisData){
+// 			fMT2tree->photon[i].MCmatchexitcode     =fTR->PhoMCmatchexitcode[fPhotons[i]]; 
+// 			if(fTR->PhoMCmatchindex[fPhotons[i]]>=0){
+// 				int index=fTR->PhoMCmatchindex[fPhotons[i]];
+// 				fMT2tree->photon[i].GenJetMinDR= fTR->GenPhotonPartonMindR[index];
+// 			}
+// 		}
 		if(IsGoodPhotonEGMLoose(fPhotons[i]) ) ++num_phot;
 		if(IsGoodPhotonEGMLoose(fPhotons[i]) && fTR->PhoPt[fPhotons[i]]>25.) ++num_phot25;
 		// exit code meaning:  
@@ -993,7 +1004,7 @@ bool MT2Analysis::FillMT2TreeBasics(){
 void MT2Analysis::FillMT2treeCalculations(){
 	// -----------------------------------------------------------
 	// fill MT2hemi 
-	
+  /*	
 	// hemi 0
 	// testmass 0, massless pseudojets, PF-JID, JPt > 20, |jet-eta|<2.4, hemi seed =2 (max inv mass), hemi assoc =3, pf-met, hemi-index 1
 	fMT2tree->FillMT2Hemi(0,0,1,20,2.4,2,3,1,0);  
@@ -1005,7 +1016,7 @@ void MT2Analysis::FillMT2treeCalculations(){
 	fMT2tree->misc.MT2                 = fMT2tree->hemi[0].MT2;    // note: this is a bit dangerous, 
 	fMT2tree->misc.MCT                 = fMT2tree->hemi[0].MCT;
 	fMT2tree->misc.MT2jet40            = fMT2tree->GetMT2(0,false,1,40,2.4,2,3,1);
-
+  */
 
 	// other variables to be computed based on MT2tree
 	// ----------------------------------------------------------------------------------
@@ -1069,7 +1080,7 @@ void MT2Analysis::FillMT2treeCalculations(){
 	// W and Top decay modes
 	fMT2tree->misc.WDecayMode   = fMT2tree->WDecayMode  ();
 	fMT2tree->misc.TopDecayMode = fMT2tree->TopDecayMode();
-
+	/*
 	//saeid
         // testmass 0, massless pseudojets, PF-JID, JPt > 20, |jet-eta|<2.4, hemi seed =2 (max inv mass), hemi assoc =3, pf-met, hemi-index 1
   fMT2tree->FillMT2Hemi(0,0,1,20,2.4,2,3,1,2);  
@@ -1091,7 +1102,7 @@ void MT2Analysis::FillMT2treeCalculations(){
   fMT2tree->misc.MT2MassiveOnlyTop      = fMT2tree->hemi[6].MT2;    // note: this is a bit dangerous, 
   fMT2tree->misc.MCTMassiveOnlyTop      = fMT2tree->hemi[6].MCT;
 		//saeid
-
+		*/
   //btag SF --------------------------------------------------------------------------------------------------------                                                               
   if(!fMT2tree->misc.isData && fbtagFileName.length() !=0){
     btagfile->cd();

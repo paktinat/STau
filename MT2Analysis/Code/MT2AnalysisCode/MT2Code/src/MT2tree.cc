@@ -818,6 +818,7 @@ void MT2tree::Reset() {
   muTau.Reset();
   doubleTau.Reset();
   eleTau.Reset();
+  doubleEle.Reset();
 
   for (int i = 0; i < m_jetSize; ++i) {
     jet[i].Reset();
