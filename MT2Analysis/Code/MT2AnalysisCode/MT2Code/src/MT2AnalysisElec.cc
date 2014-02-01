@@ -39,11 +39,11 @@ void MT2Analysis::FillMT2Elecs(){
 		fMT2tree->ele[i].IDVetoTauTau   = IsGoodMT2ElectronVetoIDforTauTau(fElecs[i]);
 
                 fMT2tree->ele[i].PassE0_EE = 0;
-                if (fTR->ElPt [fElecs[i]] > 20 && fTR->ElEta[fElecs[i]] < 2.3 && IsGoodMT2ElectronSelIDforEleEle(fElecs[i]))
+                if (fTR->ElPt [fElecs[i]] > 20 && fTR->ElEta[fElecs[i]] < 2.3 /*&& IsGoodMT2ElectronSelIDforEleEle(fElecs[i])*/)
                 fMT2tree->ele[i].PassE0_EE=1;
                
                 fMT2tree->ele[i].PassE1_EE = 0;
-                if (fTR->ElEta[fElecs[i]] < 2.3 && IsGoodMT2ElectronSelIDforEleEle(fElecs[i]))
+                if (fTR->ElPt [fElecs[i]] > 10 && fTR->ElEta[fElecs[i]] < 2.3 /*&& IsGoodMT2ElectronSelIDforEleEle(fElecs[i])*/)
                 fMT2tree->ele[i].PassE0_EE=1;
 
 
@@ -96,9 +96,9 @@ bool MT2Analysis::IsGoodMT2ElectronVetoID(const int index){
 // Electron Selector for Electron-Electron Channel
 
 bool MT2Analysis::IsGoodMT2ElectronSelIDforEleEle(const int index){
-  	if(!(fabs(fTR->ElEta[index]) < 2.3) )  return false;
+  	if(!(fabs(fTR->ElEta[index]) < 2.3) ) 
+           return false;
 
-	
 	if (!(IsGoodMT2ElectronMVANoTrigLoose(index))) 
 	    return false;
 
@@ -125,7 +125,7 @@ bool MT2Analysis::IsGoodMT2ElectronSelIDforEleEle(const int index){
 // Electron Vetoer for Electron-Muon Channel
 bool MT2Analysis::IsGoodMT2ElectronVetoIDforEleMu(const int index){
   if (!(IsGoodMT2ElectronMVANoTrigLoose(index)))
-	    return false; 
+      return false; 
 
 
 	// Vertex
@@ -148,8 +148,8 @@ bool MT2Analysis::IsGoodMT2ElectronSelIDforEleMu(const int index){
   	if(!(fabs(fTR->ElEta[index]) < 2.3) ) 
 	  return false;
 
-	if (!(IsGoodMT2ElectronMVANoTrigLoose(index)))
-	    return false;
+        if (!(IsGoodMT2ElectronMVANoTrigLoose(index)))
+	  return false;
 
 	// Vertex
 	if(!(abs(fTR->ElD0PV[index])<0.02))
