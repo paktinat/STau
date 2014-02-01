@@ -535,7 +535,7 @@ bool MT2Analysis::FillMT2TreeBasics(){
 	}
 
 	for(int i=0; i<fTR->nGenParticles; ++i){
-	  if(fTR->genInfoStatus[i] != 3)
+	  if(fTR->genInfoStatus[i] != 3  && abs(fTR->genInfoId[fTR->genInfoMo1[i]]) != 15)
 	    continue;
 	  
 

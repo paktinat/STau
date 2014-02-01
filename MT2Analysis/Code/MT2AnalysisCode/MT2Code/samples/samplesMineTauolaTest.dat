@@ -1,0 +1,53 @@
+############################################################################################
+GENERAL
+Path           ///home/hbakhshi/work/STau/MT2_Tau_V02-03-02/MT2Analysis/Code/MT2AnalysisCode/MT2Code/
+________________________________________________________________________________________
+# list of samples
+#
+## -------- SMS --------
+     
+SAMPLE
+Name        	TStau
+SName        	SUSY
+ShapeName	Signal
+File	        MassTree_500_300_Tauola_1514.root
+Xsection	10000.00 pb
+Kfact	        1.
+Lumi	        1
+Type        	susy
+Color        	1
+
+SAMPLE
+Name		QCD_HT_1000ToInf
+SName		QCD
+ShapeName	QCD
+File	        MassTree_500_300_Tauolapp_1000.root
+Xsection  	1 pb
+Kfact           1
+Lumi            1
+Type		mc
+Color		401
+
+SAMPLE
+Name		TTbar
+SName		Top
+ShapeName	Top
+File            MassTree_800_0_Tauola537_1000.root
+Xsection  	1
+Kfact           1.	
+Lumi            1
+Type            mc
+Color		600
+
+
+
+SAMPLE
+Name		Run2012D_DoubleMuParked2
+SName		DoubleMu-Data2
+ShapeName	Data
+File	        MassTree_800_0_Tauolapp_1257.root 
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
