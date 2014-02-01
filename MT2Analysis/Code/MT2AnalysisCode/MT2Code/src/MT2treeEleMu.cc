@@ -25,7 +25,9 @@ void MT2tree::FillEleMu(){
     }
   }
    
-  if(eleMu.ele0Ind!=-1 && eleMu.mu0Ind!=-1){
+  if(eleMu.ele0Ind == -1 && eleMu.mu0Ind ==-1)
+  {}
+  else{
     
     eleMu.charge = muo[eleMu.mu0Ind].Charge + ele[eleMu.ele0Ind].Charge; //check two good muon charge
   
