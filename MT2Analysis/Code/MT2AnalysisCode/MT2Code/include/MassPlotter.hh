@@ -259,6 +259,7 @@ public:
 
   void QCD();
   double DeltaPhi(double phi1, double phi2);
+  void TauolaTest();
 private:
 	TString fOutputDir;
 	TFile *fOutputFile;
@@ -341,7 +342,7 @@ private:
   //Few functions for debugging and ready for .tex printout
   void printYield();
 
-  void AddOverAndUnderFlow(TH1 * Histo, bool overflow=true, bool underflow=true);
+  TH1* AddOverAndUnderFlow(TH1 * Histo, bool overflow=true, bool underflow=true);
   void Cout(int k, TH1F * Histo);
   void Cout(int k, TH2F * Histo);
 

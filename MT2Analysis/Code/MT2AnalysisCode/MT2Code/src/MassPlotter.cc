@@ -4656,7 +4656,7 @@ void MassPlotter::setFlags(int flag){
 
 
 
-void MassPlotter::AddOverAndUnderFlow(TH1 * Histo, bool overflow, bool underflow){
+TH1* MassPlotter::AddOverAndUnderFlow(TH1 * Histo, bool overflow, bool underflow){
   // Add underflow & overflow bins
   // This failed for older ROOT version when the first(last) bin is empty
   // and there are underflow (overflow) events --- must check whether this 
@@ -4679,6 +4679,8 @@ void MassPlotter::AddOverAndUnderFlow(TH1 * Histo, bool overflow, bool underflow
 			  Histo->GetBinError(Histo->GetNbinsX()+1)  ));
   Histo->SetBinContent(Histo->GetNbinsX() + 1, 0.0);
   }
+
+  return Histo;
 }
 
 void MassPlotter::Cout(int k, TH1F * Histo){
@@ -7976,3 +7978,250 @@ void MassPlotter::MakeCutFlowTable( std::vector<std::string> all_cuts ){
 		return TMath::Abs(result);
 	}
  
+
+
+void MassPlotter::TauolaTest(){
+
+  gStyle->SetOptTitle( false );
+
+  TString  cnames[4] =  {"Tauola_500_300", "Tauolapp_500_300", "Tauola_800_0", "Tauolapp_800_0"};
+  TString  ctitles[4] = {"Tauola (500,300)", "Tauola++ (500,300)", "Tauola (800,0)", "Tauola++ (800,0)"};
+  int      ccolor[4] = {  401,                           417,            419,       855};
+
+  TH1F *genLepID[4];
+  TString varname = "genLepID";
+  for (int i=0; i<4; i++){
+    genLepID[i] = new TH1F(varname+"_"+cnames[i], ctitles[i]+";#tau child id;normalized entry", 250, 0, 250);
+
+    genLepID[i] -> SetLineColor  (ccolor[i]);
+    genLepID[i] -> SetLineWidth  (2);
+    genLepID[i] -> SetMarkerColor(ccolor[i]);
+
+    genLepID[i]->SetFillStyle( 3004 );
+    genLepID[i]->SetFillColor( ccolor [i] );
+    
+    genLepID[i]->SetStats( false );
+  }
+
+  TH1F *genLepPt[4];
+  varname = "genLepPt";
+  for (int i=0; i<4; i++){
+    int max = 250;
+    if(i >1 )
+      max = 800;
+    genLepPt[i] = new TH1F(varname+"_"+cnames[i], ctitles[i]+";#tau child p_{T};normalized entry", max/5, 0, max);
+
+    genLepPt[i] -> SetLineColor  (ccolor[i]);
+    genLepPt[i] -> SetLineWidth  (2);
+    genLepPt[i] -> SetMarkerColor(ccolor[i]);
+
+    genLepID[i]->SetFillStyle( 3004 );
+    genLepID[i]->SetFillColor( ccolor [i] );
+
+    genLepPt[i]->SetStats( false );
+  }
+
+  TH1F *nTauChildren[4];
+  varname = "nTauChildren";
+  for (int i=0; i<4; i++){
+    nTauChildren[i] = new TH1F(varname+"_"+cnames[i], ctitles[i]+";number of #tau children;normalized entry", 10, 0, 10);
+
+    nTauChildren[i] -> SetLineColor  (ccolor[i]);
+    nTauChildren[i] -> SetLineWidth  (2);
+    nTauChildren[i] -> SetMarkerColor(ccolor[i]);
+
+    nTauChildren[i]->SetFillStyle( 3004 );
+    nTauChildren[i]->SetFillColor( ccolor [i] );
+   
+    nTauChildren[i]->SetStats( false );
+  }
+
+  TH1F *TauPtChildPt[4];
+  varname = "TauPtChildPt";
+  for (int i=0; i<4; i++){
+    TauPtChildPt[i] = new TH1F(varname+"_"+cnames[i], ctitles[i]+";p_{T}^{#tau} - #Sigmap_{T}^{children};normalized entry" , 12, -5, 19);
+
+    TauPtChildPt[i] -> SetLineColor  (ccolor[i]);
+    TauPtChildPt[i] -> SetLineWidth  (2);
+    TauPtChildPt[i] -> SetMarkerColor(ccolor[i]);
+
+    TauPtChildPt[i]->SetFillStyle( 3004 );
+    TauPtChildPt[i]->SetFillColor( ccolor [i] );
+    
+    TauPtChildPt[i]->SetStats( false );
+  }
+
+  TH1F *TauDecayMode[4];
+  varname = "TauDecayMode";
+
+  TString  decayModeNames[10] =  { "e" , "#mu" , "1#pi" , "3#pi" , "1#rho" , "3#rho" , "others" , "" , "" , ""};
+  for (int i=0; i<4; i++){
+    TauDecayMode[i] = new TH1F(varname+"_"+cnames[i], ctitles[i]+";#tau decay mode;normalized entry", 10, 1, 11);
+  
+    for( int dmn = 0 ; dmn < 10 ; dmn++)
+      TauDecayMode[i]->GetXaxis()->SetBinLabel(dmn+1, decayModeNames[dmn] );
+
+    TauDecayMode[i] -> SetLineColor  (ccolor[i]);
+    TauDecayMode[i] -> SetLineWidth  (2);
+    TauDecayMode[i] -> SetMarkerColor(ccolor[i]);
+
+    TauDecayMode[i]->SetFillStyle( 3004 );
+    TauDecayMode[i]->SetFillColor( ccolor [i] );
+    
+    TauDecayMode[i]->SetStats( false );
+  }
+
+
+
+  fMT2tree = new MT2tree();
+  for(int ii = 0; ii <(int) fSamples.size(); ii++){
+    sample Sample = fSamples[ii];
+
+    Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
+    Long64_t nentries =  Sample.tree->GetEntries();
+    float Weight = 1.0;
+ 
+ 
+    std::cout << setfill('=') << std::setw(70) << "" << std::endl;
+    cout << "looping over :     " <<endl;   
+    cout << "   Name:           " << Sample.name << endl;
+    cout << "   File:           " << (Sample.file)->GetName() << endl;
+    cout << "   Events:         " << Sample.nevents  << endl;
+    cout << "   Events in tree: " << nentries << endl;
+    cout << "   Xsection:       " << Sample.xsection << endl;
+    cout << "   kfactor:        " << Sample.kfact << endl;
+    cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
+    cout << "   Weight:         " << Weight <<endl;
+    std::cout << setfill('-') << std::setw(70) << "" << std::endl;
+
+    for (Long64_t jentry=0; jentry<nentries;jentry++) {
+    
+      Sample.tree->GetEntry(jentry);
+      if ( fVerbose>2 && jentry % 100 == 0 ){
+	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+	fflush(stdout);
+      }
+     
+      for(int i=0; i < fMT2tree->NGenParticles; i++){
+	if(abs(fMT2tree->genparticle[i].ID) == 15){
+	  int nChilds = 0;
+	  double ChildsPt = 0;
+	  int nEle = 0 ;
+	  int nMuons = 0;
+	  int nPis = 0;
+	  int nRhos = 0;
+	  for(int j=0; j < fMT2tree->NGenParticles; j++)
+	    if(fMT2tree->genparticle[j].MIndex == fMT2tree->genparticle[i].Index){
+	      nChilds++;
+	      genLepID[ii]->Fill(abs(fMT2tree->genparticle[j].ID));
+
+	      double childPt = fMT2tree->genparticle[j].lv.Pt() ;
+	      genLepPt[ii]->Fill( childPt );
+	      ChildsPt += childPt ;
+
+	      switch(abs(fMT2tree->genparticle[j].ID)){
+	      case 11:
+		nEle ++;
+		break;
+	      case 13:
+		nMuons ++;
+		break;
+	      case 211:
+		nPis++;
+		break;
+	      case 213:
+		nRhos++;
+		break;
+	      }
+	    }
+	  nTauChildren[ii]->Fill( nChilds );
+	  TauPtChildPt[ii]->Fill( fMT2tree->genparticle[i].lv.Pt() -  ChildsPt ); 
+
+	  int decayMode = 0;
+	  if( nEle == 1 && nMuons == 0 && nPis == 0 && nRhos == 0)
+	    decayMode = 1;
+	  else if( nEle == 0 && nMuons == 1 && nPis == 0 && nRhos == 0)
+	    decayMode = 2;
+	  else if( nEle == 0 && nMuons == 0 && nPis == 1 && nRhos == 0)
+	    decayMode = 3;
+	  else if( nEle == 0 && nMuons == 0 && nPis == 3 && nRhos == 0)
+	    decayMode = 4;
+	  else if( nEle == 0 && nMuons == 0 && nPis == 0 && nRhos == 1)
+	    decayMode = 5;
+	  else if( nEle == 0 && nMuons == 0 && nPis == 0 && nRhos == 3)
+	    decayMode = 6;
+	  else
+	    decayMode = 7;
+
+	  TauDecayMode[ii]->Fill( decayMode );
+	}
+      }
+    }
+  }
+
+  TCanvas *genLepIDC = new TCanvas("genLepID", "genLepID");
+  genLepIDC->Divide(2,1);
+
+  genLepIDC->cd(1);
+  AddOverAndUnderFlow( genLepID[1] , true , true)->DrawNormalized("BAR");
+  AddOverAndUnderFlow(genLepID[0],true,true)->DrawNormalized("sames BAR");
+  ( (TPad*)gPad )->BuildLegend();
+
+  genLepIDC->cd(2);
+  AddOverAndUnderFlow(genLepID[3],true,true)->DrawNormalized("BAR");
+  AddOverAndUnderFlow(genLepID[2],true,true)->DrawNormalized("sames BAR BAR");
+  ( (TPad*)gPad )->BuildLegend();
+  
+
+  TCanvas *genLepPtC = new TCanvas("genLepPt", "genLepPt");
+  genLepPtC->Divide(2,1);
+
+  genLepPtC->cd(1);
+  AddOverAndUnderFlow(genLepPt[1],true,true)->DrawNormalized("BAR");
+  AddOverAndUnderFlow(genLepPt[0],true,true)->DrawNormalized("sames BAR");
+  ( (TPad*)gPad )->BuildLegend();
+
+  genLepPtC->cd(2);
+  AddOverAndUnderFlow(genLepPt[3],true,true)->DrawNormalized("BAR");
+  AddOverAndUnderFlow(genLepPt[2],true,true)->DrawNormalized("sames BAR");
+  ( (TPad*)gPad )->BuildLegend();
+
+  TCanvas *nTauChildrenC = new TCanvas("nTauChildren", "nTauChildren");
+  nTauChildrenC->Divide(2,1);
+
+  nTauChildrenC->cd(1);
+  AddOverAndUnderFlow(nTauChildren[0],true,true)->DrawNormalized("BAR");
+  AddOverAndUnderFlow(nTauChildren[1],true,true)->DrawNormalized("sames BAR");
+  ( (TPad*)gPad )->BuildLegend();
+
+  nTauChildrenC->cd(2);
+  AddOverAndUnderFlow(nTauChildren[2],true,true)->DrawNormalized("BAR");
+  AddOverAndUnderFlow(nTauChildren[3],true,true)->DrawNormalized("sames BAR");
+  ( (TPad*)gPad )->BuildLegend();
+
+  TCanvas *TauPtChildPtC = new TCanvas("TauPtChildPt", "TauPtChildPt");
+  TauPtChildPtC->Divide(2,1);
+
+  TauPtChildPtC->cd(1);
+  AddOverAndUnderFlow(TauPtChildPt[1],true,true)->DrawNormalized("BAR");
+  AddOverAndUnderFlow(TauPtChildPt[0],true,true)->DrawNormalized("sames BAR");
+  ( (TPad*)gPad )->BuildLegend();
+
+  TauPtChildPtC->cd(2);
+  AddOverAndUnderFlow(TauPtChildPt[3],true,true)->DrawNormalized("BAR");
+  AddOverAndUnderFlow(TauPtChildPt[2],true,true)->DrawNormalized("sames BAR");
+  ( (TPad*)gPad )->BuildLegend();
+
+  TCanvas *TauDecayModeC = new TCanvas("TauDecayMode", "TauDecayMode");
+  TauDecayModeC->Divide(2,1);
+
+  TauDecayModeC->cd(1);
+  AddOverAndUnderFlow(TauDecayMode[0],true,true)->DrawNormalized("BAR");
+  AddOverAndUnderFlow(TauDecayMode[1],true,true)->DrawNormalized("sames BAR");
+  ( (TPad*)gPad )->BuildLegend();
+
+  TauDecayModeC->cd(2);
+  AddOverAndUnderFlow(TauDecayMode[2],true,true)->DrawNormalized("BAR");
+  AddOverAndUnderFlow(TauDecayMode[3],true,true)->DrawNormalized("sames BAR");
+  ( (TPad*)gPad )->BuildLegend();
+}
