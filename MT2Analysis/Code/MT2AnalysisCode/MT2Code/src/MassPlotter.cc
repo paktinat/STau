@@ -8105,26 +8105,23 @@ void MassPlotter::TauolaTest(){
       for(int i=0; i < fMT2tree->NGenParticles; i++){
 	if(abs(fMT2tree->genparticle[i].ID) == 15){
 	  int nChilds = 0;
-	  double ChildsPt = 0;
+	  TLorentzVector ChildsPt(0,0,0,0);
 	  int nEle = 0 ;
 	  int nMuons = 0;
 	  int nPis = 0;
 	  int nRhos = 0;
+	  int nTaus = 0;
 	  for(int j=0; j < fMT2tree->NGenParticles; j++)
 	    if(fMT2tree->genparticle[j].MIndex == fMT2tree->genparticle[i].Index){
-	      nChilds++;
-	      genLepID[ii]->Fill(abs(fMT2tree->genparticle[j].ID));
-
-	      double childPt = fMT2tree->genparticle[j].lv.Pt() ;
-	      genLepPt[ii]->Fill( childPt );
-	      ChildsPt += childPt ;
-
 	      switch(abs(fMT2tree->genparticle[j].ID)){
 	      case 11:
 		nEle ++;
 		break;
 	      case 13:
 		nMuons ++;
+		break;
+	      case 15:
+		nTaus ++;
 		break;
 	      case 211:
 		nPis++;
@@ -8134,26 +8131,43 @@ void MassPlotter::TauolaTest(){
 		break;
 	      }
 	    }
-	  nTauChildren[ii]->Fill( nChilds );
-	  TauPtChildPt[ii]->Fill( fMT2tree->genparticle[i].lv.Pt() -  ChildsPt ); 
 
 	  int decayMode = 0;
-	  if( nEle == 1 && nMuons == 0 && nPis == 0 && nRhos == 0)
+	  if( nEle == 1 && nMuons == 0 && nPis == 0 && nRhos == 0 && nTaus == 0)
 	    decayMode = 1;
-	  else if( nEle == 0 && nMuons == 1 && nPis == 0 && nRhos == 0)
+	  else if( nEle == 0 && nMuons == 1 && nPis == 0 && nRhos == 0 && nTaus == 0)
 	    decayMode = 2;
-	  else if( nEle == 0 && nMuons == 0 && nPis == 1 && nRhos == 0)
+	  else if( nEle == 0 && nMuons == 0 && nPis == 1 && nRhos == 0 && nTaus == 0)
 	    decayMode = 3;
-	  else if( nEle == 0 && nMuons == 0 && nPis == 3 && nRhos == 0)
+	  else if( nEle == 0 && nMuons == 0 && nPis == 3 && nRhos == 0 && nTaus == 0)
 	    decayMode = 4;
-	  else if( nEle == 0 && nMuons == 0 && nPis == 0 && nRhos == 1)
+	  else if( nEle == 0 && nMuons == 0 && nPis == 0 && nRhos == 1 && nTaus == 0)
 	    decayMode = 5;
-	  else if( nEle == 0 && nMuons == 0 && nPis == 0 && nRhos == 3)
+	  else if( nEle == 0 && nMuons == 0 && nPis == 0 && nRhos == 3 && nTaus == 0)
 	    decayMode = 6;
-	  else
+	  else if( nEle == 0 && nMuons == 0 && nPis == 0 && nRhos == 0 && nTaus == 1)
 	    decayMode = 7;
+	  else
+	    decayMode = 8;
 
 	  TauDecayMode[ii]->Fill( decayMode );
+
+	  if(decayMode == 7)
+	    continue;
+
+
+	  for(int j=0; j < fMT2tree->NGenParticles; j++)
+	    if(fMT2tree->genparticle[j].MIndex == fMT2tree->genparticle[i].Index){
+	      nChilds++;
+	      genLepID[ii]->Fill(abs(fMT2tree->genparticle[j].ID));
+
+	      double childPt = fMT2tree->genparticle[j].lv.Pt() ;
+	      genLepPt[ii]->Fill( childPt );
+	      ChildsPt += fMT2tree->genparticle[j].lv ;
+	    }
+	
+	  nTauChildren[ii]->Fill( nChilds );
+	  TauPtChildPt[ii]->Fill(( fMT2tree->genparticle[i].lv -  ChildsPt ).Pt() ); 
 	}
       }
     }
