@@ -20,6 +20,7 @@ public:
     PassMu0_TauMu = -1;
     RejMu1_TauMu = -1;
     PassMu0_EleMu = -1;
+    RejMu1_EleMu = -1;
     RejMu_TauTau = -1;
   }
   
@@ -39,6 +40,7 @@ public:
   Int_t    PassMu0_TauMu;
   Int_t    RejMu1_TauMu;
   Int_t    PassMu0_EleMu;
+  Int_t    RejMu1_EleMu;
   Int_t    RejMu_TauTau;
   ClassDef(MT2Muon, 9)
 };

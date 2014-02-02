@@ -10,6 +10,10 @@ void MT2tree::FillEleMu(){
 	  eleMu.mu0Ind = i;
 	  continue;
 	} //one good muon is
+
+      if  (muo[i].RejMu1_EleMu ==1){
+	eleMu.HasNoVetomuoForEleMu=false;
+      }
     }
     
 
@@ -25,9 +29,8 @@ void MT2tree::FillEleMu(){
     }
   }
    
-  if(eleMu.ele0Ind == -1 && eleMu.mu0Ind ==-1)
-  {}
-  else{
+  if(eleMu.ele0Ind != -1 && eleMu.mu0Ind !=-1){
+ 
     
     eleMu.charge = muo[eleMu.mu0Ind].Charge + ele[eleMu.ele0Ind].Charge; //check two good muon charge
   
