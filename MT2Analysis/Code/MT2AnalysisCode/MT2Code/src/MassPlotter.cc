@@ -7984,6 +7984,8 @@ void MassPlotter::TauolaTest(){
 
   gStyle->SetOptTitle( false );
 
+  ReadPDGTable b( "/home/hbakhshi/work/STau/MT2_Tau_V02-03-02/MT2Analysis/Code/MT2AnalysisCode/TESCO/pdgtable.txt" );
+
   TString  cnames[4] =  {"Tauola_500_300", "Tauolapp_500_300", "Tauola_800_0", "Tauolapp_800_0"};
   TString  ctitles[4] = {"Tauola (500,300)", "Tauola++ (500,300)", "Tauola (800,0)", "Tauola++ (800,0)"};
   int      ccolor[4] = {  401,                           417,            419,       855};
@@ -7991,7 +7993,7 @@ void MassPlotter::TauolaTest(){
   TH1F *genLepID[4];
   TString varname = "genLepID";
   for (int i=0; i<4; i++){
-    genLepID[i] = new TH1F(varname+"_"+cnames[i], ctitles[i]+";#tau child id;normalized entry", 250, 0, 250);
+    genLepID[i] = new TH1F(varname+"_"+cnames[i], ctitles[i]+";#tau child id;normalized entry", 10, 0, 10);
 
     genLepID[i] -> SetLineColor  (ccolor[i]);
     genLepID[i] -> SetLineWidth  (2);
@@ -8113,6 +8115,7 @@ void MassPlotter::TauolaTest(){
 	  int nTaus = 0;
 	  for(int j=0; j < fMT2tree->NGenParticles; j++)
 	    if(fMT2tree->genparticle[j].MIndex == fMT2tree->genparticle[i].Index){
+	      nChilds++;
 	      switch(abs(fMT2tree->genparticle[j].ID)){
 	      case 11:
 		nEle ++;
@@ -8150,24 +8153,26 @@ void MassPlotter::TauolaTest(){
 	  else
 	    decayMode = 8;
 
-	  TauDecayMode[ii]->Fill( decayMode );
-
 	  if(decayMode == 7)
 	    continue;
 
-
-	  for(int j=0; j < fMT2tree->NGenParticles; j++)
-	    if(fMT2tree->genparticle[j].MIndex == fMT2tree->genparticle[i].Index){
-	      nChilds++;
-	      genLepID[ii]->Fill(abs(fMT2tree->genparticle[j].ID));
-
-	      double childPt = fMT2tree->genparticle[j].lv.Pt() ;
-	      genLepPt[ii]->Fill( childPt );
-	      ChildsPt += fMT2tree->genparticle[j].lv ;
-	    }
+	  if(true){ //nChilds == 0 || nChilds == 1){	  
+	    for(int j=0; j < fMT2tree->NGenParticles; j++)
+	      if(fMT2tree->genparticle[j].MIndex == fMT2tree->genparticle[i].Index){
+		if ( b.GetPDGParticle( abs(fMT2tree->genparticle[j].ID) ) ){
+		  //genLepID[ii]->Fill(abs(fMT2tree->genparticle[j].ID));
+		  genLepID[ii]->Fill(b.GetPDGParticle( abs(fMT2tree->genparticle[j].ID) )->get_texname().c_str()  , 1.0 );
+		}
+		double childPt = fMT2tree->genparticle[j].lv.Pt() ;
+		genLepPt[ii]->Fill( childPt );
+		ChildsPt += fMT2tree->genparticle[j].lv ;
+	      }
 	
-	  nTauChildren[ii]->Fill( nChilds );
-	  TauPtChildPt[ii]->Fill(( fMT2tree->genparticle[i].lv -  ChildsPt ).Pt() ); 
+	    nTauChildren[ii]->Fill( nChilds );
+
+	    TauDecayMode[ii]->Fill( decayMode );
+	    TauPtChildPt[ii]->Fill(( fMT2tree->genparticle[i].lv -  ChildsPt ).Pt() ); 
+	  }
 	}
       }
     }
@@ -8177,15 +8182,16 @@ void MassPlotter::TauolaTest(){
   genLepIDC->Divide(2,1);
 
   genLepIDC->cd(1);
-  AddOverAndUnderFlow( genLepID[1] , true , true)->DrawNormalized("BAR");
-  AddOverAndUnderFlow(genLepID[0],true,true)->DrawNormalized("sames BAR");
-  ( (TPad*)gPad )->BuildLegend();
+  AddOverAndUnderFlow( genLepID[0] , true , true)->DrawNormalized("BAR");
+  AddOverAndUnderFlow(genLepID[1],true,true)->DrawNormalized("sames BAR");
+  //( (TPad*)gPad )->BuildLegend();
 
   genLepIDC->cd(2);
-  AddOverAndUnderFlow(genLepID[3],true,true)->DrawNormalized("BAR");
-  AddOverAndUnderFlow(genLepID[2],true,true)->DrawNormalized("sames BAR BAR");
-  ( (TPad*)gPad )->BuildLegend();
-  
+  AddOverAndUnderFlow(genLepID[2],true,true)->DrawNormalized("BAR");
+  AddOverAndUnderFlow(genLepID[3],true,true)->DrawNormalized("sames BAR BAR");
+  //( (TPad*)gPad )->BuildLegend();
+
+  genLepIDC->SaveAs("genLepIDC.C");
 
   TCanvas *genLepPtC = new TCanvas("genLepPt", "genLepPt");
   genLepPtC->Divide(2,1);
@@ -8193,25 +8199,29 @@ void MassPlotter::TauolaTest(){
   genLepPtC->cd(1);
   AddOverAndUnderFlow(genLepPt[1],true,true)->DrawNormalized("BAR");
   AddOverAndUnderFlow(genLepPt[0],true,true)->DrawNormalized("sames BAR");
-  ( (TPad*)gPad )->BuildLegend();
+  //( (TPad*)gPad )->BuildLegend();
 
   genLepPtC->cd(2);
   AddOverAndUnderFlow(genLepPt[3],true,true)->DrawNormalized("BAR");
   AddOverAndUnderFlow(genLepPt[2],true,true)->DrawNormalized("sames BAR");
-  ( (TPad*)gPad )->BuildLegend();
+  //( (TPad*)gPad )->BuildLegend();
+
+  genLepPtC->SaveAs("genLepPtC.C");
 
   TCanvas *nTauChildrenC = new TCanvas("nTauChildren", "nTauChildren");
   nTauChildrenC->Divide(2,1);
 
   nTauChildrenC->cd(1);
-  AddOverAndUnderFlow(nTauChildren[0],true,true)->DrawNormalized("BAR");
-  AddOverAndUnderFlow(nTauChildren[1],true,true)->DrawNormalized("sames BAR");
-  ( (TPad*)gPad )->BuildLegend();
+  AddOverAndUnderFlow(nTauChildren[1],true,true)->DrawNormalized("BAR");
+  AddOverAndUnderFlow(nTauChildren[0],true,true)->DrawNormalized("sames BAR");
+  //( (TPad*)gPad )->BuildLegend();
 
   nTauChildrenC->cd(2);
-  AddOverAndUnderFlow(nTauChildren[2],true,true)->DrawNormalized("BAR");
-  AddOverAndUnderFlow(nTauChildren[3],true,true)->DrawNormalized("sames BAR");
-  ( (TPad*)gPad )->BuildLegend();
+  AddOverAndUnderFlow(nTauChildren[3],true,true)->DrawNormalized("BAR");
+  AddOverAndUnderFlow(nTauChildren[2],true,true)->DrawNormalized("sames BAR");
+  //( (TPad*)gPad )->BuildLegend();
+
+  nTauChildrenC->SaveAs("nTauChildrenC.C");
 
   TCanvas *TauPtChildPtC = new TCanvas("TauPtChildPt", "TauPtChildPt");
   TauPtChildPtC->Divide(2,1);
@@ -8219,12 +8229,14 @@ void MassPlotter::TauolaTest(){
   TauPtChildPtC->cd(1);
   AddOverAndUnderFlow(TauPtChildPt[1],true,true)->DrawNormalized("BAR");
   AddOverAndUnderFlow(TauPtChildPt[0],true,true)->DrawNormalized("sames BAR");
-  ( (TPad*)gPad )->BuildLegend();
+  //( (TPad*)gPad )->BuildLegend();
 
   TauPtChildPtC->cd(2);
   AddOverAndUnderFlow(TauPtChildPt[3],true,true)->DrawNormalized("BAR");
   AddOverAndUnderFlow(TauPtChildPt[2],true,true)->DrawNormalized("sames BAR");
-  ( (TPad*)gPad )->BuildLegend();
+  //( (TPad*)gPad )->BuildLegend();
+
+  TauPtChildPtC->SaveAs("TauPtChildPtC.C");
 
   TCanvas *TauDecayModeC = new TCanvas("TauDecayMode", "TauDecayMode");
   TauDecayModeC->Divide(2,1);
@@ -8232,10 +8244,13 @@ void MassPlotter::TauolaTest(){
   TauDecayModeC->cd(1);
   AddOverAndUnderFlow(TauDecayMode[0],true,true)->DrawNormalized("BAR");
   AddOverAndUnderFlow(TauDecayMode[1],true,true)->DrawNormalized("sames BAR");
-  ( (TPad*)gPad )->BuildLegend();
+  //( (TPad*)gPad )->BuildLegend();
 
   TauDecayModeC->cd(2);
   AddOverAndUnderFlow(TauDecayMode[2],true,true)->DrawNormalized("BAR");
   AddOverAndUnderFlow(TauDecayMode[3],true,true)->DrawNormalized("sames BAR");
-  ( (TPad*)gPad )->BuildLegend();
+  //( (TPad*)gPad )->BuildLegend();
+
+  TauDecayModeC->SaveAs("TauDecayModeC.C");
+
 }
