@@ -2,8 +2,8 @@
    TString outputdir = "../MassPlots/";
   //  TString samples   = "./samples/samplesMineDoubleMu.dat"; Int_t channel = 26; //2* 13 (Muon PDG Id)
    //TString samples   = "./samples/samplesMineDoubleElectron.dat";  Int_t channel = 22; //2* 11 (Electron PDG Id)
-  //  TString samples   = "./samples/samplesMineMuEG.dat"; //MuEG datasets  Int_t channel = 24; //11 + 13 
-       TString samples   = "./samples/samplesMineTest.dat"; 
+    TString samples   = "./samples/samplesMineMuEG.dat"; //MuEG datasets  Int_t channel = 24; //11 + 13 
+  //     TString samples   = "./samples/samplesMineTest.dat"; 
   int verbose =3;
 
   gSystem->CompileMacro("../MT2Code/src/MassPlotter.cc", "kf");//"k", "f"
@@ -19,7 +19,7 @@
   double  gMT2bins_l[gNMT2bins+1]   = {0, 10, 20, 30, 40, 50, 65, 80, 95, 115, 140, 180, 250, 350, 500}; 	
 
   MassPlotter *tA = new MassPlotter(outputdir, "MassPlots.root");
-  tA->SietSave(false);
+  tA->SetSave(false);
   tA->setVerbose(verbose);
   tA->init(samples);
   tA->SetIsPhoton(false);
