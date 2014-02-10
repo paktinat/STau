@@ -175,7 +175,8 @@ def createCMSConf(step, nameOfDirectory, releasePath, nameOfConf, inputString, e
   
   thisjobnumber=0
 
-  cmd = " ".join(['qsub','-q all.q','-N',"RMG"+str(step)+taskName,'-o',stdout,'-e',stderr,nameOfDirectory+taskName+'/'+nameOfConf2+' '+str(step)])
+#  cmd = " ".join(['qsub','-q all.q','-N',"RMG"+str(step)+taskName,'-o',stdout,'-e',stderr,nameOfDirectory+taskName+'/'+nameOfConf2+' '+str(step)]) saeid
+  cmd = " ".join(['qsub','-v myVar='+str(step),'-q batch ','-N',"RMG"+str(step)+taskName,'-o',stdout,'-e',stderr,nameOfDirectory+taskName+'/'+nameOfConf2])
   print cmd
   if options.dryrun: return thisjobnumber
 
@@ -300,7 +301,8 @@ def getListOfTasks(nameOfFile):
 #                                                             #
 ###############################################################
 def process(task, conf):
-  dcapPath = "dcap://t3se01.psi.ch:22125/pnfs/psi.ch/cms/trivcat"
+#  dcapPath = "dcap://t3se01.psi.ch:22125/pnfs/psi.ch/cms/trivcat" saeid
+  dcapPath = "rfio:///dpm/particles.ipm.ac.ir/home/cms"
   dbsUrl = 'http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_02/servlet/DBSServlet'
   list = [] # Initialize file list
 
@@ -387,7 +389,8 @@ def ensure_dir(f) :
 		os.makedirs(f)
 
 def join_directory(path,filelist,username) :
-	localpath="/scratch/"+username+"/ntuples/"+path
+#	localpath="/scratch/"+username+"/ntuples/"+path  saeid
+	localpath="/dataLOCAL/"+username+"/ntuples/"+path
 	ensure_dir(localpath)
 	cleanpath=path;
 	if (cleanpath[len(cleanpath)-1]=="/") : # remove trailing slash
@@ -403,7 +406,8 @@ def join_directory(path,filelist,username) :
 		
 
 def check_directory(path,username) :
-	complete_path="/pnfs/psi.ch/cms/trivcat/store/user/"+username+"/"+path
+#	complete_path="/pnfs/psi.ch/cms/trivcat/store/user/"+username+"/"+path  saeid
+        complete_path="/dpm/particles.ipm.ac.ir/home/cms/store/user/"+username+"/"+path
 	print "\033[1;34m Going to checkout the subdirectory "+complete_path+" \033[0m "
 	listoffiles=[]
 	supposedtobejoined=False;

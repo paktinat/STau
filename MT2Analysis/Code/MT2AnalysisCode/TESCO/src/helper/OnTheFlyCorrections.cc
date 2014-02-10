@@ -4,10 +4,18 @@
 using namespace std;
 
 OnTheFlyCorrections::OnTheFlyCorrections(string gt, bool isdata){
-	JetCorrectorParameters *ResJetPar = new JetCorrectorParameters("../TESCO/src/helper/JetCorrectionFiles/"+gt+"_L2L3Residual_AK5PF.txt");
-	JetCorrectorParameters *L3JetPar  = new JetCorrectorParameters("../TESCO/src/helper/JetCorrectionFiles/"+gt+"_L3Absolute_AK5PF.txt");
-	JetCorrectorParameters *L2JetPar  = new JetCorrectorParameters("../TESCO/src/helper/JetCorrectionFiles/"+gt+"_L2Relative_AK5PF.txt");
-	JetCorrectorParameters *L1JetPar  = new JetCorrectorParameters("../TESCO/src/helper/JetCorrectionFiles/"+gt+"_L1FastJet_AK5PF.txt");
+  /*
+  string path = "/dataLOCAL/MT2Top/JetEnergyCorrection/"+gt;
+  JetCorrectorParameters *ResJetPar = new JetCorrectorParameters(path+"/"+gt+"_L2L3Residual_AK5PF.txt");
+  JetCorrectorParameters *L3JetPar  = new JetCorrectorParameters(path+"/"+gt+"_L3Absolute_AK5PF.txt");
+  JetCorrectorParameters *L2JetPar  = new JetCorrectorParameters(path+"/"+gt+"_L2Relative_AK5PF.txt");
+  JetCorrectorParameters *L1JetPar  = new JetCorrectorParameters(path+"/"+gt+"_L1FastJet_AK5PF.txt");
+  */
+  //        string path = "/shome/paktinat/Top/CMSSW_5_3_7_patch5/src/MT2_Tau_V02-03-02/MT2Analysis/Code/MT2AnalysisCode";  
+  	JetCorrectorParameters *ResJetPar = new JetCorrectorParameters("../TESCO/src/helper/JetCorrectionFiles/"+gt+"_L2L3Residual_AK5PF.txt");
+  	JetCorrectorParameters *L3JetPar  = new JetCorrectorParameters("../TESCO/src/helper/JetCorrectionFiles/"+gt+"_L3Absolute_AK5PF.txt");
+  	JetCorrectorParameters *L2JetPar  = new JetCorrectorParameters("../TESCO/src/helper/JetCorrectionFiles/"+gt+"_L2Relative_AK5PF.txt");
+  	JetCorrectorParameters *L1JetPar  = new JetCorrectorParameters("../TESCO/src/helper/JetCorrectionFiles/"+gt+"_L1FastJet_AK5PF.txt");
 	fJetCorPar.push_back(*L1JetPar);
 	fJetCorPar.push_back(*L2JetPar);
 	fJetCorPar.push_back(*L3JetPar);
