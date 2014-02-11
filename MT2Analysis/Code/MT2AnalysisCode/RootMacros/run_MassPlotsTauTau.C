@@ -1,9 +1,9 @@
 {
    TString outputdir = "../MassPlots/";
-   // TString samples   = "./samples/samplesMineDoubleMu.dat"; Int_t channel = 26; //2* 13 (Muon PDG Id)
+  //  TString samples   = "./samples/samplesMineDoubleMu.dat"; Int_t channel = 26; //2* 13 (Muon PDG Id)
    //TString samples   = "./samples/samplesMineDoubleElectron.dat";  Int_t channel = 22; //2* 11 (Electron PDG Id)
-  //  TString samples   = "./samples/samplesMineMuEG.dat"; //MuEG datasets  Int_t channel = 24; //11 + 13 
-    TString samples   = "./samples/samplesMineTest.dat"; 
+    TString samples   = "./samples/samplesMineMuEG.dat"; //MuEG datasets  Int_t channel = 24; //11 + 13 
+  //     TString samples   = "./samples/samplesMineTest.dat"; 
   int verbose =3;
 
   gSystem->CompileMacro("../MT2Code/src/MassPlotter.cc", "kf");//"k", "f"

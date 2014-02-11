@@ -19,8 +19,14 @@ public:
     METImbalancedPhi = -10.;
     MT2           = -1.;
     MT2Imbalanced = -1.; 
+<<<<<<< HEAD
     HasNoVetoElecForEleMu=true;
     isSignalMuEG = false;
+=======
+    HasNoVetomuoForEleMu=true;
+   HasNoVetoElecForEleMu=true;
+    isSignalEleMu = false;
+>>>>>>> 9af21f59e2a63ab464043655e5047d1a7d6db9a6
    }
   
 
@@ -32,9 +38,9 @@ public:
   Float_t  METImbalancedPhi;
   Float_t  MT2;
   Float_t  MT2Imbalanced ;
- 
+  bool     HasNoVetomuoForEleMu;
   bool     HasNoVetoElecForEleMu;
-  bool	   isSignalMuEG;
+  bool	   isSignalEleMu;
   ClassDef(MT2EleMu, 1)
     }; 
 #endif

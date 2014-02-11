@@ -3,6 +3,10 @@
 # PSI Tier-3 example batch Job  #
 #################################
 
+export DPM_HOST=se1.particles.ipm.ac.ir
+export DPNS_HOST=se1.particles.ipm.ac.ir
+
+
 ##### CONFIGURATION ##############################################
 # Output files to be copied back to the User Interface
 # (the file path must be given relative to the working directory)
@@ -10,7 +14,7 @@ OUTFILES=
 
 # Output files to be copied to the SE
 # (as above the file path must be given relative to the working directory)
-SEOUTFILES="output_$1.root"
+SEOUTFILES="output_$myVar.root"
 
 SOURCEFILES=sourcefile
 
@@ -31,11 +35,13 @@ DBG=0
 
 #### The following configurations you should not need to change
 # The SE's user home area (SRMv2 URL)
-USER_SRM_HOME="srm://t3se01.psi.ch:8443/srm/managerv2?SFN=/pnfs/psi.ch/cms/trivcat/store/user/"
+#USER_SRM_HOME="srm://t3se01.psi.ch:8443/srm/managerv2?SFN=/pnfs/psi.ch/cms/trivcat/store/user/" saeid
+USER_SRM_HOME="srm://se1.particles.ipm.ac.ir:8446/srm/managerv2?SFN=/dpm/particles.ipm.ac.ir/home/cms/store/user/"
 
 # Top working directory on worker node's local disk. The batch
 # job working directory will be created below this
-TOPWORKDIR=/scratch/`whoami`
+#TOPWORKDIR=/scratch/`whoami`
+TOPWORKDIR=/dataLOCAL/`whoami`
 
 # Basename of job sandbox (job workdir will be $TOPWORKDIR/$JOBDIR)
 JOBDIR=jobdir
@@ -140,19 +146,23 @@ eval `scramv1 runtime -sh`
 
 cd $WORKDIR
 
-export LD_LIBRARY_PATH=/swshare/glite/d-cache/dcap/lib/:$LD_LIBRARY_PATH
+
+#saeid:: we do use dpm instead of dcap, needs to be checked
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH
 rootoutfiles=""
 counter=0
 for f in $SOURCEFILES; do
   output=${SEOUTFILES%.*}"_"$counter.root
   echo Running $exe $ARGUMENTS -o $output $f ...
+  cp /dataLOCAL/MT2Tau/libshift.so.2.1  .
+  export LD_LIBRARY_PATH=${pwd}:${LD_LIBRARY_PATH}
   $exe $ARGUMENTS -o $output $f 
   if test -e $output; then rootoutfiles=$rootoutfiles" "$output; fi
   let counter++
   CURRDATE=`date +%s`
   RUNTIME=$(echo "($CURRDATE - $DATE_START)/(60)" | bc -l)
   echo "-----> running since $RUNTIME min <-------------------------"
-  RUNMIN=$(echo $RUNTIME | awk -F . '{print $1}')
+  RUNMIN=$(echo $RUNTIME | awk -F . '{print $myVar}')
   echo $RUNMIN
   if [ "$RUNMIN" -gt "55" ]; then echo "WARNING: runtime hits 1 hour.."; fi
 done

@@ -538,10 +538,12 @@ bool MT2Analysis::FillMT2TreeBasics(){
 	  if(fTR->genInfoStatus[i] != 3)
 	    continue;
 	  
-
 	  MT2GenParticle* particle = & (fMT2tree->genparticle[fMT2tree->NGenParticles]) ;
 	  fMT2tree->NGenParticles++;
 	  particle->lv.SetPtEtaPhiM( fTR->genInfoPt[i] , fTR->genInfoEta[i] , fTR->genInfoPhi[i] , fTR->genInfoM[i] );
+	  if((TMath::IsNaN(fTR->genInfoPt[i])))
+	    cout<<" Pt "<<particle->lv.Pt()<<endl;
+
 	  particle->ID = fTR->genInfoId[i] ;
 	  particle->Index = i;
 	  particle->MIndex = fTR->genInfoMo1[i];
