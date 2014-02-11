@@ -13,7 +13,6 @@ public:
     Ele1Ind            = -1;
     PairCharge           = -1;
     MT2            = -1;
-    //MET            = -1;
     MT2Imbalanced = -1;
     METImbalanced = -1;
 
@@ -25,7 +24,6 @@ public:
   Float_t  MT2;
   Float_t  MT2Imbalanced;
   Float_t  METImbalanced;
-
 
   ClassDef(MT2DoubleEle, 1)
     };

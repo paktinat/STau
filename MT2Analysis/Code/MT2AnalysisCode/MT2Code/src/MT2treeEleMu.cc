@@ -24,12 +24,50 @@ void MT2tree::FillEleMu(){
       eleMu.HasNoVetoElecForEleMu=false;
     }
   }
+
+for(int i=0; i<NEles; i++){    
+    if  (ele[i].IDSelEMU) //muon i pass first good muon conditions.
+      if (eleMu.ele0Ind==-1) {  //Default value
+	eleMu.ele0Ind = i; 
+	continue;
+      }//one good ele is 
+    
+    if (ele[i].IDVetoEMU){
+      eleMu.HasNoVetoElecForEleMu=false;
+    }
+  }
+
+for(int i=0; i<NEles; i++){    
+    if  (ele[i].IDSelEMU) //muon i pass first good muon conditions.
+      if (eleMu.ele0Ind==-1) {  //Default value
+	eleMu.ele0Ind = i; 
+	continue;
+      }//one good ele is 
+    
+    if (ele[i].IDVetoEMU){
+      eleMu.HasNoVetoElecForEleMu=false;
+    }
+  }
+for(int i=0; i<NEles; i++){    
+    if  (ele[i].IDSelEMU) //muon i pass first good muon conditions.
+      if (eleMu.ele0Ind==-1) {  //Default value
+	eleMu.ele0Ind = i; 
+	continue;
+      }//one good ele is 
+    
+    if (ele[i].IDVetoEMU){
+      eleMu.HasNoVetoElecForEleMu=false;
+    }
+  }
+
    
-  if(eleMu.ele0Ind == -1 && eleMu.mu0Ind ==-1)
-  {}
-  else{
+  if(eleMu.ele0Ind != -1  && eleMu.mu0Ind !=-1)
+  
+  {
     
     eleMu.charge = muo[eleMu.mu0Ind].Charge + ele[eleMu.ele0Ind].Charge; //check two good muon charge
+
+
   
     if(fVerbose > 3){ 
       cout<<" Indices for Ele Muon "<<eleMu.mu0Ind<<" "<<eleMu.ele0Ind<<endl;

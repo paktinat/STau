@@ -19,7 +19,6 @@ public:
     METImbalancedPhi = -10.;
     MT2           = -1.;
     MT2Imbalanced = -1.; 
-   
     HasNoVetoElecForEleMu=true;
     isSignalMuEG = false;
    }
