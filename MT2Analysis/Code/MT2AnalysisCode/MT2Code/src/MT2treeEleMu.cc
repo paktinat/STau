@@ -65,14 +65,11 @@ for(int i=0; i<NEles; i++){
   }
 
    
-<<<<<<< HEAD
-  if(eleMu.ele0Ind != -1  && eleMu.mu0Ind !=-1)
-  
-  {
-=======
+ 
+
   if(eleMu.ele0Ind != -1 && eleMu.mu0Ind !=-1){
  
->>>>>>> 9af21f59e2a63ab464043655e5047d1a7d6db9a6
+
     
     eleMu.charge = muo[eleMu.mu0Ind].Charge + ele[eleMu.ele0Ind].Charge; //check two good muon charge
 
@@ -98,3 +95,4 @@ for(int i=0; i<NEles; i++){
     if(fVerbose > 3) cout<<"  eleMu.MT2Imbalanced  "<<eleMu.MT2Imbalanced <<endl;
   }
 }
+
