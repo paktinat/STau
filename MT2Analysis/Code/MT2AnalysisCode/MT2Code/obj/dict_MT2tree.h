@@ -32,7 +32,6 @@ extern void G__set_cpp_environmentdict_MT2tree();
 #include "TObject.h"
 #include "TMemberInspector.h"
 #include "MT2tree.hh"
-#include "MT2tree.hh"
 #include <algorithm>
 namespace std { }
 using namespace std;

@@ -76,10 +76,11 @@ MakeMassPlots: src/exe/MakeMassPlots.C $(OBJS)
 #	mv MakeMassPlots /scratch/$$USERNAME/MakeMassPlots
 #	mv /scratch/$$USERNAME/MakeMassPlots MakeMassPlots
 
+obj/dict_%.C: include/%.hh dict/%_linkdef.hh 
+	$(ROOTSYS)/bin/rootcint -f $@ -c -I./dict $(INCLUDES) $(notdir $^)
 
-obj/dict_%.o: include/%.hh ../TESCO/include/%.hh  dict/%_linkdef.hh 
+obj/dict_%.o: include/%.hh ../TESCO/include/%.hh  dict/%_linkdef.hh obj/dict_%.C obj/dict_%.h
 	@echo "Generating dictionary for $<"
-	$(ROOTSYS)/bin/rootcint -f $(patsubst %.o, %.C, $@) -c -Idict $(INCLUDES) $(notdir $^)
 	$(CXX) -c $(CXXFLAGS) -o $@ $(patsubst %.o, %.C, $@)
 
 clean:
