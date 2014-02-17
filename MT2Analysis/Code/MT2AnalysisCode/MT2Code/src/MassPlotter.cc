@@ -2166,8 +2166,8 @@ void MassPlotter::plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, bo
 
 	TString save=name+"_ratio";
 	if(fSave) Util::Print(c1, save, fOutputDir, fOutputFile);
-	if(saveMacro == "gif")
-		c1->SaveAs(save+".gif");
+	if(saveMacro != "")
+		c1->SaveAs(save+"."+saveMacro);
 
 // 	delete h1;
 // 	delete h2;
@@ -2355,8 +2355,8 @@ void MassPlotter::plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, TH
 
 	TString save=name+"_ratio";
 	if(fSave)Util::Print(c1, save, fOutputDir, fOutputFile);
-    if(saveMacro = "gif")	
-		c1->SaveAs(save + ".gif");
+    if(saveMacro != "")	
+		c1->SaveAs(save + "." + saveMacro);
 
 
 }
