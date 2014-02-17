@@ -133,7 +133,7 @@ Type            mc
 Color		419 
 
 SAMPLE
-Name		DYToLL_M50
+Name		DYToLL_HT_M50
 SName		DY
 ShapeName	ZJetsToLL
 File            TauTau_V1_0/DYJetsToLL-M-50-TuneZ2Star-8TeV-madgraph-tarball-Summer12-DR53X-PU-S10-START53-V7A-v1.root
@@ -242,49 +242,49 @@ Lumi            19600.0
 Type            mc
 Color		419  
 
-SAMPLE
-Name		DY1JetsToLL_M_50
-SName		DY
-ShapeName	DY1JetsToLL_M_50
-File            TauTau_V1_0/DY1JetsToLL-M-50-TuneZ2Star-8TeV-madgraph--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM--NTupleProdPlus.root
-Xsection  	666.3 pb
-Kfact           1.
-Lumi            19600.0
-Type            mc
-Color		419 
+#SAMPLE
+#Name		DY1JetsToLL_M_50
+#SName		DY
+#ShapeName	DY1JetsToLL_M_50
+#File            TauTau_V1_0/DY1JetsToLL-M-50-TuneZ2Star-8TeV-madgraph--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM--NTupleProdPlus.root
+#Xsection  	666.3 pb
+#Kfact           1.
+#Lumi            19600.0
+#Type            mc
+#Color		419 
 
-SAMPLE
-Name		DY2JetsToLL_M_50
-SName		DY
-ShapeName	DY2JetsToLL_M_50
-File            TauTau_V1_0/DY2JetsToLL-M-50-TuneZ2Star-8TeV-madgraph--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM--NTupleProdPlus.root
-Xsection  	215.0 pb
-Kfact           1.
-Lumi            19600.0
-Type            mc
-Color		419
+#SAMPLE
+#Name		DY2JetsToLL_M_50
+#SName		DY
+#ShapeName	DY2JetsToLL_M_50
+#File            TauTau_V1_0/DY2JetsToLL-M-50-TuneZ2Star-8TeV-madgraph--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM--NTupleProdPlus.root
+#Xsection  	215.0 pb
+#Kfact           1.
+#Lumi            19600.0
+#Type            mc
+#Color		419
  
-SAMPLE
-Name		DY3JetsToLL_M_50
-SName		DY
-ShapeName	DY3JetsToLL_M_50
-File            TauTau_V1_0/DY3JetsToLL-M-50-TuneZ2Star-8TeV-madgraph--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM--NTupleProdPlus.root
-Xsection  	60.7 pb
-Kfact           1.
-Lumi            19600.0
-Type            mc
-Color		419
+#SAMPLE
+#Name		DY3JetsToLL_M_50
+#SName		DY
+#ShapeName	DY3JetsToLL_M_50
+#File            TauTau_V1_0/DY3JetsToLL-M-50-TuneZ2Star-8TeV-madgraph--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM--NTupleProdPlus.root
+#Xsection  	60.7 pb
+#Kfact           1.
+#Lumi            19600.0
+#Type            mc
+#Color		419
  
-SAMPLE
-Name		DY4JetsToLL_M_50
-SName		DY
-ShapeName	DY4JetsToLL_M_50
-File            TauTau_V1_0/DY4JetsToLL-M-50-TuneZ2Star-8TeV-madgraph--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM--NTupleProdPlus.root
-Xsection  	27.3 pb
-Kfact           1.
-Lumi            19600.0
-Type            mc
-Color		419 
+#SAMPLE
+#Name		DY4JetsToLL_M_50
+#SName		DY
+#ShapeName	DY4JetsToLL_M_50
+#File            TauTau_V1_0/DY4JetsToLL-M-50-TuneZ2Star-8TeV-madgraph--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM--NTupleProdPlus.root
+#Xsection  	27.3 pb
+#Kfact           1.
+#Lumi            19600.0
+#Type            mc
+#Color		419 
 ## --------------- Top ----------
 SAMPLE
 Name		TTGJets
