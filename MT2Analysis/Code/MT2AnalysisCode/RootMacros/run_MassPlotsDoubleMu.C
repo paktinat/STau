@@ -90,11 +90,11 @@
    * Plot the channel specific variables: add what you like to see ....
    */
 
-  vars.push_back(myChan + ".MT2"); props.Add(&PT);
+  /*vars.push_back(myChan + ".MT2"); props.Add(&PT);
   vars.push_back(myChan + ".METImbalanced"); props.Add(&PT);
   vars.push_back(myChan + ".MT2Imbalanced"); props.Add(&PT);
   vars.push_back(myChan + ".METImbalancedPhi"); props.Add(&PHI);
-
+*/
 
   /*
    * Plot the channel independent variables: add what you like to see ....
@@ -104,7 +104,7 @@
 
   TString myMisc = "misc";
 
-  vars.push_back(myMisc + ".MET"); props.Add(&PT);
+  /*vars.push_back(myMisc + ".MET"); props.Add(&PT);
   vars.push_back(myMisc + ".METPhi"); props.Add(&PHI);
   vars.push_back(myMisc + ".MT2"); props.Add(&PT);
   vars.push_back(myMisc + ".MT2jet40"); props.Add(&PT);
@@ -123,9 +123,9 @@
   vars.push_back(myMisc + ".pfHT40"); props.Add(&PT);
   vars.push_back(myMisc + ".pfHT45"); props.Add(&PT);
   vars.push_back(myMisc + ".pfHT50"); props.Add(&PT);
-
+*/
   /*Multiplicities*/
-  vars.push_back("NJets"); props.Add(&MULT);
+/*  vars.push_back("NJets"); props.Add(&MULT);
   vars.push_back("NJetsIDLoose"); props.Add(&MULT);
   vars.push_back("NJetsIDLoose40"); props.Add(&MULT);
   vars.push_back("NJetsIDLoose50"); props.Add(&MULT);
@@ -145,6 +145,18 @@
   vars.push_back("NTausIDLoose3Hits"); props.Add(&MULT);
   vars.push_back("NTausIDLooseMVA"); props.Add(&MULT);
   vars.push_back("NTausIDLoose2"); props.Add(&MULT);
+  vars.push_back("pfmet[0].Pt()"); props.Add(&PT);
+  vars.push_back("pfmet[0].Phi()"); props.Add(&PHI);
+*/
+
+  /*
+   * PileUp information
+   */
+
+  TString myPU = "pileUp";
+
+  vars.push_back(myPU + ".NVertices"); props.Add(&MULT);
+
 
   /*
    * Loop over variables and plot
