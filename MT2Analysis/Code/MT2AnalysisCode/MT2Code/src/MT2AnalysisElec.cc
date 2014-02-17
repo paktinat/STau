@@ -38,16 +38,33 @@ void MT2Analysis::FillMT2Elecs(){
 		fMT2tree->ele[i].IDVetoMuTau   = IsGoodMT2ElectronVetoIDforMuTau(fElecs[i]);
 		fMT2tree->ele[i].IDVetoTauTau   = IsGoodMT2ElectronVetoIDforTauTau(fElecs[i]);
 
-                fMT2tree->ele[i].PassE0_EE = 0;
-                fMT2tree->ele[i].PassE1_EE = 0;
-                if ( IsGoodMT2ElectronSelIDforEleEle(fElecs[i]) ){
-		  if( fTR->ElPt [fElecs[i]] > 20 )
-		    fMT2tree->ele[i].PassE0_EE=1;
 
-		  
-		  fMT2tree->ele[i].PassE1_EE=1;
+
+		//		if (IsGoodMT2ElectronSelIDforEleEle(fElecs[i]) && fTR->ElPt[fElecs[i]] > 20 && (fabs(fTR->ElEta[index]) < 2.3) ) fMT2tree->ele[i].PassE0_EE = 1;
+ 
+		//             if( fMT2tree->ele[i].PassE0_EE == 1 || IsGoodMT2ElectronSelIDforEleEle(fElecs[i]) && fTR->ElPt[fElecs[i]] < 20 && fTR->ElPt[fElecs[i]] > 10  && (fabs(fTR->ElEta[index]) < 2.3) )
+		//  fMT2tree->ele[i].PassE1_EE =1;
+
+		//                fMT2tree->ele[i].PassE0_EE = 0;
+		//                fMT2tree->ele[i].PassE1_EE = 0;
+ 
+		//  		fMT2tree->muo[i].PassMu0_MuMu = (fMT2tree->muo[i].IsTightMuon && fTR->MuPt[fMuons[i]] > 20 && fabs(fTR->MuEta[fMuons[i]])<2.1 && MuPFIso04(fMuons[i]) < 0.1) ? 1 : 0;	
+
+		//                fMT2tree->muo[i].PassMu1_MuMu = (fMT2tree->muo[i].PassMu0_MuMu || (fMT2tree->muo[i].IsTightMuon && fTR->MuPt[fMuons[i]] < 20 && fabs(fTR->MuEta[fMuons[i]])<2.1 && MuPFIso04(fMuons[i]) < 0.15 ))? 1 : 0;
+
+                    fMT2tree->ele[i].PassE0_EE  = (fMT2tree->ele[i].IDSelEE && fTR->ElPt[fElecs[i]] > 20) ? 1 : 0;	
+
+                    fMT2tree->ele[i].PassE1_EE  = (fMT2tree->ele[i].PassE0_EE || fMT2tree->ele[i].IDSelEE && fTR->ElPt[fElecs[i]] < 20) ? 1 : 0;	
+	    /*     if (IsGoodMT2ElectronSelIDforEleEle(fElecs[i]) ){
+		  if( fTR->ElPt [fElecs[i]] > 20 )
+ 		    fMT2tree->ele[i].PassE0_EE=1;
 		}
 
+                if (IsGoodMT2ElectronSelIDforEleEle(fElecs[i]) ){
+		  if( fMT2tree->ele[i].PassE0_EE ==1 || fTR->ElPt [fElecs[i]] < 20 )
+		    fMT2tree->ele[i].PassE1_EE=1;
+		}
+	    */ 
 	}
 }
 
