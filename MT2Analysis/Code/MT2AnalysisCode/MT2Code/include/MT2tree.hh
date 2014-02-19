@@ -814,25 +814,46 @@ public:
   std::pair<int,int> GetTauMu();
   std::pair<int,int> GetTauEG();
   //double corrMETPhi;
-  double correctMETPhi(int mode = 0){
+  double correctMETPhi(){
 	double ret = -1000.;
-		if(mode == 2){//MC ReReco
-			double metPx = misc.MET * cos(misc.METPhi)-(+1.62861e-01 - 2.38517e-02 * pileUp.NVertices);
-    		double metPy = misc.MET * sin(misc.METPhi)-(+3.60860e-01 - 1.30335e-01 * pileUp.NVertices);
-    		if (metPx < 0) {
-        		if (metPy > 0)ret = atan(metPy / metPx) + M_PI;
-        		if (metPy < 0)ret = atan(metPy / metPx) - M_PI;
-    		} else ret = (atan(metPy / metPx));
-		} else if(mode == 1){//Data ReReco
-			double metPx = misc.MET * cos(misc.METPhi)-(+4.83642e-02 + 2.48870e-01 * pileUp.NVertices);
-    		double metPy = misc.MET * sin(misc.METPhi)-(-1.50135e-01 - 8.27917e-02 * pileUp.NVertices);
-    		if (metPx < 0) {
-        		if (metPy > 0)ret = atan(metPy / metPx) + M_PI;
-        		if (metPy < 0)ret = atan(metPy / metPx) - M_PI;
-    		} else ret = (atan(metPy / metPx));
-		}
+	if( ! misc.isData){//MC ReReco
+	  double metPx = misc.MET * cos(misc.METPhi)-(+1.62861e-01 - 2.38517e-02 * pileUp.NVertices);
+	  double metPy = misc.MET * sin(misc.METPhi)-(+3.60860e-01 - 1.30335e-01 * pileUp.NVertices);
+	  if (metPx < 0) {
+	    if (metPy > 0)ret = atan(metPy / metPx) + M_PI;
+	    if (metPy < 0)ret = atan(metPy / metPx) - M_PI;
+	  } else ret = (atan(metPy / metPx));
+	} else{//Data ReReco
+	  double metPx = misc.MET * cos(misc.METPhi)-(+4.83642e-02 + 2.48870e-01 * pileUp.NVertices);
+	  double metPy = misc.MET * sin(misc.METPhi)-(-1.50135e-01 - 8.27917e-02 * pileUp.NVertices);
+	  if (metPx < 0) {
+	    if (metPy > 0)ret = atan(metPy / metPx) + M_PI;
+	    if (metPy < 0)ret = atan(metPy / metPx) - M_PI;
+	  } else ret = (atan(metPy / metPx));
+	}
 	return ret;
   } 
+
+  double correctTypeIMETPhi(){
+	double ret = -1000.;
+	if( ! misc.isData){//MC ReReco
+	  double metPx = type1pfmet[0].Pt() * cos(type1pfmet[0].Phi())-(+1.62861e-01 - 2.38517e-02 * pileUp.NVertices);
+	  double metPy = type1pfmet[0].Pt() * sin(type1pfmet[0].Phi())-(+3.60860e-01 - 1.30335e-01 * pileUp.NVertices);
+	  if (metPx < 0) {
+	    if (metPy > 0)ret = atan(metPy / metPx) + M_PI;
+	    if (metPy < 0)ret = atan(metPy / metPx) - M_PI;
+	  } else ret = (atan(metPy / metPx));
+	} else{//Data ReReco
+	  double metPx = type1pfmet[0].Pt() * cos(type1pfmet[0].Phi())-(+4.83642e-02 + 2.48870e-01 * pileUp.NVertices);
+	  double metPy = type1pfmet[0].Pt() * sin(type1pfmet[0].Phi())-(-1.50135e-01 - 8.27917e-02 * pileUp.NVertices);
+	  if (metPx < 0) {
+	    if (metPy > 0)ret = atan(metPy / metPx) + M_PI;
+	    if (metPy < 0)ret = atan(metPy / metPx) - M_PI;
+	  } else ret = (atan(metPy / metPx));
+	}
+	return ret;
+  } 
+
   // My functions here
   // NJets
   Int_t    GetNjets   (float minJPt=20, float maxJEta=5., int PFJID=0);  // PFJETID not depends on pt and eta
@@ -1005,8 +1026,6 @@ public:
   MT2DoubleEle doubleEle; 
 
   void  FillDoubleEle();
- // float GetMT2DoubleEle();
- // float GetMT2DoubleEleImbalanceLeptons();
 
 
   //chenarani   
@@ -1022,7 +1041,40 @@ public:
   void  FillMuTau();
   void  FillEleTau();
   void  FillEleMu();
+  double DoubleMuInvMass(){//ele/muo/tau
+	if(doubleMu.mu0Ind != -1 && doubleMu.mu1Ind != -1)
+		return ((muo[doubleMu.mu0Ind].lv +muo[doubleMu.mu1Ind].lv).M());
+	return -1.;
+  }	
+  double DoubleTauInvMass(){
+	if(doubleTau.GetTauIndex0() != -1 && doubleTau.GetTauIndex1() != -1)
+		return ((tau[doubleTau.GetTauIndex0()].lv +tau[doubleTau.GetTauIndex1()].lv).M());
+	return -1.;
+  }	
+  double DoubleEleInvMass(){
+	if(doubleEle.Ele0Ind != -1 && doubleEle.Ele1Ind != -1)
+		return ((ele[doubleEle.Ele0Ind].lv +ele[doubleEle.Ele1Ind].lv).M());
+	return -1.;
+  }	
+  double EleMuInvMass(){
+	if(eleMu.mu0Ind != -1 && eleMu.ele0Ind != -1)
+		return ((ele[eleMu.ele0Ind].lv + muo[eleMu.mu0Ind].lv).M());
+	return -1.;
+  }	
+  double TauMuInvMass(){
+	if(muTau.GetTauIndex0() != -1 && muTau.GetMuIndex0() != -1)
+		return ((tau[muTau.GetTauIndex0()].lv + muo[muTau.GetMuIndex0()].lv).M());
+	return -1.;
+  }	
+  double TauEleInvMass(){
+	if(eleTau.GetTauIndex0() != -1 && eleTau.GetEleIndex0() != -1)
+		return ((tau[eleTau.GetTauIndex0()].lv + ele[eleTau.GetEleIndex0()].lv).M());
+	return -1.;
+  }	
+
   int fVerbose;
+
+
   //chenarani
   
 

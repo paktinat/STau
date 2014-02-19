@@ -63,6 +63,7 @@
   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoMu"));
   myChannelCuts.push_back("0 == 0");											//Place holder for Jet requirements
   myChannelCuts.push_back("0 == 0");											//Place holder for MET requirements
+  myChannelCuts.push_back("DoubleMuInvMass() > 106. || (DoubleMuInvMass() > 12. && DoubleMuInvMass() < 74.)");
 
 
   // We need to make the cut stream
@@ -94,6 +95,7 @@
   vars.push_back(myChan + ".METImbalanced"); props.Add(&PT);
   vars.push_back(myChan + ".MT2Imbalanced"); props.Add(&PT);
   vars.push_back(myChan + ".METImbalancedPhi"); props.Add(&PHI);
+  vars.push_back("DoubleMuInvMass()"); props.Add(&PT);// very slow
 
 
   /*
@@ -104,49 +106,52 @@
 
   TString myMisc = "misc";
 
-  vars.push_back(myMisc + ".MET"); props.Add(&PT);
-  vars.push_back(myMisc + ".METPhi"); props.Add(&PHI);
-  vars.push_back(myMisc + ".MT2"); props.Add(&PT);
-  vars.push_back(myMisc + ".MT2jet40"); props.Add(&PT);
-  vars.push_back(myMisc + ".LeadingJPt"); props.Add(&PT);
-  vars.push_back(myMisc + ".SecondJPt"); props.Add(&PT);
-  vars.push_back(myMisc + ".J3Pt"); props.Add(&PT);
-  vars.push_back(myMisc + ".J4Pt"); props.Add(&PT);
-  vars.push_back(myMisc + ".Vectorsumpt"); props.Add(&PT);
-  vars.push_back(myMisc + ".MinMetJetDPhi"); props.Add(&PHI); 
-  vars.push_back(myMisc + ".MinMetJetDPhi4"); props.Add(&PHI);
-  vars.push_back(myMisc + ".MinMetJetDPhiPt40"); props.Add(&PHI);
-  vars.push_back(myMisc + ".MinMetJetDPhi4Pt40"); props.Add(&PHI);
-  vars.push_back(myMisc + ".HT"); props.Add(&PT);
-  vars.push_back(myMisc + ".pfHT30"); props.Add(&PT);
-  vars.push_back(myMisc + ".pfHT35"); props.Add(&PT);
-  vars.push_back(myMisc + ".pfHT40"); props.Add(&PT);
-  vars.push_back(myMisc + ".pfHT45"); props.Add(&PT);
-  vars.push_back(myMisc + ".pfHT50"); props.Add(&PT);
+  //vars.push_back(myMisc + ".MET"); props.Add(&PT);
+  //vars.push_back(myMisc + ".METPhi"); props.Add(&PHI);
+  //vars.push_back(myMisc + ".MT2"); props.Add(&PT);
+  //vars.push_back(myMisc + ".MT2jet40"); props.Add(&PT);
+  //vars.push_back(myMisc + ".LeadingJPt"); props.Add(&PT);
+  //vars.push_back(myMisc + ".SecondJPt"); props.Add(&PT);
+  //vars.push_back(myMisc + ".J3Pt"); props.Add(&PT);
+  //vars.push_back(myMisc + ".J4Pt"); props.Add(&PT);
+  //vars.push_back(myMisc + ".Vectorsumpt"); props.Add(&PT);
+  //vars.push_back(myMisc + ".MinMetJetDPhi"); props.Add(&PHI); 
+  //vars.push_back(myMisc + ".MinMetJetDPhi4"); props.Add(&PHI);
+  //vars.push_back(myMisc + ".MinMetJetDPhiPt40"); props.Add(&PHI);
+  //vars.push_back(myMisc + ".MinMetJetDPhi4Pt40"); props.Add(&PHI);
+  //vars.push_back(myMisc + ".HT"); props.Add(&PT);
+  //vars.push_back(myMisc + ".pfHT30"); props.Add(&PT);
+  //vars.push_back(myMisc + ".pfHT35"); props.Add(&PT);
+  //vars.push_back(myMisc + ".pfHT40"); props.Add(&PT);
+  //vars.push_back(myMisc + ".pfHT45"); props.Add(&PT);
+  //vars.push_back(myMisc + ".pfHT50"); props.Add(&PT);
 
   /*Multiplicities*/
-  vars.push_back("NJets"); props.Add(&MULT);
-  vars.push_back("NJetsIDLoose"); props.Add(&MULT);
-  vars.push_back("NJetsIDLoose40"); props.Add(&MULT);
-  vars.push_back("NJetsIDLoose50"); props.Add(&MULT);
-  vars.push_back("NBJets"); props.Add(&MULT);
-  vars.push_back("NBJetsHE"); props.Add(&MULT);
-  vars.push_back("NBJetsCSVL"); props.Add(&MULT);
-  vars.push_back("NBJetsCSVM"); props.Add(&MULT);
-  vars.push_back("NBJetsCSVT"); props.Add(&MULT);
-  vars.push_back("NBJets40CSVL"); props.Add(&MULT);
-  vars.push_back("NBJets40CSVM"); props.Add(&MULT);
-  vars.push_back("NBJets40CSVT"); props.Add(&MULT);
-  vars.push_back("NEles"); props.Add(&MULT);
-  vars.push_back("NMuons"); props.Add(&MULT);
-  vars.push_back("NMuonsCommonIso"); props.Add(&MULT);
-  vars.push_back("NTaus"); props.Add(&MULT);
-  vars.push_back("NTausIDLoose"); props.Add(&MULT);
-  vars.push_back("NTausIDLoose3Hits"); props.Add(&MULT);
-  vars.push_back("NTausIDLooseMVA"); props.Add(&MULT);
-  vars.push_back("NTausIDLoose2"); props.Add(&MULT);
-  vars.push_back("pfmet[0].Pt()"); props.Add(&PT);
-  vars.push_back("pfmet[0].Phi()"); props.Add(&PHI);
+  //vars.push_back("NJets"); props.Add(&MULT);
+  //vars.push_back("NJetsIDLoose"); props.Add(&MULT);
+  //vars.push_back("NJetsIDLoose40"); props.Add(&MULT);
+  //vars.push_back("NJetsIDLoose50"); props.Add(&MULT);
+  //vars.push_back("NBJets"); props.Add(&MULT);
+  //vars.push_back("NBJetsHE"); props.Add(&MULT);
+  //vars.push_back("NBJetsCSVL"); props.Add(&MULT);
+  //vars.push_back("NBJetsCSVM"); props.Add(&MULT);
+  //vars.push_back("NBJetsCSVT"); props.Add(&MULT);
+  //vars.push_back("NBJets40CSVL"); props.Add(&MULT);
+  //vars.push_back("NBJets40CSVM"); props.Add(&MULT);
+  //vars.push_back("NBJets40CSVT"); props.Add(&MULT);
+  //vars.push_back("NEles"); props.Add(&MULT);
+  //vars.push_back("NMuons"); props.Add(&MULT);
+  //vars.push_back("NMuonsCommonIso"); props.Add(&MULT);
+  //vars.push_back("NTaus"); props.Add(&MULT);
+  //vars.push_back("NTausIDLoose"); props.Add(&MULT);
+  //vars.push_back("NTausIDLoose3Hits"); props.Add(&MULT);
+  //vars.push_back("NTausIDLooseMVA"); props.Add(&MULT);
+  //vars.push_back("NTausIDLoose2"); props.Add(&MULT);
+  //vars.push_back("pfmet[0].Pt()"); props.Add(&PT);
+  //vars.push_back("pfmet[0].Phi()"); props.Add(&PHI);
+  //vars.push_back("type1pfmet[0].Phi()"); props.Add(&PHI);
+  //vars.push_back("correctMETPhi()"); props.Add(&PHI);// very slow
+  //vars.push_back("correctTypeIMETPhi()"); props.Add(&PHI);// very slow
 
 
   /*
@@ -155,7 +160,7 @@
 
   TString myPU = "pileUp";
 
-  vars.push_back(myPU + ".NVertices"); props.Add(&MULT);
+  //vars.push_back(myPU + ".NVertices"); props.Add(&MULT);
 
 
   /*

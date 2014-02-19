@@ -1274,6 +1274,7 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 		if(fVerbose>2) cout << "  +++++++ Drawing      " << variable  << endl
 				    << "  +++++++ with cuts:   " << setw(40)  << selection << endl;
 
+
 		int nev = Samples[i].tree->Draw(variable.Data(),selection.Data(),"goff");
 
 		// Add underflow & overflow bins
@@ -2946,7 +2947,8 @@ void MassPlotter::loadSamples(const char* filename){
 			TFile *f = TFile::Open(file);
 			s.file = f;
 		
-			  s.tree = (TTree*)f->Get("MassTree");
+			s.tree = (TTree*)f->Get("MassTree");
+
 			
 			IN.getline(buffer, 200, '\n');
 			sscanf(buffer, "Xsection\t%f", &ParValue);
