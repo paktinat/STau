@@ -753,6 +753,10 @@ bool MT2Analysis::FillMT2TreeBasics(){
 		// di-tau triggers ------------------------------------------------------------------------------------------------------
 		string diTauTriggers[100];
 		int diTauTriggernumber=0;
+		diTauTriggers[diTauTriggernumber++] = "HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_v2";
+		diTauTriggers[diTauTriggernumber++] = "HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_v3";
+		diTauTriggers[diTauTriggernumber++] = "HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_v4";
+		diTauTriggers[diTauTriggernumber++] = "HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_v6";
 		diTauTriggers[diTauTriggernumber++] = "HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_v1";
 		diTauTriggers[diTauTriggernumber++] = "HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_v3";
 		diTauTriggers[diTauTriggernumber++] = "HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_v4";
@@ -765,6 +769,9 @@ bool MT2Analysis::FillMT2TreeBasics(){
 		// mu-tau triggers ------------------------------------------------------------------------------------------------------
 		string MuTauTriggers[100];
 		int MuTauTriggernumber=0;
+		MuTauTriggers[MuTauTriggernumber++] = "HLT_IsoMu18_eta2p1_LooseIsoPFTau20_v4";
+		MuTauTriggers[MuTauTriggernumber++] = "HLT_IsoMu18_eta2p1_LooseIsoPFTau20_v5";
+		MuTauTriggers[MuTauTriggernumber++] = "HLT_IsoMu18_eta2p1_LooseIsoPFTau20_v6";
 		MuTauTriggers[MuTauTriggernumber++] = "HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v2";
 		MuTauTriggers[MuTauTriggernumber++] = "HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v3";
 		MuTauTriggers[MuTauTriggernumber++] = "HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v6";
@@ -778,6 +785,9 @@ bool MT2Analysis::FillMT2TreeBasics(){
 		// ele-tau triggers ------------------------------------------------------------------------------------------------------
 		string EleTauTriggers[100];
 		int EleTauTriggernumber=0;
+		EleTauTriggers[EleTauTriggernumber++] = "HLT_Ele20_CaloIdVT_CaloIsoRhoT_TrkIdT_TrkIsoT_LooseIsoPFTau20_v4";
+		EleTauTriggers[EleTauTriggernumber++] = "HLT_Ele20_CaloIdVT_CaloIsoRhoT_TrkIdT_TrkIsoT_LooseIsoPFTau20_v5";
+		EleTauTriggers[EleTauTriggernumber++] = "HLT_Ele20_CaloIdVT_CaloIsoRhoT_TrkIdT_TrkIsoT_LooseIsoPFTau20_v6";
 		EleTauTriggers[EleTauTriggernumber++] = "HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20_v2";
 		EleTauTriggers[EleTauTriggernumber++] = "HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20_v3";
 		EleTauTriggers[EleTauTriggernumber++] = "HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20_v6";
