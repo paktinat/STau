@@ -26,7 +26,7 @@ ShapeName	QCD
 File            TauTau_V1_0/QCD-HT-100To250-TuneZ2star-8TeV-madgraph-pythia-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	1.036E7 pb #xsection TESCOdatareplication
 Kfact           1.59
-Lumi            19600.0
+Lumi            19600 
 Type		mc
 Color		401
 #
@@ -44,7 +44,7 @@ Color		401
 SAMPLE
 Name		QCD_HT_500To1000
 SName		QCD
-ShapeName	QCD
+ShapeName	QCD   
 File            TauTau_V1_0/QCD-HT-500To1000-TuneZ2star-8TeV-madgraph-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1-2.root
 Xsection  	8426.0 pb #xsection TESCOdatareplication
 Kfact           1.59
@@ -65,7 +65,7 @@ Color		401
 # -------- electroweak --------
 SAMPLE
 Name		WWJetsTo2L2Nu
-SName		WWJetsTo2L2Nu
+SName		Wtolnu
 ShapeName	WJets  
 File            TauTau_V1_0/WWJetsTo2L2Nu-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection        5.8	  #xsection AN-171  #4.7 pb 
@@ -153,33 +153,35 @@ Lumi            19600.0
 Type            mc
 Color		419
 
+
 SAMPLE
 Name		ZZJetsTo2L2Nu
 SName		DY
 ShapeName	ZZJetsTo2L2Nu
-File            TauTau_V1_0/ZZJetsTo2L2Nu-TuneZ2star-8TeV-madgraph-tauola--Summer12-DR53X-PU-S10-START53-V7A-v3--AODSIM.root
-Xsection  	0.7  #xsection AN-171  #0.28 pb 
+File            TauTau_V1_0/ZZJetsTo2L2Nu-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v3.root
+Xsection  	0.7  #xsection AN-171  #0.28 pb
 Kfact           1.
 Lumi            19600.0
 Type            mc
 Color		419
- 
+
+
 SAMPLE
 Name		ZZJetsTo2L2Q
 SName		DY
 ShapeName	ZZJetsTo2L2Q
-File            TauTau_V1_0/ZZJetsTo2L2Q-TuneZ2star-8TeV-madgraph-tauola--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM.root 
+File            TauTau_V1_0/ZZJetsTo2L2Q-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	2.5 #xsection AN-171     #0.91 pb
 Kfact           1.
 Lumi            19600.0
 Type            mc
 Color		419
-    
+   
 SAMPLE
 Name		ZZJetsTo4L
 SName		DY
 ShapeName	ZZJetsTo4L
-File            TauTau_V1_0/ZZJetsTo4L-TuneZ2star-8TeV-madgraph-tauola--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM.root
+File            TauTau_V1_0/ZZJetsTo4L-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection        0.2    #xsection AN-171 #0.1296 pb
 Kfact           1.
 Lumi            19600.0
@@ -190,7 +192,7 @@ SAMPLE
 Name		WZJetsTo3LNu
 SName		DY
 ShapeName	WZJetsTo3LNu
-File            TauTau_V1_0/WZJetsTo3LNu-TuneZ2-8TeV-madgraph-tauola--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM.root
+File            TauTau_V1_0/WZJetsTo3LNu-TuneZ2-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	1.1   #xsection AN-171  #0.8674 pb
 Kfact           1.
 Lumi            19600.0
@@ -223,7 +225,7 @@ Color		419
 Name		DY2JetsToLL_M_50
 SName		DY
 ShapeName	DY2JetsToLL_M_50
-File            TauTau_V1_0/DY2JetsToLL-M-50-TuneZ2Star-8TeV-madgraph--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM--NTupleProdPlus.root
+File            TauTau_V1_0/DY2JetsToLL-M-50-TuneZ2Star-8TeV-madgraph--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM--NTupleProdPlus.root         
 Xsection  	215.0 pb   #xsection AN-171
 Kfact           1.
 Lumi            19600.0
@@ -257,12 +259,13 @@ SAMPLE
 Name		TTGJets
 SName		Top
 ShapeName	Top   
-File            TauTau_V1_0/TTGJets-8TeV-madgraph--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM.root
+File            TauTau_V1_0/TTGJets-8TeV-madgraph-Summer12-DR53X-PU-S10-START53-V19-v1.root
 Xsection  	2.166  #xsectin TESCOdatareplication
 Kfact           1.	
 Lumi            19600.0
 Type            mc
 Color		600
+
 
 SAMPLE
 Name		TTH_Inclusive
@@ -275,17 +278,18 @@ Lumi            19600.0
 Type            mc
 Color		600
 
+
 SAMPLE
 Name		TTWJets
 SName		Top
 ShapeName	Top   
-File            TauTau_V1_0/TTWJets-8TeV-madgraph--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM.root
+File            TauTau_V1_0/TTWJets-8TeV-madgraph-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	0.232 pb #xsectiont TESCOdatareplication
 Kfact           1.	
 Lumi            19600.0
 Type            mc
 Color		600
- 
+
 SAMPLE
 Name		TTWWJets
 SName		Top
@@ -301,7 +305,7 @@ SAMPLE
 Name		TTZJets
 SName		Top
 ShapeName	Top   
-File            TauTau_V1_0/TTZJets-8TeV-madgraph-v2--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM.root
+File            TauTau_V1_0/TTZJets-8TeV-madgraph-v2-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	0.2057  #xsection LPCSusyDataset
 Kfact           1.	
 Lumi            19600.0
