@@ -65,10 +65,8 @@ void MT2tree::FillEleTau(){
 		eleTau.SetEleIndex0(indecies.second);
 		eleTau.SetSumCharge(tau[indecies.first].Charge + ele[indecies.second].Charge);
 		eleTau.SetMT2(this->CalcMT2(0, false, tau[indecies.first].lv, ele[indecies.second].lv, pfmet[0]));
-		TLorentzVector met = -(tau[indecies.first].lv + ele[indecies.second].lv);
-		eleTau.SetMT2Imbalanced(this->CalcMT2(0, false, tau[indecies.first].lv, ele[indecies.second].lv, met));
-		eleTau.SetMETImbalanced(met.Pt());
-		eleTau.SetMETImbalancedPhi(met.Phi());
+		eleTau.SetLV(tau[indecies.first].lv + ele[indecies.second].lv);
+		eleTau.SetMT2Imbalanced(this->CalcMT2(0, false, tau[indecies.first].lv, ele[indecies.second].lv, (-eleTau.GetLV())));
 		eleTau.SetElecVeto(this->HasNoVetoElecForEleTau(indecies.second));
 		eleTau.SetMuVeto(this->HasNoVetoMuForEleTau());
 		eleTau.SetBeingSignal(eleTau.isDesirableEvent() && (eleTau.GetSumCharge() == 0) );

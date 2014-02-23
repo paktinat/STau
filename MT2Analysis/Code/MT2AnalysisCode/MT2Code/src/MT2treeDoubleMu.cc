@@ -26,10 +26,8 @@ void MT2tree::FillDoubleMu(){
   
     doubleMu.MT2     = CalcMT2(0, 0,muo[doubleMu.mu0Ind].lv,muo[doubleMu.mu1Ind].lv, pfmet[0]);
  
-    TLorentzVector met = -(muo[doubleMu.mu0Ind].lv + muo[doubleMu.mu1Ind].lv);
+    doubleMu.lv = muo[doubleMu.mu0Ind].lv + muo[doubleMu.mu1Ind].lv;
     //cout<<"met.Pt() "<<met.Pt()<<endl;
-    doubleMu.METImbalanced = met.Pt();
-    doubleMu.METImbalancedPhi = met.Phi();
-    doubleMu.MT2Imbalanced = CalcMT2(0, 0,muo[doubleMu.mu0Ind].lv,muo[doubleMu.mu1Ind].lv, met);
+    doubleMu.MT2Imbalanced = CalcMT2(0, 0,muo[doubleMu.mu0Ind].lv,muo[doubleMu.mu1Ind].lv, -(doubleMu.lv));
   }
 }

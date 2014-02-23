@@ -11,26 +11,21 @@ public:
  
 
   void Reset(){
-    
+    lv.SetPxPyPzE(0, 0, 0, 0);
     mu0Ind            = -1;
     ele0Ind           = -1;
     charge            = -10;
-    METImbalanced   = -1.;
-    METImbalancedPhi = -10.;
     MT2           = -1.;
     MT2Imbalanced = -1.; 
     HasNoVetomuoForEleMu=true;
-   HasNoVetoElecForEleMu=true;
+    HasNoVetoElecForEleMu=true;
     isSignalEleMu = false;
-   }
+  }
   
-
-
+  TLorentzVector lv;
   Int_t    mu0Ind;
   Int_t    ele0Ind;
   Int_t    charge;
-  Float_t  METImbalanced;
-  Float_t  METImbalancedPhi;
   Float_t  MT2;
   Float_t  MT2Imbalanced ;
   bool     HasNoVetomuoForEleMu;
