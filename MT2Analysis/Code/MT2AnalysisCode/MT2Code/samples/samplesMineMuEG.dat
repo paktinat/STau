@@ -99,7 +99,7 @@ Type            mc
 Color		419 
 
 SAMPLE
-Name		DYToLL_HT_M50
+Name		DYToLL_M50
 SName		DY
 ShapeName	ZJetsToLL
 File            TauTau_V1_0/DYJetsToLL-M-50-TuneZ2Star-8TeV-madgraph-tarball-Summer12-DR53X-PU-S10-START53-V7A-v1.root

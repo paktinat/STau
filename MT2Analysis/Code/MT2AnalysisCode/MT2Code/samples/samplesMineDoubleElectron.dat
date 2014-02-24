@@ -65,7 +65,7 @@ Color		401
 # -------- electroweak --------
 SAMPLE
 Name		WWJetsTo2L2Nu
-SName		WWJetsTo2L2Nu
+SName		Wtolnu
 ShapeName	WJets  
 File            TauTau_V1_0/WWJetsTo2L2Nu-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection        5.8	  #xsection AN-171  #4.7 pb 
@@ -97,7 +97,7 @@ Type            mc
 Color		419 
 
 SAMPLE
-Name		DYToLL_HT_M50
+Name		DYToLL_M50
 SName		DY
 ShapeName	ZJetsToLL
 File            TauTau_V1_0/DYJetsToLL-M-50-TuneZ2Star-8TeV-madgraph-tarball-Summer12-DR53X-PU-S10-START53-V7A-v1.root
