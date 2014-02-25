@@ -23,6 +23,7 @@ public:
 	void SetHadTauEfficiency(string hadtauFileName){ fhadtauFileName = hadtauFileName;};
 	void SetPUReweighting(string puScenario){fPu = puScenario;};
 	void SetType1MET(bool type1MET){fType1MET = type1MET;};
+	void SetMETPhiModCorr(bool input_){fdoMETPhiModCorr = input_;};
 	void SetCHSJets(bool CHSJets){fCHSJets = CHSJets;};
 	void SetFastSim(bool FastSim){fisFastSim = FastSim;};
 	bool removePhoton;
@@ -32,6 +33,7 @@ public:
         bool fisFastSim;
 	string fPu;
 	bool fType1MET;
+	bool fdoMETPhiModCorr;
 	bool fCHSJets;
 private:
 	MT2Analysis             *fMT2Analysis;

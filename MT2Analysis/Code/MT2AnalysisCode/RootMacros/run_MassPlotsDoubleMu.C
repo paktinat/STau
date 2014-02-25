@@ -62,8 +62,9 @@
   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoElec"));
   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoMu"));
   myChannelCuts.push_back("0 == 0");											//Place holder for Jet requirements
-  myChannelCuts.push_back("0 == 0");											//Place holder for MET requirements
-  //  myChannelCuts.push_back("DoubleMuInvMass() > 106. || (DoubleMuInvMass() > 12. && DoubleMuInvMass() < 74.)");
+  myChannelCuts.push_back("misc.MET > 40");											//Place holder for MET requirements
+  //myChannelCuts.push_back("DoubleMuInvMass() > 106. || (DoubleMuInvMass() > 12. && DoubleMuInvMass() < 74.)");
+  myChannelCuts.push_back("NBJets40CSVT > 1");
 
 
   // We need to make the cut stream
@@ -91,10 +92,10 @@
    * Plot the channel specific variables: add what you like to see ....
    */
 
-//   vars.push_back(myChan + ".MT2"); props.Add(&PT);
-//   vars.push_back(myChan + ".METImbalanced"); props.Add(&PT);
-//   vars.push_back(myChan + ".MT2Imbalanced"); props.Add(&PT);
-//   vars.push_back(myChan + ".METImbalancedPhi"); props.Add(&PHI);
+  //vars.push_back(myChan + ".MT2"); props.Add(&PT);
+  //vars.push_back(myChan + ".METImbalanced"); props.Add(&PT);
+  //vars.push_back(myChan + ".MT2Imbalanced"); props.Add(&PT);
+  //vars.push_back(myChan + ".METImbalancedPhi"); props.Add(&PHI);
   vars.push_back("DoubleMuInvMass()"); props.Add(&PT);// very slow
 
 
@@ -131,6 +132,7 @@
   //vars.push_back("NJetsIDLoose"); props.Add(&MULT);
   //vars.push_back("NJetsIDLoose40"); props.Add(&MULT);
   //vars.push_back("NJetsIDLoose50"); props.Add(&MULT);
+  //vars.push_back("NBJets"); props.Add(&MULT);
   //vars.push_back("NBJetsHE"); props.Add(&MULT);
   //vars.push_back("NBJetsCSVL"); props.Add(&MULT);
   //vars.push_back("NBJetsCSVM"); props.Add(&MULT);
@@ -169,7 +171,7 @@
   for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
 	tA->makePlot(vars[iVar], cuts, -10, -10 , -10, trigger, vars[iVar], ((Objectproperties*)props.At(iVar))->nBins, 
 				 ((Objectproperties*)props.At(iVar))->lowVal, ((Objectproperties*)props.At(iVar))->highVal, false, true, true,
-				 true, true, true, 1, true, false, "png");
+				 true, true, true, 1, true, false, "gif");
   }
 
   /*

@@ -26,6 +26,10 @@ git push -u origin master
 
 ./RunMT2Analyzer -d . -i 4 -t mc -m MC -e -E /dataLOCAL/MT2Top/MT2_V02-03-02/MT2Analysis/Code/MT2AnalysisCode/MT2Code/V03-09-01_TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola_NTupleProducer_53X_MC_492_1_TCA.root     
 
+################################################################################################
+# Important: to have METPhi modulation correction, add switch "-c" to  ./RunMT2Analyzer inputs #
+# Only needed for 2012 data																	   #
+################################################################################################
 
 #Or this one which has more detail
 

@@ -30,6 +30,9 @@ MT2Analysis::MT2Analysis(TreeReader *tr) : UserAnalysisBase(tr){
 	fisType1MET                         = false;
 	fisCHSJets                          = false;
 	fisFastSim                          = false;
+	//Nadjieh
+	fdoMETPhiModCorr		    = false;
+	//EndNadjieh
 
 	fRequiredHLT.clear();
 	fVetoedHLT.clear();
@@ -948,7 +951,13 @@ bool MT2Analysis::FillMT2TreeBasics(){
 	
 	fMT2tree->misc.MET                 = MET().Pt();
 	fMT2tree->misc.METPhi              = MET().Phi();
-
+	//Nadjieh
+	if(fdoMETPhiModCorr){
+		double newMETPhi = fMT2tree->correctMETPhi();
+		fMT2tree->misc.METPhi = newMETPhi;
+		fMT2tree->pfmet[0].SetPtEtaPhiE(fMT2tree->pfmet[0].Pt(), fMT2tree->pfmet[0].Eta(), newMETPhi, fMT2tree->pfmet[0].E());
+	}
+        //End Nadjieh
 	fMT2tree->misc.LeadingJPt          = (fMT2tree->NJets > 0) ? fMT2tree->jet[0].lv.Pt() : 0;
 	fMT2tree->misc.SecondJPt           = (fMT2tree->NJets > 1) ? fMT2tree->jet[1].lv.Pt() : 0;
 	fMT2tree->misc.J3Pt                = (fMT2tree->NJets > 2) ? fMT2tree->jet[2].lv.Pt() : 0;
