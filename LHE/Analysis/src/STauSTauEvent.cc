@@ -1,6 +1,7 @@
 #include "../include/STauSTauEvent.h"
+#include "helper/Davismt2.h"
 
-TLorentzVector STauSTauEvent::MET()
+TLorentzVector STauSTauEvent::CalcMET()
 { 
   TLorentzVector tmp = STauM.SusyChild.p4;
   tmp += STauP.SusyChild.p4;
@@ -9,7 +10,7 @@ TLorentzVector STauSTauEvent::MET()
   return tmp;
 }
 
-double STauSTauEvent::MT2(){
+double STauSTauEvent::CalcMT2(){
   float testmass = 0;
   bool massive = false;
   TLorentzVector visible1 = STauP.SMChild.p4;

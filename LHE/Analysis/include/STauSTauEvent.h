@@ -11,11 +11,14 @@ public:
   SLepton STauP;
   SLepton STauM;
 
-  TLorentzVector MET();
-  double MT2();
+  TLorentzVector CalcMET();
+  double CalcMT2();
 
   float MET;
   float MT2;
+
+  float STauMass;
+  float LSPMass;
   
   ClassDef( STauSTauEvent , 1)
 };

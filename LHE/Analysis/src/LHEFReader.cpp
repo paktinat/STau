@@ -67,16 +67,16 @@ STauSTauEvent* LHEFReader::GetSTauSTauEvent(){
   STauSTau_Event.STauM.Set( hepeup.PUP[particle][0] , hepeup.PUP[particle][1] , hepeup.PUP[particle][2] , hepeup.PUP[particle][3] , hepeup.PUP[particle][4] ,
 			    hepeup.ISTUP[particle]  , hepeup.MOTHUP[particle].first , hepeup.MOTHUP[particle].second , hepeup.IDUP[particle] );
 
-  particle = TauP
+  particle = TauP ;
   STauSTau_Event.STauP.SMChild.Set( hepeup.PUP[particle][0] , hepeup.PUP[particle][1] , hepeup.PUP[particle][2] , hepeup.PUP[particle][3] , hepeup.PUP[particle][4] ,
 				    hepeup.ISTUP[particle]  , hepeup.MOTHUP[particle].first , hepeup.MOTHUP[particle].second , hepeup.IDUP[particle] );
 
   particle = TauN ;
-  STauSTau_Event.STauN.SMChild.Set( hepeup.PUP[particle][0] , hepeup.PUP[particle][1] , hepeup.PUP[particle][2] , hepeup.PUP[particle][3] , hepeup.PUP[particle][4] ,
+  STauSTau_Event.STauM.SMChild.Set( hepeup.PUP[particle][0] , hepeup.PUP[particle][1] , hepeup.PUP[particle][2] , hepeup.PUP[particle][3] , hepeup.PUP[particle][4] ,
 				    hepeup.ISTUP[particle]  , hepeup.MOTHUP[particle].first , hepeup.MOTHUP[particle].second , hepeup.IDUP[particle] );
 
   particle = LSPN ;
-  STauSTau_Event.STauN.SusyChild.Set( hepeup.PUP[particle][0] , hepeup.PUP[particle][1] , hepeup.PUP[particle][2] , hepeup.PUP[particle][3] , hepeup.PUP[particle][4] ,
+  STauSTau_Event.STauM.SusyChild.Set( hepeup.PUP[particle][0] , hepeup.PUP[particle][1] , hepeup.PUP[particle][2] , hepeup.PUP[particle][3] , hepeup.PUP[particle][4] ,
 				      hepeup.ISTUP[particle]  , hepeup.MOTHUP[particle].first , hepeup.MOTHUP[particle].second , hepeup.IDUP[particle] );
 
   particle = LSPP ;
@@ -84,7 +84,7 @@ STauSTauEvent* LHEFReader::GetSTauSTauEvent(){
 				      hepeup.ISTUP[particle]  , hepeup.MOTHUP[particle].first , hepeup.MOTHUP[particle].second , hepeup.IDUP[particle] );
 
 
-  STauSTau_Event.MT2();
+  STauSTau_Event.CalcMT2();
   
   STauSTau_Event.STauMass = STauSTau_Event.STauP.mass;
   STauSTau_Event.LSPMass = STauSTau_Event.STauP.SusyChild.mass;
@@ -211,7 +211,8 @@ int main(int argc, char *argv[])
     }
 
   int event_type = atoi( argv[1] );
-  cout << "Event Type : " << event_type==1?"CharginoChargino":"STauSTau" << endl;
+  string event_type_name = (event_type==1?"CharginoChargino":"STauSTau");
+  cout << "Event Type : " << event_type_name << endl;
 
   LHEFReader theReader;
 
