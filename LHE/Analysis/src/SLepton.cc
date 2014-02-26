@@ -23,4 +23,3 @@ TLorentzVector SLepton::ChildrenP4Sum(){
 
 ClassImp(SLepton)
 
-

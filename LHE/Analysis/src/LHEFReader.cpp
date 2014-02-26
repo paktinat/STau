@@ -22,6 +22,75 @@ bool LHEFReader::LoadNextEvent(){
   return reader->readEvent() ;
 }
 
+STauSTauEvent* LHEFReader::GetSTauSTauEvent(){
+
+  const LHEF::HEPEUP &hepeup = reader->hepeup;
+
+  int particle;
+
+  int SLP = -1;
+  int TauP = -1;
+  int LSPP = -1;
+
+  int SLN = -1;
+  int TauN = -1;
+  int LSPN = -1;
+
+  for(particle = 0; particle < hepeup.NUP; ++particle)
+  {
+    if( hepeup.IDUP[particle] == 1000015 )
+      SLP = particle;
+    else if(hepeup.IDUP[particle] == -1000015 )
+      SLN = particle;
+    else if( abs(hepeup.IDUP[particle]) == 15 ){
+      if(hepeup.MOTHUP[particle].first == SLP+1)
+	TauP = particle;
+      else if(hepeup.MOTHUP[particle].first == SLN+1)
+	TauN = particle;
+      else
+	cout << "Orphan SM Particle" << endl;
+    }else if( abs(hepeup.IDUP[particle]) == 1000022){
+      if(hepeup.MOTHUP[particle].first == SLP+1)
+	LSPP = particle;
+      else if(hepeup.MOTHUP[particle].first == SLN+1)
+	LSPN = particle;
+      else
+	cout << "Orphan LSP" << endl;
+    }
+  }
+
+  particle = SLP ;
+  STauSTau_Event.STauP.Set( hepeup.PUP[particle][0] , hepeup.PUP[particle][1] , hepeup.PUP[particle][2] , hepeup.PUP[particle][3] , hepeup.PUP[particle][4] ,
+			    hepeup.ISTUP[particle]  , hepeup.MOTHUP[particle].first , hepeup.MOTHUP[particle].second , hepeup.IDUP[particle] );
+
+  particle = SLN ;
+  STauSTau_Event.STauM.Set( hepeup.PUP[particle][0] , hepeup.PUP[particle][1] , hepeup.PUP[particle][2] , hepeup.PUP[particle][3] , hepeup.PUP[particle][4] ,
+			    hepeup.ISTUP[particle]  , hepeup.MOTHUP[particle].first , hepeup.MOTHUP[particle].second , hepeup.IDUP[particle] );
+
+  particle = TauP
+  STauSTau_Event.STauP.SMChild.Set( hepeup.PUP[particle][0] , hepeup.PUP[particle][1] , hepeup.PUP[particle][2] , hepeup.PUP[particle][3] , hepeup.PUP[particle][4] ,
+				    hepeup.ISTUP[particle]  , hepeup.MOTHUP[particle].first , hepeup.MOTHUP[particle].second , hepeup.IDUP[particle] );
+
+  particle = TauN ;
+  STauSTau_Event.STauN.SMChild.Set( hepeup.PUP[particle][0] , hepeup.PUP[particle][1] , hepeup.PUP[particle][2] , hepeup.PUP[particle][3] , hepeup.PUP[particle][4] ,
+				    hepeup.ISTUP[particle]  , hepeup.MOTHUP[particle].first , hepeup.MOTHUP[particle].second , hepeup.IDUP[particle] );
+
+  particle = LSPN ;
+  STauSTau_Event.STauN.SusyChild.Set( hepeup.PUP[particle][0] , hepeup.PUP[particle][1] , hepeup.PUP[particle][2] , hepeup.PUP[particle][3] , hepeup.PUP[particle][4] ,
+				      hepeup.ISTUP[particle]  , hepeup.MOTHUP[particle].first , hepeup.MOTHUP[particle].second , hepeup.IDUP[particle] );
+
+  particle = LSPP ;
+  STauSTau_Event.STauP.SusyChild.Set( hepeup.PUP[particle][0] , hepeup.PUP[particle][1] , hepeup.PUP[particle][2] , hepeup.PUP[particle][3] , hepeup.PUP[particle][4] ,
+				      hepeup.ISTUP[particle]  , hepeup.MOTHUP[particle].first , hepeup.MOTHUP[particle].second , hepeup.IDUP[particle] );
+
+
+  STauSTau_Event.MT2();
+  
+  STauSTau_Event.STauMass = STauSTau_Event.STauP.mass;
+  STauSTau_Event.LSPMass = STauSTau_Event.STauP.SusyChild.mass;
+
+  return &STauSTau_Event;
+}
 
 CharginoChargino* LHEFReader::GetCharginoCharginoEvent(){
 
@@ -132,22 +201,29 @@ CharginoChargino* LHEFReader::GetCharginoCharginoEvent(){
 
 int main(int argc, char *argv[])
 {
-  if(argc < 3)
+  if(argc < 4)
     {
-      cout << " Usage: " << argv[0] << " output_file" << " input_files" << endl;
+      cout << " Usage: " << argv[0] << "EventType output_file" << " input_files" << endl;
+      cout << "EventType : 1 for CharginoChargino, 2 for STauSTau" << endl;
       cout << " output_file - output file in ROOT format." << endl;
       cout << " input_files - input files in LHEF format," << endl;
       return 1;
     }
 
+  int event_type = atoi( argv[1] );
+  cout << "Event Type : " << event_type==1?"CharginoChargino":"STauSTau" << endl;
+
   LHEFReader theReader;
 
-  TFile* rootFile = TFile::Open( TString(argv[1]) , "recreate");
+  TFile* rootFile = TFile::Open( TString(argv[2]) , "recreate");
   TTree tree("LHEFiles" , "");
-  tree.Branch("CharginoCharginoEvent" , &(theReader.CharginoCharginoEvent ) );
+  if(event_type == 1)
+    tree.Branch("CharginoCharginoEvent" , &(theReader.CharginoCharginoEvent ) );
+  else if(event_type == 2 )
+    tree.Branch("STauSTauEvent" , &(theReader.STauSTau_Event) );
 
 
-  for(int input_index = 2 ; input_index < argc ; input_index ++){
+  for(int input_index = 3 ; input_index < argc ; input_index ++){
 
     theReader.SetReader( argv[input_index] );
 
@@ -159,7 +235,10 @@ int main(int argc, char *argv[])
 
     while( theReader.LoadNextEvent() ){
       //cout << nevent << endl;
-      theReader.GetCharginoCharginoEvent();
+      if(event_type == 1)
+	theReader.GetCharginoCharginoEvent();
+      else if(event_type == 2)
+	theReader.GetSTauSTauEvent();
       tree.Fill();
       nevent++;
     }

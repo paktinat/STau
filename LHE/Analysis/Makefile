@@ -25,13 +25,13 @@ OBJS += $(DICTOBS)
 .SUFFIXES: .cc,.C,.hh,.h
 .PHONY : clean all
 
-all: lib/libDataFormats.so bin/CharginoCharginoConverter
+all: lib/libDataFormats.so bin/LHEFConverter
 
 lib/libDataFormats.so : $(OBJS)
 	$(LD) $(LDFLAGS) $(SOFLAGS) $(ROOTLIBS)  $(OBJS) -o lib/libDataFormats.so
 	@echo "DataFormats.so successfully compiled!"		
 
-bin/CharginoCharginoConverter : lib/libDataFormats.so ../../MT2Analysis/Code/MT2AnalysisCode/TESCO/src/helper/Davismt2.o  src/LHEFReader.o
+bin/LHEFConverter : lib/libDataFormats.so ../../MT2Analysis/Code/MT2AnalysisCode/TESCO/src/helper/Davismt2.o  src/LHEFReader.o
 	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) $(ROOTLIBS) -L./lib/ -lDataFormats -o $@ src/LHEFReader.o	../../MT2Analysis/Code/MT2AnalysisCode/TESCO/src/helper/Davismt2.o
 
 obj/dict.C: $(wildcard include/*.h) include/linkdef.hh
@@ -45,6 +45,6 @@ clean:
 	$(RM) src/*.o 
 	$(RM) obj/dict.*
 	$(RM) lib/libDataFormats.so
-	$(RM) bin/CharginoCharginoConverter
+	$(RM) bin/LHEFConverter
 	$(RM) *~
 	$(RM) */*~
