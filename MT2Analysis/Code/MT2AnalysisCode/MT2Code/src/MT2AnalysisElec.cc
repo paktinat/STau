@@ -13,13 +13,11 @@ void MT2Analysis::GetElectronIndices(){
 
 
 void MT2Analysis::FillMT2Elecs(){
-  TLorentzVector METlv;
-  METlv.SetPtEtaPhiM(MET().Pt(), 0., MET().Phi(), 0.);
 
 
 	for(int i=0; i<fElecs.size(); ++i) {
 	  	fMT2tree->ele[i].lv.SetPtEtaPhiE(fTR->ElPt [fElecs[i]], fTR->ElEta[fElecs[i]], fTR->ElPhi[fElecs[i]], fTR->ElE[fElecs[i]]); 
-		fMT2tree->ele[i].MT       = fMT2tree->GetMT(fMT2tree->ele[i].lv, 0., METlv, 0.); 
+		fMT2tree->ele[i].MT       = fMT2tree->GetMT(fMT2tree->ele[i].lv, 0., fMT2tree->pfmet[0], 0.); 
 		fMT2tree->ele[i].Charge   = fTR->ElCharge[fElecs[i]];
 		fMT2tree->ele[i].Iso      = ElePFIso(fElecs[i]);
 		fMT2tree->ele[i].Iso04    = ElePFIso04(fElecs[i]);

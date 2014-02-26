@@ -521,13 +521,6 @@ bool MT2Analysis::FillMT2TreeBasics(){
 // 	}
 	
 	// -----------------------------------------------------------------
-	// Fill leptons 4-momenta
-	FillMT2Elecs();
-	
-	FillMT2Muons();
-
-	FillMT2Taus();
-
 	// ---------------------------------------------------------------
 	// GenMET	
 	fMT2tree->genmet[0].SetPtEtaPhiM(fTR->GenMET, 0., fTR->GenMETphi, 0.);
@@ -958,6 +951,19 @@ bool MT2Analysis::FillMT2TreeBasics(){
 		fMT2tree->pfmet[0].SetPtEtaPhiE(fMT2tree->pfmet[0].Pt(), fMT2tree->pfmet[0].Eta(), newMETPhi, fMT2tree->pfmet[0].E());
 	}
         //End Nadjieh
+
+
+	//Saeid moved FillLeptons after MET modulation is done!
+	// Fill leptons 4-momenta
+	FillMT2Elecs();
+	
+	FillMT2Muons();
+
+	FillMT2Taus();
+	//Saeid 
+
+
+
 	fMT2tree->misc.LeadingJPt          = (fMT2tree->NJets > 0) ? fMT2tree->jet[0].lv.Pt() : 0;
 	fMT2tree->misc.SecondJPt           = (fMT2tree->NJets > 1) ? fMT2tree->jet[1].lv.Pt() : 0;
 	fMT2tree->misc.J3Pt                = (fMT2tree->NJets > 2) ? fMT2tree->jet[2].lv.Pt() : 0;

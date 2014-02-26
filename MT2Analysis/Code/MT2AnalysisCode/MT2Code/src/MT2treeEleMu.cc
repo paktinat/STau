@@ -29,44 +29,6 @@ void MT2tree::FillEleMu(){
     }
   }
 
-for(int i=0; i<NEles; i++){    
-    if  (ele[i].IDSelEMU) //muon i pass first good muon conditions.
-      if (eleMu.ele0Ind==-1) {  //Default value
-	eleMu.ele0Ind = i; 
-	continue;
-      }//one good ele is 
-    
-    if (ele[i].IDVetoEMU){
-      eleMu.HasNoVetoElecForEleMu=false;
-    }
-  }
-
-for(int i=0; i<NEles; i++){    
-    if  (ele[i].IDSelEMU) //muon i pass first good muon conditions.
-      if (eleMu.ele0Ind==-1) {  //Default value
-	eleMu.ele0Ind = i; 
-	continue;
-      }//one good ele is 
-    
-    if (ele[i].IDVetoEMU){
-      eleMu.HasNoVetoElecForEleMu=false;
-    }
-  }
-for(int i=0; i<NEles; i++){    
-    if  (ele[i].IDSelEMU) //muon i pass first good muon conditions.
-      if (eleMu.ele0Ind==-1) {  //Default value
-	eleMu.ele0Ind = i; 
-	continue;
-      }//one good ele is 
-    
-    if (ele[i].IDVetoEMU){
-      eleMu.HasNoVetoElecForEleMu=false;
-    }
-  }
-
-   
- 
-
   if(eleMu.ele0Ind != -1 && eleMu.mu0Ind !=-1){
  
 
