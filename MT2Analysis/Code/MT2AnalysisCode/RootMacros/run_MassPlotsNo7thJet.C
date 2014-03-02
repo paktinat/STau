@@ -1,7 +1,9 @@
 {
   TString outputdir = "../MassPlots/";
-  TString samples   = "./samples/samplesMine.dat";
-  int verbose =3;
+  //  TString samples   = "./samples/samplesMine.dat";
+  TString samples   = "./samples/samplesMineSmearedJetMETNewBTagParkedNewSamples_No7trig.dat";
+  
+ int verbose =3;
 
   gSystem->CompileMacro("../MT2Code/src/MassPlotter.cc", "kf");//"k", "f"
   gROOT->ProcessLine(".x SetStyle_PRD.C");
@@ -25,12 +27,12 @@
   cutStream << " " 
             << "(misc.ProcessID!=10 || (Susy.MassGlu >= 350 && Susy.MassGlu < 355"<< "&&"
             << "Susy.MassLSP >= 50 && Susy.MassLSP < 55))"                     << "&&"
-    //     	    << "misc.MT2>125"                                                << "&&"
+       	    << "misc.MT2>125"                                                << "&&"
      	    << "NBJetsCSVT> 0"                                                << "&&"
 	    << "misc.MET>30"                                                << "&&"
    // 	    << "misc.HT>1500  "                                  << "&&"
     //          << "NTops > 0"                                                   << "&&"
-    //	    << "NTaus >0  && tau[0].Isolation3Hits > 1.5"                            << "&&"
+    	    << "NTaus >0  && tau[0].Isolation3Hits > 1.5"                            << "&&"
 //	    << "misc.MT2<60 "                                               << "&&"
 	    << "NJetsIDLoose40  >=4"                                         << "&&"
 	    << "(NEles==0  || ele[0].lv.Pt()<5)"                             << "&&"
@@ -93,12 +95,14 @@
   //NBJetsCSVT == M ==> nbjets == M
   //saeid
 
-  tA->makePlot("misc.MT2",             cuts,    -1,  -1 , -10 ,   trigger , "MT2"     , 35, 0, 350,        false,         true ,  true,   true,  true,  true, 1, 1);
+  //tA->makePlot("misc.MT2",             cuts,    -1,  -1 , -10 ,   trigger , "MT2"     , 35, 0, 350,        false,         true ,  true,   true,  true,  true, 1, 1);
   //tA->TriggerEfficiency(6, 4, 0, 100000000000);
   //tA->SortHighMT2(100.0, 100000000);
 
   //tA->TopStudy("TTbar",3000);
-  //tA->TauContamination(-1, 1000000000, 27);
+   tA->TauContamination(-1, 1000000000, 27, cuts, trigger, 0);
+ 
+   //tA->TauContamination(-1, 1000000000, 27);
   //tA->vs();
   //tA->Efficiency("SMS");
   //tA->MySmallMakePlot(1000000000);
