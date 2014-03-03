@@ -8058,10 +8058,10 @@ void MassPlotter::TauolaTest(){
 
   TString  decayModeNames[10] =  { "e" , "#mu" , "1#pi" , "3#pi" , "1#rho" , "3#rho" , "others" , "" , "" , ""};
   for (int i=0; i<4; i++){
-    TauDecayMode[i] = new TH1F(varname+"_"+cnames[i], ctitles[i]+";#tau decay mode;normalized entry", 10, 1, 11);
+    TauDecayMode[i] = new TH1F(varname+"_"+cnames[i], ctitles[i]+";#tau decay mode;normalized entry", 50, 1, 51);
   
-    for( int dmn = 0 ; dmn < 10 ; dmn++)
-      TauDecayMode[i]->GetXaxis()->SetBinLabel(dmn+1, decayModeNames[dmn] );
+    //for( int dmn = 0 ; dmn < 10 ; dmn++)
+    //  TauDecayMode[i]->GetXaxis()->SetBinLabel(dmn+1, decayModeNames[dmn] );
 
     TauDecayMode[i] -> SetLineColor  (ccolor[i]);
     TauDecayMode[i] -> SetLineWidth  (2);
@@ -8111,8 +8111,21 @@ void MassPlotter::TauolaTest(){
 	  int nEle = 0 ;
 	  int nMuons = 0;
 	  int nPis = 0;
+	  int nPiN = 0;
 	  int nRhos = 0;
+	  int nRhoN = 0;
 	  int nTaus = 0;
+	  int nNuTaus = 0;
+	  int nNuEles = 0;
+	  int nNuMus = 0;
+	  int nA1s = 0;
+	  int nKPlus = 0;
+	  int nKN = 0;
+	  int nPhotons = 0;
+	  int nOmega = 0;
+	  int nEta = 0;
+	  int nOthers = 0;
+	  int other[3];
 	  for(int j=0; j < fMT2tree->NGenParticles; j++)
 	    if(fMT2tree->genparticle[j].MIndex == fMT2tree->genparticle[i].Index){
 	      nChilds++;
@@ -8120,17 +8133,60 @@ void MassPlotter::TauolaTest(){
 	      case 11:
 		nEle ++;
 		break;
+	      case 12:
+		nNuEles ++;
+		break;
 	      case 13:
 		nMuons ++;
 		break;
+	      case 14:
+		nNuMus ++;
+		break;
 	      case 15:
 		nTaus ++;
+		break;
+	      case 16:
+		nNuTaus ++;
+		break;
+	      case 22:
+		nPhotons ++;
 		break;
 	      case 211:
 		nPis++;
 		break;
 	      case 213:
-		nRhos++;
+		//nRhos++;
+		nPis++;
+		nPiN++;
+		break;
+	      case 113:
+		//nRhoN ++;
+		nPis++;
+		nPis++;
+		break;
+	      case 130:
+	      case 310:
+		nKN ++;
+		break;
+	      case 323:
+	      case 321:
+		nKPlus ++;
+		break;
+	      case 20213:
+		nA1s ++;
+		break;
+	      case 111:
+		nPiN ++;
+		break;
+	      case 223:
+		nOmega ++;
+		break;
+	      case 221:
+		nEta ++;
+		break;
+	      default :
+		other[nOthers] = abs(fMT2tree->genparticle[j].ID);
+		nOthers ++;
 		break;
 	      }
 	    }
@@ -8153,8 +8209,107 @@ void MassPlotter::TauolaTest(){
 	  else
 	    decayMode = 8;
 
-	  if(decayMode == 7)
+	  //if(decayMode == 7)
+	  //  continue;
+	  stringstream sDecayMode;
+
+	  if(nEle == 1)
+	    sDecayMode << "e" ;
+	  else if(nEle > 1)
+	    sDecayMode << nEle << "e" ;
+	  
+	  if(nMuons == 1)
+	    sDecayMode << "μ";
+	  //sDecayMode << "#mu" ;
+	  else if(nMuons > 1)
+	    sDecayMode << nMuons << "μ" ;
+	  //sDecayMode << nMuons << "#mu" ;
+
+	  if(nPis == 1 )
+	    sDecayMode << "π+" ;
+	  //sDecayMode << "#pi" ;
+	  else if(nPis > 1)
+	    sDecayMode << nPis << "π+" ;
+
+	  if(nPiN == 1 )
+	    sDecayMode << "π0" ;
+	  //sDecayMode << "#pi" ;
+	  else if(nPiN > 1)
+	    sDecayMode << nPiN << "π0" ;
+
+
+	  if( nRhos == 1)
+	    sDecayMode << "ρ+" ;
+	  else if(nRhos > 1)
+	    sDecayMode << nRhos << "ρ+" ;
+
+	  if( nRhoN == 1)
+	    sDecayMode << "ρ0" ;
+	  else if(nRhoN > 1)
+	    sDecayMode << nRhoN << "ρ0" ;
+
+	  if( nTaus == 1)
+	    sDecayMode << "#tau" ;
+	  else if(nTaus >1)
+	    sDecayMode << nTaus << "#tau" ;
+	  
+	  if(nNuEles ==1)
+	    sDecayMode << "νe" ;
+	  else if( nNuEles > 1)
+	    sDecayMode << nNuEles << "νe";
+
+	  if(nNuMus ==1)
+	    sDecayMode << "νμ" ;
+	  else if( nNuMus > 1)
+	    sDecayMode << nNuMus << "νμ";
+
+	  if(nNuTaus ==1)
+	    sDecayMode << "ντ" ;
+	  else if( nNuTaus > 1)
+	    sDecayMode << nNuTaus << "ντ";
+
+	  if(nA1s ==1 )
+	    sDecayMode << "a1" ;
+	  else if(nA1s > 1)
+	    sDecayMode << nA1s << "a1";
+	  
+	  if(nKPlus ==1)
+	    sDecayMode << "K+";
+	  else if(nKPlus > 1)
+	    sDecayMode << nKPlus << "K+";
+
+	  if(nKN ==1)
+	    sDecayMode << "K0";
+	  else if(nKN > 1)
+	    sDecayMode << nKN << "K0";
+
+	  if(nOmega ==1)
+	    sDecayMode << "Ω";
+	  else if(nOmega > 1)
+	    sDecayMode << nOmega << "Ω";
+
+	  if(nEta ==1)
+	    sDecayMode << "η";
+	  else if(nEta > 1)
+	    sDecayMode << nEta << "η";
+
+// 	  if(nPhotons == 1)
+// 	    sDecayMode << "#gamma";
+// 	  else if(nPhotons > 1)
+// 	    sDecayMode << nPhotons << "#gamma" ;
+
+	  
+	  if(nOthers == 1)
+	    sDecayMode << "+" << b.GetPDGParticle(  other[0] )->get_texname();
+	  else if(nOthers == 2)
+	    sDecayMode << "+" <<  b.GetPDGParticle(  other[0] )->get_texname() << "+" <<  b.GetPDGParticle(  other[1] )->get_texname();
+	  else if(nOthers == 3)
+	    sDecayMode << "+" <<  b.GetPDGParticle(  other[0] )->get_texname() << "+" <<  b.GetPDGParticle(  other[1] )->get_texname()<< "+" <<  b.GetPDGParticle(  other[2] )->get_texname();
+
+	  if( sDecayMode.str() == "#tau" )
 	    continue;
+
+	  //sDecayMode <<  nEle << "," <<  nMuons << "," <<  nPis << "," <<  nRhos << "," <<  nTaus << "," <<  nNuTaus << "," <<nNuEles << "," << nNuMus << "," << nA1s << "," <<nKPlus << "," << nPhotons << "," << nOthers;
 
 	  if(true){ //nChilds == 0 || nChilds == 1){	  
 	    for(int j=0; j < fMT2tree->NGenParticles; j++)
@@ -8170,7 +8325,7 @@ void MassPlotter::TauolaTest(){
 	
 	    nTauChildren[ii]->Fill( nChilds );
 
-	    TauDecayMode[ii]->Fill( decayMode );
+	    TauDecayMode[ii]->Fill( sDecayMode.str().c_str() , 1.0 );
 	    TauPtChildPt[ii]->Fill(( fMT2tree->genparticle[i].lv -  ChildsPt ).Pt() ); 
 	  }
 	}
@@ -8239,16 +8394,18 @@ void MassPlotter::TauolaTest(){
   TauPtChildPtC->SaveAs("TauPtChildPtC.C");
 
   TCanvas *TauDecayModeC = new TCanvas("TauDecayMode", "TauDecayMode");
-  TauDecayModeC->Divide(2,1);
+  TauDecayModeC->Divide(2,2);
 
   TauDecayModeC->cd(1);
   AddOverAndUnderFlow(TauDecayMode[0],true,true)->DrawNormalized("BAR");
-  AddOverAndUnderFlow(TauDecayMode[1],true,true)->DrawNormalized("sames BAR");
+  TauDecayModeC->cd(2);
+  AddOverAndUnderFlow(TauDecayMode[1],true,true)->DrawNormalized("BAR");
   //( (TPad*)gPad )->BuildLegend();
 
-  TauDecayModeC->cd(2);
+  TauDecayModeC->cd(3);
   AddOverAndUnderFlow(TauDecayMode[2],true,true)->DrawNormalized("BAR");
-  AddOverAndUnderFlow(TauDecayMode[3],true,true)->DrawNormalized("sames BAR");
+  TauDecayModeC->cd(4);
+  AddOverAndUnderFlow(TauDecayMode[3],true,true)->DrawNormalized("BAR");
   //( (TPad*)gPad )->BuildLegend();
 
   TauDecayModeC->SaveAs("TauDecayModeC.C");
