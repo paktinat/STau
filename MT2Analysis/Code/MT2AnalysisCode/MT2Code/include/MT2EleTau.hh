@@ -5,21 +5,23 @@ using namespace std;
 
 class MT2EleTau: public TObject {
 public:
-  MT2EleTau(){Reset();};
-  ~MT2EleTau(){};
-  //Reset values to default
-  void Reset(){
-    lv.SetPxPyPzE(0, 0, 0, 0);
-    tau0Ind = -1;
-    ele0Ind = -1;
-    chargeSum = -1;
-    MT2 = -1.;
-    MT2Imbalanced = -1.;
-    hasNoVetoElec = false;
-    hasNoVetoMu = false;
-    signalEleTau = false;
-    qcdEleTau = false;
-  };
+        MT2EleTau():tau0Ind(-1),ele0Ind(-1),chargeSum(-1),MT2(-1.),MT2Imbalanced(-1.),METImbalanced(-1.),METImbalancedPhi(-10.),hasNoVetoElec(false),
+                    hasNoVetoMu(false),signalEleTau(false),qcdEleTau(false){};
+        ~MT2EleTau(){};
+        //Reset values to default
+        void Reset(){
+                tau0Ind = -1;
+                ele0Ind = -1;
+                chargeSum = -1;
+                MT2 = -1.;
+                MT2Imbalanced = -1.;
+                METImbalanced = -1.;
+                METImbalancedPhi = -10.;
+                hasNoVetoElec = false;
+                hasNoVetoMu = false;
+                signalEleTau = false;
+                qcdEleTau = false;
+        };
 
         //Setters
         void SetTauIndex0(int input){ tau0Ind = input; };
@@ -27,7 +29,8 @@ public:
         void SetSumCharge(int input){ chargeSum = input; };
         void SetMT2(float input){ MT2 = input; };
         void SetMT2Imbalanced(float input){ MT2Imbalanced = input; };
-        void SetLV(TLorentzVector input){ lv = input; };
+        void SetMETImbalanced(float input){ METImbalanced = input; };
+        void SetMETImbalancedPhi(float input){ METImbalancedPhi = input; };
         void SetElecVeto(bool input){ hasNoVetoElec = input; };
         void SetMuVeto(bool input){ hasNoVetoMu = input; };
 	void SetBeingSignal(bool input){ signalEleTau = input;} 
@@ -38,7 +41,8 @@ public:
         int GetSumCharge(){ return chargeSum; };
         float GetMT2(){ return MT2; };
         float GetMT2Imbalanced(){ return MT2Imbalanced; };
-        TLorentzVector GetLV(){ return lv; };
+        float GetMETImbalanced(){ return METImbalanced; };
+        float GetMETImbalancedPhi(){ return METImbalancedPhi; };
         bool HasNoVetoElec(){ return hasNoVetoElec; };
         bool HasNoVetoMu(){ return hasNoVetoMu; };
 
@@ -65,6 +69,8 @@ public:
                 cout<<"\tchargeSum: "<<chargeSum<<endl;
                 cout<<"\tMT2: "<<MT2<<endl;
                 cout<<"\tMT2Imbalanced: "<<MT2Imbalanced<<endl;
+                cout<<"\tMETImbalanced: "<<METImbalanced<<endl;
+                cout<<"\tMETImbalancedPhi: "<<METImbalancedPhi<<endl;
                 cout<<"\thasNoVetoElec: "<<hasNoVetoElec<<endl;
                 cout<<"\thasNoVetoMu: "<<hasNoVetoMu<<endl;
                 cout<<"\tsignalEleTau: "<<signalEleTau<<endl;
@@ -72,19 +78,20 @@ public:
         }
 
 private:
-  //General properties
-  TLorentzVector lv;
-  int tau0Ind;
-  int ele0Ind;
-  int chargeSum;
-  float MT2;
-  float MT2Imbalanced;
-  bool hasNoVetoElec;
-  bool hasNoVetoMu;
-  bool signalEleTau;
-  bool qcdEleTau;
+        //General properties
+        int tau0Ind;
+        int ele0Ind;
+        int chargeSum;
+        float MT2;
+        float MT2Imbalanced;
+        float METImbalanced;
+        float METImbalancedPhi;
+        bool hasNoVetoElec;
+        bool hasNoVetoMu;
+	bool signalEleTau;
+	bool qcdEleTau;
 
-  ClassDef(MT2EleTau, 1)
+        ClassDef(MT2EleTau, 1)
 
 };
 #endif /*MT2EleTau_hh*/

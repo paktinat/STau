@@ -28,11 +28,14 @@ void MT2tree::FillEleMu(){
       eleMu.HasNoVetoElecForEleMu=false;
     }
   }
-   
+
   if(eleMu.ele0Ind != -1 && eleMu.mu0Ind !=-1){
  
+
     
     eleMu.charge = muo[eleMu.mu0Ind].Charge + ele[eleMu.ele0Ind].Charge; //check two good muon charge
+
+
   
     if(fVerbose > 3){ 
       cout<<" Indices for Ele Muon "<<eleMu.mu0Ind<<" "<<eleMu.ele0Ind<<endl;
@@ -46,9 +49,12 @@ void MT2tree::FillEleMu(){
   
     eleMu.MT2    = CalcMT2(0, 0,muo[eleMu.mu0Ind].lv,ele[eleMu.ele0Ind].lv, pfmet[0]);
  
-    eleMu.lv = muo[eleMu.mu0Ind].lv +ele[eleMu.ele0Ind].lv;
-    if(fVerbose > 3) cout<<" met.Pt() "<<eleMu.lv.Pt()<<endl;
-    eleMu.MT2Imbalanced = CalcMT2(0, 0,muo[eleMu.mu0Ind].lv,ele[eleMu.ele0Ind].lv, (-eleMu.lv));
+    TLorentzVector met = -(muo[eleMu.mu0Ind].lv +ele[eleMu.ele0Ind].lv);
+    if(fVerbose > 3) cout<<"met.Pt() "<<met.Pt()<<endl;
+    eleMu.METImbalanced = met.Pt();
+    eleMu.METImbalancedPhi = met.Phi();
+    eleMu.MT2Imbalanced = CalcMT2(0, 0,muo[eleMu.mu0Ind].lv,ele[eleMu.ele0Ind].lv, met);
     if(fVerbose > 3) cout<<"  eleMu.MT2Imbalanced  "<<eleMu.MT2Imbalanced <<endl;
   }
 }
+

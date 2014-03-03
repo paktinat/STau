@@ -49,6 +49,7 @@ public:
 	void SetBTagEfficiency(string btagFileName){ fbtagFileName = btagFileName;};
 	void SetHadTauEfficiency(string hadtauFileName){ fhadtauFileName = hadtauFileName;};
 	void SetType1MET(bool type1MET){fisType1MET = type1MET;};
+        void SetMETPhiModCorr(bool input_){fdoMETPhiModCorr = input_;};
 	void SetCHSJets(bool CHSJets){fisCHSJets = CHSJets;};
 	void SetFastSim(bool FastSim){fisFastSim = FastSim;};
 
@@ -91,6 +92,9 @@ public:
 	// CHSjets
 	bool fisType1MET;
 
+	//Nadjieh
+	bool fdoMETPhiModCorr;
+	//EndNadjieh
 	// Type1 MET
 	bool fisCHSJets;
   
@@ -242,7 +246,8 @@ private:
 
         bool IsGoodMT2ElectronMVANoTrigLoose(const int index);
         bool IsGoodMT2ElectronMVANoTrigTight(const int index);
-
+        
+        bool IsGoodMT2ElectronSelIDforStop(const int index);
 
 
 	const float EffArea(float abseta);
