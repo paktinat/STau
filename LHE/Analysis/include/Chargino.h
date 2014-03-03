@@ -16,6 +16,8 @@ public:
   SLepton SusyChild;
   Particle SMChild;
 
+  Particle* GetTau();
+
   bool DecaysToSTau();
 
   TLorentzVector ChildrenP4Sum();

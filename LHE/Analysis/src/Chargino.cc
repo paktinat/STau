@@ -1,7 +1,14 @@
 #include "../include/Chargino.h"
 
+Particle* Chargino::GetTau(){
+  if( abs(SMChild.pid) == 15 )
+    return &SMChild ;
+  else
+    return &SusyChild.SMChild;
+}
+
 bool Chargino::DecaysToSTau(){
-  return (this->SusyChild.Charge != 0);
+  return ( abs(this->SusyChild.SMChild.pid) == 16);
 }
 Chargino::Chargino(  double px , double py , double pz , double E , double m, int Status , int m1 , int m2 , int pdgid  )
   : Particle( px , py , pz , E , m , Status , m1 , m2 , pdgid)

@@ -21,6 +21,12 @@ public:
   void SetReader(string fileName);
 
   bool LoadNextEvent();
+
+  void SetMassParams(double mstau , double mlsp , double mchargino = -1);
+  double mSTau;
+  double mLSP;
+  double mChargino;
+
   CharginoChargino* GetCharginoCharginoEvent();
   STauSTauEvent* GetSTauSTauEvent();
 };

@@ -13,6 +13,12 @@ void LHEFReader::SetReader(string fileName){
   reader = new LHEF::Reader( inputFileStream );
 }
 
+void LHEFReader::SetMassParams(double mstau , double mlsp , double mchargino){
+  mSTau = mstau ;
+  mLSP = mlsp ;
+  mChargino = mchargino ;
+}
+
 LHEFReader::LHEFReader()
 {
 
@@ -86,8 +92,8 @@ STauSTauEvent* LHEFReader::GetSTauSTauEvent(){
 
   STauSTau_Event.CalcMT2();
   
-  STauSTau_Event.STauMass = STauSTau_Event.STauP.mass;
-  STauSTau_Event.LSPMass = STauSTau_Event.STauP.SusyChild.mass;
+  STauSTau_Event.STauMass = mSTau ;
+  STauSTau_Event.LSPMass = mLSP ;
 
   return &STauSTau_Event;
 }
@@ -191,9 +197,9 @@ CharginoChargino* LHEFReader::GetCharginoCharginoEvent(){
   CharginoCharginoEvent.CalcMT2();
   CharginoCharginoEvent.CalcDecayMode();
   
-  CharginoCharginoEvent.CharginoMass = CharginoCharginoEvent.CharginoP.mass;
-  CharginoCharginoEvent.LSPMass = CharginoCharginoEvent.CharginoP.SusyChild.SusyChild.mass;
-  CharginoCharginoEvent.STauMass = CharginoCharginoEvent.CharginoP.SusyChild.mass;
+  CharginoCharginoEvent.CharginoMass = mChargino ;
+  CharginoCharginoEvent.LSPMass = mLSP ; 
+  CharginoCharginoEvent.STauMass = mSTau ; 
   
   return &CharginoCharginoEvent;
 }
@@ -204,29 +210,65 @@ int main(int argc, char *argv[])
   if(argc < 4)
     {
       cout << " Usage: " << argv[0] << "EventType output_file" << " input_files" << endl;
-      cout << "EventType : 1 for CharginoChargino, 2 for STauSTau" << endl;
+      cout << "EventType : 1 for CharginoChargino X5% , 2 CharginoChargino X50%, 3 for CharginoChargino X95%, 4 for STauSTau" << endl;
       cout << " output_file - output file in ROOT format." << endl;
       cout << " input_files - input files in LHEF format," << endl;
       return 1;
     }
 
   int event_type = atoi( argv[1] );
-  string event_type_name = (event_type==1?"CharginoChargino":"STauSTau");
+  string event_type_name = (event_type==4?"STauSTau":"CharginoChargino");
   cout << "Event Type : " << event_type_name << endl;
 
   LHEFReader theReader;
 
   TFile* rootFile = TFile::Open( TString(argv[2]) , "recreate");
   TTree tree("LHEFiles" , "");
-  if(event_type == 1)
+  if(event_type == 1 || event_type == 2 || event_type == 3 )
     tree.Branch("CharginoCharginoEvent" , &(theReader.CharginoCharginoEvent ) );
-  else if(event_type == 2 )
+  else if(event_type == 4 )
     tree.Branch("STauSTauEvent" , &(theReader.STauSTau_Event) );
 
 
   for(int input_index = 3 ; input_index < argc ; input_index ++){
+    double stau = 0;
+    double chargino = -1.0;
+    double lsp = 0;
 
+    string file_name = argv[input_index];
+    int last_slash = file_name.rfind("/")+1;
+    int last_point = file_name.rfind(".");
+    file_name = file_name.substr(last_slash , last_point-last_slash);
+    int first_ = file_name.find("_")+1;
+    int last_ = file_name.rfind("_");
+    int first_number = atoi( file_name.substr( first_ , last_ - first_ ).c_str() );
+    int second_number = atoi( file_name.substr( last_+1 ).c_str() );
+
+    switch(event_type){
+    case 1:
+      stau = double(first_number)+0.05*( second_number - first_number );
+      chargino = second_number ;
+      lsp = first_number;
+      break;
+    case 2:
+      stau = double(first_number)+0.5*( second_number - first_number );
+      chargino = second_number ;
+      lsp = first_number;
+      break;
+    case 3:
+      stau = double(first_number)+0.95*( second_number - first_number );
+      chargino = second_number ;
+      lsp = first_number;
+      break;
+    case 4:
+      lsp = second_number;
+      stau = first_number;
+      break;
+    }
+
+    cout << "Analyzing (" << input_index-2 << "/" << argc-2 << ")"  << event_type_name << " lsp=" << lsp << ", chargino=" << chargino << ", stau=" << stau << endl;
     theReader.SetReader( argv[input_index] );
+    theReader.SetMassParams(stau , lsp , chargino );
 
     cout << "** Calculating number of events to process. Please wait..." << endl;
     Long64_t allEntries = theReader.reader->getNumberOfEvents();
@@ -236,9 +278,9 @@ int main(int argc, char *argv[])
 
     while( theReader.LoadNextEvent() ){
       //cout << nevent << endl;
-      if(event_type == 1)
+      if(event_type == 1 || event_type == 2 || event_type == 3)
 	theReader.GetCharginoCharginoEvent();
-      else if(event_type == 2)
+      else if(event_type == 4)
 	theReader.GetSTauSTauEvent();
       tree.Fill();
       nevent++;

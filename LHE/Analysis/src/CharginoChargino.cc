@@ -8,8 +8,13 @@ TLorentzVector CharginoChargino::CalcMET(){
   tmp += CharginoP.SusyChild.SusyChild.p4;
   if(CharginoP.DecaysToSTau()) 
     tmp += CharginoP.SMChild.p4;
+  else
+    tmp += CharginoP.SusyChild.SMChild.p4;
+
   if(CharginoN.DecaysToSTau())
     tmp += CharginoN.SMChild.p4;
+  else
+    tmp += CharginoN.SusyChild.SMChild.p4;
 
   ret = tmp.Pt();
 
