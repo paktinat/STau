@@ -24,7 +24,7 @@ void usage( int status = 0 ) {
         cout << "                      [-s noPU,MC2012] [-C JEC]                                       " << endl;
 	cout << "                      [-w pdf] [-b btag]                                             " << endl;
 	cout << "                      [-r photon ] [-i ID ]                                          " << endl;
-	cout << "                      [-e type1MET ] [-E CHS ] [-c METPhiModCorr]                    " << endl;
+	cout << "                      [-e type1MET ] [-E CHS ]                                       " << endl;
 	cout << "                      [-f FastSim ]                                                  " << endl;
 	cout << "                      [-l] file1 [... filen]"                                          << endl;
 	cout << "  where:"                                                                              << endl;
@@ -49,7 +49,6 @@ void usage( int status = 0 ) {
 	cout << "                   /shome/pnef/MT2Analysis/Code/JetEnergyCorrection/[JEC]            " << endl;
 	cout << "                   ak5 pf-jets will be corrected with L1FastL2L3 (+RES if type=data) " << endl;
 	cout << "     type1MET      use type1 corrected pf-MET (default = false)                      " << endl;
-    cout << "     METPhiModCorr correct the phi of MET, specific to 2012 data (default = false)   " << endl;
 	cout << "     CHS           use CHS - PFjets (default = false)                                " << endl;
 	cout << "     FastSim       sample is FastSim (default = false)                               " << endl;//has to be one flag, as scan can be full/fastsim
 	cout << "     filen         are the input files (by default: ROOT files)                      " << endl;
@@ -79,20 +78,19 @@ int main(int argc, char* argv[]) {
 	bool isData  = false;
 	bool isCHSJets = false;
 	bool isType1MET = false;
-	bool doMETPhiModCorr = false;
 	bool isFastSim = false;
 	bool isScan = false;
 	int verbose  = 0;
 	int maxEvents=-1;
 	int ID       =-1;
-   	bool removePhoton = false;
-   	bool removeZll    = false;
+    	bool removePhoton = false;
+    	bool removeZll    = false;
 	string photon = "";
 	string pdf = "";
 
 // Parse options
 	char ch;
-	while ((ch = getopt(argc, argv, "s:d:o:v:j:m:n:p:P:t:r:b:u:i:C:w:ecEflh?")) != -1 ) {
+	while ((ch = getopt(argc, argv, "s:d:o:v:j:m:n:p:P:t:r:b:u:i:C:w:eEflh?")) != -1 ) {
 	  switch (ch) {
 	  case 'd': outputdir       = TString(optarg);break;
 	  case 'o': filename        = TString(optarg);break;
@@ -109,9 +107,8 @@ int main(int argc, char* argv[]) {
 	  case 'w': pdf             = string(optarg); break;
 	  case 'i': ID              = atoi(optarg);   break;
 	  case 's': puScenario      = string(optarg); break;
-      case 'C': JEC             = string(optarg); break;
+          case 'C': JEC             = string(optarg); break;
 	  case 'e': isType1MET      = true; break;
-	  case 'c': doMETPhiModCorr = true; break;
 	  case 'E': isCHSJets       = true; break; 
 	  case 'f': isFastSim       = true; break; 
 	  case 'l': isList          = true; break;
@@ -209,7 +206,6 @@ int main(int argc, char* argv[]) {
 	cout << "PileUp Scenario:                " << puScenario << endl;
 	cout << "ak5-PF have CHS                 " << (isCHSJets? "ENABLED":"DISABLED") << endl;
 	cout << "pfMET is:                       " << (isType1MET? "Type1 corrected":"raw") << endl;
-	cout << "METPhi is:                      " << (doMETPhiModCorr? "corrected":"raw") << endl;
   	if(btagFileName.length() !=0){
 	cout << "btag file is:                   " << (btagFileName.length()>0?btagFileName:"empty") << endl;
 	}
@@ -239,7 +235,6 @@ int main(int argc, char* argv[]) {
 	tA->SetHadTauEfficiency(htauFileName);
 	tA->SetPUReweighting(puScenario);
 	tA->SetType1MET(isType1MET);
-	tA->SetMETPhiModCorr(doMETPhiModCorr);
 	tA->SetCHSJets(isCHSJets);
 	tA->SetFastSim(isFastSim);
 	tA->isScan = isScan;

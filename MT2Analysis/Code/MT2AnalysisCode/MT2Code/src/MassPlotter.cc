@@ -52,29 +52,9 @@
 #include <map>
 #include <time.h> // access to date/time
 
+
 using namespace std;
 
- Objectproperties::Objectproperties(TString type_):type(type_), nBins(10),lowVal(-1000.),highVal(0.){
-		if(type == "pt"){	
-			nBins = 100;
-			lowVal = -2.;
-			highVal = 1000.;
-		}
-                else if(type == "phi"){
-                        nBins = 70;
-                        lowVal = -3.5;
-                        highVal = 3.5;
-                }
-                else if(type == "mult"){
-                        nBins = 20;
-                        lowVal = -0.5;
-                        highVal = 19.5;
-                }
-		else std::cout<<"Bad Type!!!"<<std::endl;
-
-
-	}
- Objectproperties::Objectproperties():type(""), nBins(10),lowVal(-1000.),highVal(0.){}
 //____________________________________________________________________________
 MassPlotter::MassPlotter(){
 	fSave=true;
@@ -266,18 +246,18 @@ void MassPlotter::MakeMT2PredictionAndPlots(bool cleaned , double dPhisplit[], d
 void MassPlotter::makeplot(TString var, TString maincuts, TString basecuts, int njets, int nbjets, int nleps, TString HLT,  TString xtitle,
 			   const int nbins, const double min, const double max,
 			   bool flip_order, bool logflag, bool composited, bool ratio, bool stacked, 
-			   bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos, TString saveMacro){
+			   bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos){
 
-  MakePlot(fSamples, var, maincuts, basecuts, njets, nbjets, nleps, HLT, xtitle, nbins, min, max, flip_order, logflag, composited, ratio, stacked, overlaySUSY, overlayScale, add_underflow, saveHistos, saveMacro);
+  MakePlot(fSamples, var, maincuts, basecuts, njets, nbjets, nleps, HLT, xtitle, nbins, min, max, flip_order, logflag, composited, ratio, stacked, overlaySUSY, overlayScale, add_underflow, saveHistos);
   
 }
 
 void MassPlotter::makePlot(TString var, TString cuts, int njets, int nbjets, int nleps, TString HLT,  TString xtitle,
 			   const int nbins, const double min, const double max,
 			   bool flip_order, bool logflag, bool composited, bool ratio, bool stacked, 
-			   bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos, TString saveMacro){
+			   bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos){
 
-  MakePlot(fSamples, var, cuts, njets, nbjets, nleps, HLT, xtitle, nbins, min, max, flip_order, logflag, composited, ratio, stacked, overlaySUSY, overlayScale, add_underflow, saveHistos, saveMacro);
+  MakePlot(fSamples, var, cuts, njets, nbjets, nleps, HLT, xtitle, nbins, min, max, flip_order, logflag, composited, ratio, stacked, overlaySUSY, overlayScale, add_underflow, saveHistos);
   
 }
 
@@ -285,18 +265,18 @@ void MassPlotter::makePlot(TString var, TString cuts, int njets, int nbjets, int
 void MassPlotter::Makeplot(TString var, TString maincuts, TString basecuts, int njets, int nbjets, int nleps, TString HLT, TString xtitle, 
 			   const int nbins,  const double *bins,
 			   bool flip_order, bool logflag, bool composited, bool ratio, bool stacked, 
-			   bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos, TString saveMacro){
+			   bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos){
 
-	  MakePlot(fSamples, var, maincuts, basecuts, njets, nbjets, nleps, HLT, xtitle, nbins, bins, flip_order, logflag, composited, ratio, stacked, overlaySUSY, overlayScale, add_underflow, saveHistos, saveMacro);
+	  MakePlot(fSamples, var, maincuts, basecuts, njets, nbjets, nleps, HLT, xtitle, nbins, bins, flip_order, logflag, composited, ratio, stacked, overlaySUSY, overlayScale, add_underflow, saveHistos);
 
 }
 
 void MassPlotter::MakePlot(TString var, TString cuts, int njets, int nbjets, int nleps, TString HLT, TString xtitle, 
 			   const int nbins,  const double *bins,
 			   bool flip_order, bool logflag, bool composited, bool ratio, bool stacked, 
-			   bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos, TString saveMacro){
+			   bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos){
 
-	  MakePlot(fSamples, var, cuts, njets, nbjets, nleps, HLT, xtitle, nbins, bins, flip_order, logflag, composited, ratio, stacked, overlaySUSY, overlayScale, add_underflow, saveHistos, saveMacro);
+	  MakePlot(fSamples, var, cuts, njets, nbjets, nleps, HLT, xtitle, nbins, bins, flip_order, logflag, composited, ratio, stacked, overlaySUSY, overlayScale, add_underflow, saveHistos);
 
 }
 
@@ -1079,26 +1059,26 @@ void MassPlotter::CompSamples(std::vector<sample> Samples, TString var, TString 
 void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString maincuts, TString basecuts, int njets, int nbjets, int nleps, TString HLT,
 			   TString xtitle, const int nbins, const double min, const double max,
 			   bool flip_order, bool logflag, bool composited, bool ratio, 
-			   bool stacked, bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos, TString saveMacro){
+			   bool stacked, bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos){
 
   double bins[nbins];
   bins[0] = min;
   for(int i=1; i<=nbins; i++)
     bins[i] = min+i*(max-min)/nbins;
-  MakePlot(Samples, var, maincuts, basecuts, njets, nbjets, nleps, HLT, xtitle, nbins, bins, flip_order, logflag, composited, ratio, stacked, overlaySUSY, overlayScale, add_underflow, saveHistos, saveMacro);
+  MakePlot(Samples, var, maincuts, basecuts, njets, nbjets, nleps, HLT, xtitle, nbins, bins, flip_order, logflag, composited, ratio, stacked, overlaySUSY, overlayScale, add_underflow, saveHistos);
 
 }
 
 void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString cuts, int njets, int nbjets, int nleps, TString HLT,
 			   TString xtitle, const int nbins, const double min, const double max,
 			   bool flip_order, bool logflag, bool composited, bool ratio, 
-			   bool stacked, bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos, TString saveMacro){
+			   bool stacked, bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos){
 
   double bins[nbins];
   bins[0] = min;
   for(int i=1; i<=nbins; i++)
     bins[i] = min+i*(max-min)/nbins;
-  MakePlot(Samples, var, cuts, njets, nbjets, nleps, HLT, xtitle, nbins, bins, flip_order, logflag, composited, ratio, stacked, overlaySUSY, overlayScale, add_underflow, saveHistos, 	saveMacro);
+  MakePlot(Samples, var, cuts, njets, nbjets, nleps, HLT, xtitle, nbins, bins, flip_order, logflag, composited, ratio, stacked, overlaySUSY, overlayScale, add_underflow, saveHistos);
 
 }
 
@@ -1107,18 +1087,18 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString cut
 void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString cuts, int njets, int nbjets, int nleps, TString HLT,
 			   TString xtitle, const int nbins, const double *bins, 
 			   bool flip_order, bool logflag, bool composited, bool ratio, 
-			   bool stacked, bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos, TString saveMacro){
+			   bool stacked, bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos){
 
   TString basecuts = "";
   TString maincuts = cuts;
-  MakePlot(Samples, var, maincuts, basecuts, njets, nbjets, nleps, HLT, xtitle, nbins, bins, flip_order, logflag, composited, ratio, stacked, overlaySUSY, overlayScale, add_underflow, saveHistos, saveMacro);
+  MakePlot(Samples, var, maincuts, basecuts, njets, nbjets, nleps, HLT, xtitle, nbins, bins, flip_order, logflag, composited, ratio, stacked, overlaySUSY, overlayScale, add_underflow, saveHistos);
 
 }
 
 void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString maincuts, TString basecuts, int njets, int nbjets, int nleps, TString HLT,
 			   TString xtitle, const int nbins, const double *bins, 
 			   bool flip_order, bool logflag, bool composited, bool ratio, 
-			   bool stacked, bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos, TString saveMacro){
+			   bool stacked, bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos){
         TString varname = Util::removeFunnyChar(var.Data());
 
 	TString nMinCut = var;
@@ -1273,7 +1253,6 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 		  
 		if(fVerbose>2) cout << "  +++++++ Drawing      " << variable  << endl
 				    << "  +++++++ with cuts:   " << setw(40)  << selection << endl;
-
 
 		int nev = Samples[i].tree->Draw(variable.Data(),selection.Data(),"goff");
 
@@ -1559,7 +1538,7 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 	  //printHisto(h_stack, h_data, h_mc_sum, h_susy, Legend1 , outname, "hist", logflag, xtitle, ytitle, njets, nbjets, nleps, overlayScale);
 	  printHisto(h_stack, h_data, h_mc_sum, h_signals, n_sig, Legend1 , outname, "hist", logflag, xtitle, ytitle, njets, nbjets, nleps, overlayScale);
 	  if (ratio) 
-	    plotRatioStack(h_stack,  h_mc_sum, h_data, h_susy,  logflag, false, outname, Legend1, xtitle, ytitle, njets, nbjets, nleps, overlayScale, saveMacro);
+	    plotRatioStack(h_stack,  h_mc_sum, h_data, h_susy,  logflag, false, outname, Legend1, xtitle, ytitle, njets, nbjets, nleps, overlayScale);
 
 	}
 	
@@ -2035,7 +2014,7 @@ void MassPlotter::printEstimation(TH1D* h_pred, TH1D* h_pred_c, int nbins, float
 }
 
 //_________________________________________________________________________________
-void MassPlotter::plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle,int njets, int nleps, TString saveMacro){
+void MassPlotter::plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle,int njets, int nleps){
 	// define canvas and pads 
 	TH1D *h1 = (TH1D*)h1_orig->Clone("h1_copy");
 	TH1D *h2 = (TH1D*)h2_orig->Clone("h2_copy");
@@ -2166,9 +2145,7 @@ void MassPlotter::plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, bo
  	c1->Update();
 
 	TString save=name+"_ratio";
-	if(fSave) Util::Print(c1, save, fOutputDir, fOutputFile);
-	if(saveMacro != "")
-		c1->SaveAs(save+"."+saveMacro);
+	if(fSave) Util::Print(c1, save, fOutputDir, fOutputFile);	
 
 // 	delete h1;
 // 	delete h2;
@@ -2179,7 +2156,7 @@ void MassPlotter::plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, bo
 
 }
 //_________________________________________________________________________________
-void MassPlotter::plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, TH1* h3, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle,int njets,int nbjets, int nleps, float overlayScale, TString saveMacro){
+void MassPlotter::plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, TH1* h3, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle,int njets,int nbjets, int nleps, float overlayScale){
   //LEO TRUE USE THIS
 
 	// define canvas and pads 
@@ -2355,9 +2332,7 @@ void MassPlotter::plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, TH
  	c1->Update();
 
 	TString save=name+"_ratio";
-	if(fSave)Util::Print(c1, save, fOutputDir, fOutputFile);
-    if(saveMacro != "")	
-		c1->SaveAs(save + "." + saveMacro);
+	if(fSave)Util::Print(c1, save, fOutputDir, fOutputFile);	
 
 
 }
@@ -2947,8 +2922,7 @@ void MassPlotter::loadSamples(const char* filename){
 			TFile *f = TFile::Open(file);
 			s.file = f;
 		
-			s.tree = (TTree*)f->Get("MassTree");
-
+			  s.tree = (TTree*)f->Get("MassTree");
 			
 			IN.getline(buffer, 200, '\n');
 			sscanf(buffer, "Xsection\t%f", &ParValue);
@@ -2979,6 +2953,10 @@ void MassPlotter::loadSamples(const char* filename){
 			  }
 			  s.type!="data" ? s.PU_avg_weight = h_PUWeights->GetMean()    : s.PU_avg_weight =1;
 			  s.type!="data" ? s.nevents       = h_Events   ->GetEntries() : s.nevents       =1;
+			  //Test Nadjieh
+			  s.PU_avg_weight =1;
+                          s.nevents       =1;	
+			  // End Test Nadjieh		
 			  delete h_PUWeights;
 			  delete h_Events;
 			} else{
@@ -7979,6 +7957,7 @@ void MassPlotter::MakeCutFlowTable( std::vector<std::string> all_cuts ){
     cout << endl;
   }
 }
+
 
 
 

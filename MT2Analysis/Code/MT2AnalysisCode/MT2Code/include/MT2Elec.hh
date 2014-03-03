@@ -32,12 +32,6 @@ public:
 
   PassE0_EE    = -1;
   PassE1_EE    = -1;
-
-  IDSelStop    = -1;
-
-  PassQCDE0_EE = -1;
-  PassQCDE1_EE = -1;
-
   }
   void SetLV(const TLorentzVector v){lv = v;}
 
@@ -65,11 +59,6 @@ public:
 
   Int_t PassE0_EE;
   Int_t PassE1_EE;
-
-  Int_t IDSelStop;
-
-  Int_t PassQCDE0_EE;
-  Int_t PassQCDE1_EE;
 
   ClassDef(MT2Elec, 12)
 };

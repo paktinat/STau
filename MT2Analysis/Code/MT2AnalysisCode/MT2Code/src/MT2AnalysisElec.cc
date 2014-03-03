@@ -13,11 +13,13 @@ void MT2Analysis::GetElectronIndices(){
 
 
 void MT2Analysis::FillMT2Elecs(){
+  TLorentzVector METlv;
+  METlv.SetPtEtaPhiM(MET().Pt(), 0., MET().Phi(), 0.);
 
 
 	for(int i=0; i<fElecs.size(); ++i) {
 	  	fMT2tree->ele[i].lv.SetPtEtaPhiE(fTR->ElPt [fElecs[i]], fTR->ElEta[fElecs[i]], fTR->ElPhi[fElecs[i]], fTR->ElE[fElecs[i]]); 
-		fMT2tree->ele[i].MT       = fMT2tree->GetMT(fMT2tree->ele[i].lv, 0., fMT2tree->pfmet[0], 0.); 
+		fMT2tree->ele[i].MT       = fMT2tree->GetMT(fMT2tree->ele[i].lv, 0., METlv, 0.); 
 		fMT2tree->ele[i].Charge   = fTR->ElCharge[fElecs[i]];
 		fMT2tree->ele[i].Iso      = ElePFIso(fElecs[i]);
 		fMT2tree->ele[i].Iso04    = ElePFIso04(fElecs[i]);
@@ -36,60 +38,11 @@ void MT2Analysis::FillMT2Elecs(){
 		fMT2tree->ele[i].IDVetoMuTau   = IsGoodMT2ElectronVetoIDforMuTau(fElecs[i]);
 		fMT2tree->ele[i].IDVetoTauTau   = IsGoodMT2ElectronVetoIDforTauTau(fElecs[i]);
 
-     
-                fMT2tree->ele[i].PassE0_EE  = (fMT2tree->ele[i].IDSelEE && fTR->ElPt[fElecs[i]] > 20) ? 1 : 0;	
+		fMT2tree->ele[i].PassE0_EE = (fMT2tree->ele[i].IDSelEE && fTR->ElPt[fElecs[i]] > 20) ? 1 : 0;	
 
-                fMT2tree->ele[i].PassE1_EE  = (fMT2tree->ele[i].PassE0_EE || (fMT2tree->ele[i].IDSelEE && fTR->ElPt[fElecs[i]] < 20)) ? 1 : 0;	
-
-                fMT2tree->ele[i].IDSelStop = IsGoodMT2ElectronSelIDforStop(fElecs[i]);
-
-                fMT2tree->ele[i].PassQCDE0_EE= 0;
-		if((fabs(fTR->ElEta[fElecs[i]])< 2.3) && (ElePFIso04(fElecs[i]) >0.5))
-                  fMT2tree->ele[i].PassQCDE0_EE=1;
-               
-                fMT2tree->ele[i].PassQCDE1_EE= 0;
-		if((fabs(fTR->ElEta[fElecs[i]])< 2.3) && (ElePFIso04(fElecs[i]) >0.5))
-                  fMT2tree->ele[i].PassQCDE1_EE=1;
+                fMT2tree->ele[i].PassE1_EE = (fMT2tree->ele[i].PassE0_EE || (fMT2tree->ele[i].IDSelEE && fTR->ElPt[fElecs[i]] < 20)) ? 1 : 0;	
 
 	}
-}
-//************************************************************************************************
-bool MT2Analysis::IsGoodMT2ElectronSelIDforStop(const int index){
-  if(!(fabs(fTR->ElEta[index]) < 2.4) ) return false;
-  if(!(fabs(fTR->ElPt[index]) > 10.0 ) ) return false;
-
-  //  ECAL gap veto
-  if ( fabs(fTR->ElSCEta[index]) > 1.4442 && fabs(fTR->ElSCEta[index]) < 1.566 ) return false;
-
-  // Conversion rejection
-  if(!(fTR->ElPassConversionVeto[index]))
-    return false;
-  if(!(fTR->ElNumberOfMissingInnerHits[index]<=1)) 
-    return false;
-
-        
-  // Medium Working Point
-  if ( fabs(fTR->ElEta[index]) < 1.479 ) { // Barrel
-    if(!(fabs(fTR->ElDeltaEtaSuperClusterAtVtx[index])<0.007)) return false;
-    if(!(fabs(fTR->ElDeltaPhiSuperClusterAtVtx[index])<0.8)) return false;
-    if(!(fTR->ElSigmaIetaIeta[index]<0.01)) return false;
-    if(!(fTR->ElHcalOverEcal[index]<0.15)) return false;
-  } else { // Endcap
-    if(!(fabs(fTR->ElDeltaEtaSuperClusterAtVtx[index])<0.01)) return false;
-    if(!(fabs(fTR->ElDeltaPhiSuperClusterAtVtx[index])<0.7)) return false;
-    if(!(fTR->ElSigmaIetaIeta[index]<0.03)) return false;
-  }
-  
-  // Vertex
-  if(!(abs(fTR->ElD0PV[index])<0.04)) return false;
-  if(!(abs(fTR->ElDzPV[index])<0.2)) return false;
-
-
-  // Iso
-  float pfIso = ElePFIso(index);
-  if ( !(pfIso < 0.15 ) ) return false;
-
-  return true;
 }
 
 

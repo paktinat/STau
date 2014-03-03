@@ -16,11 +16,13 @@ void MT2Analysis::GetTauIndices(){
 }
 
 void MT2Analysis::FillMT2Taus(){
+  TLorentzVector METlv;
+  METlv.SetPtEtaPhiM(MET().Pt(), 0., MET().Phi(), 0.);
   if(fVerbose > 3) cout<<"This event has "<<fTaus.size()<<" Tau(s)"<<endl;	
   for(int i=0; i<fTaus.size(); ++i) {
     fMT2tree->tau[i].lv.SetPtEtaPhiE(fTR->TauPt [fTaus[i]], fTR->TauEta[fTaus[i]], 
 				     fTR->TauPhi[fTaus[i]], fTR->TauE[fTaus[i]]); 
-    fMT2tree->tau[i].MT       = fMT2tree->GetMT(fMT2tree->tau[i].lv, 0., fMT2tree->pfmet[0], 0.); 
+    fMT2tree->tau[i].MT       = fMT2tree->GetMT(fMT2tree->tau[i].lv, 0., METlv, 0.); 
     fMT2tree->tau[i].Charge   = fTR->TauCharge[fTaus[i]];
     fMT2tree->tau[i].JetPt    = fTR->TauJetPt[fTaus[i]];
     fMT2tree->tau[i].JetEta   = fTR->TauJetEta[fTaus[i]];

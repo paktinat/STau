@@ -344,6 +344,9 @@ void MT2Trigger::Reset(){
 	HLT_DiMuons                     = false;
 	HLT_DiMuonsNonTk                = false;
 	HLT_EMu                         = false;
+	HLT_DiTau                       = false;
+	HLT_MuTau                       = false;
+	HLT_EleTau                      = false;
 	// Single Leptons
 	// please look at exact triggers (some are pfnopu, others not)
 	HLT_SingleMu                    = false;
