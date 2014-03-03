@@ -22,16 +22,6 @@ void  MT2tree::FillDoubleEle(){
 	 continue;
 	}	
   }
-  for (int i=0; i < NEles; i++){
-   std::vector<int> QCDE0;
-   std::vector<int> QCDE1;
-
-        if(ele[i].PassQCDE0_EE)
-                QCDE0.push_back(i);
-        if(ele[i].PassQCDE1_EE)
-                QCDE1.push_back(i);
-
-  }
 
 
     if( doubleEle.Ele0Ind != -1 && doubleEle.Ele1Ind != -1 ){
