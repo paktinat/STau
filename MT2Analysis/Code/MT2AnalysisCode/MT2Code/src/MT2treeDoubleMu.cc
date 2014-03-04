@@ -34,8 +34,8 @@
     //cout<<"met.Pt() "<<met.Pt()<<endl;
     doubleMu.MT2Imbalanced = CalcMT2(0, 0,muo[doubleMu.mu0Ind].lv,muo[doubleMu.mu1Ind].lv, -(doubleMu.lv));
   }else{
-  
-       
+   doubleMu.mu0Ind=-1;
+   doubleMu.mu1Ind=-1;  
       for(int i=0; i<NMuons; i++){
       if  (muo[i].PassQCDMu0_MuMu ==1) 
       if (doubleMu.mu0Ind==-1)  
