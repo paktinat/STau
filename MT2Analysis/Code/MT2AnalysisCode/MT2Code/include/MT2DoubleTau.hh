@@ -20,6 +20,7 @@ public:
     isTau0NonIso = false;
     isTau1NonIso = false;
     QCDCategory = -1;
+    DPhi = 999.;
         };
 
         //Setters
@@ -35,6 +36,7 @@ public:
         void SetTau0NonIso(bool input){ isTau0NonIso = input; };
         void SetTau1NonIso(bool input){ isTau1NonIso = input; };
 	void SetQCDCategory( int input){ QCDCategory = input;}
+	void SetDPhi( float input){ DPhi = input;}
         //Getters
         int GetTauIndex0(){ return tau0Ind; };
         int GetTauIndex1(){ return tau1Ind; };
@@ -46,6 +48,7 @@ public:
         bool HasNoVetoMu(){ return hasNoVetoMu; };
         bool IsTau0NonIso(){ return isTau0NonIso; };
         bool IsTau1NonIso(){ return isTau1NonIso; };
+	float GetDPhi(){ return DPhi;}
 
         //Event Selection Methods (only focus on leptons)
         bool isSignalDoubleTau(){
@@ -95,6 +98,7 @@ public:
                 cout<<"\tQCDCategory: "<<QCDCategory<<endl;
                 cout<<"\t\tisTau0NonIso: "<<isTau0NonIso<<endl;
                 cout<<"\t\tisTau1NonIso: "<<isTau1NonIso<<endl;
+                cout<<"\tDPhi of the two leptons: "<<DPhi<<endl ;
         }
 
 private:
@@ -113,6 +117,7 @@ private:
   bool isTau0NonIso;
   bool isTau1NonIso;
   int  QCDCategory;
+  float DPhi;
   ClassDef(MT2DoubleTau, 1)
 
 };

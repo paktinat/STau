@@ -19,6 +19,7 @@ public:
     hasNoVetoMu = false;
     signalEleTau = false;
     qcdEleTau = false;
+    DPhi = 999.;
   };
 
         //Setters
@@ -32,6 +33,7 @@ public:
         void SetMuVeto(bool input){ hasNoVetoMu = input; };
 	void SetBeingSignal(bool input){ signalEleTau = input;} 
 	void SetBeingQCD(bool input){ qcdEleTau = input;} 
+	void SetDPhi(float input){ DPhi = input;} 
         //Getters
         int GetTauIndex0(){ return tau0Ind; };
         int GetEleIndex0(){ return ele0Ind; };
@@ -41,6 +43,7 @@ public:
         TLorentzVector GetLV(){ return lv; };
         bool HasNoVetoElec(){ return hasNoVetoElec; };
         bool HasNoVetoMu(){ return hasNoVetoMu; };
+        float GetDPhi(){ return DPhi; };
 
         //Event Selection Methods (only focus on leptons)
 	bool isDesirableEvent(){
@@ -69,6 +72,7 @@ public:
                 cout<<"\thasNoVetoMu: "<<hasNoVetoMu<<endl;
                 cout<<"\tsignalEleTau: "<<signalEleTau<<endl;
                 cout<<"\tqcdEleTau: "<<qcdEleTau<<endl;
+                cout<<"\tDPhi of the two leptonsl: "<<DPhi<<endl;
         }
 
 private:
@@ -83,7 +87,7 @@ private:
   bool hasNoVetoMu;
   bool signalEleTau;
   bool qcdEleTau;
-
+  float DPhi;
   ClassDef(MT2EleTau, 1)
 
 };

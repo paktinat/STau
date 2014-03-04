@@ -1,4 +1,5 @@
 #include "MT2tree.hh"
+#include "helper/Utilities.hh"
 
 struct IsoSumSort{
   bool operator() (std::pair <int, std::pair<int,int> > comb1, std::pair <int, std::pair<int,int> > comb2) 
@@ -107,6 +108,7 @@ void MT2tree::FillDoubleTau(){
                 doubleTau.SetMT2Imbalanced(this->CalcMT2(0, false, tau[tauIndecies.first].lv, tau[tauIndecies.second].lv, (-doubleTau.GetLV())));
 		doubleTau.SetElecVeto(this->HasNoVetoElecForDoubleTau());
 		doubleTau.SetMuVeto(this->HasNoVetoMuForDoubleTau());
+		doubleTau.SetDPhi(fabs(Util::DeltaPhi(tau[tauIndecies.first].lv.Phi(),tau[tauIndecies.second].lv.Phi())));
 		if(isSignal){
                 	bool ret = (doubleTau.GetSumCharge() == 0);
 	                ret = ret && doubleTau.HasNoVetoMu();
