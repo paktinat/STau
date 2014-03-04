@@ -10,7 +10,7 @@ void  MT2tree::FillDoubleEle(){
 
     if  (ele[i].PassE0_EE) 
       {
-        doubleEle.Ele0Ind = i	;
+        doubleEle.Ele0Ind = i ;
 	break;
       }
   }
@@ -23,6 +23,26 @@ void  MT2tree::FillDoubleEle(){
 	}
        
     }
+   
+ if( doubleEle.Ele0Ind == -1 && doubleEle.Ele1Ind == -1 ){
+  for (int i=0 ; i < NEles ; i++){
+
+    if  (ele[i].PassQCDE0_EE) 
+      {
+        doubleEle.QCDEle0Ind = i ;
+	break;
+      }
+  }
+    for (int j = doubleEle.QCDEle0Ind+1 ; j < NEles ; j++){
+
+      if  (ele[j].PassQCDE1_EE) 
+	{
+	  doubleEle.QCDEle1Ind = j ;
+	  break;
+	}
+       
+       }
+ }
 
     if( doubleEle.Ele0Ind != -1 && doubleEle.Ele1Ind != -1 ){
     

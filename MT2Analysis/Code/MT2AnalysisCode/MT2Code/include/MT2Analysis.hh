@@ -226,9 +226,9 @@ private:
 	// Electrons
 	bool IsGoodMT2ElectronVetoID(const int index);
   //bool IsGoodMT2ElectronLooseID(const int index);
-  //bool IsGoodMT2ElectronMediumID(const int index);
+        bool IsGoodMT2ElectronSelIDforQCDEleEle(const int index);
 
-  //bool IsGoodMT2ElectronVetoIDforEleEle(const int index);
+        bool IsGoodMT2ElectronSelIDforStop(const int index);
 	bool IsGoodMT2ElectronSelIDforEleEle(const int index);
 
 	bool IsGoodMT2ElectronVetoIDforEleMu(const int index);

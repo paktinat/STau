@@ -38,7 +38,7 @@
        if  (doubleMu.mu0Ind==-1 && doubleMu.mu1Ind==-1)      doubleMu.Isolated=false;{
        
       for(int i=0; i<NMuons; i++){
-      if  (muo[i].PassQCDMu0_MuMu ==1) .
+      if  (muo[i].PassQCDMu0_MuMu ==1) 
       if (doubleMu.mu0Ind==-1)  
 	{ doubleMu.mu0Ind = i;
 	  continue;
