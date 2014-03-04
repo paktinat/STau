@@ -37,7 +37,7 @@ public:
 
   PassQCDE0_EE    = -1;
   PassQCDE1_EE    = -1;
-
+  PassQCDele0_EleMu =-1;
   }
   void SetLV(const TLorentzVector v){lv = v;}
 
@@ -70,7 +70,7 @@ public:
 
   Int_t PassQCDE0_EE;
   Int_t PassQCDE1_EE;
-
+  Int_t PassQCDele0_EleMu;
   ClassDef(MT2Elec, 12)
 };
 #endif

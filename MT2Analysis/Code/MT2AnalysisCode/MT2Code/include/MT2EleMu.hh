@@ -20,6 +20,7 @@ public:
     HasNoVetomuoForEleMu=true;
     HasNoVetoElecForEleMu=true;
     isSignalEleMu = false;
+      Isolated      =false;
   }
   
   TLorentzVector lv;
@@ -31,6 +32,7 @@ public:
   bool     HasNoVetomuoForEleMu;
   bool     HasNoVetoElecForEleMu;
   bool	   isSignalEleMu;
+  bool  Isolated;
   ClassDef(MT2EleMu, 1)
     }; 
 #endif

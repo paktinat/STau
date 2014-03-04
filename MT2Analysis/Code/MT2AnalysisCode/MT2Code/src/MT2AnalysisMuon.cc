@@ -40,7 +40,8 @@ void MT2Analysis::FillMT2Muons(){
                 fMT2tree->muo[i].PassQCDMu0_MuMu = (fMT2tree->muo[i].IsTightMuon && fTR->MuPt[fMuons[i]] > 20 && fabs(fTR->MuEta[fMuons[i]])<2.1 && MuPFIso04(fMuons[i]) > 0.5) ? 1 : 0;
                
                 fMT2tree->muo[i].PassQCDMu1_MuMu = (fMT2tree->muo[i].PassQCDMu0_MuMu || (fMT2tree->muo[i].IsTightMuon && fTR->MuPt[fMuons[i]] < 20 && fabs(fTR->MuEta[fMuons[i]])<2.1 && MuPFIso04(fMuons[i]) >0.5 ))? 1 : 0;
-
+                
+                fMT2tree->muo[i].PassQCDMu0_EleMu = ((fMT2tree->muo[i].IsTightMuon && fabs(fTR->MuEta[fMuons[i]])<2.1 && fabs(fTR->MuEta[fMuons[i]]) > 1.479 && MuPFIso04(fMuons[i]) >0.5) ||  (fMT2tree->muo[i].IsTightMuon && fabs(fTR->MuEta[fMuons[i]]) < 1.479 && MuPFIso04(fMuons[i]) >0.5)) ? 1 : 0;
 
 
                 fMT2tree->muo[i].PassMu0_TauMu = fMT2tree->muo[i].PassMu0_MuMu;	

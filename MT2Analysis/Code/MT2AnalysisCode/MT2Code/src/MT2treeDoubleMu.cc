@@ -20,22 +20,21 @@
   }
  
   if  (doubleMu.mu0Ind!=-1 && doubleMu.mu1Ind!=-1)
-          doubleMu.Isolated=true;
-      {
+         
+      {  doubleMu.Isolated=true;
     
     doubleMu.chargeSum = muo[doubleMu.mu0Ind].Charge + muo[doubleMu.mu1Ind].Charge;//check two good muon charge
-  
+  if(fVerbose > 3){
     cout<<" Indices for Double Muon1 "<<doubleMu.mu0Ind<<" "<<doubleMu.mu1Ind<<endl;
     cout<<" mu0.charge "<<muo[doubleMu.mu0Ind].Charge<<" mu1.charge"<<muo[doubleMu.mu1Ind].Charge<<endl;
-    cout<<"doubleMu.chargeSum1 "<<doubleMu.chargeSum<<endl;
+    cout<<"doubleMu.chargeSum1 "<<doubleMu.chargeSum<<endl;}
     doubleMu.MT2     = CalcMT2(0, 0,muo[doubleMu.mu0Ind].lv,muo[doubleMu.mu1Ind].lv, pfmet[0]);
  
     doubleMu.lv = muo[doubleMu.mu0Ind].lv + muo[doubleMu.mu1Ind].lv;
     //cout<<"met.Pt() "<<met.Pt()<<endl;
     doubleMu.MT2Imbalanced = CalcMT2(0, 0,muo[doubleMu.mu0Ind].lv,muo[doubleMu.mu1Ind].lv, -(doubleMu.lv));
-  }
-   
-       if  (doubleMu.mu0Ind==-1 && doubleMu.mu1Ind==-1)      doubleMu.Isolated=false;{
+  }else{
+  
        
       for(int i=0; i<NMuons; i++){
       if  (muo[i].PassQCDMu0_MuMu ==1) 
@@ -48,12 +47,13 @@
 	{ doubleMu.mu1Ind = i;
 	  continue;
 	} 
-            }
+            }  if  (doubleMu.mu0Ind!=-1 && doubleMu.mu1Ind!=-1){
+      doubleMu.Isolated=false;
     doubleMu.chargeSum = muo[doubleMu.mu0Ind].Charge + muo[doubleMu.mu1Ind].Charge;//check two good muon charge
-    
+    if(fVerbose > 3){
     cout<<"doubleMu.chargeSum2 "<<doubleMu.chargeSum<<endl;
     cout<<" mu0.charge "<<muo[doubleMu.mu0Ind].Charge<<" mu1.charge"<<muo[doubleMu.mu1Ind].Charge<<endl;
-    cout<<" Indices for Double Muon2"<<doubleMu.mu0Ind<<" "<<doubleMu.mu1Ind<<endl;
+    cout<<" Indices for Double Muon2"<<doubleMu.mu0Ind<<" "<<doubleMu.mu1Ind<<endl;}
     
     doubleMu.MT2     = CalcMT2(0, 0,muo[doubleMu.mu0Ind].lv,muo[doubleMu.mu1Ind].lv, pfmet[0]);
  
@@ -61,4 +61,5 @@
     //cout<<"met.Pt() "<<met.Pt()<<endl;
     doubleMu.MT2Imbalanced = CalcMT2(0, 0,muo[doubleMu.mu0Ind].lv,muo[doubleMu.mu1Ind].lv, -(doubleMu.lv));
         }
+}
 }

@@ -50,7 +50,10 @@ void MT2Analysis::FillMT2Elecs(){
                 fMT2tree->ele[i].PassQCDE1_EE= 0;
 		if(fMT2tree->ele[i].PassQCDE0_EE || (IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i])&& fTR->ElPt[fElecs[i]] < 20 &&(ElePFIso04(fElecs[i]) >0.5)))
                   fMT2tree->ele[i].PassQCDE1_EE=1;
-
+   fMT2tree->ele[i].PassQCDele0_EleMu = ((fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<2.3 &&fTR->ElEta[fElecs[i]]>1.479&&
+fMT2tree->ele[i].Iso04>0.5 )||(fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<2.3 &&fTR->ElEta[fElecs[i]]<1.479&&
+fMT2tree->ele[i].Iso04>0.5 ))
+? 1 : 0;
 	}
 }
 //************************************************************************************************

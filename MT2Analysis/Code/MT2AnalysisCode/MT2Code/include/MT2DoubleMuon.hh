@@ -12,8 +12,6 @@ public:
     lv.SetPxPyPzE(0, 0, 0, 0);
     mu0Ind            = -1;
     mu1Ind            = -1;
-    mu0QCDInd            = -1;
-    mu1QCDInd            = -1;
     chargeSum            = -1;
     //chargeSumQCD         = -1;
     MT2            = -1;
@@ -26,8 +24,7 @@ public:
   TLorentzVector lv;
   Int_t    mu0Ind;
   Int_t    mu1Ind;
-  Int_t    mu0QCDInd;
-  Int_t    mu1QCDInd;
+  
   Int_t    chargeSum;
   //Int_t    chargeSumQCD;
   Float_t  MT2;
