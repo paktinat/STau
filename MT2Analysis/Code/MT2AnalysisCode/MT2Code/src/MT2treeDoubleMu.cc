@@ -1,5 +1,5 @@
 #include "MT2tree.hh"
-
+#include "helper/Utilities.hh"
    void MT2tree::FillDoubleMu(){
   //{-1,-1} is Default value or no good muon is found or more than two muon is found 
     
@@ -29,7 +29,7 @@
     cout<<" mu0.charge "<<muo[doubleMu.mu0Ind].Charge<<" mu1.charge"<<muo[doubleMu.mu1Ind].Charge<<endl;
     cout<<"doubleMu.chargeSum1 "<<doubleMu.chargeSum<<endl;}
     doubleMu.MT2     = CalcMT2(0, 0,muo[doubleMu.mu0Ind].lv,muo[doubleMu.mu1Ind].lv, pfmet[0]);
- 
+    doubleMu.DPhi =(fabs(Util::DeltaPhi(muo[doubleMu.mu0Ind].lv.Phi(),muo[doubleMu.mu1Ind].lv.Phi())));
     doubleMu.lv = muo[doubleMu.mu0Ind].lv + muo[doubleMu.mu1Ind].lv;
     //cout<<"met.Pt() "<<met.Pt()<<endl;
     doubleMu.MT2Imbalanced = CalcMT2(0, 0,muo[doubleMu.mu0Ind].lv,muo[doubleMu.mu1Ind].lv, -(doubleMu.lv));
@@ -54,7 +54,7 @@
     cout<<"doubleMu.chargeSum2 "<<doubleMu.chargeSum<<endl;
     cout<<" mu0.charge "<<muo[doubleMu.mu0Ind].Charge<<" mu1.charge"<<muo[doubleMu.mu1Ind].Charge<<endl;
     cout<<" Indices for Double Muon2"<<doubleMu.mu0Ind<<" "<<doubleMu.mu1Ind<<endl;}
-    
+    doubleMu.DPhi =(fabs(Util::DeltaPhi(muo[doubleMu.mu0Ind].lv.Phi(),muo[doubleMu.mu1Ind].lv.Phi())));
     doubleMu.MT2     = CalcMT2(0, 0,muo[doubleMu.mu0Ind].lv,muo[doubleMu.mu1Ind].lv, pfmet[0]);
  
     doubleMu.lv = muo[doubleMu.mu0Ind].lv + muo[doubleMu.mu1Ind].lv;

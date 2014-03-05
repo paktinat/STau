@@ -16,7 +16,8 @@ public:
     MT2                = -1;
     MT2Imbalanced      = -1;
     METImbalanced      = -1;
-    Isolated= false;
+    Isolated= -2;
+    DPhi     =-999;
   }
 
   TLorentzVector lv;
@@ -24,10 +25,11 @@ public:
   Int_t    Ele1Ind;
   
   Int_t    PairCharge;
+  Float_t   DPhi; 
   Float_t  MT2;
   Float_t  MT2Imbalanced;
   Float_t  METImbalanced;
-  bool     Isolated;
+  Int_t  Isolated;
   ClassDef(MT2DoubleEle, 1)
     };
 #endif

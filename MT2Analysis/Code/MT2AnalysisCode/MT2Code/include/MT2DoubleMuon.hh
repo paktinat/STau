@@ -19,6 +19,7 @@ public:
     hasNoVetoElec = true; //should be fixed, just a placeholder for now
     hasNoVetoMu   = true; //should be fixed, just a placeholder for now
     Isolated      =false;
+     DPhi=-999;
 }
 
   TLorentzVector lv;
@@ -28,6 +29,7 @@ public:
   Int_t    chargeSum;
   //Int_t    chargeSumQCD;
   Float_t  MT2;
+  Float_t DPhi; 
   Float_t  MT2Imbalanced;
   bool     hasNoVetoElec;
   bool     hasNoVetoMu;

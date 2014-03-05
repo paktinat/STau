@@ -1,5 +1,7 @@
 #include "MT2tree.hh"
-
+#include <iostream>
+using namespace std;
+#include "helper/Utilities.hh"
 void MT2tree::FillEleMu(){
   //{-1,-1} is Default value or no good muon is found or more than two muon is found 
 
@@ -35,17 +37,18 @@ void MT2tree::FillEleMu(){
     eleMu.charge = muo[eleMu.mu0Ind].Charge + ele[eleMu.ele0Ind].Charge; //check two good muon charge
   
     if(fVerbose > 3){ 
-      cout<<" Indices for Ele Muon "<<eleMu.mu0Ind<<" "<<eleMu.ele0Ind<<endl;
-      
+      cout<<" Indices for Ele Muon1 "<<eleMu.mu0Ind<<" "<<eleMu.ele0Ind<<endl;
+      cout<<" eleMu.charge ele&& muon1"<<muo[eleMu.mu0Ind].Charge <<" "<<ele[eleMu.ele0Ind].Charge<<endl;
+      cout<<"eleMu.charge1"<<  eleMu.charge<<endl;
       cout<<" muo ";
       muo[eleMu.mu0Ind].lv.Print();
       
       cout<<" ele ";
       ele[eleMu.ele0Ind].lv.Print();
     }  
-  
+     eleMu.DPhi =(fabs(Util::DeltaPhi(muo[eleMu.mu0Ind].lv.Phi(), ele[eleMu.ele0Ind].lv.Phi())));
     eleMu.MT2    = CalcMT2(0, 0,muo[eleMu.mu0Ind].lv,ele[eleMu.ele0Ind].lv, pfmet[0]);
- 
+    
     eleMu.lv = muo[eleMu.mu0Ind].lv +ele[eleMu.ele0Ind].lv;
     if(fVerbose > 3) cout<<" met.Pt() "<<eleMu.lv.Pt()<<endl;
     eleMu.MT2Imbalanced = CalcMT2(0, 0,muo[eleMu.mu0Ind].lv,ele[eleMu.ele0Ind].lv, (-eleMu.lv));
@@ -81,7 +84,7 @@ void MT2tree::FillEleMu(){
       cout<<" ele ";
       ele[eleMu.ele0Ind].lv.Print();
     }  
-  
+   eleMu.DPhi =(fabs(Util::DeltaPhi(muo[eleMu.mu0Ind].lv.Phi(), ele[eleMu.ele0Ind].lv.Phi())));
     eleMu.MT2    = CalcMT2(0, 0,muo[eleMu.mu0Ind].lv,ele[eleMu.ele0Ind].lv, pfmet[0]);
     doubleMu.lv = muo[doubleMu.mu0Ind].lv + muo[doubleMu.mu1Ind].lv;
     //cout<<"met.Pt() "<<met.Pt()<<endl;

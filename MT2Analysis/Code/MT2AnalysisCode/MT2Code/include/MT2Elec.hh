@@ -11,6 +11,7 @@ public:
   void Reset(){
   lv.SetPxPyPzE(0, 0, 0, 0);
   MT            = -1;
+  
   Iso           = -1;
   Iso04         = -1;
   Charge        = -10;
@@ -27,7 +28,7 @@ public:
 
   IDVetoETau    = -1; 
   IDSelETau     = -1;
-
+  
 
   IDVetoMuTau  = -1;
   IDVetoTauTau = -1;
@@ -43,7 +44,7 @@ public:
   void SetLV(const TLorentzVector v){lv = v;}
 
   TLorentzVector lv;
-
+  
   Float_t  MT;
   Float_t  Iso;
   Float_t  Iso04;

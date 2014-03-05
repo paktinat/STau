@@ -1,5 +1,5 @@
 #include "MT2tree.hh"
-
+#include "helper/Utilities.hh"
 //grep MT2DoubleMuon include/*.hh src/*.cc dict/*.hh
   
 void  MT2tree::FillDoubleEle(){
@@ -24,9 +24,9 @@ void  MT2tree::FillDoubleEle(){
        
     }    
     if( doubleEle.Ele0Ind != -1 && doubleEle.Ele1Ind != -1 ){
-      
+      doubleEle.Isolated=1;
       doubleEle.MT2 = CalcMT2(0, 0,ele[doubleEle.Ele0Ind].lv,ele[doubleEle.Ele1Ind].lv, pfmet[0]);
-
+      doubleEle.DPhi =(fabs(Util::DeltaPhi(ele[doubleEle.Ele0Ind].lv.Phi(),ele[doubleEle.Ele1Ind].lv.Phi())));
       doubleEle.lv = ele[doubleEle.Ele0Ind].lv + ele[doubleEle.Ele1Ind].lv;
 
       doubleEle.MT2Imbalanced = CalcMT2(0, 0,ele[doubleEle.Ele0Ind].lv,ele[doubleEle.Ele1Ind].lv, -(doubleEle.lv));
@@ -66,9 +66,9 @@ void  MT2tree::FillDoubleEle(){
  
 }
     if( doubleEle.Ele0Ind != -1 && doubleEle.Ele1Ind != -1 ){
-    
+     doubleEle.Isolated=0;
       doubleEle.MT2 = CalcMT2(0, 0,ele[doubleEle.Ele0Ind].lv,ele[doubleEle.Ele1Ind].lv, pfmet[0]);
-
+     doubleEle.DPhi =(fabs(Util::DeltaPhi(ele[doubleEle.Ele0Ind].lv.Phi(),ele[doubleEle.Ele1Ind].lv.Phi())));
       doubleEle.lv = ele[doubleEle.Ele0Ind].lv + ele[doubleEle.Ele1Ind].lv;
 
       doubleEle.MT2Imbalanced = CalcMT2(0, 0,ele[doubleEle.Ele0Ind].lv,ele[doubleEle.Ele1Ind].lv, -(doubleEle.lv));
@@ -108,9 +108,10 @@ void  MT2tree::FillDoubleEle(){
 } 
 
     if( doubleEle.Ele0Ind != -1 && doubleEle.Ele1Ind != -1 ){
+     doubleEle.Isolated=-1;
     
       doubleEle.MT2 = CalcMT2(0, 0,ele[doubleEle.Ele0Ind].lv,ele[doubleEle.Ele1Ind].lv, pfmet[0]);
-
+      doubleEle.DPhi =(fabs(Util::DeltaPhi(ele[doubleEle.Ele0Ind].lv.Phi(),ele[doubleEle.Ele1Ind].lv.Phi())));
       doubleEle.lv = ele[doubleEle.Ele0Ind].lv + ele[doubleEle.Ele1Ind].lv;
 
       doubleEle.MT2Imbalanced = CalcMT2(0, 0,ele[doubleEle.Ele0Ind].lv,ele[doubleEle.Ele1Ind].lv, -(doubleEle.lv));
