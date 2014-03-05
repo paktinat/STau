@@ -4,24 +4,23 @@
 
 class MT2DoubleTau: public TObject {
 public:
-        MT2DoubleTau():tau0Ind(-1),tau1Ind(-1),chargeSum(-1),MT2(-1.),MT2Imbalanced(-1.),METImbalanced(-1.),METImbalancedPhi(-10.),
-		       hasNoVetoElec(false),hasNoVetoMu(false),signalDoubleTau(false),isTau0NonIso(false),isTau1NonIso(false),QCDCategory(-1){};
+  MT2DoubleTau(){Reset();};
         ~MT2DoubleTau(){};
         //Reset values to default
-        void Reset(){
-                tau0Ind = -1;
-                tau1Ind = -1;
-                chargeSum = -1;
-                MT2 = -1.;
-                MT2Imbalanced = -1.;
-		METImbalanced = -1.;
-		METImbalancedPhi = -10.;
-                hasNoVetoElec = false;
-                hasNoVetoMu = false;
-		signalDoubleTau = false;
-                isTau0NonIso = false;
-                isTau1NonIso = false;
-		QCDCategory = -1;
+  void Reset(){
+    lv.SetPxPyPzE(0, 0, 0, 0);
+    tau0Ind = -1;
+    tau1Ind = -1;
+    chargeSum = -1;
+    MT2 = -1.;
+    MT2Imbalanced = -1.;
+    hasNoVetoElec = false;
+    hasNoVetoMu = false;
+    signalDoubleTau = false;
+    isTau0NonIso = false;
+    isTau1NonIso = false;
+    QCDCategory = -1;
+    DPhi = 999.;
         };
 
         //Setters
@@ -30,26 +29,26 @@ public:
         void SetSumCharge(int input){ chargeSum = input; };
         void SetMT2(float input){ MT2 = input; };
         void SetMT2Imbalanced(float input){ MT2Imbalanced = input; };
-	void SetMETImbalanced( float input){ METImbalanced = input;};
-	void SetMETImbalancedPhi( float input){ METImbalancedPhi = input;};
         void SetElecVeto(bool input){ hasNoVetoElec = input; };
         void SetMuVeto(bool input){ hasNoVetoMu = input; };
 	void SetBeingSignal(bool input) { signalDoubleTau = input;};
+        void SetLV(TLorentzVector input){ lv = input;};
         void SetTau0NonIso(bool input){ isTau0NonIso = input; };
         void SetTau1NonIso(bool input){ isTau1NonIso = input; };
 	void SetQCDCategory( int input){ QCDCategory = input;}
+	void SetDPhi( float input){ DPhi = input;}
         //Getters
         int GetTauIndex0(){ return tau0Ind; };
         int GetTauIndex1(){ return tau1Ind; };
         int GetSumCharge(){ return chargeSum; };
         float GetMT2(){ return MT2; };
         float GetMT2Imbalanced(){ return MT2Imbalanced; };
-	float GetMETImbalanced(){ return METImbalanced;};
-	float GetMETImbalancedPhi(){ return METImbalancedPhi;};
+        TLorentzVector GetLV(){ return lv;};
         bool HasNoVetoElec(){ return hasNoVetoElec; };
         bool HasNoVetoMu(){ return hasNoVetoMu; };
         bool IsTau0NonIso(){ return isTau0NonIso; };
         bool IsTau1NonIso(){ return isTau1NonIso; };
+	float GetDPhi(){ return DPhi;}
 
         //Event Selection Methods (only focus on leptons)
         bool isSignalDoubleTau(){
@@ -91,34 +90,35 @@ public:
                 cout<<"\tchargeSum: "<<chargeSum<<endl;
                 cout<<"\tMT2: "<<MT2<<endl;
                 cout<<"\tMT2Imbalanced: "<<MT2Imbalanced<<endl;
-                cout<<"\tMETImbalanced: "<<METImbalanced<<endl;
-                cout<<"\tMETImbalancedPhi: "<<METImbalancedPhi<<endl;
+                cout<<"\tMETImbalanced: "<<lv.Pt()<<endl;
+                cout<<"\tMETImbalancedPhi: "<<(-lv).Phi()<<endl;
                 cout<<"\thasNoVetoElec: "<<hasNoVetoElec<<endl;
                 cout<<"\thasNoVetoMu: "<<hasNoVetoMu<<endl;
                 cout<<"\tsignalDoubleTau: "<<signalDoubleTau<<endl;
                 cout<<"\tQCDCategory: "<<QCDCategory<<endl;
                 cout<<"\t\tisTau0NonIso: "<<isTau0NonIso<<endl;
                 cout<<"\t\tisTau1NonIso: "<<isTau1NonIso<<endl;
+                cout<<"\tDPhi of the two leptons: "<<DPhi<<endl ;
         }
 
 private:
-        //General properties
-        int tau0Ind;
-        int tau1Ind;
-        int chargeSum;
-        float MT2;
-        float MT2Imbalanced;
-	float METImbalanced;
-        float METImbalancedPhi;
-        bool hasNoVetoElec;
-        bool hasNoVetoMu;
-	//Check for being Signal
-	bool signalDoubleTau;
-        //Tau propertis for QCD backgrund estmation
-        bool isTau0NonIso;
-        bool isTau1NonIso;
-	int  QCDCategory;
-        ClassDef(MT2DoubleTau, 1)
+  //General properties
+  TLorentzVector lv;
+  int tau0Ind;
+  int tau1Ind;
+  int chargeSum;
+  float MT2;
+  float MT2Imbalanced;
+  bool hasNoVetoElec;
+  bool hasNoVetoMu;
+  //Check for being Signal
+  bool signalDoubleTau;
+  //Tau propertis for QCD backgrund estmation
+  bool isTau0NonIso;
+  bool isTau1NonIso;
+  int  QCDCategory;
+  float DPhi;
+  ClassDef(MT2DoubleTau, 1)
 
 };
 #endif /*MT2DoubleTau_hh*/

@@ -36,13 +36,77 @@ void MT2Analysis::FillMT2Elecs(){
 		fMT2tree->ele[i].IDVetoMuTau   = IsGoodMT2ElectronVetoIDforMuTau(fElecs[i]);
 		fMT2tree->ele[i].IDVetoTauTau   = IsGoodMT2ElectronVetoIDforTauTau(fElecs[i]);
 
-
-
+     
                 fMT2tree->ele[i].PassE0_EE  = (fMT2tree->ele[i].IDSelEE && fTR->ElPt[fElecs[i]] > 20) ? 1 : 0;	
 
                 fMT2tree->ele[i].PassE1_EE  = (fMT2tree->ele[i].PassE0_EE || (fMT2tree->ele[i].IDSelEE && fTR->ElPt[fElecs[i]] < 20)) ? 1 : 0;	
 
+                fMT2tree->ele[i].IDSelStop = IsGoodMT2ElectronSelIDforStop(fElecs[i]);
+               
+                fMT2tree->ele[i].PassQCDNonIsoE0_EE= 0;
+		if(IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) && fTR->ElPt[fElecs[i]] > 20 && (ElePFIso04(fElecs[i]) <0.5))
+		  fMT2tree->ele[i].PassQCDNonIsoE0_EE=1;
+                  
+               
+                fMT2tree->ele[i].PassQCDMediumE0_EE= 0;
+		if(IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) && fTR->ElPt[fElecs[i]] > 20 && (ElePFIso04(fElecs[i]) <0.5) &&
+		   (ElePFIso04(fElecs[i]) >0.25))
+                  fMT2tree->ele[i].PassQCDMediumE0_EE=1;
+               
+                fMT2tree->ele[i].PassQCDNonIsoE1_EE= 0;
+		if(IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) && (ElePFIso04(fElecs[i]) <0.5))
+		  fMT2tree->ele[i].PassQCDNonIsoE1_EE= 1;
+
+		fMT2tree->ele[i].PassQCDMediumE1_EE= 0;
+		if(IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) && (ElePFIso04(fElecs[i]) <0.5) &&
+		   (ElePFIso04(fElecs[i]) >0.25))
+		  fMT2tree->ele[i].PassQCDMediumE1_EE= 1;
+		
+             
+   
+   fMT2tree->ele[i].PassQCDele0_EleMu = ((fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<2.3 &&fTR->ElEta[fElecs[i]]>1.479&&
+fMT2tree->ele[i].Iso04>0.5 )||(fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<2.3 &&fTR->ElEta[fElecs[i]]<1.479&&
+fMT2tree->ele[i].Iso04>0.5 ))
+? 1 : 0;
 	}
+}
+//************************************************************************************************
+bool MT2Analysis::IsGoodMT2ElectronSelIDforStop(const int index){
+  if(!(fabs(fTR->ElEta[index]) < 2.4) ) return false;
+  if(!(fabs(fTR->ElPt[index]) > 10.0 ) ) return false;
+
+  //  ECAL gap veto
+  if ( fabs(fTR->ElSCEta[index]) > 1.4442 && fabs(fTR->ElSCEta[index]) < 1.566 ) return false;
+
+  // Conversion rejection
+  if(!(fTR->ElPassConversionVeto[index]))
+    return false;
+  if(!(fTR->ElNumberOfMissingInnerHits[index]<=1)) 
+    return false;
+
+        
+  // Medium Working Point
+  if ( fabs(fTR->ElEta[index]) < 1.479 ) { // Barrel
+    if(!(fabs(fTR->ElDeltaEtaSuperClusterAtVtx[index])<0.007)) return false;
+    if(!(fabs(fTR->ElDeltaPhiSuperClusterAtVtx[index])<0.8)) return false;
+    if(!(fTR->ElSigmaIetaIeta[index]<0.01)) return false;
+    if(!(fTR->ElHcalOverEcal[index]<0.15)) return false;
+  } else { // Endcap
+    if(!(fabs(fTR->ElDeltaEtaSuperClusterAtVtx[index])<0.01)) return false;
+    if(!(fabs(fTR->ElDeltaPhiSuperClusterAtVtx[index])<0.7)) return false;
+    if(!(fTR->ElSigmaIetaIeta[index]<0.03)) return false;
+  }
+  
+  // Vertex
+  if(!(abs(fTR->ElD0PV[index])<0.04)) return false;
+  if(!(abs(fTR->ElDzPV[index])<0.2)) return false;
+
+
+  // Iso
+  float pfIso = ElePFIso(index);
+  if ( !(pfIso < 0.15 ) ) return false;
+
+  return true;
 }
 
 
@@ -117,6 +181,34 @@ bool MT2Analysis::IsGoodMT2ElectronSelIDforEleEle(const int index){
 	return true;
 }
 //......................................................................................
+bool MT2Analysis::IsGoodMT2ElectronSelIDforQCDEleEle(const int index){
+  	if(!(fabs(fTR->ElEta[index]) < 2.3) ) 
+           return false;
+
+	if (!(IsGoodMT2ElectronMVANoTrigLoose(index))) 
+	    return false;
+
+	// Vertex
+	if(!(abs(fTR->ElD0PV[index])<0.02))                               return false;
+	if(!(abs(fTR->ElDzPV[index])<0.2))                                return false;
+
+
+	// Iso 
+	//	float pfIso = ElePFIso04(index);
+	//    if ( fabs(fTR->ElEta[index]) < 1.479){
+	//	      if(!( pfIso  < 0.15 ))
+	//	return false;   
+	//	    }else{
+	//      if(!( pfIso  < 0.10)) 
+	//		return false;                                        
+	//   }
+
+        //delta R matched with a cone size 0.5 to the correspoding trigger objects.
+
+	return true;
+}
+
+//-------------------------------------------------------------------------------------
 // Electron Vetoer for Electron-Muon Channel
 bool MT2Analysis::IsGoodMT2ElectronVetoIDforEleMu(const int index){
   if (!(IsGoodMT2ElectronMVANoTrigLoose(index)))

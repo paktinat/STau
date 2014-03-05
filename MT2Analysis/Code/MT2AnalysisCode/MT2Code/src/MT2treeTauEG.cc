@@ -1,4 +1,5 @@
 #include "MT2tree.hh"
+#include "helper/Utilities.hh"
 
 std::pair<int,int> MT2tree::EleTauParing(std::vector<int> GoodTau0, std::vector<int> GoodEle0){
 	std::pair<int,int> ret = make_pair(-1,-1);
@@ -65,10 +66,9 @@ void MT2tree::FillEleTau(){
 		eleTau.SetEleIndex0(indecies.second);
 		eleTau.SetSumCharge(tau[indecies.first].Charge + ele[indecies.second].Charge);
 		eleTau.SetMT2(this->CalcMT2(0, false, tau[indecies.first].lv, ele[indecies.second].lv, pfmet[0]));
-		TLorentzVector met = -(tau[indecies.first].lv + ele[indecies.second].lv);
-		eleTau.SetMT2Imbalanced(this->CalcMT2(0, false, tau[indecies.first].lv, ele[indecies.second].lv, met));
-		eleTau.SetMETImbalanced(met.Pt());
-		eleTau.SetMETImbalancedPhi(met.Phi());
+		eleTau.SetLV(tau[indecies.first].lv + ele[indecies.second].lv);
+		eleTau.SetMT2Imbalanced(this->CalcMT2(0, false, tau[indecies.first].lv, ele[indecies.second].lv, (-eleTau.GetLV())));
+		eleTau.SetDPhi(fabs(Util::DeltaPhi(tau[indecies.first].lv.Phi(),  ele[indecies.second].lv.Phi())));
 		eleTau.SetElecVeto(this->HasNoVetoElecForEleTau(indecies.second));
 		eleTau.SetMuVeto(this->HasNoVetoMuForEleTau());
 		eleTau.SetBeingSignal(eleTau.isDesirableEvent() && (eleTau.GetSumCharge() == 0) );

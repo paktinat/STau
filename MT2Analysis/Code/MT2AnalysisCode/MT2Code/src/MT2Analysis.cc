@@ -748,6 +748,54 @@ bool MT2Analysis::FillMT2TreeBasics(){
 		}
 		if(SinglePhotMETFired) fMT2tree->trigger.HLT_SinglePhoton70_MET100 = true;
 
+		// di-tau triggers ------------------------------------------------------------------------------------------------------
+		string diTauTriggers[100];
+		int diTauTriggernumber=0;
+		diTauTriggers[diTauTriggernumber++] = "HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_v2";
+		diTauTriggers[diTauTriggernumber++] = "HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_v3";
+		diTauTriggers[diTauTriggernumber++] = "HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_v4";
+		diTauTriggers[diTauTriggernumber++] = "HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_v6";
+		diTauTriggers[diTauTriggernumber++] = "HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_v1";
+		diTauTriggers[diTauTriggernumber++] = "HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_v3";
+		diTauTriggers[diTauTriggernumber++] = "HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_v4";
+		bool DiTauFired(false);
+		for(int i=0; i<diTauTriggernumber; ++i){
+			if(GetHLTResult(diTauTriggers[i])) DiTauFired=true;
+		}
+		if(DiTauFired) fMT2tree->trigger.HLT_DiTau =true;
+
+		// mu-tau triggers ------------------------------------------------------------------------------------------------------
+		string MuTauTriggers[100];
+		int MuTauTriggernumber=0;
+		MuTauTriggers[MuTauTriggernumber++] = "HLT_IsoMu18_eta2p1_LooseIsoPFTau20_v4";
+		MuTauTriggers[MuTauTriggernumber++] = "HLT_IsoMu18_eta2p1_LooseIsoPFTau20_v5";
+		MuTauTriggers[MuTauTriggernumber++] = "HLT_IsoMu18_eta2p1_LooseIsoPFTau20_v6";
+		MuTauTriggers[MuTauTriggernumber++] = "HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v2";
+		MuTauTriggers[MuTauTriggernumber++] = "HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v3";
+		MuTauTriggers[MuTauTriggernumber++] = "HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v6";
+		MuTauTriggers[MuTauTriggernumber++] = "HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v7";
+		bool MuTauFired(false);
+		for(int i=0; i<MuTauTriggernumber; ++i){
+			if(GetHLTResult(MuTauTriggers[i])) MuTauFired=true;
+		}
+		if(MuTauFired) fMT2tree->trigger.HLT_MuTau =true;
+
+		// ele-tau triggers ------------------------------------------------------------------------------------------------------
+		string EleTauTriggers[100];
+		int EleTauTriggernumber=0;
+		EleTauTriggers[EleTauTriggernumber++] = "HLT_Ele20_CaloIdVT_CaloIsoRhoT_TrkIdT_TrkIsoT_LooseIsoPFTau20_v4";
+		EleTauTriggers[EleTauTriggernumber++] = "HLT_Ele20_CaloIdVT_CaloIsoRhoT_TrkIdT_TrkIsoT_LooseIsoPFTau20_v5";
+		EleTauTriggers[EleTauTriggernumber++] = "HLT_Ele20_CaloIdVT_CaloIsoRhoT_TrkIdT_TrkIsoT_LooseIsoPFTau20_v6";
+		EleTauTriggers[EleTauTriggernumber++] = "HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20_v2";
+		EleTauTriggers[EleTauTriggernumber++] = "HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20_v3";
+		EleTauTriggers[EleTauTriggernumber++] = "HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20_v6";
+		EleTauTriggers[EleTauTriggernumber++] = "HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20_v7";
+		bool EleTauFired(false);
+		for(int i=0; i<EleTauTriggernumber; ++i){
+			if(GetHLTResult(EleTauTriggers[i])) EleTauFired=true;
+		}
+		if(EleTauFired) fMT2tree->trigger.HLT_EleTau =true;
+
 		// di-electron triggers ------------------------------------------------------------------------------------------------------
 		string diElectronTriggers[100];
 		int diElectronTriggernumber=0;
@@ -1651,9 +1699,13 @@ void MT2Analysis::GetLeptonJetIndices(){
 		// Delta R (jet-lepton cleaning)
 		Bool_t jGood(true);
 		for (int elIndex=0; elIndex<fElecs.size(); ++elIndex){
-			TLorentzVector el;
-			el.SetPtEtaPhiE(fTR->ElPt[fElecs[elIndex]], fTR->ElEta[fElecs[elIndex]], fTR->ElPhi[fElecs[elIndex]], fTR->ElE[fElecs[elIndex]]);
-			if(jet->lv.DeltaR(el)<0.4) {jGood=false;}
+		  if(!(fMT2tree->ele[elIndex].IDSelStop))
+		    continue;
+		  
+		  TLorentzVector el;
+		  
+		  el.SetPtEtaPhiE(fTR->ElPt[fElecs[elIndex]], fTR->ElEta[fElecs[elIndex]], fTR->ElPhi[fElecs[elIndex]], fTR->ElE[fElecs[elIndex]]);
+		  if(jet->lv.DeltaR(el)<0.4) {jGood=false;}
 		}
 		for (int muIndex=0; muIndex<fMuons.size(); ++muIndex){
 			TLorentzVector mu;

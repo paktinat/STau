@@ -11,6 +11,7 @@ public:
   void Reset(){
   lv.SetPxPyPzE(0, 0, 0, 0);
   MT            = -1;
+  
   Iso           = -1;
   Iso04         = -1;
   Charge        = -10;
@@ -19,24 +20,31 @@ public:
   IDVeto        = -1;
   //IDVetoEE      = -1;
   IDSelEE       = -1;
+  IDSelStop     = -1;
+
 
   IDVetoEMU     = -1;
   IDSelEMU      = -1;
 
   IDVetoETau    = -1; 
   IDSelETau     = -1;
-
+  
 
   IDVetoMuTau  = -1;
   IDVetoTauTau = -1;
-
-  PassE0_EE    = -1;
-  PassE1_EE    = -1;
+   PassE0_EE=-1;
+   PassE1_EE=-1;
+  PassQCDMediumE0_EE =-1;
+  PassQCDMediumE1_EE =-1;
+  PassQCDNonIsoE1_EE  =-1;
+  PassQCDNonIsoE0_EE=-1;
+  
+  PassQCDele0_EleMu =-1;
   }
   void SetLV(const TLorentzVector v){lv = v;}
 
   TLorentzVector lv;
-
+  
   Float_t  MT;
   Float_t  Iso;
   Float_t  Iso04;
@@ -47,6 +55,8 @@ public:
 
   //Int_t    IDVetoEE;
   Int_t    IDSelEE;
+  Int_t    IDSelStop ;
+
 
   Int_t    IDVetoEMU;
   Int_t    IDSelEMU;
@@ -56,10 +66,14 @@ public:
 
   Int_t    IDVetoMuTau;
   Int_t    IDVetoTauTau;
-
-  Int_t PassE0_EE;
-  Int_t PassE1_EE;
-
+  Int_t  PassQCDMediumE0_EE ;
+  Int_t  PassQCDMediumE1_EE ;
+  Int_t  PassQCDNonIsoE1_EE ;
+  Int_t  PassQCDNonIsoE0_EE;
+  Int_t     PassE0_EE;
+  Int_t     PassE1_EE;
+ 
+  Int_t PassQCDele0_EleMu;
   ClassDef(MT2Elec, 12)
 };
 #endif

@@ -17,6 +17,9 @@ public:
     IsTightMuon   = -1;
     PassMu0_MuMu  = -1;
     PassMu1_MuMu  = -1;
+    PassQCDMu0_MuMu  = -1;
+    PassQCDMu1_MuMu  = -1;
+    PassQCDMu0_EleMu =-1;
     PassMu0_TauMu = -1;
     RejMu1_TauMu = -1;
     PassMu0_EleMu = -1;
@@ -29,7 +32,7 @@ public:
   }
 
   TLorentzVector lv;
-
+  double test;
   Float_t  MT;
   Float_t  Iso;
   Float_t  Iso04;
@@ -37,6 +40,9 @@ public:
   Int_t    IsTightMuon;
   Int_t    PassMu0_MuMu;
   Int_t    PassMu1_MuMu ;
+  Int_t    PassQCDMu0_MuMu;
+  Int_t    PassQCDMu1_MuMu ;
+  Int_t    PassQCDMu0_EleMu ;
   Int_t    PassMu0_TauMu;
   Int_t    RejMu1_TauMu;
   Int_t    PassMu0_EleMu;
