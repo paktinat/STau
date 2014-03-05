@@ -19,8 +19,8 @@ public:
     hasNoVetoElec = true; //should be fixed, just a placeholder for now
     hasNoVetoMu   = true; //should be fixed, just a placeholder for now
     Isolated      =false;
-     DPhi=-999;
-}
+    DPhi=-999;
+  }
 
   TLorentzVector lv;
   Int_t    mu0Ind;

@@ -1682,9 +1682,13 @@ void MT2Analysis::GetLeptonJetIndices(){
 		// Delta R (jet-lepton cleaning)
 		Bool_t jGood(true);
 		for (int elIndex=0; elIndex<fElecs.size(); ++elIndex){
-			TLorentzVector el;
-			el.SetPtEtaPhiE(fTR->ElPt[fElecs[elIndex]], fTR->ElEta[fElecs[elIndex]], fTR->ElPhi[fElecs[elIndex]], fTR->ElE[fElecs[elIndex]]);
-			if(jet->lv.DeltaR(el)<0.4) {jGood=false;}
+		  if(!(fMT2tree->ele[elIndex].IDSelStop))
+		    continue;
+		  
+		  TLorentzVector el;
+		  
+		  el.SetPtEtaPhiE(fTR->ElPt[fElecs[elIndex]], fTR->ElEta[fElecs[elIndex]], fTR->ElPhi[fElecs[elIndex]], fTR->ElE[fElecs[elIndex]]);
+		  if(jet->lv.DeltaR(el)<0.4) {jGood=false;}
 		}
 		for (int muIndex=0; muIndex<fMuons.size(); ++muIndex){
 			TLorentzVector mu;

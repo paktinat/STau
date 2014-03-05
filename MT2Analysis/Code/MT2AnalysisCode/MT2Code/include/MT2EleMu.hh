@@ -22,7 +22,7 @@ public:
     HasNoVetomuoForEleMu=true;
     HasNoVetoElecForEleMu=true;
     isSignalEleMu = false;
-      Isolated      =false;
+    Isolated      =false;
   }
   
   TLorentzVector lv;

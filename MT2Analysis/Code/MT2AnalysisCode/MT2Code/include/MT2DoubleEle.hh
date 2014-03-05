@@ -15,7 +15,6 @@ public:
     PairCharge         = -1;
     MT2                = -1;
     MT2Imbalanced      = -1;
-    METImbalanced      = -1;
     Isolated= -2;
     DPhi     =-999;
   }
@@ -28,7 +27,6 @@ public:
   Float_t   DPhi; 
   Float_t  MT2;
   Float_t  MT2Imbalanced;
-  Float_t  METImbalanced;
   Int_t  Isolated;
   ClassDef(MT2DoubleEle, 1)
     };
