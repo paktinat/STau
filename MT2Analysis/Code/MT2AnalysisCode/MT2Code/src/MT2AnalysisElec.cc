@@ -42,14 +42,27 @@ void MT2Analysis::FillMT2Elecs(){
                 fMT2tree->ele[i].PassE1_EE  = (fMT2tree->ele[i].PassE0_EE || (fMT2tree->ele[i].IDSelEE && fTR->ElPt[fElecs[i]] < 20)) ? 1 : 0;	
 
                 fMT2tree->ele[i].IDSelStop = IsGoodMT2ElectronSelIDforStop(fElecs[i]);
-
-                fMT2tree->ele[i].PassQCDE0_EE= 0;
-		if(IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) && fTR->ElPt[fElecs[i]] > 20 && (ElePFIso04(fElecs[i]) >0.5))
-                  fMT2tree->ele[i].PassQCDE0_EE=1;
                
-                fMT2tree->ele[i].PassQCDE1_EE= 0;
-		if(fMT2tree->ele[i].PassQCDE0_EE || (IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i])&& fTR->ElPt[fElecs[i]] < 20 &&(ElePFIso04(fElecs[i]) >0.5)))
-                  fMT2tree->ele[i].PassQCDE1_EE=1;
+                fMT2tree->ele[i].PassQCDNonIsoE0_EE= 0;
+		if(IsGoodMT2ElectronSelIDforEleEle(fElecs[i]) && fTR->ElPt[fElecs[i]] > 20 && (ElePFIso04(fElecs[i]) <0.5))
+                fMT2tree->ele[i].PassQCDNonIsoE0_EE=1;
+                  
+               
+                fMT2tree->ele[i].PassQCDMediumE0_EE= 0;
+		if(IsGoodMT2ElectronSelIDforEleEle(fElecs[i]) && fTR->ElPt[fElecs[i]] > 20 && (ElePFIso04(fElecs[i]) <0.5)&&
+                          (ElePFIso04(fElecs[i]) >0.25))
+                  fMT2tree->ele[i].PassQCDMediumE0_EE=1;
+               
+                fMT2tree->ele[i].PassQCDNonIsoE1_EE= 0;
+		if(fMT2tree->ele[i].PassE0_EE || (IsGoodMT2ElectronSelIDforEleEle(fElecs[i]))&& fTR->ElPt[fElecs[i]] < 20 &&(ElePFIso04(fElecs[i]) >0.5))
+                fMT2tree->ele[i].PassQCDNonIsoE1_EE= 1;
+
+		fMT2tree->ele[i].PassQCDMediumE1_EE= 0;
+                if(fMT2tree->ele[i].PassE0_EE || (IsGoodMT2ElectronSelIDforEleEle(fElecs[i])&& fTR->ElPt[fElecs[i]] < 20 &&(ElePFIso04(fElecs[i]) <0.5)&&(ElePFIso04(fElecs[i]) >0.25)))
+                fMT2tree->ele[i].PassQCDMediumE1_EE= 1;
+		
+             
+   
    fMT2tree->ele[i].PassQCDele0_EleMu = ((fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<2.3 &&fTR->ElEta[fElecs[i]]>1.479&&
 fMT2tree->ele[i].Iso04>0.5 )||(fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<2.3 &&fTR->ElEta[fElecs[i]]<1.479&&
 fMT2tree->ele[i].Iso04>0.5 ))

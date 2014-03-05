@@ -14,6 +14,7 @@ public:
     lv.SetPxPyPzE(0, 0, 0, 0);
     mu0Ind            = -1;
     ele0Ind           = -1;
+   
     charge            = -10;
     MT2           = -1.;
     MT2Imbalanced = -1.; 

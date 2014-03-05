@@ -31,12 +31,13 @@ public:
 
   IDVetoMuTau  = -1;
   IDVetoTauTau = -1;
-
-  PassE0_EE    = -1;
-  PassE1_EE    = -1;
-
-  PassQCDE0_EE    = -1;
-  PassQCDE1_EE    = -1;
+   PassE0_EE=-1;
+   PassE1_EE=-1;
+  PassQCDMediumE0_EE =-1;
+  PassQCDMediumE1_EE =-1;
+  PassQCDNonIsoE1_EE  =-1;
+  PassQCDNonIsoE0_EE=-1;
+  
   PassQCDele0_EleMu =-1;
   }
   void SetLV(const TLorentzVector v){lv = v;}
@@ -64,12 +65,13 @@ public:
 
   Int_t    IDVetoMuTau;
   Int_t    IDVetoTauTau;
-
-  Int_t PassE0_EE;
-  Int_t PassE1_EE;
-
-  Int_t PassQCDE0_EE;
-  Int_t PassQCDE1_EE;
+  Int_t  PassQCDMediumE0_EE ;
+  Int_t  PassQCDMediumE1_EE ;
+  Int_t  PassQCDNonIsoE1_EE ;
+  Int_t  PassQCDNonIsoE0_EE;
+  Int_t     PassE0_EE;
+  Int_t     PassE1_EE;
+ 
   Int_t PassQCDele0_EleMu;
   ClassDef(MT2Elec, 12)
 };

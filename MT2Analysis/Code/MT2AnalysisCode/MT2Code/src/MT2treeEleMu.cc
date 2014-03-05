@@ -31,7 +31,7 @@ void MT2tree::FillEleMu(){
    
   if(eleMu.ele0Ind != -1 && eleMu.mu0Ind !=-1){
  
-    
+   eleMu.Isolated=true;
     eleMu.charge = muo[eleMu.mu0Ind].Charge + ele[eleMu.ele0Ind].Charge; //check two good muon charge
   
     if(fVerbose > 3){ 
@@ -67,7 +67,7 @@ void MT2tree::FillEleMu(){
 	continue;
       }
      } if(eleMu.ele0Ind != -1 && eleMu.mu0Ind !=-1){
-      
+       eleMu.Isolated=false;
        eleMu.charge = muo[eleMu.mu0Ind].Charge + ele[eleMu.ele0Ind].Charge; //check two good muon charge
        if(fVerbose > 3)
          { 
