@@ -64,10 +64,8 @@ void MT2Analysis::FillMT2Elecs(){
 		
              
    
-   fMT2tree->ele[i].PassQCDele0_EleMu = ((fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<2.3 &&fTR->ElEta[fElecs[i]]>1.479&&
-fMT2tree->ele[i].Iso04>0.5 )||(fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<2.3 &&fTR->ElEta[fElecs[i]]<1.479&&
-fMT2tree->ele[i].Iso04>0.5 ))
-? 1 : 0;
+		fMT2tree->ele[i].PassQCDele0_EleMu = ((IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) && fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<2.3 &&fTR->ElEta[fElecs[i]]>1.479&& fMT2tree->ele[i].Iso04>0.5 )||(IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) &&fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<1.479&&
+fMT2tree->ele[i].Iso04>0.5 )) ? 1 : 0;
 	}
 }
 //************************************************************************************************
