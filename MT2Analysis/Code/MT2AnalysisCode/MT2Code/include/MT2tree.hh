@@ -6,10 +6,8 @@
 #include "helper/TopSearch.h"
 #include "TVector3.h"
 #include "TH2.h"
-//#include "helper/JetCorrectorParameters.h"
-//#include "helper/JetResolution.h"
 #include "CondFormats/JetMETObjects/interface/JetResolution.h"
-//#include "CondFormats/JetMETObjects/interface/JetResolution.h"
+
 
 #include <TRandom3.h>
 #include "MT2Elec.hh"
