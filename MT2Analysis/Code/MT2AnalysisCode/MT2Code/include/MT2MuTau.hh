@@ -19,7 +19,7 @@ public:
     hasNoVetoMu = false;
     signalMuTau = false;
     qcdMuTau = false;
-    DPhi = 999.;
+    DPhi = -9.;
   };
 
   //Setters

@@ -15,10 +15,10 @@ public:
     mu0Ind            = -1;
     ele0Ind           = -1;
     charge            = -10;
-    MT2           = -1.;
-    DPhi     =-999;
+    MT2               = -1.;
+    DPhi              =-9.;
     
-    MT2Imbalanced = -1.; 
+    MT2Imbalanced     = -1.; 
     HasNoVetomuoForEleMu=true;
     HasNoVetoElecForEleMu=true;
     isSignalEleMu = false;

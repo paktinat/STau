@@ -16,7 +16,7 @@ public:
     MT2                = -1;
     MT2Imbalanced      = -1;
     Isolated= -2;
-    DPhi     =-999;
+    DPhi     =-9;
   }
 
   TLorentzVector lv;

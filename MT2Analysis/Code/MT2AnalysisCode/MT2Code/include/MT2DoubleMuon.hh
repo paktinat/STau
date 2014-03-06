@@ -13,13 +13,12 @@ public:
     mu0Ind            = -1;
     mu1Ind            = -1;
     chargeSum            = -1;
-    //chargeSumQCD         = -1;
     MT2            = -1;
     MT2Imbalanced = -1;
     hasNoVetoElec = true; //should be fixed, just a placeholder for now
     hasNoVetoMu   = true; //should be fixed, just a placeholder for now
     Isolated      =false;
-    DPhi=-999;
+    DPhi=-9;
   }
 
   TLorentzVector lv;

@@ -2,8 +2,8 @@
    TString outputdir = "../MassPlots/";
   //  TString samples   = "./samples/samplesMineDoubleMu.dat"; Int_t channel = 26; //2* 13 (Muon PDG Id)
    //TString samples   = "./samples/samplesMineDoubleElectron.dat";  Int_t channel = 22; //2* 11 (Electron PDG Id)
-    TString samples   = "./samples/samplesMineMuEG.dat"; //MuEG datasets  Int_t channel = 24; //11 + 13 
-  //     TString samples   = "./samples/samplesMineTest.dat"; 
+   // TString samples   = "./samples/samplesMineMuEG.dat"; //MuEG datasets  Int_t channel = 24; //11 + 13 
+       TString samples   = "./samples/samplesMineTest.dat"; 
   int verbose =3;
 
   gSystem->CompileMacro("../MT2Code/src/MassPlotter.cc", "kf");//"k", "f"
@@ -70,7 +70,6 @@
  
  tA->makePlot("eleMu.MT2",     cuts,    -10,  -10 , -10 ,   trigger , "eleMu.MT2"            ,20,0,1000,        false,        true ,  true,   true,  true,  true, 1, 1);     
 
- tA->makePlot("eleMu.METImbalanced",     cuts,    -10,  -10 , -10 ,   trigger , "eleMu.METImbalanced"            ,20,0,1000,        false,        true ,  true,   true,  true,  true, 1, 1);     
 
  tA->makePlot("eleMu.MT2Imbalanced",     cuts,    -10,  -10 , -10 ,   trigger , " eleMu.MT2Imbalanced"            ,20,0,1000,        false,        true ,  true,   true,  true,  true, 1, 1);     
 
@@ -83,8 +82,7 @@
 
  tA->makePlot("doubleEle.MT2",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle.MT2"            ,20,0,1000,        false,        true ,  true,   true,  true,  true, 1, 1);     
  
- tA->makePlot("doubleEle.METImbalanced",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle.METImbalanced"            ,20,0,1000,        false,        true ,  true,   true,  true,  true, 1, 1);     
- 
+
  tA->makePlot("doubleEle.MT2Imbalanced",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle.MT2Imbalanced"            ,20,0,1000,        false,        true ,  true,   true,  true,  true, 1, 1);     
 
  tA->makePlot("NEles",     cuts,    -10,  -10 , -10 ,   trigger , "NEles"            ,10,0,10,        false,        true ,  true,   true,  true,  true, 1, 1);     

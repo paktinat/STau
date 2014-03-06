@@ -11,7 +11,7 @@ Name	TStau
 SName	SUSY
 ShapeName	Signal
 File	MassTree.root
-Xsection	0.5 pb
+Xsection	500 pb
 Kfact	1.
 Lumi	1.0
 Type	susy
@@ -22,19 +22,19 @@ Name		QCD_HT_1000ToInf
 SName		QCD
 ShapeName	QCD
 File	MassTree.root
-Xsection  	0.5 pb
+Xsection  	1000 pb
 Kfact           1.
 Lumi            1.0
 Type		mc
 Color		401
 
-#SAMPLE
-#Name		Run2012D_DoubleMuParked
-#SName		DoubleMu-Data
-#ShapeName	Data
-#File	MassTree.root
-#Xsection  	1.
-#Kfact           1.	
-#Lumi            1.
-#Type            data
-#Color		1
+SAMPLE
+Name		Run2012D_DoubleMuParked
+SName		DoubleMu-Data
+ShapeName	Data
+File	MassTree.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
