@@ -56,15 +56,18 @@
 
   // You need to carefully define the cut variables based on MT2"Channel".hh
 
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0Ind  != -1")); // First lepton index, channel specific
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".mu1Ind  != -1")); // Second lepton index, channel specific
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0Ind >=0")); // First lepton index, channel specific
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".mu1Ind  >=0")); // Second lepton index, channel specific
   myChannelCuts.push_back(std::string(std::string(myChan) + ".chargeSum == 0"));
   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoElec"));
   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoMu"));
+  //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0QCDInd  != -1")); // First lepton index, channel specific
+  //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu1QCDInd  != -1"));
+
   myChannelCuts.push_back("0 == 0");											//Place holder for Jet requirements
-  myChannelCuts.push_back("misc.MET > 40");											//Place holder for MET requirements
-  //myChannelCuts.push_back("DoubleMuInvMass() > 106. || (DoubleMuInvMass() > 12. && DoubleMuInvMass() < 74.)");
-  myChannelCuts.push_back("NBJets40CSVT > 1");
+  //myChannelCuts.push_back("misc.MET > 30");											//Place holder for MET requirements
+  ///myChannelCuts.push_back("DoubleMuInvMass() > 106. || (DoubleMuInvMass() > 12. && DoubleMuInvMass() < 74.)");
+  //myChannelCuts.push_back("NBJets40CSVT > 1");
 
 
   // We need to make the cut stream
@@ -107,8 +110,8 @@
 
   TString myMisc = "misc";
 
-  //vars.push_back(myMisc + ".MET"); props.Add(&PT);
-  //vars.push_back(myMisc + ".METPhi"); props.Add(&PHI);
+ // vars.push_back(myMisc + ".MET"); props.Add(&PT);
+ // vars.push_back(myMisc + ".METPhi"); props.Add(&PHI);
   //vars.push_back(myMisc + ".MT2"); props.Add(&PT);
   //vars.push_back(myMisc + ".MT2jet40"); props.Add(&PT);
   //vars.push_back(myMisc + ".LeadingJPt"); props.Add(&PT);

@@ -18,7 +18,6 @@ Type            susy
 Color           1
 
 ## -------- QCD ----------------
-
 SAMPLE
 Name		QCD_HT_100To250
 SName		QCD
@@ -307,7 +306,7 @@ Type            mc
 Color		600
 
 SAMPLE
-Name		TTbar
+Name		TTJets
 SName		Top
 ShapeName	Top   
 File            TauTau_V2_1/TTJets-MassiveBinDECAY-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root

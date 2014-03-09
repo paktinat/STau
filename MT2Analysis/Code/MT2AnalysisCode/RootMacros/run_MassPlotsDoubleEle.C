@@ -1,10 +1,10 @@
 {
   TString outputdir = "../MassPlots/";
   
-  TString samples = "./samples/samplesMineDoubleEle.dat";
+  TString samples = "./samples/samplesMineDoubleElectron.dat";
   //    TString samples = "./samples/samplesMineTest.dat";
 
-  Int_t channel = 22; //2* 11 (Electron PDG Id) 
+ // Int_t channel = 22; //2* 11 (Electron PDG Id) 
 
   int verbose =3; 
   
@@ -37,30 +37,27 @@
 		<<" misc.eeBadScFlag==0 && misc.EcalDeadCellTriggerPrimitiveFlag==0 )" <<"&&("
 
                 <<"(trigger.HLT_DiElectrons) " << ")))";
-  //
-  TString trigger = triggerStream.str().c_str();
+ 
+      TString trigger = triggerStream.str().c_str();
+     //  TString cuts = cutStream.str().c_str();
+  
+     std::vector<std::string> myChannelCuts;
+     myChannelCuts.push_back(std::string(trigger));
 
 
-  std::vector<std::string> myChannelCuts;
-  myChannelCuts.push_back(std::string(trigger));
+  
 
+  // You need to specify the channel
+    TString myChan = "doubleEle";
 
-  TString myChan = "doubleEle";
+  // You need to carefully define the cut variables based on MT2"Channel".hh
 
-  //  You need to carefully define the cut variables based on MT2"Channel".hh
-
-     myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele0Ind  != -1")); // First lepton index, channel specific
-     myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele1Ind  != -1")); // Second lepton index, channel specific
-     myChannelCuts.push_back(std::string(std::string(myChan) + ".PairCharge == 0"));
-  //  myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoElec"));
-  //  myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoMu"));
-  //  myChannelCuts.push_back("0 == 0");  					//Place holder for Jet requirements
-  //  myChannelCuts.push_back("0 == 0");				//Place holder for MET requirements
-
-
-  // We need to make the cut stream
-
-  std::ostringstream cutStream;
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele0Ind  >= 0")); 
+  myChannelCuts.push_back(std::string(std::string(myChan) + ". Ele1Ind>=0"));
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".PairCharge== 0"));
+  myChannelCuts.push_back("0 == 0");	        										
+ 
+ std::ostringstream cutStream;
   cutStream << " ";
   for(unsigned int iCut = 1; iCut < myChannelCuts.size(); iCut++){
 	cutStream << myChannelCuts[iCut];
@@ -69,105 +66,103 @@
   }
 
   TString cuts = cutStream.str().c_str();
-           
+          
+   std::vector<TString>vars;
+  std::vector<TString>vars1;
+  std::vector<TString>vars2;
+  std::vector<TString>vars3;
+
+    TString myMisc="misc";
+
+    vars.push_back("DoubleEleInvMass()");
+    vars.push_back( myChan + ".MT2");
+    vars.push_back( myChan + ".METImbalanced");
+    vars.push_back(myChan+".MT2Imbalanced");
+    vars1.push_back( myChan + ".METImbalancedPhi");
+       vars.push_back(myMisc + ".MET");
+       vars1.push_back(myMisc + ".METPhi");
+       vars.push_back(myMisc + ".MT2");
+       vars.push_back(myMisc + ".MT2jet40"); 
+       vars.push_back(myMisc + ".LeadingJPt");
+       vars.push_back(myMisc + ".LeadingElePt");
+       vars.push_back(myMisc + ".SecondJPt");
+       vars.push_back(myMisc + ".J3Pt");
+       vars.push_back(myMisc + ".J4Pt");
+       vars.push_back(myMisc + ".Vectorsumpt");
+       vars1.push_back(myMisc + ".MinMetJetDPhi");
+       vars1.push_back(myMisc + ".MinMetJetDPhi");
+       vars1.push_back(myMisc + ".MinMetJetDPhi4");
+       vars1.push_back(myMisc + ".MinMetJetDPhiPt40");
+       vars1.push_back(myMisc + ".MinMetJetDPhi4Pt40");
+       vars.push_back(myMisc + ".HT");
+       vars.push_back(myMisc + ".pfHT30");
+       vars.push_back(myMisc + ".pfHT35");
+       vars.push_back(myMisc + ".pfHT40");
+       vars.push_back(myMisc + ".pfHT45");
+       vars.push_back(myMisc + ".pfHT50");
+ /*Multiplicities*/
+  vars2.push_back("NJets");
+  vars2.push_back("NJetsIDLoose");
+  vars2.push_back("NJetsIDLoose40");
+  vars2.push_back("NJetsIDLoose50");
+  vars2.push_back("NBJets");
+  //vars2.push_back("NBJetsHE");
+ // vars2.push_back("NBJetsCSVL");
+  vars2.push_back("NBJetsCSVM");
+  vars2.push_back("NBJetsCSVT");
+ // vars2.push_back("NBJets40CSVL");
+  vars2.push_back("NBJets40CSVM");
+  vars2.push_back("NBJets40CSVT");
+  vars2.push_back("NEles");
+  vars2.push_back("NMuons");
+  //vars2.push_back("NMuonsCommonIso");
+  vars2.push_back("NTaus");
+  vars2.push_back("NTausIDLoose");
+  //vars2.push_back("NTausIDLoose3Hits");
+ // vars2.push_back("NTausIDLooseMVA");
+  //vars2.push_back("NTausIDLoose2");
+  vars.push_back("pfmet[0].Pt()"); 
+  vars1.push_back("pfmet[0].Phi()");
 
 
+  /*
+   * PileUp information
+   */
+
+                                                                                                                                                   
+         
+         
+  TString myPU = "pileUp";
+
+  vars3.push_back(myPU + ".NVertices");
+      
+
+  /*
+   * Loop over variables and plot
+   */
     
-  /*
-   * Plot the high level variables: add what you like to see ....
-   */
-
-  //TString mt2 = myChan + ".MT2";
-  //TString metimb = myChan + ".METImbalanced";
-  //TString mt2imb = myChan + ".MT2Imbalanced";
-  //  TString metimbPhi = myChan + ".METImbalancedPhi";
-
-  //MT2
-  //   tA->makePlot("doubleEle.MT2",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle.MT2"            ,50,0,1000,        false,        true ,  true,   true,  true,  true, 1, 1);       
-//tA->makePlot(mt2, cuts, -10, -10 , -10, trigger, mt2, 100, 0, 1000, false, true, true, true, true, true, 1, 1);     
-
-  //METImbalanced
-  //tA->makePlot(metimb, cuts, -10, -10 , -10, trigger, metimb, 100, 0, 1000, false, true, true, true, true, true, 1, 1);     
-
-  //MT2Imbalanced
-  //tA->makePlot(mt2imb, cuts, -10, -10 , -10, trigger, mt2imb, 100, 0, 1000, false, true, true, true, true, true, 1, 1);    
-
-  //MT2ImbalancedPhi
-  //tA->makePlot(metimbPhi, cuts, -10, -10 , -10, trigger, metimbPhi, 70, -3.5, 3.5, false, true , true, true, true, true, 1, 1); 
+  for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
+        tA->makePlot(vars[iVar], cuts, -10, -10 , -10, trigger, vars[iVar],100,0,1000 , false, true, true,
+	true, true, true, 1, true, false, "png");
+  }
+      /*for(unsigned int iVar1 = 0; iVar1 < vars1.size(); iVar1++){
+	 tA->makePlot(vars1[iVar1], cuts, -10, -10 , -10, trigger, vars1[iVar1],70,-3.5,3.5 , false, true, true,true,true,true,1,true,false,"gif");}*/
+    /*for(unsigned int iVar2 = 0; iVar2 < vars2.size(); iVar2++){
+        tA->makePlot(vars2[iVar2], cuts, -10, -10 , -10, trigger, vars2[iVar2],15,0,15 , false, true, true,
+	true, true, true, 1, true, false, "png");}*/
+  /* for(unsigned int iVar3 = 0; iVar3 < vars3.size(); iVar3++){
+      tA->makePlot(vars3[iVar3], cuts, -10, -10 , -10, trigger, vars3[iVar3],20,0,20 , false, true, true,true,true,true,1,true,false,"gif");}*/
+                            
+//    makeplots( TString var, TString maincuts, TString basecuts, int njets, int nbjets, int nleps, TString HLT,
+			   //TString xtitle, const int nbins, const double *bins, 
+			  // bool flip_order, bool logflag, bool composited, bool ratio, 
+			  // bool stacked, bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos)  
 
 
 
-  /*
-   * Show cutflow table
-   */
 
-  tA->MakeCutFlowTable( myChannelCuts );
+      // tA->MakeCutFlowTable( myChannelCuts );
 
 }
 
-
-
-
-
-// //  tA->makePlot("NBJetsCSVM",          cuts,    -10,  -10 , -10 ,   trigger , "NBJetsCSVM"     ,10,0,10,        false,        true ,  true,   true,  true,  true, 1, 1);
-// ///  tA->makePlot("GetMT2MuEG()",     cuts,    -10,  -10 , -10 ,   trigger , "MT2"            ,20,0,400,        false,        true ,  true,   true,  true,  true, 1, 1);
-// //  tA->makePlot("doubleTau.signalDoubleTau",     cuts,    -10,  -10 , -10 ,   trigger , "doubleTau"            ,5,-2.5,2.5,        false,        true ,  true,   true,  true,  true, 1, 1);     
-// //  tA->makePlot("muTau.signalMuTau",     cuts,    -10,  -10 , -10 ,   trigger , "muTau"            ,5,-2.5,2.5,        false,        true ,  true,   true,  true,  true, 1, 1);     
-// //  tA->makePlot("eleMu.mu0Ind",     cuts,    -10,  -10 , -10 ,   trigger , "eleMu.mu0Ind"            ,5,-2.5,2.5,        false,        true ,  true,   true,  true,  true, 1, 1);     
-// //  tA->makePlot("eleMu.mu1Ind",     cuts,    -10,  -10 , -10 ,   trigger , "eleMu.mu1Ind"            ,5,-2.5,2.5,        false,        true ,  true,   true,  true,  true, 1, 1);     
- 
-//  tA->makePlot("eleMu.MT2",     cuts,    -10,  -10 , -10 ,   trigger , "eleMu.MT2"            ,20,0,1000,        false,        true ,  true,   true,  true,  true, 1, 1);     
-
-//  tA->makePlot("eleMu.METImbalanced",     cuts,    -10,  -10 , -10 ,   trigger , "eleMu.METImbalanced"            ,20,0,1000,        false,        true ,  true,   true,  true,  true, 1, 1);     
-
-//  tA->makePlot("eleMu.MT2Imbalanced",     cuts,    -10,  -10 , -10 ,   trigger , " eleMu.MT2Imbalanced"            ,20,0,1000,        false,        true ,  true,   true,  true,  true, 1, 1);     
-
-//   // tA->makePlot("doubleEle.NSelEle",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle.NSelEle"            ,20,0,100,        false,        true ,  true,   true,  true,  true, 1, 1);     
-  
-//    //tA->makePlot("eleMu.MT2",     cuts,    -10,  -10 , -10 ,   trigger , "eleMu.MT2"            ,100,-2,1000,        false,        true ,  true,   true,  true,  true, 1, 1);     
-
-
-//   //tA->makePlot("doubleMu.MT2",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle.MT2"            ,5,-2.5,2.5,        false,        true ,  true,   true,  true,  true, 1, 1);     
-
-//  tA->makePlot("doubleEle.MT2",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle.MT2"            ,20,0,1000,        false,        true ,  true,   true,  true,  true, 1, 1);     
- 
-//  tA->makePlot("doubleEle.METImbalanced",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle.METImbalanced"            ,20,0,1000,        false,        true ,  true,   true,  true,  true, 1, 1);     
- 
-//  tA->makePlot("doubleEle.MT2Imbalanced",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle.MT2Imbalanced"            ,20,0,1000,        false,        true ,  true,   true,  true,  true, 1, 1);     
-
-//  tA->makePlot("NEles",     cuts,    -10,  -10 , -10 ,   trigger , "NEles"            ,10,0,10,        false,        true ,  true,   true,  true,  true, 1, 1);     
-
-//  tA->makePlot("NMuons",     cuts,    -10,  -10 , -10 ,   trigger , "NMuons"            ,10,0,10,        false,        true ,  true,   true,  true,  true, 1, 1);     
-
-//  tA->makePlot("NTaus",     cuts,    -10,  -10 , -10 ,   trigger , "NTaus"            ,10,0,10,        false,        true ,  true,   true,  true,  true, 1, 1);     
-
-//  // tA->makePlot("misc.MET",     cuts,    -10,  -10 , -10 ,   trigger , "MET"            ,10,0,10,        false,        true ,  true,   true,  true,  true, 1, 1);     
-
-
-//  // tA->makePlot("doubleEle.MT2",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle.MT2"            ,100,-2,1000,        false,        true ,  true,   true,  true,  true, 1, 1);     
-
-
-//   // tA->makePlot("GetMT2DoubleMu()",     cuts,    -10,  -10 , -10 ,   trigger , "MT2"            ,20,0,400,        false,        true ,  true,   true,  true,  true, 1, 1); 
-
-
-
-// //tA->TriggerEfficiency(6, 4, 0, 100000000000);jet[3].lv.Pt()
-//   //tA->SortHighMT2(100.0, 100000000);
-//  // tA->plotSig("GetMT2elemuon()", cuts, "MT2", 40, 0, 800, true, 1 ,1);
-
-//   //tA->TopStudy("TTbar",3000);
-//   //tA->TauContamination(-1, 1000000000, 27);
-//   //tA->vs();
-//   //tA->Efficiency("SMS");
-//   //tA->MySmallMakePlot(1000000000);
-//   //tA->makeSmallCopy(200000000,100);
-//   //tA->QCD();
-//   //tA->SpecialMakePlot(10000000000);
-// }
-
    
-
-
-  
-
-

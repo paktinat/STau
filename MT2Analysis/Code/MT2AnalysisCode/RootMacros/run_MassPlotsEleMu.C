@@ -38,17 +38,15 @@
             <<"( eleMu.charge ==0)"<<"&&"
             <<"((muo[eleMu.mu0Ind].lv.Pt()>20)||(ele[eleMu.ele0Ind].lv.Pt()>20) )"<<"&&"
             <<"0==0";
-  */
-  std::ostringstream triggerStream;
+  */std::ostringstream triggerStream;
   triggerStream << "( "
-
 		<<" misc.ProcessID != 0 || ((misc.CrazyHCAL==0 && misc.NegativeJEC==0 " <<"&&"
 		<<" misc.CSCTightHaloIDFlag==0 && misc.HBHENoiseFlag==0 " <<"&&"
 		<<" misc.hcalLaserEventFlag==0 && misc.trackingFailureFlag==0 " <<"&&"
 		<<" misc.eeBadScFlag==0 && misc.EcalDeadCellTriggerPrimitiveFlag==0 )" <<"&&("
-
-  
-     	<< "(trigger.HLT_EMu)"         << ")))";
+      		<< "(trigger.HLT_EMu) " << ")))"; //Channel specific trigger
+    	
+                 
  
             
      TString trigger = triggerStream.str().c_str();
@@ -67,10 +65,10 @@
 
   myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0Ind  >= 0")); 
   myChannelCuts.push_back(std::string(std::string(myChan) + ".ele0Ind >=0"));
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".charge == 0"));
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".HasNoVetomuoForEleMu"));
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".HasNoVetoElecForEleMu"));
-  myChannelCuts.push_back("((muo[eleMu.mu0Ind].lv.Pt()>20)||(ele[eleMu.ele0Ind].lv.Pt()>20))" );
+ myChannelCuts.push_back(std::string(std::string(myChan) + ".charge == 0"));
+ myChannelCuts.push_back(std::string(std::string(myChan) + ".HasNoVetomuoForEleMu"));
+ myChannelCuts.push_back(std::string(std::string(myChan) + ".HasNoVetoElecForEleMu"));
+ myChannelCuts.push_back("((muo[eleMu.mu0Ind].lv.Pt()>20)||(ele[eleMu.ele0Ind].lv.Pt()>20))" );
   myChannelCuts.push_back("0 == 0");	        										
  
  std::ostringstream cutStream;
@@ -90,9 +88,9 @@
 
     TString myMisc="misc";
 
-
+    vars.push_back("EleMuInvMass()");
     vars.push_back( myChan + ".MT2");
-    vars.push_back( myChan + ".METImbalance");
+    vars.push_back( myChan + ".METImbalanced");
     vars.push_back(myChan+".MT2Imbalanced");
     vars1.push_back( myChan + ".METImbalancedPhi");
        vars.push_back(myMisc + ".MET");
@@ -100,6 +98,7 @@
        vars.push_back(myMisc + ".MT2");
        vars.push_back(myMisc + ".MT2jet40"); 
        vars.push_back(myMisc + ".LeadingJPt");
+       vars.push_back(myMisc + ".LeadingElePt");
        vars.push_back(myMisc + ".SecondJPt");
        vars.push_back(myMisc + ".J3Pt");
        vars.push_back(myMisc + ".J4Pt");
@@ -121,21 +120,21 @@
   vars2.push_back("NJetsIDLoose40");
   vars2.push_back("NJetsIDLoose50");
   vars2.push_back("NBJets");
-  vars2.push_back("NBJetsHE");
-  vars2.push_back("NBJetsCSVL");
+  //vars2.push_back("NBJetsHE");
+ // vars2.push_back("NBJetsCSVL");
   vars2.push_back("NBJetsCSVM");
   vars2.push_back("NBJetsCSVT");
-  vars2.push_back("NBJets40CSVL");
+ // vars2.push_back("NBJets40CSVL");
   vars2.push_back("NBJets40CSVM");
   vars2.push_back("NBJets40CSVT");
   vars2.push_back("NEles");
   vars2.push_back("NMuons");
-  vars2.push_back("NMuonsCommonIso");
+  //vars2.push_back("NMuonsCommonIso");
   vars2.push_back("NTaus");
   vars2.push_back("NTausIDLoose");
-  vars2.push_back("NTausIDLoose3Hits");
-  vars2.push_back("NTausIDLooseMVA");
-  vars2.push_back("NTausIDLoose2");
+  //vars2.push_back("NTausIDLoose3Hits");
+ // vars2.push_back("NTausIDLooseMVA");
+  //vars2.push_back("NTausIDLoose2");
   vars.push_back("pfmet[0].Pt()"); 
   vars1.push_back("pfmet[0].Phi()");
 
@@ -156,29 +155,23 @@
    * Loop over variables and plot
    */
     
-  /* for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
+  for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
         tA->makePlot(vars[iVar], cuts, -10, -10 , -10, trigger, vars[iVar],100,0,1000 , false, true, true,
-	true, true, true, 1, true, false, "gif");
-  }*/
-         for(unsigned int iVar1 = 0; iVar1 < vars1.size(); iVar1++){
-      tA->makePlot(vars1[iVar1], cuts, -10, -10 , -10, trigger, vars1[iVar1],70,-3.5,3.5 , false, true, true,true,true,true,1,true,false,"gif");}
-   for(unsigned int iVar2 = 0; iVar2 < vars2.size(); iVar2++){
+	true, true, true, 1, true, false, "png");
+  }
+      /*for(unsigned int iVar1 = 0; iVar1 < vars1.size(); iVar1++){
+	 tA->makePlot(vars1[iVar1], cuts, -10, -10 , -10, trigger, vars1[iVar1],70,-3.5,3.5 , false, true, true,true,true,true,1,true,false,"gif");}*/
+    /*for(unsigned int iVar2 = 0; iVar2 < vars2.size(); iVar2++){
         tA->makePlot(vars2[iVar2], cuts, -10, -10 , -10, trigger, vars2[iVar2],15,0,15 , false, true, true,
-	true, true, true, 1, true, false, "gif");}
-  /*  for(unsigned int iVar3 = 0; iVar3 < vars3.size(); iVar3++){
+	true, true, true, 1, true, false, "png");}*/
+  /* for(unsigned int iVar3 = 0; iVar3 < vars3.size(); iVar3++){
       tA->makePlot(vars3[iVar3], cuts, -10, -10 , -10, trigger, vars3[iVar3],20,0,20 , false, true, true,true,true,true,1,true,false,"gif");}*/
                             
 //    makeplots( TString var, TString maincuts, TString basecuts, int njets, int nbjets, int nleps, TString HLT,
 			   //TString xtitle, const int nbins, const double *bins, 
 			  // bool flip_order, bool logflag, bool composited, bool ratio, 
-			  // bool stacked, bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos)
-
+			  // bool stacked, bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos)   
   
-
-
- 
-
-    
 
 
       // tA->MakeCutFlowTable( myChannelCuts );

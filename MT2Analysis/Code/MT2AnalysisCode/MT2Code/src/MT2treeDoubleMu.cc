@@ -24,7 +24,8 @@
       {  doubleMu.Isolated=true;
     
     doubleMu.chargeSum = muo[doubleMu.mu0Ind].Charge + muo[doubleMu.mu1Ind].Charge;//check two good muon charge
-  if(fVerbose > 3){
+ //if(fVerbose > 3)
+       {
     cout<<" Indices for Double Muon1 "<<doubleMu.mu0Ind<<" "<<doubleMu.mu1Ind<<endl;
     cout<<" mu0.charge "<<muo[doubleMu.mu0Ind].Charge<<" mu1.charge"<<muo[doubleMu.mu1Ind].Charge<<endl;
     cout<<"doubleMu.chargeSum1 "<<doubleMu.chargeSum<<endl;}
@@ -50,7 +51,8 @@
             }  if  (doubleMu.mu0Ind!=-1 && doubleMu.mu1Ind!=-1){
       doubleMu.Isolated=false;
     doubleMu.chargeSum = muo[doubleMu.mu0Ind].Charge + muo[doubleMu.mu1Ind].Charge;//check two good muon charge
-    if(fVerbose > 3){
+  //  if(fVerbose > 3)
+       {
     cout<<"doubleMu.chargeSum2 "<<doubleMu.chargeSum<<endl;
     cout<<" mu0.charge "<<muo[doubleMu.mu0Ind].Charge<<" mu1.charge"<<muo[doubleMu.mu1Ind].Charge<<endl;
     cout<<" Indices for Double Muon2"<<doubleMu.mu0Ind<<" "<<doubleMu.mu1Ind<<endl;}

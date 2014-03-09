@@ -86,11 +86,11 @@ void MT2tree::FillEleMu(){
       cout<<" ele ";
       ele[eleMu.ele0Ind].lv.Print();
     }  
-   eleMu.DPhi =(fabs(Util::DeltaPhi(muo[eleMu.mu0Ind].lv.Phi(), ele[eleMu.ele0Ind].lv.Phi())));
+    eleMu.DPhi =(fabs(Util::DeltaPhi(muo[eleMu.mu0Ind].lv.Phi(), ele[eleMu.ele0Ind].lv.Phi())));
     eleMu.MT2    = CalcMT2(0, 0,muo[eleMu.mu0Ind].lv,ele[eleMu.ele0Ind].lv, pfmet[0]);
-    doubleMu.lv = muo[doubleMu.mu0Ind].lv + muo[doubleMu.mu1Ind].lv;
+    eleMu.lv = muo[eleMu.mu0Ind].lv + muo[eleMu.ele0Ind].lv;
     //cout<<"met.Pt() "<<met.Pt()<<endl;
-    doubleMu.MT2Imbalanced = CalcMT2(0, 0,muo[doubleMu.mu0Ind].lv,muo[doubleMu.mu1Ind].lv, -(doubleMu.lv));
+    eleMu.MT2Imbalanced = CalcMT2(0, 0,muo[eleMu.mu0Ind].lv,ele[eleMu.ele0Ind].lv, -(eleMu.lv));
     if(fVerbose > 3) cout<<"  eleMu.MT2Imbalanced  "<<eleMu.MT2Imbalanced <<endl;
   }
 }
