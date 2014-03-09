@@ -816,12 +816,12 @@ void MT2tree::Reset() {
   pileUp.Reset();
   trigger.Reset();
   SFWeight.Reset();
-  doubleMu.Reset();
-  eleMu.Reset();
-  muTau.Reset();
-  doubleTau.Reset();
-  eleTau.Reset();
-  doubleEle.Reset();
+  doubleMu[0].Reset();
+  eleMu[0].Reset();
+  muTau[0].Reset();
+  doubleTau[0].Reset();
+  eleTau[0].Reset();
+  doubleEle[0].Reset();
 
   for (int i = 0; i < m_jetSize; ++i) {
     jet[i].Reset();

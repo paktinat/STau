@@ -90,7 +90,7 @@ bool MT2tree::HasNoVetoMuForDoubleTau(){
 
 
 void MT2tree::FillDoubleTau(){
-	doubleTau.Reset();	
+	doubleTau[0].Reset();	
 	bool isSignal = true;
 	std::pair<int,int> tauIndecies = this->GetSignalDoubleTau();
 	if(tauIndecies.first == -1 || tauIndecies.second == -1){ //It is not signal, is it QCD?
@@ -100,40 +100,40 @@ void MT2tree::FillDoubleTau(){
 	if(this->fVerbose > 3)
 		std::cout<<"TauIndex0: "<<tauIndecies.first<<"TauIndex1: "<<tauIndecies.second<<endl;
 	if(tauIndecies.first != -1 && tauIndecies.second != -1){
-		doubleTau.SetTauIndex0(tauIndecies.first);
-		doubleTau.SetTauIndex1(tauIndecies.second);
-		doubleTau.SetSumCharge(tau[tauIndecies.first].Charge + tau[tauIndecies.second].Charge);
-		doubleTau.SetMT2(this->CalcMT2(0, false, tau[tauIndecies.first].lv, tau[tauIndecies.second].lv, pfmet[0]));
-		doubleTau.SetLV(tau[tauIndecies.first].lv + tau[tauIndecies.second].lv);
-                doubleTau.SetMT2Imbalanced(this->CalcMT2(0, false, tau[tauIndecies.first].lv, tau[tauIndecies.second].lv, (-doubleTau.GetLV())));
-		doubleTau.SetElecVeto(this->HasNoVetoElecForDoubleTau());
-		doubleTau.SetMuVeto(this->HasNoVetoMuForDoubleTau());
-		doubleTau.SetDPhi(fabs(Util::DeltaPhi(tau[tauIndecies.first].lv.Phi(),tau[tauIndecies.second].lv.Phi())));
+		doubleTau[0].SetTauIndex0(tauIndecies.first);
+		doubleTau[0].SetTauIndex1(tauIndecies.second);
+		doubleTau[0].SetSumCharge(tau[tauIndecies.first].Charge + tau[tauIndecies.second].Charge);
+		doubleTau[0].SetMT2(this->CalcMT2(0, false, tau[tauIndecies.first].lv, tau[tauIndecies.second].lv, pfmet[0]));
+		doubleTau[0].SetLV(tau[tauIndecies.first].lv + tau[tauIndecies.second].lv);
+                doubleTau[0].SetMT2Imbalanced(this->CalcMT2(0, false, tau[tauIndecies.first].lv, tau[tauIndecies.second].lv, (-doubleTau[0].GetLV())));
+		doubleTau[0].SetElecVeto(this->HasNoVetoElecForDoubleTau());
+		doubleTau[0].SetMuVeto(this->HasNoVetoMuForDoubleTau());
+		doubleTau[0].SetDPhi(fabs(Util::DeltaPhi(tau[tauIndecies.first].lv.Phi(),tau[tauIndecies.second].lv.Phi())));
 		if(isSignal){
-                	bool ret = (doubleTau.GetSumCharge() == 0);
-	                ret = ret && doubleTau.HasNoVetoMu();
-        	        ret = ret && doubleTau.HasNoVetoElec();
-			doubleTau.SetBeingSignal(ret);
+                	bool ret = (doubleTau[0].GetSumCharge() == 0);
+	                ret = ret && doubleTau[0].HasNoVetoMu();
+        	        ret = ret && doubleTau[0].HasNoVetoElec();
+			doubleTau[0].SetBeingSignal(ret);
 		} else {
 			if(!(this->tau[tauIndecies.first].Isolation3Hits <= 3 && 
 			     this->tau[tauIndecies.second].Isolation3Hits <= 3)){
-				doubleTau.SetTau0NonIso(true);
-				doubleTau.SetTau1NonIso(true);
+				doubleTau[0].SetTau0NonIso(true);
+				doubleTau[0].SetTau1NonIso(true);
 			}
 			int cat = -1;
-			if(doubleTau.HasNoVetoMu() && doubleTau.HasNoVetoElec()){ //QCD event is vetoed against additional e/mu
-				if(doubleTau.GetSumCharge() != 0 && !doubleTau.IsTau0NonIso() && !doubleTau.IsTau1NonIso())
+			if(doubleTau[0].HasNoVetoMu() && doubleTau[0].HasNoVetoElec()){ //QCD event is vetoed against additional e/mu
+				if(doubleTau[0].GetSumCharge() != 0 && !doubleTau[0].IsTau0NonIso() && !doubleTau[0].IsTau1NonIso())
                         		cat = 1;
-				else if(doubleTau.GetSumCharge() != 0 && doubleTau.IsTau0NonIso() && doubleTau.IsTau1NonIso())
+				else if(doubleTau[0].GetSumCharge() != 0 && doubleTau[0].IsTau0NonIso() && doubleTau[0].IsTau1NonIso())
                         		cat = 2;
-				else if(doubleTau.GetSumCharge() == 0 && !doubleTau.IsTau0NonIso() && !doubleTau.IsTau1NonIso())
+				else if(doubleTau[0].GetSumCharge() == 0 && !doubleTau[0].IsTau0NonIso() && !doubleTau[0].IsTau1NonIso())
                         		cat = 3;	
 			}
-			doubleTau.SetQCDCategory(cat);
+			doubleTau[0].SetQCDCategory(cat);
 		}
 	}
 	if(this->fVerbose > 3)
-		doubleTau.printObject();
+		doubleTau[0].printObject();
 }
 
 

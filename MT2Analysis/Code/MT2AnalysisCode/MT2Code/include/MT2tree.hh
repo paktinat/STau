@@ -1024,54 +1024,54 @@ public:
  
 
   //Eskandari   
-  MT2DoubleEle doubleEle; 
+  MT2DoubleEle doubleEle[1]; 
 
   void  FillDoubleEle();
 
 
   //chenarani   
-  MT2DoubleMuon doubleMu;
-  MT2EleMu      eleMu;
+  MT2DoubleMuon doubleMu[1];
+  MT2EleMu      eleMu[1];
 
   //Jafari
-  MT2DoubleTau doubleTau;	
-  MT2MuTau muTau;	
-  MT2EleTau eleTau;	
+  MT2DoubleTau doubleTau[1];	
+  MT2MuTau muTau[1];	
+  MT2EleTau eleTau[1];	
   void  FillDoubleMu();
   void  FillDoubleTau();
   void  FillMuTau();
   void  FillEleTau();
   void  FillEleMu();
-  double DoubleMuInvMass(){//ele/muo/tau
-	if(doubleMu.mu0Ind != -1 && doubleMu.mu1Ind != -1)
-		return ((muo[doubleMu.mu0Ind].lv +muo[doubleMu.mu1Ind].lv).M());
-	return -1.;
-  }	
-  double DoubleTauInvMass(){
-	if(doubleTau.GetTauIndex0() != -1 && doubleTau.GetTauIndex1() != -1)
-		return ((tau[doubleTau.GetTauIndex0()].lv +tau[doubleTau.GetTauIndex1()].lv).M());
-	return -1.;
-  }	
-  double DoubleEleInvMass(){
-	if(doubleEle.Ele0Ind != -1 && doubleEle.Ele1Ind != -1)
-		return ((ele[doubleEle.Ele0Ind].lv +ele[doubleEle.Ele1Ind].lv).M());
-	return -1.;
-  }	
-  double EleMuInvMass(){
-	if(eleMu.mu0Ind != -1 && eleMu.ele0Ind != -1)
-		return ((ele[eleMu.ele0Ind].lv + muo[eleMu.mu0Ind].lv).M());
-	return -1.;
-  }	
-  double TauMuInvMass(){
-	if(muTau.GetTauIndex0() != -1 && muTau.GetMuIndex0() != -1)
-		return ((tau[muTau.GetTauIndex0()].lv + muo[muTau.GetMuIndex0()].lv).M());
-	return -1.;
-  }	
-  double TauEleInvMass(){
-	if(eleTau.GetTauIndex0() != -1 && eleTau.GetEleIndex0() != -1)
-		return ((tau[eleTau.GetTauIndex0()].lv + ele[eleTau.GetEleIndex0()].lv).M());
-	return -1.;
-  }	
+//   double DoubleMuInvMass(){//ele/muo/tau
+// 	if(doubleMu.mu0Ind != -1 && doubleMu.mu1Ind != -1)
+// 		return ((muo[doubleMu.mu0Ind].lv +muo[doubleMu.mu1Ind].lv).M());
+// 	return -1.;
+//   }	
+//   double DoubleTauInvMass(){
+// 	if(doubleTau.GetTauIndex0() != -1 && doubleTau.GetTauIndex1() != -1)
+// 		return ((tau[doubleTau.GetTauIndex0()].lv +tau[doubleTau.GetTauIndex1()].lv).M());
+// 	return -1.;
+//   }	
+//   double DoubleEleInvMass(){
+// 	if(doubleEle.Ele0Ind != -1 && doubleEle.Ele1Ind != -1)
+// 		return ((ele[doubleEle.Ele0Ind].lv +ele[doubleEle.Ele1Ind].lv).M());
+// 	return -1.;
+//   }	
+//   double EleMuInvMass(){
+// 	if(eleMu[0].mu0Ind != -1 && eleMu[0].ele0Ind != -1)
+// 		return ((ele[eleMu[0].ele0Ind].lv + muo[eleMu[0].mu0Ind].lv).M());
+// 	return -1.;
+//   }	
+//   double TauMuInvMass(){
+// 	if(muTau.GetTauIndex0() != -1 && muTau.GetMuIndex0() != -1)
+// 		return ((tau[muTau.GetTauIndex0()].lv + muo[muTau.GetMuIndex0()].lv).M());
+// 	return -1.;
+//   }	
+//   double TauEleInvMass(){
+// 	if(eleTau.GetTauIndex0() != -1 && eleTau.GetEleIndex0() != -1)
+// 		return ((tau[eleTau.GetTauIndex0()].lv + ele[eleTau.GetEleIndex0()].lv).M());
+// 	return -1.;
+//   }	
 
   int fVerbose;
 

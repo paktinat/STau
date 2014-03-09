@@ -8,90 +8,90 @@ void MT2tree::FillEleMu(){
   for(int i=0; i<NMuons; i++)
     {
       if  (muo[i].PassMu0_EleMu ==1) //muon i pass first good muon conditions.
-	if (eleMu.mu0Ind==-1){  //Default value
-	  eleMu.mu0Ind = i;
+	if (eleMu[0].mu0Ind==-1){  //Default value
+	  eleMu[0].mu0Ind = i;
 	  continue;
 	} //one good muon is
 
       if  (muo[i].RejMu1_EleMu ==1){
-	eleMu.HasNoVetomuoForEleMu=false;
+	eleMu[0].HasNoVetomuoForEleMu=false;
       }
     }
     
 
   for(int i=0; i<NEles; i++){    
     if  (ele[i].IDSelEMU) //muon i pass first good muon conditions.
-      if (eleMu.ele0Ind==-1) {  //Default value
-	eleMu.ele0Ind = i; 
+      if (eleMu[0].ele0Ind==-1) {  //Default value
+	eleMu[0].ele0Ind = i; 
 	continue;
       }//one good ele is 
     
     if (ele[i].IDVetoEMU){
-      eleMu.HasNoVetoElecForEleMu=false;
+      eleMu[0].HasNoVetoElecForEleMu=false;
     }
   }
 
-  if(eleMu.ele0Ind != -1 && eleMu.mu0Ind !=-1){
+  if(eleMu[0].ele0Ind != -1 && eleMu[0].mu0Ind !=-1){
  
-   eleMu.Isolated=true;
-    eleMu.charge = muo[eleMu.mu0Ind].Charge + ele[eleMu.ele0Ind].Charge; //check two good muon charge
+    eleMu[0].Isolated=true;
+    eleMu[0].charge = muo[eleMu[0].mu0Ind].Charge + ele[eleMu[0].ele0Ind].Charge; //check two good muon charge
 
 
   
     if(fVerbose > 3){ 
-      cout<<" Indices for Ele Muon1 "<<eleMu.mu0Ind<<" "<<eleMu.ele0Ind<<endl;
-      cout<<" eleMu.charge ele&& muon1"<<muo[eleMu.mu0Ind].Charge <<" "<<ele[eleMu.ele0Ind].Charge<<endl;
-      cout<<"eleMu.charge1"<<  eleMu.charge<<endl;
+      cout<<" Indices for Ele Muon1 "<<eleMu[0].mu0Ind<<" "<<eleMu[0].ele0Ind<<endl;
+      cout<<" eleMu[0].charge ele&& muon1"<<muo[eleMu[0].mu0Ind].Charge <<" "<<ele[eleMu[0].ele0Ind].Charge<<endl;
+      cout<<"eleMu[0].charge1"<<  eleMu[0].charge<<endl;
       cout<<" muo ";
-      muo[eleMu.mu0Ind].lv.Print();
+      muo[eleMu[0].mu0Ind].lv.Print();
       
       cout<<" ele ";
-      ele[eleMu.ele0Ind].lv.Print();
+      ele[eleMu[0].ele0Ind].lv.Print();
     }  
-     eleMu.DPhi =(fabs(Util::DeltaPhi(muo[eleMu.mu0Ind].lv.Phi(), ele[eleMu.ele0Ind].lv.Phi())));
-    eleMu.MT2    = CalcMT2(0, 0,muo[eleMu.mu0Ind].lv,ele[eleMu.ele0Ind].lv, pfmet[0]);
+    eleMu[0].DPhi =(fabs(Util::DeltaPhi(muo[eleMu[0].mu0Ind].lv.Phi(), ele[eleMu[0].ele0Ind].lv.Phi())));
+    eleMu[0].MT2    = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, pfmet[0]);
     
-    eleMu.lv = muo[eleMu.mu0Ind].lv +ele[eleMu.ele0Ind].lv;
-    if(fVerbose > 3) cout<<" met.Pt() "<<eleMu.lv.Pt()<<endl;
-    eleMu.MT2Imbalanced = CalcMT2(0, 0,muo[eleMu.mu0Ind].lv,ele[eleMu.ele0Ind].lv, (-eleMu.lv));
-    if(fVerbose > 3) cout<<"  eleMu.MT2Imbalanced  "<<eleMu.MT2Imbalanced <<endl;
+    eleMu[0].lv = muo[eleMu[0].mu0Ind].lv +ele[eleMu[0].ele0Ind].lv;
+    if(fVerbose > 3) cout<<" met.Pt() "<<eleMu[0].lv.Pt()<<endl;
+    eleMu[0].MT2Imbalanced = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, (-eleMu[0].lv));
+    if(fVerbose > 3) cout<<"  eleMu[0].MT2Imbalanced  "<<eleMu[0].MT2Imbalanced <<endl;
   } else{
-     eleMu.mu0Ind=-1;
-     eleMu.ele0Ind = -1;
-     for(int i=0; i<NMuons; i++)
-    {
-      if  (muo[i].PassQCDMu0_EleMu ==1) 
-	if (eleMu.mu0Ind==-1){  
-	  eleMu.mu0Ind = i;
-	  continue;}
-	} 
-      for(int i=0; i<NEles; i++){    
-    if  (ele[i].PassQCDele0_EleMu) //muon i pass first good muon conditions.
-      if (eleMu.ele0Ind==-1) {  //Default value
-	eleMu.ele0Ind = i; 
-	continue;
-      }
-     } if(eleMu.ele0Ind != -1 && eleMu.mu0Ind !=-1){
-       eleMu.Isolated=false;
-       eleMu.charge = muo[eleMu.mu0Ind].Charge + ele[eleMu.ele0Ind].Charge; //check two good muon charge
-       if(fVerbose > 3)
-         { 
+    eleMu[0].mu0Ind=-1;
+    eleMu[0].ele0Ind = -1;
+    for(int i=0; i<NMuons; i++)
+      {
+	if  (muo[i].PassQCDMu0_EleMu ==1) 
+	  if (eleMu[0].mu0Ind==-1){  
+	    eleMu[0].mu0Ind = i;
+	    continue;}
+      } 
+    for(int i=0; i<NEles; i++){    
+      if  (ele[i].PassQCDele0_EleMu) //muon i pass first good muon conditions.
+	if (eleMu[0].ele0Ind==-1) {  //Default value
+	  eleMu[0].ele0Ind = i; 
+	  continue;
+	}
+    } if(eleMu[0].ele0Ind != -1 && eleMu[0].mu0Ind !=-1){
+      eleMu[0].Isolated=false;
+      eleMu[0].charge = muo[eleMu[0].mu0Ind].Charge + ele[eleMu[0].ele0Ind].Charge; //check two good muon charge
+      if(fVerbose > 3)
+	{ 
      
-      cout<<" Indices for Ele Muon2 "<<eleMu.mu0Ind<<" "<<eleMu.ele0Ind<<endl;
-      cout<<" eleMu.charge ele&& muon2"<<muo[eleMu.mu0Ind].Charge <<" "<<ele[eleMu.ele0Ind].Charge<<endl;
-      cout<<"eleMu.charge2"<<  eleMu.charge<<endl;
-      cout<<" muo ";
-      muo[eleMu.mu0Ind].lv.Print();
+	  cout<<" Indices for Ele Muon2 "<<eleMu[0].mu0Ind<<" "<<eleMu[0].ele0Ind<<endl;
+	  cout<<" eleMu[0].charge ele&& muon2"<<muo[eleMu[0].mu0Ind].Charge <<" "<<ele[eleMu[0].ele0Ind].Charge<<endl;
+	  cout<<"eleMu[0].charge2"<<  eleMu[0].charge<<endl;
+	  cout<<" muo ";
+	  muo[eleMu[0].mu0Ind].lv.Print();
       
-      cout<<" ele ";
-      ele[eleMu.ele0Ind].lv.Print();
-    }  
-    eleMu.DPhi =(fabs(Util::DeltaPhi(muo[eleMu.mu0Ind].lv.Phi(), ele[eleMu.ele0Ind].lv.Phi())));
-    eleMu.MT2    = CalcMT2(0, 0,muo[eleMu.mu0Ind].lv,ele[eleMu.ele0Ind].lv, pfmet[0]);
-    eleMu.lv = muo[eleMu.mu0Ind].lv + muo[eleMu.ele0Ind].lv;
-    //cout<<"met.Pt() "<<met.Pt()<<endl;
-    eleMu.MT2Imbalanced = CalcMT2(0, 0,muo[eleMu.mu0Ind].lv,ele[eleMu.ele0Ind].lv, -(eleMu.lv));
-    if(fVerbose > 3) cout<<"  eleMu.MT2Imbalanced  "<<eleMu.MT2Imbalanced <<endl;
+	  cout<<" ele ";
+	  ele[eleMu[0].ele0Ind].lv.Print();
+	}  
+      eleMu[0].DPhi =(fabs(Util::DeltaPhi(muo[eleMu[0].mu0Ind].lv.Phi(), ele[eleMu[0].ele0Ind].lv.Phi())));
+      eleMu[0].MT2    = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, pfmet[0]);
+      eleMu[0].lv = muo[eleMu[0].mu0Ind].lv + muo[eleMu[0].ele0Ind].lv;
+      //cout<<"met.Pt() "<<met.Pt()<<endl;
+      eleMu[0].MT2Imbalanced = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, -(eleMu[0].lv));
+      if(fVerbose > 3) cout<<"  eleMu[0].MT2Imbalanced  "<<eleMu[0].MT2Imbalanced <<endl;
+    }
   }
-}
 }
