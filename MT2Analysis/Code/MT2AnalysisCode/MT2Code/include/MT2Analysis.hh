@@ -225,6 +225,8 @@ private:
         bool IsGoodTau(int index);
 	//Muons 
 	bool IsGoodMT2Muon(const int index);
+	bool IsGoodMT2MuonStop(const int index);
+
 	float MuPFIso(const int index);
 	float MuPFIso04(const int index);
 	// Electrons

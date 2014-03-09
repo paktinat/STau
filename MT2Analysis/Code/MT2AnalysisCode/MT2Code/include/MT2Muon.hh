@@ -20,11 +20,12 @@ public:
     PassQCDMu0_MuMu  = -1;
     PassQCDMu1_MuMu  = -1;
     PassQCDMu0_EleMu =-1;
-    PassMu0_TauMu = -1;
-    RejMu1_TauMu = -1;
-    PassMu0_EleMu = -1;
-    RejMu1_EleMu = -1;
-    RejMu_TauTau = -1;
+    PassMuStop       =-1;
+    PassMu0_TauMu    = -1;
+    RejMu1_TauMu     = -1;
+    PassMu0_EleMu    = -1;
+    RejMu1_EleMu     = -1;
+    RejMu_TauTau     = -1;
   }
   
   void SetLV(const TLorentzVector v){
@@ -44,6 +45,7 @@ public:
   Int_t    PassQCDMu1_MuMu ;
   Int_t    PassQCDMu0_EleMu ;
   Int_t    PassMu0_TauMu;
+  Int_t    PassMuStop;
   Int_t    RejMu1_TauMu;
   Int_t    PassMu0_EleMu;
   Int_t    RejMu1_EleMu;
