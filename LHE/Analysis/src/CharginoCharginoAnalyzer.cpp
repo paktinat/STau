@@ -67,11 +67,26 @@ int main(int argc, char *argv[]){
   HistoManager diTauPt30("diTauPt30");
   HistoManager mt2_100("mt2_100");
 
+  int decaymode = atoi( argv[3] );
+
   CharginoCharginoAnalyzer analyzer( argv[1] );
   for(int i=0; i<analyzer.tree->GetEntries() ; i++){
     analyzer.tree->GetEntry(i);
-    decayMode.Fill( analyzer.theEvent->CalcDecayMode() == 3 || analyzer.theEvent->CalcDecayMode() == 2 , analyzer.theEvent->CharginoMass , analyzer.theEvent->LSPMass );
-    if(!(analyzer.theEvent->CalcDecayMode() == 3 || analyzer.theEvent->CalcDecayMode() == 2))
+
+    bool passDecayMode = true;
+    int event_decaymode = analyzer.theEvent->CalcDecayMode();
+    switch(decaymode){
+    case 1:
+    case 4:
+      passDecayMode = ( decaymode == event_decaymode );
+      break;
+    case 2:
+    case 3:
+      passDecayMode = ( event_decaymode == 2 || event_decaymode ==3 );
+    }
+
+    decayMode.Fill( passDecayMode , analyzer.theEvent->CharginoMass , analyzer.theEvent->LSPMass );
+    if(!(passDecayMode))
       continue;
     mt2_100.Fill( analyzer.theEvent->CalcMT2() > 100 , analyzer.theEvent->CharginoMass , analyzer.theEvent->LSPMass );
     met.Fill( analyzer.theEvent->MET > 40 , analyzer.theEvent->CharginoMass , analyzer.theEvent->LSPMass );
@@ -90,23 +105,17 @@ int main(int argc, char *argv[]){
   fout->Close();
 
   TCanvas c("Canvas");
-  c.Divide(2,3);
+  c.Divide(2,2);
   c.cd(1);
   decayMode.hPass.Draw("colz");
   
   c.cd(2);
-  met.hAll.Draw("colz");
-
-  c.cd(3);
   met.hPass.Draw("colz");
 
-  c.cd(4);
-  mt2_100.hPass.Draw("colz");
-
-  c.cd(5);
+  c.cd(3);
   diTauPt30.hPass.Draw("colz");
 
-  c.cd(6);
+  c.cd(4);
   diTauPt20.hPass.Draw("colz");
 
   string out__(argv[2]);

@@ -210,7 +210,7 @@ int main(int argc, char *argv[])
   if(argc < 4)
     {
       cout << " Usage: " << argv[0] << "EventType output_file" << " input_files" << endl;
-      cout << "EventType : 1 for CharginoChargino X5% , 2 CharginoChargino X50%, 3 for CharginoChargino X95%, 4 for STauSTau" << endl;
+      cout << " EventType : 1 for CharginoChargino X5% , 2 CharginoChargino X50%, 3 for CharginoChargino X95%, 4 for STauSTau" << endl;
       cout << " output_file - output file in ROOT format." << endl;
       cout << " input_files - input files in LHEF format," << endl;
       return 1;

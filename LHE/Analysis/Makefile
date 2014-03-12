@@ -25,7 +25,7 @@ OBJS += $(DICTOBS)
 .SUFFIXES: .cc,.C,.hh,.h
 .PHONY : clean all
 
-all: lib/libDataFormats.so bin/LHEFConverter bin/CharginoCharginoAnalyzer
+all: lib/libDataFormats.so bin/LHEFConverter bin/CharginoCharginoAnalyzer bin/STauSTauAnalyzer
 
 lib/libDataFormats.so : $(OBJS) src/Davismt2.o
 	$(LD) $(LDFLAGS) $(SOFLAGS) $(OBJS) src/Davismt2.o  -o lib/libDataFormats.so $(ROOTLIBS) 
@@ -39,6 +39,9 @@ bin/LHEFConverter : lib/libDataFormats.so  src/LHEFReader.o
 
 bin/CharginoCharginoAnalyzer : lib/libDataFormats.so  src/CharginoCharginoAnalyzer.o
 	$(LD) $(GLIBS) $(LDFLAGS) src/CharginoCharginoAnalyzer.o -o $@ $(ROOTLIBS) -lTree  -ldl -L./lib/ -lDataFormats
+
+bin/STauSTauAnalyzer : lib/libDataFormats.so  src/STauSTauAnalyzer.o
+	$(LD) $(GLIBS) $(LDFLAGS) src/STauSTauAnalyzer.o -o $@ $(ROOTLIBS) -lTree  -ldl -L./lib/ -lDataFormats
 
 obj/dict.C: $(wildcard include/*.h) include/linkdef.hh
 	$(ROOTSYS)/bin/rootcint -f $@ -c $(INCLUDES) $(notdir $^)
