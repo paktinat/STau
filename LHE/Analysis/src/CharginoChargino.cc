@@ -21,9 +21,8 @@ TLorentzVector CharginoChargino::CalcMET(){
   MET = ret;
   return tmp;
 }
-double CharginoChargino::CalcMT2(){
+double CharginoChargino::CalcMT2(float testmass){
 
-  float testmass = 0;
   bool massive = false;
   TLorentzVector visible1;
   if( CharginoN.DecaysToSTau() )

@@ -4,6 +4,7 @@
 #include "TTree.h"
 #include "TFile.h"
 #include "TH2.h"
+#include "TH3.h"
 #include "TStyle.h"
 #include <iostream>
 using namespace std;
@@ -67,6 +68,9 @@ int main(int argc, char *argv[]){
   HistoManager diTauPt30("diTauPt30");
   HistoManager mt2_100("mt2_100");
 
+  TH2D hmaxmt2_testmass0( "maxmt2_testmass0" , "testmass0" , 20 , 100 , 500 , 25 , 0 , 500 );
+  TH2D hmaxmt2_testmasslsp( "maxmt2_testmasslsp" , "testmass_lsp" , 20 , 100 , 500 , 25 , 0 , 500 );
+
   int decaymode = atoi( argv[3] );
 
   CharginoCharginoAnalyzer analyzer( argv[1] );
@@ -83,6 +87,7 @@ int main(int argc, char *argv[]){
     case 2:
     case 3:
       passDecayMode = ( event_decaymode == 2 || event_decaymode ==3 );
+      break;
     }
 
     decayMode.Fill( passDecayMode , analyzer.theEvent->CharginoMass , analyzer.theEvent->LSPMass );
@@ -92,7 +97,19 @@ int main(int argc, char *argv[]){
     met.Fill( analyzer.theEvent->MET > 40 , analyzer.theEvent->CharginoMass , analyzer.theEvent->LSPMass );
     diTauPt20.Fill( analyzer.theEvent->CharginoP.GetTau()->p4.Pt() > 20 && analyzer.theEvent->CharginoN.GetTau()->p4.Pt() > 20 , analyzer.theEvent->CharginoMass , analyzer.theEvent->LSPMass );
     diTauPt30.Fill( analyzer.theEvent->CharginoP.GetTau()->p4.Pt() > 30 && analyzer.theEvent->CharginoN.GetTau()->p4.Pt() > 30 , analyzer.theEvent->CharginoMass , analyzer.theEvent->LSPMass );
+    
+    int bin_id = hmaxmt2_testmasslsp.FindBin( analyzer.theEvent->CharginoMass , analyzer.theEvent->LSPMass );
+    double value1 = hmaxmt2_testmass0.GetBinContent(  bin_id );
+    if( analyzer.theEvent->MT2 > value1 )
+      hmaxmt2_testmass0.SetBinContent( bin_id ,  analyzer.theEvent->MT2 );
+
+    value1 = hmaxmt2_testmasslsp.GetBinContent(  bin_id );
+    double mt2_massive =  analyzer.theEvent->CalcMT2( analyzer.theEvent->LSPMass ) ;
+    if( mt2_massive > value1)
+      hmaxmt2_testmasslsp.SetBinContent( bin_id , mt2_massive);
   }
+
+  
 
   TFile* fout = new TFile(argv[2] , "RECREATE");
   fout->cd();
@@ -105,7 +122,7 @@ int main(int argc, char *argv[]){
   fout->Close();
 
   TCanvas c("Canvas");
-  c.Divide(2,2);
+  c.Divide(3,2);
   c.cd(1);
   decayMode.hPass.Draw("colz");
   
@@ -117,6 +134,12 @@ int main(int argc, char *argv[]){
 
   c.cd(4);
   diTauPt20.hPass.Draw("colz");
+
+  c.cd(5);
+  hmaxmt2_testmasslsp.Draw("colz");
+
+  c.cd(6);
+  hmaxmt2_testmass0.Draw("colz");
 
   string out__(argv[2]);
   out__ += ".C";
