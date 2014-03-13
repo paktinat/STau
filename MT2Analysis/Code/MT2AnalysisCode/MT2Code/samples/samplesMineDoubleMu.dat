@@ -5,11 +5,11 @@ ________________________________________________________________________________
 # list of samples
 #
 ## -------- SMS --------
-#SAMPLE
+SAMPLE
 Name            TStau
 SName           SUSY
 ShapeName       Signal
-File            TChipChimSTauSnu_NTupleProducer_53X_MC/TChipChimSTauSnu_250_0_MassTree_V2_1.root
+File            TChipChimSTauSnu_NTupleProducer_53X_MC/TChipChimSTauSnu_250_0_MassTree_V2_2.root
 Xsection        0.152 pb
 Kfact           1.
 Lumi            19600.0
