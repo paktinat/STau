@@ -65,7 +65,7 @@ int main(int argc, char *argv[]){
   HistoManager met("MET40");
   HistoManager decayMode("STuSTau");
   HistoManager diTauPt20("diTauPt20");
-  HistoManager diTauPt30("diTauPt30");
+  HistoManager diTauPt30("diTauPt45");
   HistoManager mt2_100("mt2_100");
 
   TH2D hmaxmt2_testmass0( "maxmt2_testmass0" , "testmass0" , 20 , 100 , 500 , 25 , 0 , 500 );
@@ -96,7 +96,7 @@ int main(int argc, char *argv[]){
     mt2_100.Fill( analyzer.theEvent->CalcMT2() > 100 , analyzer.theEvent->CharginoMass , analyzer.theEvent->LSPMass );
     met.Fill( analyzer.theEvent->MET > 40 , analyzer.theEvent->CharginoMass , analyzer.theEvent->LSPMass );
     diTauPt20.Fill( analyzer.theEvent->CharginoP.GetTau()->p4.Pt() > 20 && analyzer.theEvent->CharginoN.GetTau()->p4.Pt() > 20 , analyzer.theEvent->CharginoMass , analyzer.theEvent->LSPMass );
-    diTauPt30.Fill( analyzer.theEvent->CharginoP.GetTau()->p4.Pt() > 30 && analyzer.theEvent->CharginoN.GetTau()->p4.Pt() > 30 , analyzer.theEvent->CharginoMass , analyzer.theEvent->LSPMass );
+    diTauPt30.Fill( analyzer.theEvent->CharginoP.GetTau()->p4.Pt() > 45 && analyzer.theEvent->CharginoN.GetTau()->p4.Pt() > 45 , analyzer.theEvent->CharginoMass , analyzer.theEvent->LSPMass );
     
     int bin_id = hmaxmt2_testmasslsp.FindBin( analyzer.theEvent->CharginoMass , analyzer.theEvent->LSPMass );
     double value1 = hmaxmt2_testmass0.GetBinContent(  bin_id );
