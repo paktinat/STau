@@ -3186,7 +3186,7 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag)
 	  float METPhi = fMT2tree->misc.METPhi; //To be used if a cone close to met is used to look for taus
 	  
    for(int t = 0; t < fMT2tree->NTaus; t++){
- 	if(fMT2tree->tau[t].MT > 100 || fMT2tree->tau[t].Isolation < IsoCut)
+ 	if(fMT2tree->tau[t].MT > 100 || fMT2tree->tau[t].CombinedIsolation < IsoCut)
  	  continue;
 
 	float minDeltaR = 100.0;
@@ -3278,7 +3278,7 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag)
 	  continue;
 	
 	if(minDR < 0.1){
-	  if(fMT2tree->tau[jetIndex].Isolation > IsoCut && fMT2tree->tau[jetIndex].MT < 100)
+	  if(fMT2tree->tau[jetIndex].CombinedIsolation > IsoCut && fMT2tree->tau[jetIndex].MT < 100)
 	    hMT2TauFound->Fill(fMT2tree->misc.MT2, weight);
 	}
       }
@@ -3298,7 +3298,7 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag)
 	
 	    hEtaPtJetData->Fill(fMT2tree->jet[j].lv.Pt(), fabs(fMT2tree->jet[j].lv.Eta()), weight);
 
-	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].Isolation > IsoCut && fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT < 100){  
+	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].CombinedIsolation > IsoCut && fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT < 100){  
 	      hEtaPtTauFakeData->Fill(fMT2tree->jet[j].lv.Pt(), fabs(fMT2tree->jet[j].lv.Eta()), weight);
 	    }
 	  }
@@ -3315,7 +3315,7 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag)
 
 	    hEtaPtJet->Fill(fMT2tree->jet[j].lv.Pt(), fabs(fMT2tree->jet[j].lv.Eta()), weight);
 	    
-	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].Isolation > IsoCut && fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT < 100){ 
+	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].CombinedIsolation > IsoCut && fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT < 100){ 
 	      
 	      hEtaPtTauFake->Fill(fMT2tree->jet[j].lv.Pt(), fabs(fMT2tree->jet[j].lv.Eta()), weight);
 	    }
@@ -3343,7 +3343,7 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag)
 	    if(DeltaPhi > maxDPhiTauMET)
 	      continue;
 	    
-	    if(fMT2tree->tau[j].MT < 100 && fMT2tree->tau[j].Isolation > IsoCut){
+	    if(fMT2tree->tau[j].MT < 100 && fMT2tree->tau[j].CombinedIsolation > IsoCut){
 
 	      hMT2TauSigData->Fill(fMT2tree->misc.MT2, weight);
 	    }
@@ -3369,7 +3369,7 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag)
 	    if(DeltaPhi > maxDPhiTauMET)
 	      continue;
 	
-	    if(fMT2tree->tau[j].MT < 100 && fMT2tree->tau[j].Isolation > IsoCut){
+	    if(fMT2tree->tau[j].MT < 100 && fMT2tree->tau[j].CombinedIsolation > IsoCut){
 	      hMT2TauSig->Fill(fMT2tree->misc.MT2, weight);
 
 	      float minDR = 100.0;
@@ -3647,7 +3647,7 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag,
       if(Sample.type != "susy"){
       for(int t = 0; t < fMT2tree->NTaus; t++){
 
- 	if(fMT2tree->tau[t].MT > 100 || fMT2tree->tau[t].Isolation3Hits < IsoCut || Filled == 1)
+ 	if(fMT2tree->tau[t].MT > 100 || fMT2tree->tau[t].CombinedIsolation3Hits < IsoCut || Filled == 1)
  	  continue;
 
 	Filled = 1;
@@ -3755,14 +3755,14 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag,
 	  continue;
 	
 	if(minDR < 0.1){
-	  if(fMT2tree->tau[jetIndex].Isolation3Hits > IsoCut && fMT2tree->tau[jetIndex].MT < 100)
+	  if(fMT2tree->tau[jetIndex].CombinedIsolation3Hits > IsoCut && fMT2tree->tau[jetIndex].MT < 100)
 	    hMT2TauFound->Fill(fMT2tree->misc.MT2, weight);
 	}
       }}//TopDeayMode
       Filled = 0;
       if(GenTau == 0 && data != 1){
 	for(int j = 0; j < fMT2tree->NTaus; j++){
-	  if(fMT2tree->tau[j].Isolation3Hits > IsoCut && fMT2tree->tau[j].MT < 100 && Filled == 0){
+	  if(fMT2tree->tau[j].CombinedIsolation3Hits > IsoCut && fMT2tree->tau[j].MT < 100 && Filled == 0){
 	    Filled = 1;
 	    hMT2JetSig->Fill(fMT2tree->misc.MT2, weight);
 	    hMT2JetSigData->Fill(fMT2tree->misc.MT2, weight);
@@ -3783,10 +3783,10 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag,
 
 	    if(DeltaPhi > maxDPhiTauMET)
 	      continue;
-	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].Isolation3Hits > IsoCutLoose)
+	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].CombinedIsolation3Hits > IsoCutLoose)
 	      hEtaPtJetData->Fill(fMT2tree->jet[j].lv.Pt(), fabs(fMT2tree->jet[j].lv.Eta()), weight);
 
-	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].Isolation3Hits > IsoCut && fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT < 100){  
+	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].CombinedIsolation3Hits > IsoCut && fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT < 100){  
 	      hEtaPtTauFakeData->Fill(fMT2tree->jet[j].lv.Pt(), fabs(fMT2tree->jet[j].lv.Eta()), weight);
 	    }
 	  }
@@ -3801,10 +3801,10 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag,
 	    if(DeltaPhi > maxDPhiTauMET)
 	      continue;
 
-	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].Isolation3Hits > IsoCutLoose)
+	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].CombinedIsolation3Hits > IsoCutLoose)
 	      hEtaPtJet->Fill(fMT2tree->jet[j].lv.Pt(), fabs(fMT2tree->jet[j].lv.Eta()), weight);
 	    
-	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].Isolation3Hits > IsoCut && fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT < 100){ 
+	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].CombinedIsolation3Hits > IsoCut && fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT < 100){ 
 	      
 	      hEtaPtTauFake->Fill(fMT2tree->jet[j].lv.Pt(), fabs(fMT2tree->jet[j].lv.Eta()), weight);
 	    }
@@ -3827,7 +3827,7 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag,
 	      continue;
  
 	    
-// 	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].Isolation3Hits > IsoCutLoose){
+// 	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].CombinedIsolation3Hits > IsoCutLoose){
 // 	      hMT2JetSigData->Fill(fMT2tree->misc.MT2, weight);
 // 	      cout<<"JetSigData:: "<<fMT2tree->misc.MT2<<endl;
 // 	    }
@@ -3840,7 +3840,7 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag,
 	    if(DeltaPhi > maxDPhiTauMET)
 	      continue;
 	    
-	    if(fMT2tree->tau[j].MT < 100 && fMT2tree->tau[j].Isolation3Hits > IsoCut &&  Filled == 0){
+	    if(fMT2tree->tau[j].MT < 100 && fMT2tree->tau[j].CombinedIsolation3Hits > IsoCut &&  Filled == 0){
 	      Filled = 1;
 	      hMT2TauSigData->Fill(fMT2tree->misc.MT2, weight);
 	      //	      cout<<"TauSigData:: "<<fMT2tree->misc.MT2<<endl;
@@ -3856,7 +3856,7 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag,
 
 	    if(DeltaPhi > maxDPhiTauMET)
 	      continue;
-// 	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].Isolation3Hits > IsoCutLoose){
+// 	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].CombinedIsolation3Hits > IsoCutLoose){
 // 	      hMT2JetSig->Fill(fMT2tree->misc.MT2, weight);
 // 	      cout<<"JetSig:: "<<fMT2tree->misc.MT2<<endl;
 // 	    }
@@ -3869,7 +3869,7 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag,
 	    if(DeltaPhi > maxDPhiTauMET)
 	      continue;
 	
-	    if(fMT2tree->tau[j].MT < 100 && fMT2tree->tau[j].Isolation3Hits > IsoCut &&  Filled == 0){
+	    if(fMT2tree->tau[j].MT < 100 && fMT2tree->tau[j].CombinedIsolation3Hits > IsoCut &&  Filled == 0){
 	      Filled = 1;
 	      hMT2TauSig->Fill(fMT2tree->misc.MT2, weight);
 	      //	      cout<<"TauSig:: "<<fMT2tree->misc.MT2<<endl;
@@ -4158,7 +4158,7 @@ void MassPlotter::NewTauContamination(int sample_index, Long64_t nevents, int fl
 	  
       for(int t = 0; t < fMT2tree->NTaus; t++){
 
- 	if(fMT2tree->tau[t].MT > 100 || fMT2tree->tau[t].Isolation < IsoCut)
+ 	if(fMT2tree->tau[t].MT > 100 || fMT2tree->tau[t].CombinedIsolation < IsoCut)
  	  continue;
 
 	float minDeltaR = 100.0;
@@ -4257,10 +4257,10 @@ void MassPlotter::NewTauContamination(int sample_index, Long64_t nevents, int fl
 	  continue;
 	
 	if(minDR < 0.1){
-	  if(fMT2tree->tau[jetIndex].Isolation > IsoCutLoose && fMT2tree->tau[jetIndex].MT < 100)
+	  if(fMT2tree->tau[jetIndex].CombinedIsolation > IsoCutLoose && fMT2tree->tau[jetIndex].MT < 100)
 	    hMT2TauLooseFound->Fill(fMT2tree->misc.MT2, weight);
 
-	  if(fMT2tree->tau[jetIndex].Isolation > IsoCut && fMT2tree->tau[jetIndex].MT < 100)
+	  if(fMT2tree->tau[jetIndex].CombinedIsolation > IsoCut && fMT2tree->tau[jetIndex].MT < 100)
 	    hMT2TauTightFound->Fill(fMT2tree->misc.MT2, weight);
 	}
       }
@@ -4277,10 +4277,10 @@ void MassPlotter::NewTauContamination(int sample_index, Long64_t nevents, int fl
 
 	    if(DeltaPhi > maxDPhiTauMET)
 	      continue;
-	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].Isolation > IsoCutLoose){
+	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].CombinedIsolation > IsoCutLoose){
 	      hEtaPtJetData->Fill(fMT2tree->jet[j].lv.Pt(), fabs(fMT2tree->jet[j].lv.Eta()), weight);
 	      
-	      if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].Isolation > IsoCut && fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT < 100){  
+	      if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].CombinedIsolation > IsoCut && fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT < 100){  
 		hEtaPtTauFakeData->Fill(fMT2tree->jet[j].lv.Pt(), fabs(fMT2tree->jet[j].lv.Eta()), weight);
 	      }}}}else{
 	  for(int j = 0; j < fMT2tree->NJets; j++){
@@ -4293,10 +4293,10 @@ void MassPlotter::NewTauContamination(int sample_index, Long64_t nevents, int fl
 	    if(DeltaPhi > maxDPhiTauMET)
 	      continue;
 
-	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].Isolation > IsoCutLoose){
+	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].CombinedIsolation > IsoCutLoose){
 	      hEtaPtJet->Fill(fMT2tree->jet[j].lv.Pt(), fabs(fMT2tree->jet[j].lv.Eta()), weight);
 	      
-	      if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].Isolation > IsoCut && fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT < 100){ 
+	      if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].CombinedIsolation > IsoCut && fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT < 100){ 
 		
 		hEtaPtTauFake->Fill(fMT2tree->jet[j].lv.Pt(), fabs(fMT2tree->jet[j].lv.Eta()), weight);
 	      }}}}}
@@ -4314,10 +4314,10 @@ void MassPlotter::NewTauContamination(int sample_index, Long64_t nevents, int fl
 	      continue;
 	    
 	    if(fMT2tree->tau[j].MT < 100){
-	      if(fMT2tree->tau[j].Isolation > IsoCutLoose){
+	      if(fMT2tree->tau[j].CombinedIsolation > IsoCutLoose){
 		nTausLoose++;
 		cout<<"TauSigLooseData:: "<<fMT2tree->misc.MT2<<endl;
-		if(fMT2tree->tau[j].Isolation > IsoCut){
+		if(fMT2tree->tau[j].CombinedIsolation > IsoCut){
 		  nTaus++;
 		  cout<<"TauSigData:: "<<fMT2tree->misc.MT2<<endl;}}}}
 	    
@@ -4339,10 +4339,10 @@ void MassPlotter::NewTauContamination(int sample_index, Long64_t nevents, int fl
 	      continue;
 	
 	    if(fMT2tree->tau[j].MT < 100){
-	      if(fMT2tree->tau[j].Isolation > IsoCutLoose){
+	      if(fMT2tree->tau[j].CombinedIsolation > IsoCutLoose){
 		nTausLoose++;
 		cout<<"TauSigLoose:: "<<fMT2tree->misc.MT2<<endl;
-		if(fMT2tree->tau[j].Isolation > IsoCut){
+		if(fMT2tree->tau[j].CombinedIsolation > IsoCut){
 		  nTaus++;
 		  cout<<"TauSig:: "<<fMT2tree->misc.MT2<<endl;}}}}
 	    

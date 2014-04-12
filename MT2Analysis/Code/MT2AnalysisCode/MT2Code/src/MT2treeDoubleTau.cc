@@ -15,7 +15,7 @@ std::pair<int,int> MT2tree::DoubleTauParing(std::vector<int> GoodTau0, std::vect
 		int index1 = GoodTau1[i1];
 		if(index1 <= index0)
 			continue;
-		allPairs.push_back(make_pair((tau[index0].Isolation3Hits + tau[index1].Isolation3Hits), make_pair(index0,index1)));
+		allPairs.push_back(make_pair((tau[index0].CombinedIsolation3Hits + tau[index1].CombinedIsolation3Hits), make_pair(index0,index1)));
 	}
   }
   /*
@@ -115,8 +115,8 @@ void MT2tree::FillDoubleTau(){
         	        ret = ret && doubleTau[0].HasNoVetoElec();
 			doubleTau[0].SetBeingSignal(ret);
 		} else {
-			if(!(this->tau[tauIndecies.first].Isolation3Hits <= 3 && 
-			     this->tau[tauIndecies.second].Isolation3Hits <= 3)){
+			if(!(this->tau[tauIndecies.first].CombinedIsolation3Hits <= 3 && 
+			     this->tau[tauIndecies.second].CombinedIsolation3Hits <= 3)){
 				doubleTau[0].SetTau0NonIso(true);
 				doubleTau[0].SetTau1NonIso(true);
 			}
