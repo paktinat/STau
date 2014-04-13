@@ -2,6 +2,9 @@
 #################################
 # PSI Tier-3 example batch Job  #
 #################################
+#PBS -N hlk
+#PBS -j oe
+#PBS -l walltime=24:00:00
 
 export DPM_HOST=se1.particles.ipm.ac.ir
 export DPNS_HOST=se1.particles.ipm.ac.ir
