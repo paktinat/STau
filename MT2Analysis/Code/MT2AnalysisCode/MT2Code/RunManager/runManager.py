@@ -176,7 +176,8 @@ def createCMSConf(step, nameOfDirectory, releasePath, nameOfConf, inputString, e
   thisjobnumber=0
 
 #  cmd = " ".join(['qsub','-q all.q','-N',"RMG"+str(step)+taskName,'-o',stdout,'-e',stderr,nameOfDirectory+taskName+'/'+nameOfConf2+' '+str(step)]) saeid
-  cmd = " ".join(['qsub','-v myVar='+str(step),'-q batch ','-N',"RMG"+str(step)+taskName,'-o',stdout,'-e',stderr,nameOfDirectory+taskName+'/'+nameOfConf2])
+#  cmd = " ".join(['qsub','-v myVar='+str(step),'-q batch ','-N',"RMG"+str(step)+taskName,'-o',stdout,'-e',stderr,nameOfDirectory+taskName+'/'+nameOfConf2]) saeid
+  cmd = " ".join(['qsub','-v myVar='+str(step),'-q batch ','-N',"RMG"+str(step)+taskName,nameOfDirectory+taskName+'/'+nameOfConf2])
   print cmd
   if options.dryrun: return thisjobnumber
 
@@ -302,7 +303,9 @@ def getListOfTasks(nameOfFile):
 ###############################################################
 def process(task, conf):
 #  dcapPath = "dcap://t3se01.psi.ch:22125/pnfs/psi.ch/cms/trivcat" saeid
-  dcapPath = "rfio:///dpm/particles.ipm.ac.ir/home/cms"
+#  dcapPath = "rfio:///dpm/particles.ipm.ac.ir/home/cms" saeid
+  dcapPath = "rfio:///dpm/particles.ipm.ac.ir/home/cms/"
+	
   dbsUrl = 'http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_02/servlet/DBSServlet'
   list = [] # Initialize file list
 
@@ -370,9 +373,11 @@ def process(task, conf):
   showMessage(str(NumberOfJobs) + " jobs with " + str(FilesPerJob) + " files each will be created")
   jobnumbercollection=[]
   if(FilesPerJob > 0):
-    for step in range(0, NumberOfJobs):
-      result=createJob(step, FilesPerJob, NumberOfJobs, OverloadedJobs, conf, correctList, nameOfFolder, task[1])
-      jobnumbercollection.append(result)
+	  for step in range(0, NumberOfJobs):
+		  import time
+		  time.sleep(10)
+		  result=createJob(step, FilesPerJob, NumberOfJobs, OverloadedJobs, conf, correctList, nameOfFolder, task[1])
+		  jobnumbercollection.append(result)
   return jobnumbercollection
 
 ##################################################################################
@@ -466,6 +471,8 @@ if __name__ == '__main__' :
         fusepath=result[4]
         uname=result[6]
         for l in listOfTasks:
+		import time
+		time.sleep(10)
                 if(l[0].find("/data/")>-1) :
                         isdata=1
                 showMessage("Processing " + l[0])
