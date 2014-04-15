@@ -50,9 +50,9 @@
 
   
     //	<< "(trigger.HLT_EMu)"         << ")))";
-    //   << "(trigger.HLT_DiMuons) "     << ")))";
-              << "(trigger.HLT_DiElectrons) " << ")))";
-            
+    //  << "(trigger.HLT_DiMuons) "     << ")))";
+    //  << "(trigger.HLT_DiElectrons) " << ")))";
+            << "0==0 " << ")))";
   TString trigger = triggerStream.str().c_str();
   TString cuts = cutStream.str().c_str();
  

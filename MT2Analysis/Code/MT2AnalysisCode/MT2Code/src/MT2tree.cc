@@ -357,6 +357,19 @@ void MT2Trigger::Reset(){
 	HLT_SingleEle_MET_MT            = false;
 }
 
+//MT2HLTObject ----------
+MT2HLTObject::MT2HLTObject(){
+  Reset();
+}
+
+MT2HLTObject::~MT2HLTObject(){
+}
+
+void MT2HLTObject::Reset(){
+  lv.SetPxPyPzE(0, 0, 0, 0);
+  ID = 0;
+  path = "";
+}
 
 // MT2Jet -----------------------------------
 MT2Jet::MT2Jet(){
@@ -3161,6 +3174,7 @@ ClassImp(MT2Susy)
 ClassImp(MT2Misc)
 ClassImp(MT2PileUp)
 ClassImp(MT2Trigger)
+ClassImp(MT2HLTObject)
 ClassImp(MT2Jet)
 ClassImp(MT2Tau)
 ClassImp(MT2Elec)

@@ -244,6 +244,7 @@ public:
 			  const int nbins, const double min, const double max, bool add_underflow, bool logflag, double scale_factor, bool normalize);
 
   //public material for the tau estimation
+  void TauFakeRate(Long64_t nevents, TString cuts, TString trigger);//nevents determines the number of events to read
   void TauContamination(int sample_index, Long64_t nevents, int flag, TString cuts, TString trigger, int signalContamination = 0);//sample_index != -1 reads only a special sample, nevents determines the number of events to read
   void NewTauContamination(int sample_index, Long64_t nevents, int flag);//sample_index != -1 reads only a special sample, nevents determines the number of events to read
 

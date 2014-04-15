@@ -351,10 +351,24 @@ public:
 	Bool_t HLT_SingleMu_DiJet; // only from run 193834 on
 	Bool_t HLT_SingleMu_TriJet;
 	Bool_t HLT_SingleEle_DiJet_MET;
-	Bool_t HLT_SingleEle_MET_MT;
+        Bool_t HLT_SingleEle_MET_MT;
 
 	ClassDef(MT2Trigger, 22);
 };
+
+class MT2HLTObject {
+
+public:
+  MT2HLTObject();
+  virtual ~MT2HLTObject();
+  void Reset();
+  TLorentzVector lv;
+  int ID;
+  TString path;
+  
+  ClassDef(MT2HLTObject, 1);
+};
+
 
 class MT2Top {
 
@@ -1002,6 +1016,7 @@ public:
   MT2Misc        misc;
   MT2PileUp      pileUp;
   MT2Trigger     trigger;
+  MT2HLTObject   hltObject[6];
   MT2SFWeight    SFWeight;
   MT2Jet         jet[m_jetSize];
   MT2GenJet      genjet[m_genjetSize];

@@ -6,7 +6,9 @@
 const TreeReader& TreeReader::ToBegin() {
 
     fwlite::ChainEvent result = fEvent->toBegin();
-    LoadAll();
+    bool k = LoadAll();
+//     if(!k)
+//       ++(*this);
     return *this;
 
 }
@@ -14,9 +16,12 @@ const TreeReader& TreeReader::ToBegin() {
 //____________________________________________________________________
 // Increment event number and load variables
 const TreeReader& TreeReader::operator++() {
-
+   bool badEvent = true;
+//   while(badEvent){
     fwlite::ChainEvent result = ++(*fEvent);
-    LoadAll();
+    badEvent = !(LoadAll());
+//   } 
+
     return *this;
 
 }
@@ -38,7 +43,8 @@ const Int_t TreeReader::GetEntry(const Long64_t entry)
 const bool TreeReader::LoadAll(void) {
 
     if ( AtEnd() ) return false;
+bool k = GetAllByLabel();
 
-    return GetAllByLabel();
+ return k; 
     
 }

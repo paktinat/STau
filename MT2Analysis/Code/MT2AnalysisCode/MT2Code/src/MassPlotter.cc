@@ -7980,20 +7980,99 @@ void MassPlotter::MakeCutFlowTable( std::vector<std::string> all_cuts ){
   }
 }
 
-
-
-
-
-
-
-
-
-
-	double MassPlotter::DeltaPhi(double phi1, double phi2){
-		// From cmssw reco::deltaPhi()
-		double result = phi1 - phi2;
-		while( result >   TMath::Pi() ) result -= TMath::TwoPi();
-		while( result <= -TMath::Pi() ) result += TMath::TwoPi();
-		return TMath::Abs(result);
-	}
+double MassPlotter::DeltaPhi(double phi1, double phi2){
+  // From cmssw reco::deltaPhi()
+  double result = phi1 - phi2;
+  while( result >   TMath::Pi() ) result -= TMath::TwoPi();
+  while( result <= -TMath::Pi() ) result += TMath::TwoPi();
+  return TMath::Abs(result);
+}
  
+void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
+
+  TH1::SetDefaultSumw2();
+
+  cout<<" trigger "<<trigger<<endl;
+  cout<<" cuts "<<cuts<<endl;
+
+  TH1F* hAllTauPt = new TH1F("Pt", "Pt", 100, 0, 1000); 
+  TH1F* hPassTauPt = new TH1F("Pt", "hPt", 100, 0, 1000); 
+  
+  for(int ii = 0; ii < fSamples.size(); ii++){
+
+    TString myCuts = cuts;
+ 
+    int data = 0;
+    sample Sample = fSamples[ii];
+    
+    if(Sample.type == "data"){
+      data = 1;
+      myCuts += " && " + trigger;
+    }
+    
+    fMT2tree = new MT2tree();
+    Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
+
+    float Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
+
+    std::cout << setfill('=') << std::setw(70) << "" << std::endl;
+    cout << "looping over :     " <<endl;	
+    cout << "   Name:           " << Sample.name << endl;
+    cout << "   File:           " << (Sample.file)->GetName() << endl;
+    cout << "   Events:         " << Sample.nevents  << endl;
+    cout << "   Events in tree: " << Sample.tree->GetEntries() << endl; 
+    cout << "   Xsection:       " << Sample.xsection << endl;
+    cout << "   kfactor:        " << Sample.kfact << endl;
+    cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
+    cout << "   Weight:         " << Weight <<endl;
+    std::cout << setfill('-') << std::setw(70) << "" << std::endl;
+   
+
+    Sample.tree->Draw(">>selList", myCuts);
+    TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
+    Sample.tree->SetEventList(myEvtList);
+
+    Long64_t nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
+
+
+    for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
+      //Sample.tree->GetEntry(jentry); 
+      Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
+
+      if ( fVerbose>2 && jentry % 100000 == 0 ){  
+	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+	fflush(stdout);
+      }
+ 
+      float weight = Weight;
+      if(data == 1)
+ 	weight = 1.0;
+      else
+	if(Sample.type != "susy")
+	  weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40ge1 * fMT2tree->SFWeight.TauTagge1/Sample.PU_avg_weight);//
+      
+      TLorentzVector hltObjectLV(0,0,0,0);
+
+      for(int l = 0; l < 6; l++){
+	if(fMT2tree->hltObject[l].path == "HLT_IsoMu24_eta2p1_v" && fabs(fMT2tree->hltObject[l].ID) == 13)
+	  hltObjectLV = fMT2tree->hltObject[l].lv;
+      }
+
+      for(int t = 0; t < fMT2tree->NTaus; t++){
+	float dR = fMT2tree->tau[t].lv.DeltaR(hltObjectLV);
+	if(dR < 0.5)
+	  continue;
+
+	hAllTauPt->Fill(fMT2tree->tau[t].lv.Pt(), weight);
+	if(fMT2tree->tau[t].CombinedIsolation3Hits > 1.5)
+	  hPassTauPt->Fill(fMT2tree->tau[t].lv.Pt(), weight);
+      }
+    }
+  }
+
+  hPassTauPt->Divide(hAllTauPt);
+  
+  TCanvas *myCanvas = new TCanvas();
+ 
+  hPassTauPt->Draw();
+}

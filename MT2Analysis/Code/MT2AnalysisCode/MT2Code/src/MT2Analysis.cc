@@ -130,7 +130,7 @@ void MT2Analysis::Begin(const char* filename){
 	// define which triggers to fill
 	if(fisData){
 
-	  // HT/jetHT dataset
+		  // HT/jetHT dataset
 	  fTriggerMap["HLT_HT500_v1"]       = &fMT2tree->trigger.HLT_HT500_v1;
 	  fTriggerMap["HLT_HT500_v2"]       = &fMT2tree->trigger.HLT_HT500_v2;
 	  fTriggerMap["HLT_HT500_v3"]       = &fMT2tree->trigger.HLT_HT500_v3;
@@ -696,6 +696,56 @@ bool MT2Analysis::FillMT2TreeBasics(){
 	fMT2tree->pileUp.NVertices=nvertex;
 
 	// _________
+	// MT2HLTObject
+
+	int firedHLTLabels = 0;
+	  
+	if(fTR->HLTObjectID0.size() > 0){
+	  fMT2tree->hltObject[firedHLTLabels].lv.SetPtEtaPhiM(fTR->HLTObjectPt0[0], fTR->HLTObjectEta0[0], fTR->HLTObjectPhi0[0], 0.0);
+	  fMT2tree->hltObject[firedHLTLabels].ID = fTR->HLTObjectID0[0];
+	  fMT2tree->hltObject[firedHLTLabels].path = fTR->HLTLabels[0];
+	  //cout<<" fTR->HLTObjectID0[0] "<<fTR->HLTObjectID0[0]<<endl;
+	  firedHLTLabels++;
+	}
+	  
+	if(fTR->HLTObjectID1.size() > 0){
+	  fMT2tree->hltObject[firedHLTLabels].lv.SetPtEtaPhiM(fTR->HLTObjectPt1[0], fTR->HLTObjectEta1[0], fTR->HLTObjectPhi1[0], 0.0);
+	  fMT2tree->hltObject[firedHLTLabels].ID = fTR->HLTObjectID1[0];
+	  fMT2tree->hltObject[firedHLTLabels].path = fTR->HLTLabels[1];
+	  //  cout<<" fTR->HLTObjectID1[0] "<<fTR->HLTObjectID1[0]<<endl;
+	  firedHLTLabels++;
+	}
+	  
+	if(fTR->HLTObjectID2.size() > 0){
+	  fMT2tree->hltObject[firedHLTLabels].lv.SetPtEtaPhiM(fTR->HLTObjectPt2[0], fTR->HLTObjectEta2[0], fTR->HLTObjectPhi2[0], 0.0);
+	  fMT2tree->hltObject[firedHLTLabels].ID = fTR->HLTObjectID2[0];
+	  fMT2tree->hltObject[firedHLTLabels].path = fTR->HLTLabels[2];
+
+	  firedHLTLabels++;
+
+	  fMT2tree->hltObject[firedHLTLabels].lv.SetPtEtaPhiM(fTR->HLTObjectPt2[1], fTR->HLTObjectEta2[1], fTR->HLTObjectPhi2[1], 0.0);
+	  fMT2tree->hltObject[firedHLTLabels].ID = fTR->HLTObjectID2[1];
+	  fMT2tree->hltObject[firedHLTLabels].path = fTR->HLTLabels[2];
+
+// 	  cout<<" fTR->HLTObjectID2[0] "<<fTR->HLTObjectID2[0]<<endl;
+// 	  cout<<" fTR->HLTObjectID2[1] "<<fTR->HLTObjectID2[1]<<endl;
+	}
+
+// 	if(fTR->HLTObjectID3.size() > 0){
+// 	  fMT2tree->hltObject[firedHLTLabels].lv.SetPtEtaPhiM(fTR->HLTObjectPt3[0], fTR->HLTObjectEta3[0], fTR->HLTObjectPhi3[0], 0.0);
+// 	  fMT2tree->hltObject[firedHLTLabels].ID = fTR->HLTObjectID3[0];
+// 	  fMT2tree->hltObject[firedHLTLabels].path = fTR->HLTLabels[3];
+// 	  //  cout<<" fTR->HLTObjectID1[0] "<<fTR->HLTObjectID1[0]<<endl;
+// 	  firedHLTLabels++;
+// 	}
+
+// 	if(fTR->HLTObjectID4.size() > 0){
+// 	  fMT2tree->hltObject[firedHLTLabels].lv.SetPtEtaPhiM(fTR->HLTObjectPt4[0], fTR->HLTObjectEta4[0], fTR->HLTObjectPhi4[0], 0.0);
+// 	  fMT2tree->hltObject[firedHLTLabels].ID = fTR->HLTObjectID4[0];
+// 	  fMT2tree->hltObject[firedHLTLabels].path = fTR->HLTLabels[4];
+// 	  //  cout<<" fTR->HLTObjectID1[0] "<<fTR->HLTObjectID1[0]<<endl;
+// 	  firedHLTLabels++;
+// 	}
 
 	// _________
 	// HLT triggers --------------------------------------------------------------------------------
@@ -1675,7 +1725,10 @@ void MT2Analysis::GetLeptonJetIndices(){
 	
 	// Photons -----------------
 	vector<float> photon_pts;
+
 	for(int i=0; i<fTR->NPhotons; ++i){
+	  if(fTR->NPhotons > 5 )
+	    break;
 		if(! IsGoodPhoton(i))                             continue; 
 	//	if(! IsGoodPhotonEGMLoose(i))                     continue;   // preselection: use only photons passing the loose ID
 		fPhotons.push_back(i);
@@ -2127,10 +2180,12 @@ bool MT2Analysis::IsGoodPhotonEGMLoose(int i){
 }
 
 bool MT2Analysis::IsGoodPhoton(int i){//new
+
 	if( fTR->PhoPt[i] < 20                                                 ) return false; // pt cut
 	if( fabs(fTR->PhoEta[i])> 2.4                                          ) return false;
 	if( fabs(fTR->PhoEta[i])> 1.442 && fabs(fTR->PhoEta[i])<1.566          ) return false; // veto EB-EE gap
 	if( fTR->PhoHoverE2012[i] > 0.05                                       ) return false;
+
 //	float HoverE2012 = SingleTowerHoverE(i);
 //	if( HoverE2012 < -0.5                                                  ) return false; // H/E not calculable due missing matched SC
 //	if( HoverE2012 > 0.05                                                  ) return false; // H/E cut for 2012

@@ -44,7 +44,7 @@ USER_SRM_HOME="srm://se1.particles.ipm.ac.ir:8446/srm/managerv2?SFN=/dpm/particl
 # Top working directory on worker node's local disk. The batch
 # job working directory will be created below this
 #TOPWORKDIR=/scratch/`whoami`
-TOPWORKDIR=/dataLOCAL/`whoami`
+TOPWORKDIR=/home/`whoami`
 
 # Basename of job sandbox (job workdir will be $TOPWORKDIR/$JOBDIR)
 JOBDIR=jobdir
