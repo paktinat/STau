@@ -215,6 +215,7 @@ if test -e $SEOUTFILES; then
           echo "WARNING: Cannot find output file $WORKDIR/$n. Ignoring it" >&2
        else
           #lcg-cp -b -D srmv2 file:///$WORKDIR/$n $SERESULTDIR/$n
+	   rfmkdir $SERESULTDIR/
 	   rfcp $WORKDIR/$n $SERESULTDIR/$n
           if test $? -ne 0; then
              echo "ERROR: Failed to copy $WORKDIR/$n to $SERESULTDIR/$n" >&2
