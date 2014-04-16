@@ -1,0 +1,34 @@
+##################################################
+## Set of cuts for MultiplicityAnalysis:        ##
+#                                                #
+# ------------ Set Name -------------------------#
+SetName                                         MC
+# ------------- Cuts ----------------------------#
+PFMET_min                                        0
+HT_min                                           0
+JPt_hardest_min                                  0
+JPt_second_min                                   0
+PtHat_max                                 9999999.  
+NJets40_min                                      0
+NLeptons_min                                     2
+JESUpDown                                        0
+# ------------ Trigger --------------------------#
+HLT_required HLT_Ele20_CaloIdVT_CaloIsoRhoT_TrkIdT_TrkIsoT_LooseIsoPFTau20_v4
+HLT_required HLT_Ele20_CaloIdVT_CaloIsoRhoT_TrkIdT_TrkIsoT_LooseIsoPFTau20_v5
+HLT_required HLT_Ele20_CaloIdVT_CaloIsoRhoT_TrkIdT_TrkIsoT_LooseIsoPFTau20_v6
+HLT_required HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20_v2
+HLT_required HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20_v3
+HLT_required HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20_v6
+HLT_required HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20_v7
+HLT_required HLT_IsoMu18_eta2p1_LooseIsoPFTau20_v4
+HLT_required HLT_IsoMu18_eta2p1_LooseIsoPFTau20_v5
+HLT_required HLT_IsoMu18_eta2p1_LooseIsoPFTau20_v6
+HLT_required HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v2
+HLT_required HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v3
+HLT_required HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v6
+HLT_required HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v7
+# ----------- Run -------------------------------#
+Run_min                                          0
+Run_max                                    9999999
+##################################################
+
