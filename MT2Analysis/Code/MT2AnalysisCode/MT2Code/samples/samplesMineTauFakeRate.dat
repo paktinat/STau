@@ -1,0 +1,112 @@
+#########################################################################################
+GENERAL
+Path         ///dataLOCAL/MT2Tau/RootFiles/TauFakeRate/
+________________________________________________________________________________________
+# list of samples
+#
+
+## -------- QCD ----------------
+
+#SAMPLE
+Name		QCD_HT_100To250
+SName		QCD
+ShapeName	QCD
+File            TauTau_V2_2/QCD-HT-100To250-TuneZ2star-8TeV-madgraph-pythia-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+Xsection  	1.036E7 pb 
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+#
+#SAMPLE
+Name		QCD_HT_250To500
+SName		QCD
+ShapeName	QCD
+File            TauTau_V2_2/QCD-HT-250To500-TuneZ2star-8TeV-madgraph-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1-2.root
+Xsection 	276000.0 pb
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+#
+#SAMPLE
+Name		QCD_HT_500To1000
+SName		QCD
+ShapeName	QCD
+File            TauTau_V2_2/QCD-HT-500To1000-TuneZ2star-8TeV-madgraph-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1-2.root
+Xsection  	8426.0 pb 
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+#
+#SAMPLE
+Name		QCD_HT_1000ToInf
+SName		QCD
+ShapeName	QCD
+File            TauTau_V2_2/QCD-HT-1000ToInf-TuneZ2star-8TeV-madgraph-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1-2.root
+Xsection  	204.0 pb
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+# -------- electroweak --------
+#SAMPLE
+Name		WJetsToLNu
+SName		Wtolnu
+ShapeName	WJets
+File            TauTau_V2_2/WJetsToLNu-TuneZ2Star-8TeV-madgraph-tarball-Summer12-DR53X-PU-S10-START53-V7A-v2.root
+Xsection  	36257.2
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		417
+
+
+## --------- Data ---------------------------
+SAMPLE
+Name		Run2012A_Jet
+SName		Jet-Data
+ShapeName	Data
+File            Jet-Run2012A-22Jan2013-v1-AOD.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
+
+ 
+SAMPLE
+Name		Run2012B_JetHT
+SName		JetHT-Data
+ShapeName	Data
+File            JetHT-Run2012B-22Jan2013-v1-AOD.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
+
+
+#SAMPLE
+Name		Run2012C_DoubleEle
+SName		DoubleEle-Data
+ShapeName	Data
+File            TauTau_V2_2/DoubleElectron-Run2012C-22Jan2013-v1-AOD-4.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
+
+
+#SAMPLE
+Name		Run2012D_DoubleEle
+SName		DoubleEle-Data
+ShapeName	Data
+File            TauTau_V2_2/DoubleElectron-Run2012D-22Jan2013-v1-AOD.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1

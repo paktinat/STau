@@ -7996,7 +7996,7 @@ void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
   cout<<" cuts "<<cuts<<endl;
 
   TH1F* hAllTauPt = new TH1F("Pt", "Pt", 100, 0, 1000); 
-  TH1F* hPassTauPt = new TH1F("Pt", "hPt", 100, 0, 1000); 
+  TH1F* hPassTauPt = new TH1F("hPt", "hPt", 100, 0, 1000); 
   
   for(int ii = 0; ii < fSamples.size(); ii++){
 
@@ -8053,15 +8053,15 @@ void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
       
       TLorentzVector hltObjectLV(0,0,0,0);
 
-      for(int l = 0; l < 6; l++){
-	if(fMT2tree->hltObject[l].path == "HLT_IsoMu24_eta2p1_v" && fabs(fMT2tree->hltObject[l].ID) == 13)
-	  hltObjectLV = fMT2tree->hltObject[l].lv;
-      }
+   //    for(int l = 0; l < 6; l++){
+// 	if(fMT2tree->hltObject[l].path == "HLT_IsoMu24_eta2p1_v" && fabs(fMT2tree->hltObject[l].ID) == 13)
+// 	  hltObjectLV = fMT2tree->hltObject[l].lv;
+//       }
 
       for(int t = 0; t < fMT2tree->NTaus; t++){
-	float dR = fMT2tree->tau[t].lv.DeltaR(hltObjectLV);
-	if(dR < 0.5)
-	  continue;
+// 	float dR = fMT2tree->tau[t].lv.DeltaR(hltObjectLV);
+// 	if(dR < 0.5)
+// 	  continue;
 
 	hAllTauPt->Fill(fMT2tree->tau[t].lv.Pt(), weight);
 	if(fMT2tree->tau[t].CombinedIsolation3Hits > 1.5)

@@ -1,8 +1,5 @@
 # To create the directory for the first time
-git clone --branch master https://github.com/paktinat/STau MT2_Tau_V02-03-02
-
-#To create an environment to perform the developments on the structure of the MT2Tree, pay attention to the _Dev at the end of the new created directory 
-git clone --branch dev https://github.com/paktinat/STau MT2_Tau_V02-03-02_Dev
+git clone --branch TauFR https://github.com/paktinat/STau MT2_TauFR_V02-03-02
 
 # To update an existing directory
 git pull
