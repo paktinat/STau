@@ -5,7 +5,7 @@
 SetName                                         MC
 # ------------- Cuts ----------------------------#
 PFMET_min                                        0
-HT_min                                           1000
+HT_min                                           0
 JPt_hardest_min                                  0
 JPt_second_min                                   0
 PtHat_max                                 9999999.  

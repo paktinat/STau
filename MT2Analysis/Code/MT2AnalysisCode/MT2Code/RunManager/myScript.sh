@@ -39,7 +39,9 @@ DBG=0
 #### The following configurations you should not need to change
 # The SE's user home area (SRMv2 URL)
 #USER_SRM_HOME="srm://t3se01.psi.ch:8443/srm/managerv2?SFN=/pnfs/psi.ch/cms/trivcat/store/user/" saeid
-USER_SRM_HOME="srm://se1.particles.ipm.ac.ir:8446/srm/managerv2?SFN=/dpm/particles.ipm.ac.ir/home/cms/store/user/"
+#USER_SRM_HOME="srm://se1.particles.ipm.ac.ir:8446/srm/managerv2?SFN=/dpm/particles.ipm.ac.ir/home/cms/store/user/"
+USER_SRM_HOME="rfio:///dpm/particles.ipm.ac.ir/home/cms/store/user/"
+
 
 # Top working directory on worker node's local disk. The batch
 # job working directory will be created below this
@@ -212,7 +214,8 @@ if test -e $SEOUTFILES; then
        if test ! -e $WORKDIR/$n; then
           echo "WARNING: Cannot find output file $WORKDIR/$n. Ignoring it" >&2
        else
-          lcg-cp -b -D srmv2 file:///$WORKDIR/$n $SERESULTDIR/$n
+          #lcg-cp -b -D srmv2 file:///$WORKDIR/$n $SERESULTDIR/$n
+	   rfcp $WORKDIR/$n $SERESULTDIR/$n
           if test $? -ne 0; then
              echo "ERROR: Failed to copy $WORKDIR/$n to $SERESULTDIR/$n" >&2
           fi
