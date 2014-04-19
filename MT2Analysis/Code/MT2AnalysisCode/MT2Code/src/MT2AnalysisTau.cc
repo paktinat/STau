@@ -200,6 +200,6 @@ bool MT2Analysis::IsGoodTau(int i){
        //if(fTR->TauLooseElectronRejection[i]      < 0.5        ) return false;//have to take this as we apply tau veto
        //if(fTR->TauLooseMuonRejection[i]          < 0.5        ) return false;//loose WP is the same for '2' version, no problem
        //if(fTR->TauLooseCombinedIsolationDeltaBetaCorr[i] < 0.5        ) return false;//should contain also the "3hits" ones, small inefficiency for MVA2.
-       if(fTR->TauLooseCombinedIsolationDeltaBetaCorr3Hits[i] < 0.5     ) return false;//should contain also the "3hits" ones, small inefficiency for MVA2.
+       // TauFR       if(fTR->TauLooseCombinedIsolationDeltaBetaCorr3Hits[i] < 0.5     ) return false;//should contain also the "3hits" ones, small inefficiency for MVA2.
        return true;
 }

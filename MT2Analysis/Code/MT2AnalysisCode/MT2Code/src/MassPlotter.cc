@@ -8058,15 +8058,25 @@ void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
 // 	  hltObjectLV = fMT2tree->hltObject[l].lv;
 //       }
 
+
+      //NJets > 1
+      for (jets)
+	//leading jet excluded 
+	//acceptance cuts Pt,Eta
+	//	hAllTauPt->Fill(fMT2tree->jet[t].lv.Pt(), weight);
+
+
       for(int t = 0; t < fMT2tree->NTaus; t++){
 // 	float dR = fMT2tree->tau[t].lv.DeltaR(hltObjectLV);
 // 	if(dR < 0.5)
 // 	  continue;
 
-	hAllTauPt->Fill(fMT2tree->tau[t].lv.Pt(), weight);
+//DltaR (tau , leading jet) > 0.5
+//acceptance cuts Pt,Eta
+
 	if(fMT2tree->tau[t].CombinedIsolation3Hits > 1.5)
 	  hPassTauPt->Fill(fMT2tree->tau[t].lv.Pt(), weight);
-      }
+      
     }
   }
 
