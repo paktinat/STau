@@ -25,8 +25,12 @@
   std::ostringstream cutStream;
   cutStream << " " 
  
-                  << "(doubleEle.Ele0Ind != -1  )" <<"&&"
-                  << "(doubleEle.Ele1Ind != -1  )" <<"&&"
+               //   << "(doubleEle.Ele0Ind != -1  )" <<"&&"
+               //   << "(doubleEle.Ele1Ind != -1  )" <<"&&"
+	    <<"(NJetsIDLoose >=2 )"        <<"&&"
+	    <<"misc.LeadingJPt > 350.0"  <<"&&"
+
+
 
     //        << "(eleMu.mu0Ind != -1  )" <<"&&"
     //        << "(eleMu.ele0Ind != -1  )" <<"&&"
@@ -69,7 +73,7 @@
   //tA->makeSmallCopy(200000000,100);
   //tA->QCD();
   //tA->SpecialMakePlot(10000000000);
-  tA->TauFakeRate(-1, cuts,trigger);
+  tA->TauFakeRate(10000, cuts,trigger);
 
 
 }

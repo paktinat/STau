@@ -7994,9 +7994,11 @@ void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
 
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
-
-  TH1F* hAllTauPt = new TH1F("Pt", "Pt", 100, 0, 1000); 
-  TH1F* hPassTauPt = new TH1F("hPt", "hPt", 100, 0, 1000); 
+  
+   
+   
+    TH1F* hAllTauPt = new TH1F("Pt", "Pt", 100, 0, 1000); 
+    TH1F* hPassTauPt = new TH1F("hPt", "hPt", 100, 0, 1000); 
   
   for(int ii = 0; ii < fSamples.size(); ii++){
 
@@ -8007,7 +8009,7 @@ void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
     
     if(Sample.type == "data"){
       data = 1;
-      myCuts += " && " + trigger;
+      //myCuts += " && " + trigger;
     }
     
     fMT2tree = new MT2tree();
@@ -8034,22 +8036,22 @@ void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
 
     Long64_t nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
 
-
+    cout<<"nentries "<<nentries<<endl;
     for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
       //Sample.tree->GetEntry(jentry); 
       Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
-
+     
       if ( fVerbose>2 && jentry % 100000 == 0 ){  
 	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
 	fflush(stdout);
       }
  
-      float weight = Weight;
+      float weight = 0;
       if(data == 1)
  	weight = 1.0;
       else
 	if(Sample.type != "susy")
-	  weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40ge1 * fMT2tree->SFWeight.TauTagge1/Sample.PU_avg_weight);//
+	  weight = Weight * (fMT2tree->pileUp.Weight/Sample.PU_avg_weight);//
       
       TLorentzVector hltObjectLV(0,0,0,0);
 
@@ -8059,30 +8061,50 @@ void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
 //       }
 
 
-      //NJets > 1
-      for (jets)
-	//leading jet excluded 
-	//acceptance cuts Pt,Eta
-	//	hAllTauPt->Fill(fMT2tree->jet[t].lv.Pt(), weight);
-
-
-      for(int t = 0; t < fMT2tree->NTaus; t++){
-// 	float dR = fMT2tree->tau[t].lv.DeltaR(hltObjectLV);
-// 	if(dR < 0.5)
-// 	  continue;
-
-//DltaR (tau , leading jet) > 0.5
-//acceptance cuts Pt,Eta
-
-	if(fMT2tree->tau[t].CombinedIsolation3Hits > 1.5)
-	  hPassTauPt->Fill(fMT2tree->tau[t].lv.Pt(), weight);
       
-    }
-  }
+      for(int i=0; i<fMT2tree->NJets; ++i){
+        //NJets > 1
+        //leading jet excluded 
+	//acceptance cuts Pt,Eta
+	if (i==0)
+	  continue;
+	 
+	if (!((fMT2tree->jet[i].lv.Pt() > 20)  &&  fabs(fMT2tree->jet[1].lv.Eta()<2.3)))  
+	  continue;
 
-  hPassTauPt->Divide(hAllTauPt);
+	hAllTauPt->Fill(fMT2tree->jet[i].lv.Pt(), weight);                                
+	
+	if(fMT2tree->jet[i].isTauMatch < 0)
+	  continue;
+	
+	int matchedTauInd = fMT2tree->jet[i].isTauMatch;
+
+	//fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT > 100)
+             // 	float dR = fMT2tree->tau[t].lv.DeltaR(hltObjectLV);
+             // 	if(dR < 0.5)
+             // 	        continue;
+            //      DltaR (tau , leading jet) > 0.5
+            //      acceptance cuts Pt,Etafor(int j = 0; j < fMT2tree->NJets; j++){
+	    
+	if(!( fabs(fMT2tree->tau[matchedTauInd].lv.Eta())<2.3 &&  fMT2tree->tau[matchedTauInd] .lv.Pt()>20 )) 
+	  continue;	    
+             
+              
+ //            float dR=0;
+//             dR = (fMT2tree->jet[0].lv.Eta(),fMT2tree->tau[t].lv.Eta());
+//             if(dR < 0.5)
+//             continue;
+	if(fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits > 1.5)
+	  hPassTauPt->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);                                 
+      }
+    }        
+         
+  }  
+
+   hPassTauPt->Divide(hAllTauPt);
   
   TCanvas *myCanvas = new TCanvas();
  
   hPassTauPt->Draw();
+//hAllTauPt->Draw("same");
 }

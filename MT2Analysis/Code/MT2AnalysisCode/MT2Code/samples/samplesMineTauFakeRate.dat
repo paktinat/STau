@@ -88,11 +88,11 @@ Type            data
 Color		1
 
 
-#SAMPLE
-Name		Run2012C_DoubleEle
-SName		DoubleEle-Data
+SAMPLE
+Name		Run2012C_JetHT
+SName		JetHT-Data
 ShapeName	Data
-File            TauTau_V2_2/DoubleElectron-Run2012C-22Jan2013-v1-AOD-4.root
+File            JetHT-Run2012C-22Jan2013-v1-AOD.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.
@@ -104,7 +104,7 @@ Color		1
 Name		Run2012D_DoubleEle
 SName		DoubleEle-Data
 ShapeName	Data
-File            TauTau_V2_2/DoubleElectron-Run2012D-22Jan2013-v1-AOD.root
+File            
 Xsection  	1.
 Kfact           1.	
 Lumi            1.
