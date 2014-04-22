@@ -73,7 +73,7 @@
   //tA->makeSmallCopy(200000000,100);
   //tA->QCD();
   //tA->SpecialMakePlot(10000000000);
-  tA->TauFakeRate(10000, cuts,trigger);
+  tA->TauFakeRate(10000000, cuts,trigger);
 
 
 }

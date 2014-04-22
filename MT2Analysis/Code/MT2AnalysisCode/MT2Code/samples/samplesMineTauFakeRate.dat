@@ -100,11 +100,11 @@ Type            data
 Color		1
 
 
-#SAMPLE
-Name		Run2012D_DoubleEle
-SName		DoubleEle-Data
+SAMPLE
+Name		Run2012D_JetHT
+SName		JetHT-Data
 ShapeName	Data
-File            
+File            JetHT-Run2012D-22Jan2013-v1-AOD.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.
