@@ -7995,20 +7995,29 @@ void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
   
+  
+    Double_t xbin[20]={0.0,10,20,30,40,50,60,70,80,90,100,120,140,160,180,200,250,300,400,500};
+    TH1F* hAllTauPt = new TH1F("", "",19,xbin); 
+    
+    TH1F* hPassTauPtLoose3hit= new TH1F("", "", 19,xbin);
+    TH1F* hPassTauPtMedium3hit= new TH1F("", "",19,xbin);
+    TH1F* hPassTauPtTight3hit= new TH1F("", "",19,xbin);
    
+     
+    TH1F* hPassTauPtLooseMVA2= new TH1F("", "", 19,xbin);
+    TH1F* hPassTauPtMediumMVA2= new TH1F("", "", 19,xbin);
+    TH1F* hPassTauPtTightMVA2= new TH1F("", "",19, xbin);
    
-    TH1F* hAllTauPt = new TH1F("", "", 100, 0, 1000); 
-  /* TH1F* hPassTauPtLoose3hit= new TH1F("", "", 100, 0, 1000);
-    TH1F* hPassTauPtMedium3hit= new TH1F("", "", 100, 0, 1000);
-    TH1F* hPassTauPtTight3hit= new TH1F("", "", 100, 0, 1000);*/
-   /*  TH1F* hPassTauPtLooseMVA2= new TH1F("", "", 100, 0, 1000);
-    TH1F* hPassTauPtMediumMVA2= new TH1F("", "", 100, 0, 1000);
-    TH1F* hPassTauPtTightMVA2= new TH1F("", "", 100, 0, 1000);*/
-    TH1F* hPassTauPtVLoose= new TH1F("", "", 100, 0, 1000);
-    TH1F* hPassTauPtLoose= new TH1F("", "", 100, 0, 1000);
-    TH1F* hPassTauPtMedium= new TH1F("", "", 100, 0, 1000);
-    TH1F* hPassTauPtTight= new TH1F("", "", 100, 0, 1000);
-   for(int ii = 0; ii < fSamples.size(); ii++){
+    TH1F* hPassTauPtVLoose= new TH1F("", "", 19,xbin) ;
+    TH1F* hPassTauPtLoose= new TH1F("", "",19, xbin);
+    TH1F* hPassTauPtMedium= new TH1F("", "",19,xbin);
+    TH1F* hPassTauPtTight= new TH1F("", "", 19,xbin);
+    
+      
+     
+
+   
+    for(int ii = 0; ii < fSamples.size(); ii++){
 
     TString myCuts = cuts;
  
@@ -8038,7 +8047,7 @@ void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
     std::cout << setfill('-') << std::setw(70) << "" << std::endl;
    
 
-    Sample.tree->Draw(">>selList", myCuts);
+    Sample.tree->Draw(">>selList", myCuts,"goff");
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
     Sample.tree->SetEventList(myEvtList);
 
@@ -8075,8 +8084,8 @@ void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
         //leading jet excluded 
 	//acceptance cuts Pt,Eta
 	if (i==0)
-	  continue;
-	 
+        continue;
+	 if(fMT2tree->jet[i].isPFIDLoose==false) continue;
 	if (!((fMT2tree->jet[i].lv.Pt() > 20)  &&  fabs(fMT2tree->jet[1].lv.Eta()<2.3)))  
 	  continue;
 
@@ -8102,28 +8111,28 @@ void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
 //             dR = (fMT2tree->jet[0].lv.Eta(),fMT2tree->tau[t].lv.Eta());
 //             if(dR < 0.5)
 //             continue;
-	/* if(fMT2tree->tau[matchedTauInd].IsolationMVA2 >=2)
-	  hPassTauPtLooseMVA2->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight); 
+	 if(fMT2tree->tau[matchedTauInd].IsolationMVA2 >=2)
+	  hPassTauPtLooseMVA2->Fill(fMT2tree->jet[i].lv.Pt(), weight); 
          if(fMT2tree->tau[matchedTauInd].IsolationMVA2 >=3)
-	  hPassTauPtMediumMVA2->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);                        
+	  hPassTauPtMediumMVA2->Fill(fMT2tree->jet[i].lv.Pt(), weight);                        
          if(fMT2tree->tau[matchedTauInd].IsolationMVA2 >=4)
-	  hPassTauPtTightMVA2->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);*/
+	  hPassTauPtTightMVA2->Fill(fMT2tree->jet[i].lv.Pt(), weight);
 
-      /*   if( fMT2tree->tau[i].CombinedIsolation3Hits >= 2)
-         hPassTauPtLoose3hit->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight); 
+        if( fMT2tree->tau[i].CombinedIsolation3Hits >= 2)
+         hPassTauPtLoose3hit->Fill(fMT2tree->jet[i].lv.Pt(), weight); 
         if( fMT2tree->tau[i].CombinedIsolation3Hits >= 3) 
-         hPassTauPtMedium3hit->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight); 
+         hPassTauPtMedium3hit->Fill(fMT2tree->jet[i].lv.Pt(), weight); 
         if( fMT2tree->tau[i].CombinedIsolation3Hits >= 4)
-         hPassTauPtTight3hit->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);*/
+         hPassTauPtTight3hit->Fill(fMT2tree->jet[i].lv.Pt(), weight);
         
         if( fMT2tree->tau[i].CombinedIsolation>= 1)
-         hPassTauPtVLoose->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
+         hPassTauPtVLoose->Fill(fMT2tree->jet[i].lv.Pt(), weight);
         if( fMT2tree->tau[i].CombinedIsolation>= 2)
-         hPassTauPtLoose->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight); 
+         hPassTauPtLoose->Fill(fMT2tree->jet[i].lv.Pt(), weight); 
         if( fMT2tree->tau[i].CombinedIsolation>= 3) 
-         hPassTauPtMedium->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight); 
+         hPassTauPtMedium->Fill(fMT2tree->jet[i].lv.Pt(), weight); 
         if( fMT2tree->tau[i].CombinedIsolation >= 4)
-         hPassTauPtTight->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
+         hPassTauPtTight->Fill(fMT2tree->jet[i].lv.Pt(), weight);
 
 
 
@@ -8131,19 +8140,22 @@ void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
     }        
          
   }  
-   hPassTauPtVLoose->Divide(hAllTauPt);
-   hPassTauPtLoose->Divide(hAllTauPt);
-   hPassTauPtMedium->Divide(hAllTauPt);
-   hPassTauPtTight->Divide(hAllTauPt);
-  /* hPassTauPtLooseMVA2 ->Divide(hAllTauPt);
-   hPassTauPtMediumMVA2->Divide(hAllTauPt);
-   hPassTauPtTightMVA2->Divide(hAllTauPt);*/
-  /* hPassTauPtLoose3hit->Divide(hAllTauPt);
-   hPassTauPtMedium3hit->Divide(hAllTauPt);
-   hPassTauPtTight3hit->Divide(hAllTauPt);*/
   
-  /* TCanvas *myCanvasMVA= new TCanvas();
-   hPassTauPtLooseMVA2->SetMarkerColor(4);
+   hPassTauPtLooseMVA2 ->Divide(hAllTauPt);
+   hPassTauPtMediumMVA2->Divide(hAllTauPt);
+   hPassTauPtTightMVA2->Divide(hAllTauPt);
+  
+   hPassTauPtLoose3hit->Divide(hAllTauPt);
+   hPassTauPtMedium3hit->Divide(hAllTauPt);
+   hPassTauPtTight3hit->Divide(hAllTauPt);
+  
+  hPassTauPtVLoose->Divide(hAllTauPt);
+  hPassTauPtLoose->Divide(hAllTauPt);
+  hPassTauPtMedium->Divide(hAllTauPt);
+  hPassTauPtTight->Divide(hAllTauPt);
+  
+  TCanvas *myCanvasMVA= new TCanvas();
+  hPassTauPtLooseMVA2->SetMarkerColor(4);
   hPassTauPtLooseMVA2->SetMarkerStyle(20);
   hPassTauPtLooseMVA2->SetLineColor(4);
   hPassTauPtLooseMVA2->SetLineStyle(20);
@@ -8162,9 +8174,9 @@ void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
   hPassTauPtTightMVA2->SetLineColor(6);
   hPassTauPtTightMVA2->SetLineStyle(22);
   hPassTauPtTightMVA2->SetLineWidth(2);
-  hPassTauPtTightMVA2->Draw("same"); */
+  hPassTauPtTightMVA2->Draw("same"); 
   
-  /*TCanvas *myCanvas3hit= new TCanvas();
+ /* TCanvas *myCanvas3hit= new TCanvas();
   hPassTauPtLoose3hit->SetMarkerColor(4);
   hPassTauPtLoose3hit->SetMarkerStyle(20);
   hPassTauPtLoose3hit->SetLineColor(4);
@@ -8185,13 +8197,14 @@ void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
   hPassTauPtTight3hit->SetLineStyle(22);
   hPassTauPtTight3hit->SetLineWidth(2);
   hPassTauPtTight3hit->Draw("same"); */
-   
-  TCanvas *myCanvas= new TCanvas();
+ /*  
+  TCanvas *myCanvas8hit=new TCanvas();
   hPassTauPtLoose->SetMarkerColor(4);
   hPassTauPtLoose->SetMarkerStyle(20);
   hPassTauPtLoose->SetLineColor(4);
   hPassTauPtLoose->SetLineStyle(20);
   hPassTauPtLoose->SetLineWidth(2);
+  hPassTauPtLoose->SetFillStyle(0);
   hPassTauPtLoose->Draw();
  
   hPassTauPtVLoose->SetMarkerColor(9);
@@ -8213,7 +8226,7 @@ void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
   hPassTauPtTight->SetLineColor(6);
   hPassTauPtTight->SetLineStyle(22);
   hPassTauPtTight->SetLineWidth(2);
-  hPassTauPtTight->Draw("same"); 
+  hPassTauPtTight->Draw("same"); */
 
 
   TLegend *leg = new TLegend(0.25,0.75,0.45,0.95,NULL,"BR NDC");
@@ -8224,9 +8237,8 @@ void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
    leg->SetLineWidth(1);
    leg->SetFillColor(5);
    leg->SetFillStyle(0);
-
-  
-  TLegendEntry *entry=leg->AddEntry("NULL","TauLoosIsolation8hit","lpf");
+   
+   TLegendEntry *entry=leg->AddEntry("NULL","TauLooseIsolationMVA","lpf");
    entry->SetFillStyle(1001);
    entry->SetLineColor(4);
    entry->SetLineStyle(1);
@@ -8234,7 +8246,38 @@ void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
    entry->SetMarkerColor(4);
    entry->SetMarkerStyle(20);
    entry->SetMarkerSize(1);
+  
+   entry=leg->AddEntry("NULL","TauMediumIsolationMVA","lpf");
+   entry->SetFillStyle(1001);
+   entry->SetLineColor(3);
+   entry->SetLineStyle(1);
+   entry->SetLineWidth(2);
+   entry->SetMarkerColor(3);
+   entry->SetMarkerStyle(21);
+   entry->SetMarkerSize(1);
+   
+   
+   entry=leg->AddEntry("NULL","TauTightIsolationMVA","lpf");
+   entry->SetFillStyle(1001);
+   entry->SetLineColor(6);
+   entry->SetLineStyle(1);
+   entry->SetLineWidth(2);
+   entry->SetMarkerColor(6);
+   entry->SetMarkerStyle(22);
+   entry->SetMarkerSize(1);
+   
+   leg->Draw();
+  
 
+  /* TLegendEntry *entry=leg->AddEntry("NULL","TauLoosIsolation8hit","lpf");
+   entry->SetFillStyle(1001);
+   entry->SetLineColor(4);
+   entry->SetLineStyle(1);
+   entry->SetLineWidth(2);
+   entry->SetMarkerColor(4);
+   entry->SetMarkerStyle(20);
+   entry->SetMarkerSize(1);
+  
    entry=leg->AddEntry("NULL","TauMediumIsolation8hit","lpf");
    entry->SetFillStyle(1001);
    entry->SetLineColor(3);
@@ -8244,6 +8287,14 @@ void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
    entry->SetMarkerStyle(21);
    entry->SetMarkerSize(1);
    
+   entry=leg->AddEntry("NULL","TauVLooseIsolation8hit","lpf");
+   entry->SetFillStyle(1001);
+   entry->SetLineColor(9);
+   entry->SetLineStyle(1);
+   entry->SetLineWidth(2);
+   entry->SetMarkerColor(9);
+   entry->SetMarkerStyle(23);
+   entry->SetMarkerSize(1);
    
    entry=leg->AddEntry("NULL","TauTightIsolation8hit","lpf");
    entry->SetFillStyle(1001);
@@ -8255,7 +8306,43 @@ void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
    entry->SetMarkerSize(1);
    
    leg->Draw();
+  
+ 
+   TLegendEntry *entry=leg->AddEntry("NULL","TauLoosIsolation3hit","lpf");
+   entry->SetFillStyle(1001);
+   entry->SetLineColor(4);
+   entry->SetLineStyle(1);
+   entry->SetLineWidth(2);
+   entry->SetMarkerColor(4);
+   entry->SetMarkerStyle(20);
+   entry->SetMarkerSize(1);
+  
+   entry=leg->AddEntry("NULL","TauMediumIsolation3hit","lpf");
+   entry->SetFillStyle(1001);
+   entry->SetLineColor(3);
+   entry->SetLineStyle(1);
+   entry->SetLineWidth(2);
+   entry->SetMarkerColor(3);
+   entry->SetMarkerStyle(21);
+   entry->SetMarkerSize(1);
    
+   
+   entry=leg->AddEntry("NULL","TauTightIsolation3hit","lpf");
+   entry->SetFillStyle(1001);
+   entry->SetLineColor(6);
+   entry->SetLineStyle(1);
+   entry->SetLineWidth(2);
+   entry->SetMarkerColor(6);
+   entry->SetMarkerStyle(22);
+   entry->SetMarkerSize(1);
+   
+
+  
+  
+   
+   
+   leg->Draw();
+   */
   
    
 }
