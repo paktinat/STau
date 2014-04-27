@@ -897,14 +897,14 @@ void MassPlotter::FillMonitor(Monitor *count, TString sname, TString type, TStri
 
 //________________________________________________________________________
 
-void MassPlotter::plotSig(TString var, TString cuts, TString xtitle, int nbins, double min, double max, bool flip_order, int type ){
+void MassPlotter::plotSig(TString var, TString theCuts, TString xtitle, int nbins, double min, double max, bool flip_order, int type , int LowerCut){
 
-        TString varname = Util::removeFunnyChar(var.Data());
+       TString varname = Util::removeFunnyChar(var.Data());
 
 	TH1D*    h_mc_sum    = new TH1D   (varname+"mc_sum", "", nbins, min, max );
 	TH1D*    h_susy      = new TH1D   (varname+"susy"  , "", nbins, min, max );	
-	h_mc_sum    ->Sumw2();
-	h_susy      ->Sumw2();
+	h_mc_sum  ->Sumw2();
+	h_susy    ->Sumw2();
 	// vector of all histos
 	vector<TH1D*> h_samples;
 
@@ -913,57 +913,91 @@ void MassPlotter::plotSig(TString var, TString cuts, TString xtitle, int nbins, 
 
 		h_samples.push_back(new TH1D(varname+"_"+fSamples[i].name, "", nbins, min, max));
 		h_samples[i] -> Sumw2();
+                
+             
+               
+                   Float_t weight =0;
+  
+                if  (fSamples[i].type=="mc") weight= fSamples[i].xsection * fSamples[i].kfact * fSamples[i].lumi / (fSamples[i].nevents*fSamples[i].PU_avg_weight);
+			 
+		if(fSamples[i].type=="susy")
+	        weight = fSamples[i].xsection * fSamples[i].kfact * fSamples[i].lumi / (fSamples[i].nevents);
 
-		Double_t weight = fSamples[i].xsection * fSamples[i].kfact * fSamples[i].lumi / (fSamples[i].nevents);
+	        if(fSamples[i].type=="data")
+		weight = 1.0;
 
-		if(fVerbose>2) cout << "MakePlot: looping over " << fSamples[i].sname << endl;
-		if(fVerbose>2) cout << "           sample has weight " << weight << " and " << fSamples[i].tree->GetEntries() << " entries" << endl; 
-	
-		TString variable  = TString::Format("%s>>%s",var.Data(),h_samples[i]->GetName());
-		TString selection = TString::Format("(%f) * (%s)",weight,cuts.Data());
-		  
-		if(fVerbose>2) cout << "+++++ Drawing " << variable  << endl
-				    << "\twith cuts: "  << selection << endl;
+	        TString btagweight = "SFWeight.BTagCSV40ge1";//"1.0";
 
-		int nev = fSamples[i].tree->Draw(variable.Data(),selection.Data(),"goff");
+	        TString selection;	
+		if(     fSamples[i].type=="mc" && fPUReweight && fbSFReWeight) selection = TString::Format("(%.15f*pileUp.Weight*%s) * (%s)",weight, btagweight.Data(), theCuts.Data());
+		else if(fSamples[i].type=="mc" && fPUReweight                ) selection = TString::Format("(%.15f*pileUp.Weight) * (%s)",   weight,                    theCuts.Data());
+		else if(fSamples[i].type=="mc" &&                fbSFReWeight) selection = TString::Format("(%.15f*%s) * (%s)",              weight, btagweight.Data(), theCuts.Data());
+		else                                                            selection = TString::Format("(%.15f) * (%s)",                 weight,                    theCuts.Data()); 
+
+              
+                TString variable  = TString::Format("%s>>%s",var.Data(),h_samples[i]->GetName());
+	  
+		if(fVerbose>2) cout << "  +++++++ Drawing      " << variable  << endl
+				    << "  +++++++ with cuts:   " << setw(40)  << selection << endl;
+
+
+		int nev = fSamples[i].tree->Draw( variable.Data(), selection.Data(),"goff");
 		
 		if(fVerbose>2) cout << "\tevents found : "  <<  nev << endl
-				    << "\t->Integral() : "  <<  h_samples[i]->Integral() << endl;
+				   << "\t->Integral() : "  <<  h_samples[i]->Integral(0,nbins+1) << endl;
 		
 		if( fSamples[i].type=="mc"        )   h_mc_sum->Add(h_samples[i]);
+                  
 		else if( fSamples[i].type=="susy" )   h_susy  ->Add(h_samples[i]);
+
 	}
+        if (fVerbose>2)cout<<"----------------------------------bg----"<<h_mc_sum->Integral(0,nbins+1) <<endl;
 	Float_t  x[nbins], y[nbins];
 	for (int i = 1; i <=nbins+1; i++){
 	  x[i-1] = h_mc_sum->GetBinLowEdge(i);
-	  float s = h_susy  ->Integral(i,nbins+1);
-	  float b = h_mc_sum->Integral(i,nbins+1);
-	  switch (type){
-	  case 0:
+cout<<i<<" x[i-1] "<<x[i-1]<<endl;
+	  float s;
+	  if(LowerCut == 1) 
+	    s = h_susy  ->Integral(i,nbins+1);
+	  else	
+	    s = h_susy  ->Integral(0, i - 1);
+cout<<" s "<<s<<endl;
+	  float b;
+	  if(LowerCut == 1) 
+	    b = h_mc_sum->Integral(i,nbins+1);
+	  else
+	    b = h_mc_sum->Integral(0, i - 1);
+cout<<" b "<<b<<endl;
+	  if(b == 0)
+	    y[i-1] = 5.0;
+	  else{
+          if (type==0) {
 	    y[i-1] = s/sqrt(b);
-	    break;
-	  case 1:
+	  }
+	  if (type==1) {
 	    y[i-1] = s/sqrt(s+b);
-	    break;
-	  case 2:
+	  }
+	  if (type==2) {
 	    y[i-1] = s/b;
-	    break;
+	  }
+cout<<" y[i-1] "<<y[i-1]<<endl;
+
 	  }
 	}
 	TGraph *sig = new TGraph(nbins+1,x,y);
 	sig->SetTitle("");
 	sig->GetXaxis()->SetTitle(xtitle);
 	sig->SetMarkerStyle(20);
-	switch (type){
-	case 0:
-	  sig->GetYaxis()->SetTitle("S/#sqrt{B}");
-	  break;
-	case 1:
+	if (type==0){
+	
+	sig->GetYaxis()->SetTitle("S/#sqrt{B}");
+	 }
+	if (type==1){
 	  sig->GetYaxis()->SetTitle("S/#sqrt{S+B}");
-	  break;
-	case 2:
+	 }
+	 if (type==2){
 	  sig->GetYaxis()->SetTitle("S/B");
-	  break;
+	  
 	}
 	sig->Draw("ACP");
 }
