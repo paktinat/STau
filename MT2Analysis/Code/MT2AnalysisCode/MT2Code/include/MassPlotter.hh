@@ -225,7 +225,7 @@ public:
 		      bool cleaned=false, bool logflag=true, bool composited=false, bool ratio=false, 
 		      bool stacked=true, bool overlaySUSY=false, float overlayScale = 0, bool add_underflow=false, bool saveHistos=false, TString saveMacro = "");
         void plotSig(TString var="misc.PseudoJetMT2", TString cuts="misc.HBHENoiseFlag == 1", TString xtitle="MT2 [GeV]", 
-		     int nbins=50, double min=0., double max=1., bool cleaned=false, int type=0 ); // 0: s/sqrt(b), 1: s/sqrt(s+b), 3:s/b
+		     int nbins=50, double min=0., double max=1., bool cleaned=false, int type=0 ,int LowerCut=0); // 0: s/sqrt(b), 1: s/sqrt(s+b), 3:s/b
   	void PrintCutFlow(int njets=-2, int nleps=0, TString trigger="", TString cuts="");
 	void PrintCutFlowMT2vsHT(TString trigger="", TString cuts="");
         void FillMonitor(Monitor *count, TString sname, TString type, TString cut, double weight);
