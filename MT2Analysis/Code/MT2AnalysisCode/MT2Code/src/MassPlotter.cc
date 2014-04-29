@@ -8092,11 +8092,12 @@ fflush(stdout);
          continue;
          
          hAllTauPt->Fill(fMT2tree->jet[i].lv.Pt(), weight);
+                                              }
 
-         if(fMT2tree->jet[i].isTauMatch < 0)
-          continue;
+        // if(fMT2tree->jet[i].isTauMatch < 0)
+       //   continue;
 
-           int matchedTauInd = fMT2tree->jet[i].isTauMatch;
+         //  int matchedTauInd = fMT2tree->jet[i].isTauMatch;
 
 //fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT > 100)
              // float dR = fMT2tree->tau[t].lv.DeltaR(hltObjectLV);
@@ -8104,37 +8105,39 @@ fflush(stdout);
              // continue;
             // DltaR (tau , leading jet) > 0.5
             // acceptance cuts Pt,Etafor(int j = 0; j < fMT2tree->NJets; j++){
-
-             if(!( fabs(fMT2tree->tau[matchedTauInd].lv.Eta())<2.3 && fMT2tree->tau[matchedTauInd] .lv.Pt()>20 ))
-             continue;	
-             
+             for(int i=0; i<fMT2tree->NTaus; ++i){
+ 
+           //  if(!( fabs(fMT2tree->tau[matchedTauInd].lv.Eta())<2.3 && fMT2tree->tau[matchedTauInd] .lv.Pt()>20 ))
+             //continue;	
+             if(!( fabs(fMT2tree->tau[i].lv.Eta())<2.3 && fMT2tree->tau[i] .lv.Pt()>20 ))
+             continue;
               
  // float dR=0;
 // dR = (fMT2tree->jet[0].lv.Eta(),fMT2tree->tau[t].lv.Eta());
 // if(dR < 0.5)
 // continue;
-          if(fMT2tree->tau[matchedTauInd].IsolationMVA2 >=2)
-         hPassTauPtLooseMVA2->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
-         if(fMT2tree->tau[matchedTauInd].IsolationMVA2 >=3)
-        hPassTauPtMediumMVA2->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
-         if(fMT2tree->tau[matchedTauInd].IsolationMVA2 >=4)
-        hPassTauPtTightMVA2->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
+         if(fMT2tree->tau[i].IsolationMVA2 >=2)
+         hPassTauPtLooseMVA2->Fill(fMT2tree->tau[i].lv.Pt(), weight);
+         if(fMT2tree->tau[i].IsolationMVA2 >=3)
+        hPassTauPtMediumMVA2->Fill(fMT2tree->tau[i].lv.Pt(), weight);
+         if(fMT2tree->tau[i].IsolationMVA2 >=4)
+        hPassTauPtTightMVA2->Fill(fMT2tree->tau[i].lv.Pt(), weight);
 
-        if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 2)
-         hPassTauPtLoose3hit->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
-        if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 3)
-         hPassTauPtMedium3hit->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
-        if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 4)
-         hPassTauPtTight3hit->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
+        if( fMT2tree->tau[i].CombinedIsolation3Hits >= 2)
+         hPassTauPtLoose3hit->Fill(fMT2tree->tau[i].lv.Pt(), weight);
+        if( fMT2tree->tau[i].CombinedIsolation3Hits >= 3)
+         hPassTauPtMedium3hit->Fill(fMT2tree->tau[i].lv.Pt(), weight);
+        if( fMT2tree->tau[i].CombinedIsolation3Hits >= 4)
+         hPassTauPtTight3hit->Fill(fMT2tree->tau[i].lv.Pt(), weight);
         
-        if( fMT2tree->tau[matchedTauInd].CombinedIsolation>= 1)
-         hPassTauPtVLoose->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
-        if( fMT2tree->tau[matchedTauInd].CombinedIsolation>= 2)
-         hPassTauPtLoose->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
-        if( fMT2tree->tau[matchedTauInd].CombinedIsolation>= 3)
-         hPassTauPtMedium->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
-        if( fMT2tree->tau[matchedTauInd].CombinedIsolation >= 4)
-         hPassTauPtTight->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
+        if( fMT2tree->tau[i].CombinedIsolation>= 1)
+         hPassTauPtVLoose->Fill(fMT2tree->tau[i].lv.Pt(), weight);
+        if( fMT2tree->tau[i].CombinedIsolation>= 2)
+         hPassTauPtLoose->Fill(fMT2tree->tau[i].lv.Pt(), weight);
+        if( fMT2tree->tau[i].CombinedIsolation>= 3)
+         hPassTauPtMedium->Fill(fMT2tree->tau[i].lv.Pt(), weight);
+        if( fMT2tree->tau[i].CombinedIsolation >= 4)
+         hPassTauPtTight->Fill(fMT2tree->tau[i].lv.Pt(), weight);
 
 
 
