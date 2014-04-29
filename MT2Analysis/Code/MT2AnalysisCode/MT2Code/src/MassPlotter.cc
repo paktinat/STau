@@ -7987,13 +7987,13 @@ double MassPlotter::DeltaPhi(double phi1, double phi2){
   while( result <= -TMath::Pi() ) result += TMath::TwoPi();
   return TMath::Abs(result);
 }
- 
-void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
 
-  TH1::SetDefaultSumw2();
+   void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
 
-  cout<<" trigger "<<trigger<<endl;
-  cout<<" cuts "<<cuts<<endl;
+   TH1::SetDefaultSumw2();
+
+   cout<<" trigger "<<trigger<<endl;
+   cout<<" cuts "<<cuts<<endl;
   
   
     Double_t xbin[20]={0.0,10,20,30,40,50,60,70,80,90,100,120,140,160,180,200,250,300,400,500};
@@ -8061,14 +8061,14 @@ void MassPlotter::TauFakeRate(Long64_t nevents, TString cuts, TString trigger){
       if ( fVerbose>2 && jentry % 100000 == 0 ){
 fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
 fflush(stdout);
-      }
- 
+      } 
+
       float weight = 0;
       if(data == 1)
-    weight = 1.0;
+      weight = 1.0;
       else
-if(Sample.type != "susy")
-weight = Weight * (fMT2tree->pileUp.Weight/Sample.PU_avg_weight);//
+      if(Sample.type != "susy")
+     weight = Weight * (fMT2tree->pileUp.Weight/Sample.PU_avg_weight);
       
       TLorentzVector hltObjectLV(0,0,0,0);
 
@@ -8078,7 +8078,7 @@ weight = Weight * (fMT2tree->pileUp.Weight/Sample.PU_avg_weight);//
 // }
 
 
-          int jetcounter=0;
+         int jetcounter=0;
          for(int i=0; i<fMT2tree->NJets; ++i){
         //NJets > 1
         //leading jet excluded
@@ -8090,11 +8090,11 @@ weight = Weight * (fMT2tree->pileUp.Weight/Sample.PU_avg_weight);//
          jetcounter++;
          if (jetcounter==1)
          continue;
-          if(fMT2tree->jet[i].isTauMatch < 0)
-          continue;
+         
          hAllTauPt->Fill(fMT2tree->jet[i].lv.Pt(), weight);
 
-        
+         if(fMT2tree->jet[i].isTauMatch < 0)
+          continue;
 
            int matchedTauInd = fMT2tree->jet[i].isTauMatch;
 
@@ -8114,27 +8114,27 @@ weight = Weight * (fMT2tree->pileUp.Weight/Sample.PU_avg_weight);//
 // if(dR < 0.5)
 // continue;
           if(fMT2tree->tau[matchedTauInd].IsolationMVA2 >=2)
-         hPassTauPtLooseMVA2->Fill(fMT2tree->jet[i].lv.Pt(), weight);
+         hPassTauPtLooseMVA2->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
          if(fMT2tree->tau[matchedTauInd].IsolationMVA2 >=3)
-        hPassTauPtMediumMVA2->Fill(fMT2tree->jet[i].lv.Pt(), weight);
+        hPassTauPtMediumMVA2->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
          if(fMT2tree->tau[matchedTauInd].IsolationMVA2 >=4)
-        hPassTauPtTightMVA2->Fill(fMT2tree->jet[i].lv.Pt(), weight);
+        hPassTauPtTightMVA2->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
 
-        if( fMT2tree->tau[i].CombinedIsolation3Hits >= 2)
-         hPassTauPtLoose3hit->Fill(fMT2tree->jet[i].lv.Pt(), weight);
-        if( fMT2tree->tau[i].CombinedIsolation3Hits >= 3)
-         hPassTauPtMedium3hit->Fill(fMT2tree->jet[i].lv.Pt(), weight);
-        if( fMT2tree->tau[i].CombinedIsolation3Hits >= 4)
-         hPassTauPtTight3hit->Fill(fMT2tree->jet[i].lv.Pt(), weight);
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 2)
+         hPassTauPtLoose3hit->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 3)
+         hPassTauPtMedium3hit->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 4)
+         hPassTauPtTight3hit->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
         
-        if( fMT2tree->tau[i].CombinedIsolation>= 1)
-         hPassTauPtVLoose->Fill(fMT2tree->jet[i].lv.Pt(), weight);
-        if( fMT2tree->tau[i].CombinedIsolation>= 2)
-         hPassTauPtLoose->Fill(fMT2tree->jet[i].lv.Pt(), weight);
-        if( fMT2tree->tau[i].CombinedIsolation>= 3)
-         hPassTauPtMedium->Fill(fMT2tree->jet[i].lv.Pt(), weight);
-        if( fMT2tree->tau[i].CombinedIsolation >= 4)
-         hPassTauPtTight->Fill(fMT2tree->jet[i].lv.Pt(), weight);
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation>= 1)
+         hPassTauPtVLoose->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation>= 2)
+         hPassTauPtLoose->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation>= 3)
+         hPassTauPtMedium->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation >= 4)
+         hPassTauPtTight->Fill(fMT2tree->tau[matchedTauInd].lv.Pt(), weight);
 
 
 
@@ -8178,7 +8178,7 @@ weight = Weight * (fMT2tree->pileUp.Weight/Sample.PU_avg_weight);//
   hPassTauPtTightMVA2->SetLineWidth(2);
   hPassTauPtTightMVA2->Draw("same");*/
   
-  TCanvas *myCanvas3hit= new TCanvas();
+TCanvas *myCanvas3hit= new TCanvas();
 hPassTauPtLoose3hit->SetMarkerColor(4);
 hPassTauPtLoose3hit->SetMarkerStyle(20);
 hPassTauPtLoose3hit->SetLineColor(4);
@@ -8228,7 +8228,7 @@ hPassTauPtTight->SetLineWidth(2);
 hPassTauPtTight->Draw("same"); */
 
 
-  TLegend *leg = new TLegend(0.25,0.75,0.45,0.95,NULL,"BR NDC");
+   TLegend *leg = new TLegend(0.25,0.75,0.45,0.95,NULL,"BR NDC");
    leg->SetBorderSize(0);
    leg->SetTextFont(62);
    leg->SetLineColor(1);
@@ -8331,3 +8331,4 @@ leg->Draw();
   
    
 }
+    
