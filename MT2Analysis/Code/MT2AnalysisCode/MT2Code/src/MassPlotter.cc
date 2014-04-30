@@ -8047,7 +8047,7 @@ double MassPlotter::DeltaPhi(double phi1, double phi2){
     std::cout << setfill('-') << std::setw(70) << "" << std::endl;
    
 
-    Sample.tree->Draw(">>selList", myCuts,"goff");
+    Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
     Sample.tree->SetEventList(myEvtList);
 
@@ -8092,30 +8092,32 @@ fflush(stdout);
          continue;
          
          hAllTauPt->Fill(fMT2tree->jet[i].lv.Pt(), weight);
-                                              }
+                                        }
+           
+       
+    for(int i=0; i<fMT2tree->NTaus; ++i) {                               
+         for(int i=0; i<fMT2tree->NJets; ++i)
+                                     {
+           //int matchedTauInd = fMT2tree->jet[i].isTauMatch;
+         // if(fMT2tree->jet[i].isTauMatch < 0)
+	  //  continue;
 
-        // if(fMT2tree->jet[i].isTauMatch < 0)
-       //   continue;
-
-         //  int matchedTauInd = fMT2tree->jet[i].isTauMatch;
-
-//fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT > 100)
-             // float dR = fMT2tree->tau[t].lv.DeltaR(hltObjectLV);
-             // if(dR < 0.5)
-             // continue;
-            // DltaR (tau , leading jet) > 0.5
-            // acceptance cuts Pt,Etafor(int j = 0; j < fMT2tree->NJets; j++){
-             for(int i=0; i<fMT2tree->NTaus; ++i){
- 
-           //  if(!( fabs(fMT2tree->tau[matchedTauInd].lv.Eta())<2.3 && fMT2tree->tau[matchedTauInd] .lv.Pt()>20 ))
-             //continue;	
-             if(!( fabs(fMT2tree->tau[i].lv.Eta())<2.3 && fMT2tree->tau[i] .lv.Pt()>20 ))
-             continue;
+      
+       
+           float mindR=1000;
+           float deltaR = Util::GetDeltaR(fMT2tree->tau[i].lv.Eta(),fMT2tree->jet[i].lv.Eta(),fMT2tree->tau[i].lv.Phi() ,fMT2tree->jet[i].lv.Phi());
+	  if (!(deltaR < mindR))    continue;	
+         
+           //fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT > 100);
+             
+            // acceptance cuts Pt,Eta
+             
+            
+           if(!( fabs(fMT2tree->tau[i].lv.Eta())<2.3 && fMT2tree->tau[i] .lv.Pt()>20 ))
+            continue;	
+             
               
- // float dR=0;
-// dR = (fMT2tree->jet[0].lv.Eta(),fMT2tree->tau[t].lv.Eta());
-// if(dR < 0.5)
-// continue;
+ 
          if(fMT2tree->tau[i].IsolationMVA2 >=2)
          hPassTauPtLooseMVA2->Fill(fMT2tree->tau[i].lv.Pt(), weight);
          if(fMT2tree->tau[i].IsolationMVA2 >=3)
@@ -8141,7 +8143,7 @@ fflush(stdout);
 
 
 
-                              }
+                              }  }
     }
          
   }
