@@ -8095,26 +8095,23 @@ fflush(stdout);
                                         }
            
        
-    for(int i=0; i<fMT2tree->NTaus; ++i) {                               
-         for(int j=0; j<fMT2tree->NJets; ++j)
-                                     {
-           //int matchedTauInd = fMT2tree->jet[i].isTauMatch;
-         // if(fMT2tree->jet[i].isTauMatch < 0)
-	  //  continue;
-
+         for(int i=0; i<fMT2tree->NTaus; ++i) {  
+         if(!( fabs(fMT2tree->tau[i].lv.Eta())<2.3 && fMT2tree->tau[i] .lv.Pt()>20 ))
+            continue;	
+         
+         float mindR=1000;                            
+         for(int j=0; j<fMT2tree->NJets; ++j) { 
+         float deltaR = Util::GetDeltaR(fMT2tree->tau[i].lv.Eta(),fMT2tree->jet[j].lv.Eta(),fMT2tree->tau[i].lv.Phi() ,fMT2tree->jet[j].lv.Phi());
       
-       
-           float mindR=1000;
-           float deltaR = Util::GetDeltaR(fMT2tree->tau[i].lv.Eta(),fMT2tree->jet[j].lv.Eta(),fMT2tree->tau[i].lv.Phi() ,fMT2tree->jet[j].lv.Phi());
-	  if (!(deltaR < mindR))    continue;	
+         
+	  if (deltaR >mindR && deltaR > 0.5)    continue;	
          
            //fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT > 100);
              
             // acceptance cuts Pt,Eta
              
             
-           if(!( fabs(fMT2tree->tau[i].lv.Eta())<2.3 && fMT2tree->tau[i] .lv.Pt()>20 ))
-            continue;	
+          
              
               
  
