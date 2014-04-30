@@ -8106,7 +8106,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents)
 //       cout<<" muIsoSF "<<muIsoSF<<endl;
 
       float muTrgSF = fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].GetMuTrgSFmuTau();
-
+      cout<<" muTrgSF "<<muTrgSF<<endl;  
 //        weight *= muIdSF * muIsoSF;
 
       float weight = Weight * muIdSF * muIsoSF * muTrgSF;

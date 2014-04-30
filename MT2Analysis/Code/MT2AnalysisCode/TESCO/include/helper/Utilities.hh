@@ -447,8 +447,8 @@ namespace Util {
 
 
 
-	  RooRealVar m("m","invariant mass (GeV/c^{2})",2.5,3.6);
-	  RooRealVar m0("m0","m0",3,2.9,3.2);
+	  RooRealVar m("m","m",-10000.0,pt);
+	  RooRealVar m0("m0","m0",3,0,32);
 	  RooRealVar sigma_cb("sigma_cb","width",0.06,0,0.1);
 	  RooRealVar alpha("alpha","alpha",1,0,2);
 	  RooRealVar n("n","order",1,0,5);
@@ -469,13 +469,13 @@ namespace Util {
 	      sigma_cb.setVal(7.64004e-05);
 	      alpha.setVal(6.4951e-08);
 	      n.setVal(1.57403);
-	    }
+	    }//else if(dataOrMC == "data")
 	  }//if(channel == "muTau")
 
-	  m.setRange("RangeName",-1000.,pt);
- 	  RooAbsReal* intRange = crystalball->createIntegral(m,m,"RangeName"); 
+	  //	  m.setRange("RangeName",-10000.,pt);
+	  RooAbsReal* intRange = crystalball->createIntegral(m,m,m.GetName()); 
 
-	  return intRange.getVal();
+	  return intRange->getVal();
        }
 }
 

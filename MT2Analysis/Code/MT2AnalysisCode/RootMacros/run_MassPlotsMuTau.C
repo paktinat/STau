@@ -196,9 +196,9 @@ cutStream	<<" && ";
 // 		 true, true, true, 1, true, true, "png");
 //  }
 
- for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
-  tA->makePlot(vars[iVar], cuts, -10, -10 , -10, trigger, vars[iVar], 50, 0, 750, false, true, true, true, true, true, 1, true, true, "png");
- }
+// for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
+//  tA->makePlot(vars[iVar], cuts, -10, -10 , -10, trigger, vars[iVar], 50, 0, 750, false, true, true, true, true, true, 1, true, true, "png");
+// }
 
  //      tA->makePlot("doubleMu[0].lv.M()",     cuts,    -10,  -10 , -10 ,   trigger , "doubleMu[0].lv.M()"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 
@@ -207,7 +207,7 @@ cutStream	<<" && ";
 
 //void MassPlotter::plotSig(TString var, TString cuts, TString xtitle, int nbins, double min, double max, bool flip_order, int type ){
   //tA->plotSig("muo[muTau[0].mu0Ind].MT", cuts,  "muo[muTau[0].mu0Ind].MT", 60, 0, 300, 0, 0, 1);
-  //tA->muTauAnalysis(cuts, trigger, 100000000);
+ tA->muTauAnalysis(cuts, trigger, 100000000);
   /*
 * Show cutflow table
 */
