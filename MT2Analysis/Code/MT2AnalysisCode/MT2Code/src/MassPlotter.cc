@@ -8096,7 +8096,7 @@ fflush(stdout);
            
        
     for(int i=0; i<fMT2tree->NTaus; ++i) {                               
-         for(int i=0; i<fMT2tree->NJets; ++i)
+         for(int j=0; j<fMT2tree->NJets; ++j)
                                      {
            //int matchedTauInd = fMT2tree->jet[i].isTauMatch;
          // if(fMT2tree->jet[i].isTauMatch < 0)
@@ -8105,7 +8105,7 @@ fflush(stdout);
       
        
            float mindR=1000;
-           float deltaR = Util::GetDeltaR(fMT2tree->tau[i].lv.Eta(),fMT2tree->jet[i].lv.Eta(),fMT2tree->tau[i].lv.Phi() ,fMT2tree->jet[i].lv.Phi());
+           float deltaR = Util::GetDeltaR(fMT2tree->tau[i].lv.Eta(),fMT2tree->jet[j].lv.Eta(),fMT2tree->tau[i].lv.Phi() ,fMT2tree->jet[j].lv.Phi());
 	  if (!(deltaR < mindR))    continue;	
          
            //fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT > 100);
