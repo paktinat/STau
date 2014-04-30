@@ -1,3 +1,4 @@
+#include "helper/Utilities.hh"
 #ifndef MT2Muon_hh
 #define MT2Muon_hh
 
@@ -31,6 +32,70 @@ public:
   void SetLV(const TLorentzVector v){
     lv = v;
   }
+  //Mu Isolation/Identification Scale factors for muTau channel Table 17 of AN-13-171. 
+  //Mu trigger efficiency scale factor for muTau channel Table Table 17 of AN-13-171. 
+  //To be applided on MC samples(both Background and signal)
+  //It is here just for the time being until thenext MT2tree production.
+  //It needs to be added as an attribute of the Muons.  
+
+  Float_t GetMuIDSFmuTau(){
+    Float_t eta = fabs(this->lv.Eta());
+    Float_t pt = this->lv.Pt();
+
+    if(pt < 30.0){
+      if(eta < 0.8)
+	return 0.9818;
+      if(eta >= 0.8 && eta < 1.2)
+	return 0.9829;
+      if(eta >= 1.2)
+	return 0.9869;
+    }else{
+      if(eta < 0.8)
+	return 0.9852;
+      if(eta >= 0.8 && eta < 1.2)
+	return 0.9852;
+      if(eta >= 1.2)
+	return 0.9884;
+    }
+  }
+
+  Float_t GetMuIsoSFmuTau(){
+    Float_t eta = fabs(this->lv.Eta());
+    Float_t pt = this->lv.Pt();
+
+    if(pt < 30.0){
+      if(eta < 0.8)
+	return 0.9494;
+      if(eta >= 0.8 && eta < 1.2)
+	return 0.9835;
+      if(eta >= 1.2)
+	return 0.9923;
+    }else{
+      if(eta < 0.8)
+	return 0.9883;
+      if(eta >= 0.8 && eta < 1.2)
+	return 0.9937;
+      if(eta >= 1.2)
+	return 0.9996;
+    }
+  }
+
+  Float_t GetMuTrgSFmuTau(){
+    Float_t eta = this->lv.Eta();
+    Float_t pt = this->lv.Pt();
+
+    Float_t Fdata = Util::CrystalBallCDF(pt, eta,"muTau", "data");
+    Float_t FMC   = Util::CrystalBallCDF(pt, eta,"muTau", "MC");
+
+    cout<<" Fdata "<<Fdata<<endl;
+
+    if(FMC != 0)
+      return Fdata/FMC;
+    else
+      return 1;
+
+}
+  
 
   TLorentzVector lv;
   double test;

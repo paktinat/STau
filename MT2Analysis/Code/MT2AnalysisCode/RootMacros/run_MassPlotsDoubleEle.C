@@ -48,12 +48,12 @@
   
 
   // You need to specify the channel
-    TString myChan = "doubleEle";
+    TString myChan = "doubleEle[0]";
 
   // You need to carefully define the cut variables based on MT2"Channel".hh
   myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated"));
   myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele0Ind >= 0"));
-  myChannelCuts.push_back(std::string(std::string(myChan) + ". Ele1Ind>=0"));
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele1Ind>=0"));
   myChannelCuts.push_back(std::string(std::string(myChan) + ".PairCharge== 0"));
   myChannelCuts.push_back("0 == 0");	
  

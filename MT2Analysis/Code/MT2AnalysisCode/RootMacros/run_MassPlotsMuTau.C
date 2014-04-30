@@ -58,18 +58,21 @@
   myChannelCuts.push_back(std::string(std::string(myChan) + ".tau0Ind >=0")); // First lepton index, channel specific
   myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0Ind >=0")); // Second lepton index, channel specific
   myChannelCuts.push_back(std::string(std::string(myChan) + ".chargeSum == 0"));
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".signalMuTau")); 
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".signalMuTau"));                                                                                                  
+
+  //myChannelCuts.push_back(std::string(std::string(myChan) + ".qcdMuTau")); 
 
   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoElec"));
   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoMu"));
-  //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0QCDInd != -1")); // First lepton index, channel specific
+ //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0QCDInd != -1")); // First lepton index, channel specific
   //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu1QCDInd != -1"));
-
+  myChannelCuts.push_back("(muTau[0].lv.M() < 45 || muTau[0].lv.M() > 75)");
+  myChannelCuts.push_back("muTau[0].lv.M() > 15");
   myChannelCuts.push_back("0 == 0");	//Place holder for Jet requirements
   //myChannelCuts.push_back("misc.MET > 30"); //Place holder for MET requirements
-  ///myChannelCuts.push_back("DoubleMuInvMass() > 106. || (DoubleMuInvMass() > 12. && DoubleMuInvMass() < 74.)");
-  //myChannelCuts.push_back("NBJets40CSVT > 1");
-
+//    myChannelCuts.push_back(std::string(std::string(myChan) + ".DPhi < 2.5"));
+   myChannelCuts.push_back("NBJetsCSVT == 0");
+//    myChannelCuts.push_back("muo[muTau[0].mu0Ind].MT > 125.0");
 
   // We need to make the cut stream
 
@@ -96,12 +99,12 @@ cutStream	<<" && ";
 * Plot the channel specific variables: add what you like to see ....
 */
 
-//   vars.push_back(myChan + ".MT2"); props.Add(&PT);
-//  vars.push_back(myChan + ".lv.M()"); props.Add(&PT);
-//   vars.push_back(myChan + ".DPhi"); props.Add(&PHI);
+  vars.push_back(myChan + ".MT2"); props.Add(&PT);
+// vars.push_back(myChan + ".lv.M()"); props.Add(&PT);
+ //  vars.push_back(myChan + ".DPhi"); props.Add(&PHI);
 
 //   vars.push_back(myChan + ".lv.Pt()"); props.Add(&PT);
-//   vars.push_back(myChan + ".MT2Imbalanced"); props.Add(&PT);
+//  vars.push_back(myChan + ".MT2Imbalanced"); props.Add(&PT);
 //   vars.push_back(myChan + ".lv.Phi()"); props.Add(&PHI);
 //   vars.push_back(myChan + ".lv.Eta()"); props.Add(&PHI);
   
@@ -110,7 +113,7 @@ cutStream	<<" && ";
 //   vars.push_back("jet[0].lv.Phi()"); props.Add(&PHI);
 //   vars.push_back("jet[0].lv.Eta()"); props.Add(&PHI);
 
-//   vars.push_back("muo[muTau[0].mu0Ind].MT"); props.Add(&PT);
+//    vars.push_back("muo[muTau[0].mu0Ind].MT"); props.Add(&PT);
 //   vars.push_back("muo[muTau[0].mu0Ind].lv.Pt()"); props.Add(&PT);
 //   vars.push_back("muo[muTau[0].mu0Ind].lv.Phi()"); props.Add(&PHI);
 //   vars.push_back("muo[muTau[0].mu0Ind].lv.Eta()"); props.Add(&PHI);
@@ -126,7 +129,7 @@ cutStream	<<" && ";
   TString myMisc = "misc";
   //vars.push_back(myMisc + ".Run"); props.Add(&PT);
 
- // vars.push_back(myMisc + ".MET"); props.Add(&PT);
+//   vars.push_back(myMisc + ".MET"); props.Add(&PT);
  // vars.push_back(myMisc + ".METPhi"); props.Add(&PHI);
   //vars.push_back(myMisc + ".MT2"); props.Add(&PT);
   //vars.push_back(myMisc + ".MT2jet40"); props.Add(&PT);
@@ -147,18 +150,18 @@ cutStream	<<" && ";
   //vars.push_back(myMisc + ".pfHT50"); props.Add(&PT);
 
   /*Multiplicities*/
-  //vars.push_back("NJets"); props.Add(&MULT);
-  //vars.push_back("NJetsIDLoose"); props.Add(&MULT);
-  //vars.push_back("NJetsIDLoose40"); props.Add(&MULT);
-  //vars.push_back("NJetsIDLoose50"); props.Add(&MULT);
+//   vars.push_back("NJets"); props.Add(&MULT);
+//   vars.push_back("NJetsIDLoose"); props.Add(&MULT);
+//   vars.push_back("NJetsIDLoose40"); props.Add(&MULT);
+ //   vars.push_back("NJetsIDLoose50"); props.Add(&MULT);
   //vars.push_back("NBJets"); props.Add(&MULT);
   //vars.push_back("NBJetsHE"); props.Add(&MULT);
-  vars.push_back("NBJetsCSVL"); props.Add(&MULT);
-  vars.push_back("NBJetsCSVM"); props.Add(&MULT);
-  vars.push_back("NBJetsCSVT"); props.Add(&MULT);
-  vars.push_back("NBJets40CSVL"); props.Add(&MULT);
-  vars.push_back("NBJets40CSVM"); props.Add(&MULT);
-  vars.push_back("NBJets40CSVT"); props.Add(&MULT);
+//   vars.push_back("NBJetsCSVL"); props.Add(&MULT);
+//     vars.push_back("NBJetsCSVM"); props.Add(&MULT);
+//  vars.push_back("NBJetsCSVT"); props.Add(&MULT);
+//   vars.push_back("NBJets40CSVL"); props.Add(&MULT);
+//   vars.push_back("NBJets40CSVM"); props.Add(&MULT);
+//   vars.push_back("NBJets40CSVT"); props.Add(&MULT);
   //vars.push_back("NEles"); props.Add(&MULT);
   //vars.push_back("NMuons"); props.Add(&MULT);
   //vars.push_back("NMuonsCommonIso"); props.Add(&MULT);
@@ -187,16 +190,24 @@ cutStream	<<" && ";
 * Loop over variables and plot
 */
 
-  for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
-    tA->makePlot(vars[iVar], cuts, -10, -10 , -10, trigger, vars[iVar], ((Objectproperties*)props.At(iVar))->nBins,
-		 ((Objectproperties*)props.At(iVar))->lowVal, ((Objectproperties*)props.At(iVar))->highVal, false, true, true,
-		 true, true, true, 1, true, false, "gif");
-  }
-//      tA->makePlot("doubleMu[0].lv.M()",     cuts,    -10,  -10 , -10 ,   trigger , "doubleMu[0].lv.M()"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "gif");
+//  for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
+//   tA->makePlot(vars[iVar], cuts, -10, -10 , -10, trigger, vars[iVar], ((Objectproperties*)props.At(iVar))->nBins,
+// 		 ((Objectproperties*)props.At(iVar))->lowVal, ((Objectproperties*)props.At(iVar))->highVal, false, true, true,
+// 		 true, true, true, 1, true, true, "png");
+//  }
 
-//   tA->makePlot("misc.Run",     cuts,    -10,  -10 , -10 ,   trigger , "Run"            ,19000,190000, 209000,          false,        true ,  true,   true,  true,  true, 1,true, false, "gif");
+ for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
+  tA->makePlot(vars[iVar], cuts, -10, -10 , -10, trigger, vars[iVar], 50, 0, 750, false, true, true, true, true, true, 1, true, true, "png");
+ }
+
+ //      tA->makePlot("doubleMu[0].lv.M()",     cuts,    -10,  -10 , -10 ,   trigger , "doubleMu[0].lv.M()"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+
+//   tA->makePlot("misc.Run",     cuts,    -10,  -10 , -10 ,   trigger , "Run"            ,19000,190000, 209000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 
 
+//void MassPlotter::plotSig(TString var, TString cuts, TString xtitle, int nbins, double min, double max, bool flip_order, int type ){
+  //tA->plotSig("muo[muTau[0].mu0Ind].MT", cuts,  "muo[muTau[0].mu0Ind].MT", 60, 0, 300, 0, 0, 1);
+  //tA->muTauAnalysis(cuts, trigger, 100000000);
   /*
 * Show cutflow table
 */

@@ -16,6 +16,11 @@
 #include "TFile.h"
 #include "TH1.h"
 
+#include "RooCBShape.h"
+#include "RooAbsReal.h"
+#include "RooRealVar.h"
+
+using namespace RooFit ;
 
 namespace Util {
 	//__________________________________________________________________________
@@ -432,6 +437,47 @@ namespace Util {
 		err = TMath::Sqrt(igerr2);
 		return integral;
 	}
+
+  
+        inline double CrystalBallCDF(float pt, float eta, TString channel, TString dataOrMC){
+ //       From RooCBShape.cc
+// 	  RooCBShape::RooCBShape(const char *name, const char *title,
+// 		       RooAbsReal& _m, RooAbsReal& _m0, RooAbsReal& _sigma,
+// 		       RooAbsReal& _alpha, RooAbsReal& _n)
+
+
+
+	  RooRealVar m("m","invariant mass (GeV/c^{2})",2.5,3.6);
+	  RooRealVar m0("m0","m0",3,2.9,3.2);
+	  RooRealVar sigma_cb("sigma_cb","width",0.06,0,0.1);
+	  RooRealVar alpha("alpha","alpha",1,0,2);
+	  RooRealVar n("n","order",1,0,5);
+	  RooCBShape *crystalball = new RooCBShape("crystal ball","crystal ball PDF",m,m0,sigma_cb,alpha,n);
+
+	  //Fit parameters for 8 TeV data muon in muTau Table 13. AN-13-171
+	  if(channel == "muTau"){
+	    if(dataOrMC == "data"){
+
+	      m0.setVal(15.9977);
+	      sigma_cb.setVal(7.64004e-05);
+	      alpha.setVal(6.4951e-08);
+	      n.setVal(1.57403);
+
+	    }//if(dataOrMC == "data")
+	    else{
+	     m0.setVal(15.9977);
+	      sigma_cb.setVal(7.64004e-05);
+	      alpha.setVal(6.4951e-08);
+	      n.setVal(1.57403);
+	    }
+	  }//if(channel == "muTau")
+
+	  m.setRange("RangeName",-1000.,pt);
+ 	  RooAbsReal* intRange = crystalball->createIntegral(m,m,"RangeName"); 
+
+	  return intRange.getVal();
+       }
 }
 
 #endif
+

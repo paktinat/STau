@@ -64,12 +64,12 @@
     TString myChan = "eleMu";
 
   // You need to carefully define the cut variables based on MT2"Channel".hh
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated"));
+    myChannelCuts.push_back((std::string("!(eleMu[0].Isolated)")));
   myChannelCuts.push_back(std::string(std::string(myChan) + ".eleMu[0].mu0Ind>= 0")); 
   myChannelCuts.push_back(std::string(std::string(myChan) + ".eleMu[0].ele0Ind >=0"));
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".charge== 0"));
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".eleMu[0].HasNoVetomuoForEleMu"));
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".eleMu[0].HasNoVetoElecForEleMu"));
+  myChannelCuts.push_back(std::string("abs(eleMu[0].charge) == 2"));
+//   myChannelCuts.push_back(std::string(std::string(myChan) + ".eleMu[0].HasNoVetomuoForEleMu"));
+//   myChannelCuts.push_back(std::string(std::string(myChan) + ".eleMu[0].HasNoVetoElecForEleMu"));
   myChannelCuts.push_back("((muo[eleMu[0].mu0Ind].lv.Pt()>20)||(ele[eleMu[0].ele0Ind].lv.Pt()>20))" );
   myChannelCuts.push_back("(eleMu[0].lv.M()>10) ");
 

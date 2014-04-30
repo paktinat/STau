@@ -58,7 +58,7 @@ using namespace std;
 		if(type == "pt"){	
 			nBins = 100;
 			lowVal = -2.;
-			highVal = 1000.;
+			highVal = 500.;
 		}
                 else if(type == "phi"){
                         nBins = 70;
@@ -926,7 +926,7 @@ void MassPlotter::plotSig(TString var, TString theCuts, TString xtitle, int nbin
 	        if(fSamples[i].type=="data")
 		weight = 1.0;
 
-	        TString btagweight = "SFWeight.BTagCSV40ge1";//"1.0";
+	        TString btagweight = "SFWeight.BTagCSV40eq0";//"1.0";
 
 	        TString selection;	
 		if(     fSamples[i].type=="mc" && fPUReweight && fbSFReWeight) selection = TString::Format("(%.15f*pileUp.Weight*%s) * (%s)",weight, btagweight.Data(), theCuts.Data());
@@ -8015,19 +8015,192 @@ void MassPlotter::MakeCutFlowTable( std::vector<std::string> all_cuts ){
 }
 
 
-
-
-
-
-
-
-
-
-	double MassPlotter::DeltaPhi(double phi1, double phi2){
-		// From cmssw reco::deltaPhi()
-		double result = phi1 - phi2;
-		while( result >   TMath::Pi() ) result -= TMath::TwoPi();
-		while( result <= -TMath::Pi() ) result += TMath::TwoPi();
-		return TMath::Abs(result);
-	}
+double MassPlotter::DeltaPhi(double phi1, double phi2){
+  // From cmssw reco::deltaPhi()
+  double result = phi1 - phi2;
+  while( result >   TMath::Pi() ) result -= TMath::TwoPi();
+  while( result <= -TMath::Pi() ) result += TMath::TwoPi();
+  return TMath::Abs(result);
+}
  
+void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents){
+
+  TH1::SetDefaultSumw2();
+
+  TString  cnames[NumberOfSamples] = {"QCD", "Wjets", "Zjets", "Top", "MC", "data"};
+  int      ccolor[NumberOfSamples] = {  401,     417,     419,   600,  500,  632};
+  TString varname = "MT2";
+  for (int i=0; i<NumberOfSamples; i++){
+    MT2[i] = new TH1F(varname+"_"+cnames[i], "", 150, 0, 750);
+    MT2[i] -> SetFillColor  (ccolor[i]);
+    MT2[i] -> SetLineColor  (ccolor[i]);
+    MT2[i] -> SetLineWidth  (2);
+    MT2[i] -> SetMarkerColor(ccolor[i]);
+    MT2[i] -> SetStats(false);
+  }
+
+  MT2[5] -> SetMarkerStyle(20);
+  MT2[5] -> SetMarkerColor(kBlack);
+  MT2[5] -> SetLineColor(kBlack);
+  
+  MT2[4] -> SetFillStyle(3004);
+  MT2[4] -> SetFillColor(kBlack);
+
+  cout<<" trigger "<<trigger<<endl;
+  cout<<" cuts "<<cuts<<endl;
+
+  for(int ii = 0; ii < fSamples.size(); ii++){
+    
+    TString myCuts = cuts;
+ 
+    int data = 0;
+    sample Sample = fSamples[ii];
+    
+    if(Sample.type == "data"){
+      data = 1;
+      myCuts += " && " + trigger;
+    }
+
+     
+    fMT2tree = new MT2tree();
+    Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
+
+    float Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
+
+    std::cout << setfill('=') << std::setw(70) << "" << std::endl;
+    cout << "looping over :     " <<endl;	
+    cout << "   Name:           " << Sample.name << endl;
+    cout << "   File:           " << (Sample.file)->GetName() << endl;
+    cout << "   Events:         " << Sample.nevents  << endl;
+    cout << "   Events in tree: " << Sample.tree->GetEntries() << endl; 
+    cout << "   Xsection:       " << Sample.xsection << endl;
+    cout << "   kfactor:        " << Sample.kfact << endl;
+    cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
+    cout << "   Weight:         " << Weight <<endl;
+    std::cout << setfill('-') << std::setw(70) << "" << std::endl;
+   
+
+    Sample.tree->Draw(">>selList", myCuts);
+    TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
+    Sample.tree->SetEventList(myEvtList);
+
+    Long64_t nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
+
+
+    for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
+      //Sample.tree->GetEntry(jentry); 
+      Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
+
+      if ( fVerbose>2 && jentry % 100000 == 0 ){  
+	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+	fflush(stdout);
+      }
+ 
+
+
+
+      float muIdSF = fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].GetMuIDSFmuTau();
+//       cout<<" muIdSF "<<muIdSF<<endl;
+      
+      float muIsoSF = fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].GetMuIsoSFmuTau();
+//       cout<<" muIsoSF "<<muIsoSF<<endl;
+
+      float muTrgSF = fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].GetMuTrgSFmuTau();
+
+//        weight *= muIdSF * muIsoSF;
+
+      float weight = Weight * muIdSF * muIsoSF * muTrgSF;
+      if(data == 1)
+ 	weight = 1.0;
+      else
+	if(Sample.type != "susy")
+	  weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq1 * fMT2tree->SFWeight.TauTagge1/Sample.PU_avg_weight);//
+
+   
+
+//   std::vector<int> GoodTau0;
+//   std::vector<int> GoodMu0;
+
+//   for(int i=0; i<NTaus; ++i){ 
+//     if(tau[i].PassTau_MuTau)
+//       GoodTau0.push_back(i);
+//   }
+//   for(int i=0; i<NMuons; ++i){
+//     if(muo[i].PassMu0_TauMu)
+//       GoodMu0.push_back(i);
+//   }
+//   std::pair<int,int> ndecies = fMT2tree->MuTauParing(GoodTau0,GoodMu0));  	
+
+//     if(indecies.first != -1 && indecies.second != -1)
+//       CalcMT2(0, false, tau[indecies.first].lv, muo[indecies.second].lv, pfmet[0]);
+
+
+
+
+	if(data == 1){
+	    
+	  MT2[5]->Fill(fMT2tree->muTau[0].GetMT2(), weight);//data
+	    
+	}else{
+	  MT2[4]->Fill(fMT2tree->muTau[0].GetMT2(), weight);
+	    
+	  if(Sample.sname == "Top")  
+	    MT2[3]->Fill(fMT2tree->muTau[0].GetMT2(), weight);
+	  else
+	    if(Sample.sname == "DY")	
+	      MT2[2]->Fill(fMT2tree->muTau[0].GetMT2(), weight);
+	    else
+	      if(Sample.sname == "Wtolnu")
+		MT2[1]->Fill(fMT2tree->muTau[0].GetMT2(), weight);
+	      else
+		if(Sample.sname == "QCD")
+		  MT2[0]->Fill(fMT2tree->muTau[0].GetMT2(), weight);
+	}}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  for(int j = 0; j < NumberOfSamples; j++){
+     AddOverAndUnderFlow(MT2[j], true, true);
+  }
+  printYield();
+
+THStack* h_stack     = new THStack(varname, "");
+  for(int j = 0; j < NumberOfSamples; j++){
+    MT2[j]->Rebin(3);
+    TH1F* mt2 = (TH1F*)MT2[j]->Clone();
+    mt2->SetName("mt2");
+    if(j < (NumberOfSamples - 2))
+      h_stack  -> Add(MT2[j]);
+    delete mt2;
+  }  
+
+  TLegend* Legend1 = new TLegend(.71,.54,.91,.92);
+  Legend1->AddEntry(MT2[0], "QCD", "f");
+  Legend1->AddEntry(MT2[1], "W+jets", "f");
+  Legend1->AddEntry(MT2[2], "Z+jets", "f");
+  Legend1->AddEntry(MT2[3], "Top", "f");
+  Legend1->AddEntry(MT2[5], "data", "l");
+  
+  //  TLegend *Legend1;
+  printHisto(h_stack, MT2[5], MT2[4], Legend1 , "MTC", "hist", true, "MT2", "Events", -4, 0);
+
+  plotRatioStack(h_stack,  MT2[4], MT2[5], true, false, "MT2_ratio", Legend1, "MT2", "Events", -4, 0);
+
+
+
+  
+}

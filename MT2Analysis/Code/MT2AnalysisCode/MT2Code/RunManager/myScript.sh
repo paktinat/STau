@@ -17,7 +17,7 @@ OUTFILES=
 
 # Output files to be copied to the SE
 # (as above the file path must be given relative to the working directory)
-SEOUTFILES="output_$myVar.root"
+SEOUTFILES="Extraoutput_$myVar.root"
 
 SOURCEFILES=sourcefile
 
