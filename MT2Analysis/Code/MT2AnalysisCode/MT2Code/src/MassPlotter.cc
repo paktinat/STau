@@ -1135,14 +1135,14 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 	}
 
 	if(njets == -10)
-	  nJets = nJetsVar + ">= 0";
+	  nJets = nJetsVar + "<=3";
 
 
 	//saeid
 // 	TString nBJets = "NBJets40CSVM";    // nbjets = -10  --> >=0 b-tags
 	TString nBJets = "NBJetsCSVT";    // nbjets = -10  --> >=0 b-tags
 	//saeid
-	nBJets += nbjets < 0 ? ">=" : "==";
+	nBJets += nbjets < 0 ? "==" : ">=";
 	nBJets += nbjets==-10 ? "0" : TString::Format("%d",abs(nbjets));
 
 	TString  nLeps;
@@ -8024,7 +8024,7 @@ double MassPlotter::DeltaPhi(double phi1, double phi2){
     int data = 0;
     sample Sample = fSamples[ii];
     
-    if(Sample.type == "data"){
+      if(Sample.type == "data"){
       data = 1;
       myCuts += " && " + trigger;
     }
@@ -8062,8 +8062,8 @@ double MassPlotter::DeltaPhi(double phi1, double phi2){
 fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
 fflush(stdout);
       } 
-
-      float weight = 0;
+  
+    float weight = 0;
       if(data == 1)
       weight = 1.0;
       else
@@ -8080,73 +8080,56 @@ fflush(stdout);
 
          int jetcounter=0;
          for(int i=0; i<fMT2tree->NJets; ++i){
-        //NJets > 1
-        //leading jet excluded
-        //acceptance cuts Pt,Eta
+        
  	 
          if(fMT2tree->jet[i].isPFIDLoose==false) continue;
-         if (!((fMT2tree->jet[i].lv.Pt() > 20) && fabs(fMT2tree->jet[i].lv.Eta()<2.3)))
+         if (!((fMT2tree->jet[i].lv.Pt() > 20) && (fabs(fMT2tree->jet[i].lv.Eta())<2.3)))
          continue;
-         jetcounter++;
-         if (jetcounter==1)
+        jetcounter++;
+        if (jetcounter==1) 
+       
          continue;
          
          hAllTauPt->Fill(fMT2tree->jet[i].lv.Pt(), weight);
-                                        }
            
-       
-         for(int i=0; i<fMT2tree->NTaus; ++i) {  
-         if(!( fabs(fMT2tree->tau[i].lv.Eta())<2.3 && fMT2tree->tau[i] .lv.Pt()>20 ))
-            continue;	
-         
-         float mindR=1000; 
-                            
-         for(int j=0; j<fMT2tree->NJets; ++j) {
-         if(fMT2tree->jet[i].isPFIDLoose==false) continue;
-         if (!((fMT2tree->jet[i].lv.Pt() > 20) && fabs(fMT2tree->jet[i].lv.Eta()<2.3)))
-         continue;
-         
-         float deltaR = Util::GetDeltaR(fMT2tree->tau[i].lv.Eta(),fMT2tree->jet[j].lv.Eta(),fMT2tree->tau[i].lv.Phi() ,fMT2tree->jet[j].lv.Phi());
-      
-         
-	  if (deltaR < mindR ) 
-            mindR = deltaR; 
-         
-           //fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT > 100);
-             
-            // acceptance cuts Pt,Eta
-             
-            
-          }
-             
-            if(mindR < 0.5) { 
- 
-         if(fMT2tree->tau[i].IsolationMVA2 >=2)
-         hPassTauPtLooseMVA2->Fill(fMT2tree->tau[i].lv.Pt(), weight);
-         if(fMT2tree->tau[i].IsolationMVA2 >=3)
-        hPassTauPtMediumMVA2->Fill(fMT2tree->tau[i].lv.Pt(), weight);
-         if(fMT2tree->tau[i].IsolationMVA2 >=4)
-        hPassTauPtTightMVA2->Fill(fMT2tree->tau[i].lv.Pt(), weight);
+          
+         if    (fMT2tree->jet[i].isTauMatch < 0)
+	 continue;
+	 int matchedTauInd = fMT2tree->jet[i].isTauMatch;
 
-        if( fMT2tree->tau[i].CombinedIsolation3Hits >= 2)
-         hPassTauPtLoose3hit->Fill(fMT2tree->tau[i].lv.Pt(), weight);
-        if( fMT2tree->tau[i].CombinedIsolation3Hits >= 3)
-         hPassTauPtMedium3hit->Fill(fMT2tree->tau[i].lv.Pt(), weight);
-        if( fMT2tree->tau[i].CombinedIsolation3Hits >= 4)
-         hPassTauPtTight3hit->Fill(fMT2tree->tau[i].lv.Pt(), weight);
+	
+	 if(!( (fabs(fMT2tree->tau[matchedTauInd].lv.Eta())<2.3) &&  (fMT2tree->tau[matchedTauInd].lv.Pt()>20) )) 
+	  continue;	      
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 2)
+         hPassTauPtLoose3hit->Fill(fMT2tree->jet[i].lv.Pt(), weight);
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 3)
+         hPassTauPtMedium3hit->Fill(fMT2tree->jet[i].lv.Pt(), weight);
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 4)
+         hPassTauPtTight3hit->Fill(fMT2tree->jet[i].lv.Pt(), weight);
+         
         
-        if( fMT2tree->tau[i].CombinedIsolation>= 1)
-         hPassTauPtVLoose->Fill(fMT2tree->tau[i].lv.Pt(), weight);
-        if( fMT2tree->tau[i].CombinedIsolation>= 2)
-         hPassTauPtLoose->Fill(fMT2tree->tau[i].lv.Pt(), weight);
-        if( fMT2tree->tau[i].CombinedIsolation>= 3)
-         hPassTauPtMedium->Fill(fMT2tree->tau[i].lv.Pt(), weight);
-        if( fMT2tree->tau[i].CombinedIsolation >= 4)
-         hPassTauPtTight->Fill(fMT2tree->tau[i].lv.Pt(), weight);
+            
+          if(fMT2tree->tau[matchedTauInd].IsolationMVA2 >=2)
+         hPassTauPtLooseMVA2->Fill(fMT2tree->jet[i].lv.Pt(), weight);
+         if(fMT2tree->tau[matchedTauInd].IsolationMVA2 >=3)
+        hPassTauPtMediumMVA2->Fill(fMT2tree->jet[i].lv.Pt(), weight);
+         if(fMT2tree->tau[matchedTauInd].IsolationMVA2 >=4)
+        hPassTauPtTightMVA2->Fill(fMT2tree->jet[i].lv.Pt(), weight);
+
+       
+        
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation>= 1)
+         hPassTauPtVLoose->Fill(fMT2tree->jet[i].lv.Pt(), weight);
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation>= 2)
+         hPassTauPtLoose->Fill(fMT2tree->jet[i].lv.Pt(), weight);
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation>= 3)
+         hPassTauPtMedium->Fill(fMT2tree->jet[i].lv.Pt(), weight);
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation >= 4)
+         hPassTauPtTight->Fill(fMT2tree->jet[i].lv.Pt(), weight);
+
 
 }
-
-                              }  
+                               
     }
          
   }
