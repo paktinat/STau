@@ -27,8 +27,8 @@
  
                //   << "(doubleEle.Ele0Ind != -1  )" <<"&&"
                //   << "(doubleEle.Ele1Ind != -1  )" <<"&&"
-	    <<"(NJetsIDLoose >=2 )"        <<"&&"
-	    <<"misc.LeadingJPt > 350.0"  <<"&&"
+	   <<"(NJetsIDLoose >=2 )"        <<"&&"
+           <<"misc.LeadingJPt > 350.0"  <<"&&"
 
 
 
@@ -73,7 +73,7 @@
   //tA->makeSmallCopy(200000000,100);
   //tA->QCD();
   //tA->SpecialMakePlot(10000000000);
-  tA->TauFakeRate(10000000, cuts,trigger);
+  tA->TauFakeRate(1000000, cuts,trigger);
 
 
 }
