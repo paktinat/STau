@@ -375,7 +375,7 @@ def process(task, conf):
   if(FilesPerJob > 0):
 	  for step in range(0, NumberOfJobs):
 		  import time
-		  time.sleep(10)
+		  time.sleep(600)
 		  result=createJob(step, FilesPerJob, NumberOfJobs, OverloadedJobs, conf, correctList, nameOfFolder, task[1])
 		  jobnumbercollection.append(result)
   return jobnumbercollection

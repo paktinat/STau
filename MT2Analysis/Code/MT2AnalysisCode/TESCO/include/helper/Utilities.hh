@@ -439,44 +439,58 @@ namespace Util {
 	}
 
   
-        inline double CrystalBallCDF(float pt, float eta, TString channel, TString dataOrMC){
+        inline float CrystalBallCDF(float pt, float eta, TString channel, TString dataOrMC){
  //       From RooCBShape.cc
 // 	  RooCBShape::RooCBShape(const char *name, const char *title,
 // 		       RooAbsReal& _m, RooAbsReal& _m0, RooAbsReal& _sigma,
 // 		       RooAbsReal& _alpha, RooAbsReal& _n)
 
+  // The code is developed according to this example:http://root.cern.ch/root/html/tutorials/roofit/rf110_normintegration.C.html
 
 
-	  RooRealVar m("m","m",-10000.0,pt);
+	  RooRealVar m("m","m",-10000.0,10000.0);
 	  RooRealVar m0("m0","m0",3,0,32);
 	  RooRealVar sigma_cb("sigma_cb","width",0.06,0,0.1);
 	  RooRealVar alpha("alpha","alpha",1,0,2);
 	  RooRealVar n("n","order",1,0,5);
 	  RooCBShape *crystalball = new RooCBShape("crystal ball","crystal ball PDF",m,m0,sigma_cb,alpha,n);
 
+	  float norm = 1.0;
+
 	  //Fit parameters for 8 TeV data muon in muTau Table 13. AN-13-171
 	  if(channel == "muTau"){
 	    if(dataOrMC == "data"){
-
-	      m0.setVal(15.9977);
-	      sigma_cb.setVal(7.64004e-05);
-	      alpha.setVal(6.4951e-08);
-	      n.setVal(1.57403);
+	      if(eta < -1.2){
+		m0.setVal(15.9977);
+		sigma_cb.setVal(7.64004e-05);
+		alpha.setVal(6.4951e-08);
+		n.setVal(1.57403);
+		norm = 0.865325;
+	      }
+	      if(eta >= -1.2){
+		m0.setVal(15.9977);
+		sigma_cb.setVal(7.64004e-05);
+		alpha.setVal(6.4951e-08);
+		n.setVal(1.57403);
+		norm = 0.865325;
+	      }
+	      
 
 	    }//if(dataOrMC == "data")
 	    else{
-	     m0.setVal(15.9977);
-	      sigma_cb.setVal(7.64004e-05);
-	      alpha.setVal(6.4951e-08);
-	      n.setVal(1.57403);
+	     m0.setVal(19.977);
+	      sigma_cb.setVal(7.64004e-03);
+	      alpha.setVal(9.51e-07);
+	      n.setVal(1.3);
 	    }//else if(dataOrMC == "data")
 	  }//if(channel == "muTau")
-
-	  //	  m.setRange("RangeName",-10000.,pt);
-	  RooAbsReal* intRange = crystalball->createIntegral(m,m,m.GetName()); 
-
-	  return intRange->getVal();
-       }
+	  
+	  m.setRange("myRange",-10000.0,pt);
+	  RooAbsReal* intRange = crystalball->createIntegral(m,NormSet(m),Range("myRange"));
+	  
+	  return norm * intRange->getVal();
+       
+	}
 }
 
 #endif

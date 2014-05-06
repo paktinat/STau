@@ -4,7 +4,7 @@
 #################################
 #PBS -N hlk
 #PBS -j oe
-#PBS -l walltime=24:00:00
+#PBS -l walltime=72:00:00
 
 export DPM_HOST=se1.particles.ipm.ac.ir
 export DPNS_HOST=se1.particles.ipm.ac.ir
@@ -17,7 +17,7 @@ OUTFILES=
 
 # Output files to be copied to the SE
 # (as above the file path must be given relative to the working directory)
-SEOUTFILES="Extraoutput_$myVar.root"
+SEOUTFILES="output_$myVar.root"
 
 SOURCEFILES=sourcefile
 
