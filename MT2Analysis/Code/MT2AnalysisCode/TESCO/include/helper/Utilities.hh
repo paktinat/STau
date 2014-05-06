@@ -447,7 +447,7 @@ namespace Util {
 
   // The code is developed according to this example:http://root.cern.ch/root/html/tutorials/roofit/rf110_normintegration.C.html
 
-
+	  RooMsgService::instance().setGlobalKillBelow(RooFit::WARNING);
 	  RooRealVar m("m","m",-10000.0,10000.0);
 	  RooRealVar m0("m0","m0",3,0,32);
 	  RooRealVar sigma_cb("sigma_cb","width",0.06,0,0.1);
