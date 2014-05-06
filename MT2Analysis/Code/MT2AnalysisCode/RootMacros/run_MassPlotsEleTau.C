@@ -65,9 +65,11 @@
   //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0QCDInd != -1")); // First lepton index, channel specific
   //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu1QCDInd != -1"));
 
+  std::string invmass = std::string(std::string(myChan) + ".lv.M()");
+  myChannelCuts.push_back(std::string( invmass +  " > 12." ) );
+
   myChannelCuts.push_back("0 == 0");	//Place holder for Jet requirements
   //myChannelCuts.push_back("misc.MET > 30"); //Place holder for MET requirements
-  ///myChannelCuts.push_back("DoubleMuInvMass() > 106. || (DoubleMuInvMass() > 12. && DoubleMuInvMass() < 74.)");
   //myChannelCuts.push_back("NBJets40CSVT > 1");
 
 
@@ -99,12 +101,43 @@
     /* channel independent kin-vars  */ false ,
     /* channel independent multi-vars*/ false ,
     /*         pile up information   */ false ,
-    /*         cut flow table        */ true 
+    /*         cut flow table        */ false ,
+    /*         selected plots        */ true
   };
     
   /*
    * Plot the channel specific variables: add what you like to see ....
    */
+
+  TString myMisc = "misc";
+  TString myPU = "pileUp";
+  if(WhatToDo[5]){
+    vars.push_back(myChan + ".DPhi"); props.Add(&PHI);
+
+//     vars.push_back("ele[eleTau[0].ele0Ind].lv.Pt()"); props.Add(&PT);
+//     vars.push_back("ele[eleTau[0].ele0Ind].MT"); props.Add(&PT);
+//     vars.push_back("ele[eleTau[0].ele0Ind].lv.Eta()"); props.Add(&PHI);
+
+//     vars.push_back(myChan + ".lv.Pt()"); props.Add(&PT);
+//     vars.push_back(myChan + ".lv.Eta()"); props.Add(&PHI);
+//     vars.push_back(myChan + ".lv.M()"); props.Add(&PT);
+
+//     vars.push_back(myChan + ".MT2Imbalanced"); props.Add(&PT);
+//     vars.push_back(myChan + ".MT2"); props.Add(&PT);
+
+//     vars.push_back(myMisc + ".LeadingJPt"); props.Add(&PT);
+//     vars.push_back("jet[0].lv.Eta()"); props.Add(&PHI);
+//     vars.push_back(myMisc + ".HT"); props.Add(&PT);
+
+//     vars.push_back(myMisc + ".MET"); props.Add(&PT);
+//     vars.push_back(myMisc + ".METPhi"); props.Add(&PHI);
+
+//     vars.push_back("NBJets40CSVL"); props.Add(&MULT);
+//     vars.push_back("NBJets40CSVT"); props.Add(&MULT);
+//     vars.push_back("NJetsIDLoose"); props.Add(&MULT);
+
+//     vars.push_back(myPU + ".NVertices"); props.Add(&MULT);
+  }
 
   if(WhatToDo[0]){
     vars.push_back(myChan + ".MT2"); props.Add(&PT);
@@ -134,7 +167,6 @@
 
   /*Kinematics*/
 
-  TString myMisc = "misc";
 
   if(WhatToDo[1]){
 
@@ -199,7 +231,6 @@
 
 
   if(WhatToDo[3]){
-    TString myPU = "pileUp";
     vars.push_back(myPU + ".NVertices"); props.Add(&MULT);
   }
 
