@@ -189,6 +189,7 @@ cutStream	<<" && ";
   /*
 * Loop over variables and plot
 */
+  // variable, cuts, njet, nbjet, nlep, HLT, xtitle nbins bins flip_order, log , comp , ratio, stack, overlay
 
 //  for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
 //   tA->makePlot(vars[iVar], cuts, -10, -10 , -10, trigger, vars[iVar], ((Objectproperties*)props.At(iVar))->nBins,
@@ -197,7 +198,7 @@ cutStream	<<" && ";
 //  }
 
 // for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
-//  tA->makePlot(vars[iVar], cuts, -10, -10 , -10, trigger, vars[iVar], 50, 0, 750, false, true, true, true, true, true, 1, true, true, "png");
+//  tA->makePlot(vars[iVar], cuts, -10, 0 , -10, trigger, vars[iVar], 50, 0, 750, false, true, true, true, true, true, 1, true, true, "png");
 // }
 
  //      tA->makePlot("doubleMu[0].lv.M()",     cuts,    -10,  -10 , -10 ,   trigger , "doubleMu[0].lv.M()"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
@@ -207,7 +208,9 @@ cutStream	<<" && ";
 
 //void MassPlotter::plotSig(TString var, TString cuts, TString xtitle, int nbins, double min, double max, bool flip_order, int type ){
   //tA->plotSig("muo[muTau[0].mu0Ind].MT", cuts,  "muo[muTau[0].mu0Ind].MT", 60, 0, 300, 0, 0, 1);
- tA->muTauAnalysis(cuts, trigger, 100000000);
+  tA->muTauAnalysis(cuts, trigger, 10000000000, "muTauOS_MC");
+ // tA->DrawMyPlots("new_Histos.root");
+
   /*
 * Show cutflow table
 */

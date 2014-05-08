@@ -205,7 +205,7 @@ Lumi            15000.0
 Type            mc
 Color		419  
 
-#SAMPLE
+##SAMPLE
 #Name		DY1JetsToLL_M_50
 #SName		DY
 #ShapeName	DY1JetsToLL_M_50
@@ -216,7 +216,7 @@ Color		419
 #Type            mc
 #Color		419 
 
-#SAMPLE
+##SAMPLE
 #Name		DY2JetsToLL_M_50
 #SName		DY
 #ShapeName	DY2JetsToLL_M_50
@@ -227,7 +227,7 @@ Color		419
 #Type            mc
 #Color		419
  
-#SAMPLE
+##SAMPLE
 #Name		DY3JetsToLL_M_50
 #SName		DY
 #ShapeName	DY3JetsToLL_M_50
@@ -238,7 +238,7 @@ Color		419
 #Type            mc
 #Color		419
  
-#SAMPLE
+##SAMPLE
 #Name		DY4JetsToLL_M_50
 #SName		DY
 #ShapeName	DY4JetsToLL_M_50

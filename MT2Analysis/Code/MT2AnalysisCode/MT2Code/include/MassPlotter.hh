@@ -248,7 +248,9 @@ public:
   void NewTauContamination(int sample_index, Long64_t nevents, int flag);//sample_index != -1 reads only a special sample, nevents determines the number of events to read
 
   void SpecialMakePlot(int nevents, TString cuts, TString trigger);
-  void muTauAnalysis(TString cuts, TString trigger, Long64_t nevents);
+  void muTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfilename);
+  void DrawMyPlots(TString myfileName);
+
 
   void setFlags(int flag); //To determine which analysis we look at HighHT/LowHT MT2(b) options are:
   // 5  :: LowHT  MT2  
@@ -347,7 +349,7 @@ private:
   float xMT2bin[NumberOfMT2Bins];//bins of MT2
 
   static const int NumberOfSamples = 6;
-  TH1F* MT2[NumberOfSamples];
+  TH1* MT2[NumberOfSamples];
 
   //Few functions for debugging and ready for .tex printout
   void printYield();

@@ -84,10 +84,104 @@ public:
     Float_t eta = this->lv.Eta();
     Float_t pt = this->lv.Pt();
 
-    Float_t Fdata = Util::CrystalBallCDF(pt, eta,"muTau", "data");
-    Float_t FMC   = Util::CrystalBallCDF(pt, eta,"muTau", "MC");
+    double alpha, sigma_cb, n, m0, norm;
+    //Fit parameters for 8 TeV data muon in muTau Table 13. AN-13-171
 
-    cout<<" Fdata "<<Fdata<<endl;
+    //data
+    if(eta < -1.2){
+      alpha = 6.4951e-08;
+      n = 1.57403;
+      m0 = 15.9977;
+      sigma_cb = 7.64004e-05;
+      norm = 0.865325;
+    }
+    if(eta >= -1.2 && eta < -0.8){
+      alpha = 0.804001;
+      n = 1.24295;
+      m0 = 17.3974;
+      sigma_cb = 0.804001;
+      norm = 0.928198;
+    }
+    if(eta >= -0.8 && eta < 0){
+      alpha = 0.226312;
+      n = 1.55756;
+      m0 = 16.4307;
+      sigma_cb = 0.226312;
+      norm = 0.974462;
+    }
+    if(eta >= 0 && eta < 0.8){
+      alpha = 0.662731;
+      n = 1.05778;
+      m0 = 17.313;
+      sigma_cb = 0.662731;
+      norm = 1.26624;
+    }
+    if(eta >= 0.8 && eta < 1.2){
+      alpha = 0.550532;
+      n = 1.55402;
+      m0 = 16.9966;
+      sigma_cb = 0.550532;
+      norm = 0.885134;
+    }
+    if(eta >= 1.2){
+      alpha = 0.000106195;
+      n = 1.9991;
+      m0 = 15.9962;
+      sigma_cb = 0.000106195;
+      norm = 0.851294;
+    }
+    
+    float Fdata = Util::tauTauCrystalBallCDF(pt, m0, sigma_cb, alpha, n, norm);
+    
+//     cout<<" FdataNew "<<Fdata<<endl;
+
+    //MC
+    if(eta < -1.2){
+      alpha = 4.3335e-09;
+      n = 1.66134;
+      m0 = 16.0051;
+      sigma_cb = 2.45144e-05;
+      norm = 0.87045;
+    }	     
+    if(eta >= -1.2 && eta < -0.8){
+      alpha = 1.21803;
+      n = 1.40611;
+      m0 = 17.3135;
+      sigma_cb = 0.747636;
+      norm = 0.934983;
+    }
+    if(eta >= -0.8 && eta < 0){
+      alpha = 0.00589832;
+      n = 1.75409;
+      m0 = 15.9556;
+      sigma_cb = 0.0236127;
+      norm = 0.981338;
+    }
+    if(eta >= 0 && eta < 0.8){
+      alpha = 0.00448573;
+      n = 1.92101;
+      m0 = 15.9289;
+      sigma_cb = 0.0271317;
+      norm = 0.978625;
+    }
+    if(eta >= 0.8 && eta < 1.2){
+      alpha = 0.354533;
+      n = 1.67085;
+      m0 = 16.5678;
+      sigma_cb = 0.328333;
+      norm = 0.916992;
+    }
+    if(eta >= 1.2){
+      alpha = 4.40036e-08;
+      n = 1.66272;
+      m0 = 15.997;
+      sigma_cb = 7.90069e-05;
+      norm = 0.884502;
+    }
+	
+    float FMC = Util::tauTauCrystalBallCDF(pt, m0, sigma_cb, alpha, n, norm);
+
+
 
     if(FMC != 0)
       return Fdata/FMC;

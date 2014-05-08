@@ -145,7 +145,7 @@ int main(int argc, char* argv[]) {
 	}
 	//setofcuts   ="../../MT2_cuts/"+setofcuts+".dat";
 
-	setofcuts   ="/dataLOCAL/paktinat/Projects/MT2/MT2_Tau_V02-03-02/MT2Analysis/Code/MT2_cuts/"+setofcuts+".dat";
+	setofcuts   ="/dataLOCAL/MT2Tau/MT2_cuts/"+setofcuts+".dat";
 
 	//	setofcuts   ="/dataLOCAL/MT2Top/CutsMT2/"+setofcuts+".dat";
 	if(data_PileUp.length()!=0   ){data_PileUp ="/dataLOCAL/MT2Top/Certification/pileUp_data/"+ data_PileUp;}
