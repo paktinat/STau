@@ -2,7 +2,7 @@
   TString outputdir = "../MassPlots/";
   
   TString samples = "./samples/samplesMineDoubleElectron.dat";
-  // TString samples = "./samples/samplesMineTest.dat";
+  //   TString samples = "./samples/samplesMineQCD.dat";
 
   Int_t channel = 22; //2* 11 (Electron PDG Id)
 
@@ -36,7 +36,9 @@
 <<" misc.hcalLaserEventFlag==0 && misc.trackingFailureFlag==0 " <<"&&"
 <<" misc.eeBadScFlag==0 && misc.EcalDeadCellTriggerPrimitiveFlag==0 )" <<"&&("
 
-                <<"(trigger.HLT_DiElectrons) " << ")))";
+                  <<"(trigger.HLT_DiElectrons) "
+    //        <<"(0==0) "
+ << ")))";
  
       TString trigger = triggerStream.str().c_str();
      // TString cuts = cutStream.str().c_str();
@@ -49,20 +51,24 @@
 
     // You need to carefully define the cut variables based on MT2"Channel".hh
 
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele0Ind>=0"));
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele1Ind>=0"));
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated== 0"));
+      myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele0Ind>=0"));
+      myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele1Ind>=0"));
+      myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==1"));
+      myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)");
+  // myChannelCuts.push_back("(((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 2) || ((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == -2))");
+
+
+    myChannelCuts.push_back("((doubleEle[0].lv.M() > 12 && doubleEle[0].lv.M() < 75) || (doubleEle[0].lv.M() > 105))");
+    myChannelCuts.push_back("NBJetsCSVM==0");
+    myChannelCuts.push_back("misc.MET > 50");
+    //    myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 70"));
+  //  myChannelCuts.push_back("misc.LeadingJPt > 350");
+  //  myChannelCuts.push_back("misc.Jet0Pass > 0");
+
+
+  // myChannelCuts.push_back(std::string(std::string(myChan) + ".PairCharge==0"));
   //myChannelCuts.push_back("getDoubleEleCharge()==0");
   //  myChannelCuts.push_back("((getDoubleEleCharge()==2) || (getDoubleEleCharge()==-2))");
-  //  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)");
-  myChannelCuts.push_back("(((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 2) || ((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == -2))");
-  // myChannelCuts.push_back(std::string(std::string(myChan) + ".PairCharge==0"));
-
-  myChannelCuts.push_back("((doubleEle[0].lv.M() > 12 && doubleEle[0].lv.M() < 75) || (doubleEle[0].lv.M() > 105))");
-
-  myChannelCuts.push_back("NBJetsCSVM==0");
-  myChannelCuts.push_back("misc.MET > 50");
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 70"));
 
   // myChannelCuts.push_back("((doubleEle[0].PairCharge == 2)  || (doubleEle[0].PairCharge== -2))");
  
@@ -175,17 +181,20 @@ tA->makePlot(vars3[iVar3], cuts, -10, -10 , -10, trigger, vars3[iVar3],20,0,20 ,
 // bool stacked, bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos)
 
 
-//tA->makePlot("doubleEle[0].lv.Eta()",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle[0].lv.Eta()"            ,70,-3.5,3.5,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-//tA->makePlot("doubleEle[0].lv.Pt()",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle[0].lv.Pt()"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-//tA->makePlot("doubleEle[0].lv.M()",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle[0].lv.M()"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-//tA->makePlot("doubleEle[0].MT2",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle[0].MT2"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-//tA->makePlot("doubleEle[0].MT2Imbalanced",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle[0].MT2Imbalanced"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-//tA->makePlot("pileUp.NVertices",     cuts,    -10,  -10 , -10 ,   trigger , "pileUp.NVertices"            ,60,0,60,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-//tA->makePlot("misc.MET",     cuts,    -10,  -10 , -10 ,   trigger , "misc.MET"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-//tA->makePlot("NBJetsCSVM",     cuts,    -10,  -10 , -10 ,   trigger , "NBJetsCSVM"            ,5,0,5,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-//tA->makePlot("ele[doubleEle[0].Ele0Ind].MT",     cuts,    -10,  -10 , -10 ,   trigger , "ele[doubleEle[0].Ele0Ind].MT"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+// tA->makePlot("doubleEle[0].lv.Eta()",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle[0].lv.Eta()"            ,70,-3.5,3.5,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+ // tA->makePlot("doubleEle[0].lv.Pt()",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle[0].lv.Pt()"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+ //  tA->makePlot("doubleEle[0].lv.M()",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle[0].lv.M()"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+ // tA->makePlot("doubleEle[0].MT2",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle[0].MT2"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+// tA->makePlot("doubleEle[0].MT2Imbalanced",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle[0].MT2Imbalanced"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+// tA->makePlot("pileUp.NVertices",     cuts,    -10,  -10 , -10 ,   trigger , "pileUp.NVertices"            ,60,0,60,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+ tA->makePlot("misc.MET",     cuts,    -10,  -10 , -10 ,   trigger , "misc.MET."            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+ // tA->makePlot("NBJetsCSVM",     cuts,    -10,  -10 , -10 ,   trigger , "NBJetsCSVM"            ,5,0,5,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+// tA->makePlot("ele[doubleEle[0].Ele0Ind].MT",     cuts,    -10,  -10 , -10 ,   trigger , "ele[doubleEle[0].Ele0Ind].MT"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+// tA->makePlot("misc.LeadingJPt",     cuts,    -10,  -10 , -10 ,   trigger , "misc.LeadingJPt"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+
+// tA->makePlot("doubleEle[0].Ele1Ind",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle[0].Ele1Ind"            ,10,-5,5,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 
 
-tA->MakeCutFlowTable( myChannelCuts );
+//tA->MakeCutFlowTable( myChannelCuts );
 
 }

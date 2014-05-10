@@ -12,7 +12,7 @@ ShapeName       Signal
 File            TChipChimSTauSnu_NTupleProducer_53X_MC/TChipChimSTauSnu_250_0_MassTree_V2_2.root
 Xsection        0.152 pb
 Kfact           1.
-Lumi            900.0
+Lumi            5300.0
 Type            susy
 Color           1
 
@@ -24,7 +24,7 @@ ShapeName	QCD
 File            TauTau_V2_2/QCD-HT-100To250-TuneZ2star-8TeV-madgraph-pythia-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	1.036E7 pb #xsection TESCOdatareplication
 Kfact           1.59
-Lumi            900.0
+Lumi            5300.0
 Type		mc
 Color		401
 
@@ -35,7 +35,7 @@ ShapeName	QCD
 File            TauTau_V2_2/QCD-HT-250To500-TuneZ2star-8TeV-madgraph-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1-2.root
 Xsection  	276000.0 pb #xsection TESCOdatareplication
 Kfact           1.59
-Lumi            900.0
+Lumi            5300.0
 Type		mc
 Color		401
 
@@ -46,7 +46,7 @@ ShapeName	QCD
 File            TauTau_V2_2/QCD-HT-500To1000-TuneZ2star-8TeV-madgraph-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1-2.root
 Xsection  	8426.0 pb #xsection TESCOdatareplication
 Kfact           1.59
-Lumi            900.0
+Lumi            5300.0
 Type		mc
 Color		401
 
@@ -57,7 +57,7 @@ ShapeName	QCD
 File            TauTau_V2_2/QCD-HT-1000ToInf-TuneZ2star-8TeV-madgraph-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1-2.root
 Xsection  	204.0 pb  #xsection TESCOdatareplication
 Kfact           1.59
-Lumi            900.0
+Lumi            5300.0
 Type		mc
 Color		401
 # -------- electroweak --------
@@ -68,7 +68,7 @@ ShapeName	WJets
 File            TauTau_V2_2/WWJetsTo2L2Nu-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection        5.8	  #xsection AN-171  #4.7 pb 
 Kfact           1.	
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		417
 
@@ -79,7 +79,7 @@ ShapeName	WJets
 File            TauTau_V2_2/WJetsToLNu-TuneZ2Star-8TeV-madgraph-tarball-Summer12-DR53X-PU-S10-START53-V7A-v2.root
 Xsection  	36257.2
 Kfact           1.
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		417
 #----------------DY----------------
@@ -90,7 +90,7 @@ ShapeName	ZJetsToLL
 File            TauTau_V2_2/DYJetsToLL-M-10To50filter-8TeV-madgraph-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	876.8      #xsection TESCOdatareplication
 Kfact           1.
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		419 
 
@@ -101,7 +101,7 @@ ShapeName	ZJetsToLL
 File            TauTau_V2_2/DYJetsToLL-M-50-TuneZ2Star-8TeV-madgraph-tarball-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	3503.71     #xsection TESCOdatareplication
 Kfact           1.
-Lumi            900.0   
+Lumi            5300.0   
 Type            mc
 Color		419 
                   
@@ -112,7 +112,7 @@ ShapeName	ZJetsToNuNu
 File            TauTau_V2_2/ZJetsToNuNu-50-HT-100-TuneZ2Star-8TeV-madgraph-ext-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	452.75 #xsection LPCSusyDataset  #381.2
 Kfact           1.
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		419
 
@@ -123,7 +123,7 @@ ShapeName	ZJetsToNuNu
 File            TauTau_V2_2/ZJetsToNuNu-100-HT-200-TuneZ2Star-8TeV-madgraph-ext-Summer12-DR53X-PU-S10-START53-V7C-v1.root
 Xsection  	190.39 #xsection LPCSusyDataset  #160.3
 Kfact           1.
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		419
 
@@ -134,7 +134,7 @@ ShapeName	ZJetsToNuNu
 File            TauTau_V2_2/ZJetsToNuNu-200-HT-400-TuneZ2Star-8TeV-madgraph-ext-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection        49.28 #xsection LPCSusyDataset  	# 41.49
 Kfact           1.
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		419
 
@@ -145,7 +145,7 @@ ShapeName	ZJetsToNuNu
 File            TauTau_V2_2/ZJetsToNuNu-400-HT-inf-TuneZ2Star-8TeV-madgraph-ext-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	6.26 #xsection LPCSusyDataset    #5.274
 Kfact           1.
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		419
 
@@ -156,7 +156,7 @@ ShapeName	ZZJetsTo2L2Nu
 File            TauTau_V2_2/ZZJetsTo2L2Nu-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v3.root
 Xsection  	0.7  #xsection AN-171  #0.28 pb 
 Kfact           1.
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		419
  
@@ -167,7 +167,7 @@ ShapeName	ZZJetsTo2L2Q
 File            TauTau_V2_2/ZZJetsTo2L2Q-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	2.5 #xsection AN-171     #0.91 pb
 Kfact           1.
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		419
     
@@ -178,7 +178,7 @@ ShapeName	ZZJetsTo4L
 File            TauTau_V2_2/ZZJetsTo4L-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection        0.2    #xsection AN-171 #0.1296 pb
 Kfact           1.
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		419
  
@@ -189,7 +189,7 @@ ShapeName	WZJetsTo3LNu
 File            TauTau_V2_2/WZJetsTo3LNu-TuneZ2-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	1.1   #xsection AN-171  #0.8674 pb
 Kfact           1.
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		419 
 
@@ -200,7 +200,7 @@ ShapeName	WZJetsTo2L2Q
 File            TauTau_V2_2/WZJetsTo2L2Q-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	2.2   #xsection AN-171  #1.755 pb 
 Kfact           1.
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		419  
 
@@ -211,7 +211,7 @@ ShapeName	DY1JetsToLL_M_50
 File            TauTau_V2_2/DY1JetsToLL-M-50-TuneZ2Star-8TeV-madgraph--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM--NTupleProdPlus.root
 Xsection  	666.3 pb  #xsection AN-171
 Kfact           1.
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		419 
 
@@ -222,7 +222,7 @@ ShapeName	DY2JetsToLL_M_50
 File            TauTau_V2_2/DY2JetsToLL-M-50-TuneZ2Star-8TeV-madgraph--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM--NTupleProdPlus.root
 Xsection  	215.0 pb   #xsection AN-171
 Kfact           1.
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		419
  
@@ -233,7 +233,7 @@ ShapeName	DY3JetsToLL_M_50
 File            TauTau_V2_2/DY3JetsToLL-M-50-TuneZ2Star-8TeV-madgraph--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM--NTupleProdPlus.root
 Xsection  	60.7 pb   #xsection AN-171
 Kfact           1.
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		419
  
@@ -244,7 +244,7 @@ ShapeName	DY4JetsToLL_M_50
 File            TauTau_V2_2/DY4JetsToLL-M-50-TuneZ2Star-8TeV-madgraph--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM--NTupleProdPlus.root
 Xsection  	27.3 pb    #xsection AN-171
 Kfact           1.
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		419 
 
@@ -257,7 +257,7 @@ ShapeName	Top
 File            TauTau_V2_2/TTGJets-8TeV-madgraph-Summer12-DR53X-PU-S10-START53-V19-v1.root
 Xsection  	2.166  #xsectin TESCOdatareplication
 Kfact           1.	
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		600
 
@@ -268,7 +268,7 @@ ShapeName	Top
 File            TauTau_V2_2/TTH-Inclusive-M-125-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	0.130 #xsectin TESCOdatareplication
 Kfact           1.	
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		600
 
@@ -279,7 +279,7 @@ ShapeName	Top
 File            TauTau_V2_2/TTWJets-8TeV-madgraph-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	0.232 pb #xsectiont TESCOdatareplication
 Kfact           1.	
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		600
  
@@ -290,7 +290,7 @@ ShapeName	Top
 File            TauTau_V2_2/TTWWJets-8TeV-madgraph-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	0.002037 #xsectiont TESCOdatareplication
 Kfact           1.	
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		600
 
@@ -301,7 +301,7 @@ ShapeName	Top
 File            TauTau_V2_2/TTZJets-8TeV-madgraph-v2-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	0.2057  #xsection LPCSusyDataset
 Kfact           1.	
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		600
 
@@ -312,7 +312,7 @@ ShapeName	Top
 File            TauTau_V2_2/TTJets-MassiveBinDECAY-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	245.8   #xsection AN-171       # 234
 Kfact           1.	
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		600
 
@@ -323,7 +323,7 @@ ShapeName	Top
 File            TauTau_V2_2/T-s-channel-TuneZ2star-8TeV-powheg-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	3.79  #StandardModelCrossSectin  # 2.82
 Kfact           1.	
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		600
 
@@ -335,7 +335,7 @@ ShapeName	Top
 File            TauTau_V2_2/Tbar-s-channel-TuneZ2star-8TeV-powheg-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	1.76    #StandardModelCrossSectin  #1.57
 Kfact           1.	
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		600
 
@@ -346,7 +346,7 @@ ShapeName	Top
 File            TauTau_V2_2/T-t-channel-TuneZ2star-8TeV-powheg-tauola-Summer12-DR53X-PU-S10-START53-V7A-v3.root 
 Xsection  	56.4 #StandardModelCrossSectin   # 47.0
 Kfact           1.	
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		600
 
@@ -358,7 +358,7 @@ ShapeName	Top
 File            TauTau_V2_2/Tbar-t-channel-TuneZ2star-8TeV-powheg-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	30.7   #StandardModelCrossSectin  # 25.0
 Kfact           1.	
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		600
 
@@ -370,7 +370,7 @@ ShapeName	Top
 File            TauTau_V2_2/T-tW-channel-DR-TuneZ2star-8TeV-powheg-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	22.4    #xsection AN-171   # 11.1773     # 10.7
 Kfact           1.	
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		600
 
@@ -382,18 +382,29 @@ ShapeName	Top
 File            TauTau_V2_2/Tbar-tW-channel-DR-TuneZ2star-8TeV-powheg-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
 Xsection  	22.4    #xsection AN-171         # 11.1773      # 10.7
 Kfact           1.	
-Lumi            900.0
+Lumi            5300.0
 Type            mc
 Color		600
 
 ## --------Jet Data ----------------
-
 
 SAMPLE
 Name		Run2012A-Jet
 SName		Jet-Data
 ShapeName	Data
 File            TauTau_V2_2/Jet-Run2012A-22Jan2013-v1-AOD.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1.
+
+
+SAMPLE
+Name		Run2012B-Jet
+SName		Jet-Data
+ShapeName	Data
+File            TauTau_V2_2/T-Run2012B-22Jan2013-v1-AOD.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.
