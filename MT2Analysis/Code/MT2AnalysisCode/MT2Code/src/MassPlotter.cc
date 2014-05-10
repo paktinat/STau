@@ -8031,7 +8031,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
   int      ccolor[NumberOfSamples+1] = {  401,     417,     419,   600,  500,      1,   632};
   TString varname = "MT2";
   for (int i=0; i<(NumberOfSamples+1); i++){
-    MT2[i] = new TH1D(varname+"_"+cnames[i], "", 150, 0, 750);
+    MT2[i] = new TH1D(varname+"_"+cnames[i], "", 80, 0, 400);
     MT2[i] -> SetFillColor  (ccolor[i]);
     MT2[i] -> SetLineColor  (ccolor[i]);
     MT2[i] -> SetLineWidth  (2);
@@ -8067,6 +8067,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 
     float Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
 
+    Weight *= 19600/15000.0;
     std::cout << setfill('=') << std::setw(70) << "" << std::endl;
     cout << "looping over :     " <<endl;	
     cout << "   Name:           " << Sample.name << endl;
@@ -8105,54 +8106,60 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 
 // 	cout<<" TauPt "<<fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt()<<endl;
 // 	cout<<" TauEta "<<fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Eta()<<endl;
-
+/*
 	float muIdSF = fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].GetMuIDSFmuTau();
 	
- 	cout<<" muIdSF "<<muIdSF<<endl;
+//  	cout<<" muIdSF "<<muIdSF<<endl;
 	
 	float muIsoSF = fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].GetMuIsoSFmuTau();
 	
- 	cout<<" muIsoSF "<<muIsoSF<<endl;
+//  	cout<<" muIsoSF "<<muIsoSF<<endl;
 
 	float muTrgSF = fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].GetMuTrgSFmuTau();
 	
- 	cout<<" muTrgSF "<<muTrgSF<<endl;  
+//  	cout<<" muTrgSF "<<muTrgSF<<endl;  
       
 	float tauTrgSF = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].GetTauTrgSFmuTau();
     
-  	cout<<" tauTrgSF "<<tauTrgSF<<endl;  
+//   	cout<<" tauTrgSF "<<tauTrgSF<<endl;  
  
 	weight = Weight * muIdSF * muIsoSF * muTrgSF * tauTrgSF;
-	
-	cout<<" New Weight "<<(muIdSF * muIsoSF * muTrgSF * tauTrgSF)<<endl;  
+*/
+// 	cout<<" New Weight "<<(muIdSF * muIsoSF * muTrgSF * tauTrgSF)<<endl;  
 	
 	if(Sample.type != "susy")
 	  weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq0/Sample.PU_avg_weight);// * fMT2tree->SFWeight.TauTagge1/Sample.PU_avg_weight);//
       }
       
-      float myQuantity = fMT2tree->muTau[0].GetMT2();
+      float myQuantity = -1.0;//fMT2tree->muTau[0].GetMT2();
+     
+   std::vector<int> Tau0;
+   std::vector<int> Mu0;
 
-//   std::vector<int> Tau0;
-//   std::vector<int> Mu0;
+   for(int i=0; i<fMT2tree->NTaus; ++i){ 
+     if(fMT2tree->tau[i].PassTau_MuTau)
+       Tau0.push_back(i);
+   }
+   for(int i=0; i<fMT2tree->NMuons; ++i){
+     if(fMT2tree->muo[i].PassQCDMu0_MuMu)
+       Mu0.push_back(i);
+   }
+   std::pair<int,int> indecies = fMT2tree->MuTauParing(Tau0,Mu0);  	
 
-//   for(int i=0; i<fMT2tree->NTaus; ++i){ 
-//     if(fMT2tree->tau[i].PassTau_MuTau)
-//       Tau0.push_back(i);
-//   }
-//   for(int i=0; i<fMT2tree->NMuons; ++i){
-//     if(fMT2tree->muo[i].PassQCDMu0_MuMu)
-//       Mu0.push_back(i);
-//   }
-//   std::pair<int,int> indecies = fMT2tree->MuTauParing(Tau0,Mu0);  	
+   int selected = 0;
 
-//     if(indecies.first != -1 && indecies.second != -1)
-//       myQuantity = fMT2tree->CalcMT2(0, false, fMT2tree->tau[indecies.first].lv, fMT2tree->muo[indecies.second].lv, fMT2tree->pfmet[0]);
+   if(indecies.first != -1 && indecies.second != -1){
+     float pairCharge = fMT2tree->tau[indecies.first].Charge + fMT2tree->muo[indecies.second].Charge;
+     
+     if(pairCharge == 0){
+       myQuantity = fMT2tree->CalcMT2(0, false, fMT2tree->tau[indecies.first].lv, fMT2tree->muo[indecies.second].lv, fMT2tree->pfmet[0]);     
+       selected = 1;
+     }
+   }
 
-//     float pairCharge = fMT2tree->tau[indecies.first].Charge + fMT2tree->muo[indecies.second].Charge;
-
-//     if(pairCharge != 0)
-//       continue;
-
+   if(selected == 0)
+     continue;
+    
     if(data == 1){
       
       MT2[6]->Fill(myQuantity, weight);//data
@@ -8187,7 +8194,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 
   THStack* h_stack     = new THStack(varname, "");
   for(int j = 0; j < (NumberOfSamples+1); j++){
-    MT2[j]->Rebin(3);
+    //    MT2[j]->Rebin(3);
     TH1F* mt2 = (TH1F*)MT2[j]->Clone();
     mt2->SetName("mt2");
     if(j < (NumberOfSamples - 1))
