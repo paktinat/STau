@@ -73,7 +73,7 @@ void  MT2tree::FillDoubleEle(){
 
       doubleEle[0].MT2Imbalanced = CalcMT2(0, 0,ele[doubleEle[0].Ele0Ind].lv,ele[doubleEle[0].Ele1Ind].lv, -(doubleEle[0].lv));
 
-      doubleEle[0].PairCharge = ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele0Ind].Charge;
+      doubleEle[0].PairCharge = ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge;
 
       if(fVerbose > 3){
          
@@ -117,7 +117,7 @@ void  MT2tree::FillDoubleEle(){
 
 	doubleEle[0].MT2Imbalanced = CalcMT2(0, 0,ele[doubleEle[0].Ele0Ind].lv,ele[doubleEle[0].Ele1Ind].lv, -(doubleEle[0].lv));
 
-	doubleEle[0].PairCharge = ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele0Ind].Charge;
+	doubleEle[0].PairCharge = ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge;
 
 	if(fVerbose > 3){
 	  std::cout<<"EleIndex0: "<< doubleEle[0].Ele0Ind << endl <<"EleIndex1: "<< doubleEle[0].Ele1Ind << endl;

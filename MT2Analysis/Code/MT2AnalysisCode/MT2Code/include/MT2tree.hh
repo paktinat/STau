@@ -863,6 +863,22 @@ public:
   Int_t    GetNBtags  (int algo=3, float value=2., float minJPt=20, float maxJEta=2.4, int PFJID=0);  // algo - 0:TCHE, 1:TCHP, 2:SSVHE, 3:SSVHP
   Float_t  JetPt      (int ijet=0, int PFJID=0, float minJPt=20, float maxJEta=2.4);
   Int_t    GetNTaus   (float minJPt=20, float maxJEta=2.4, int iso=2, int elerej=1, int muorej=3);
+  
+  int getDoubleEleCharge(){
+    int charge1 = 0;
+    int charge2 = 0;
+    if(doubleEle[0].Ele0Ind != -1)
+      charge1 = ele[doubleEle[0].Ele0Ind].Charge;
+    
+    if(doubleEle[0].Ele1Ind != -1)
+      charge2 = ele[doubleEle[0].Ele1Ind].Charge;
+
+    if(charge1 != 0 && charge2 != 0)
+      return charge1+charge2;
+    else
+      return -1;
+  }
+
 
   // HT, MHT, ...
   Float_t GetHT         (int PFJID=0, float minJPt=50, float maxJEta=2.4);
