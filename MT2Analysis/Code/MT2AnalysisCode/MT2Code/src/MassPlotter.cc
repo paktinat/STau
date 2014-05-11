@@ -8106,7 +8106,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 
 // 	cout<<" TauPt "<<fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt()<<endl;
 // 	cout<<" TauEta "<<fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Eta()<<endl;
-/*
+
 	float muIdSF = fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].GetMuIDSFmuTau();
 	
 //  	cout<<" muIdSF "<<muIdSF<<endl;
@@ -8124,41 +8124,41 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 //   	cout<<" tauTrgSF "<<tauTrgSF<<endl;  
  
 	weight = Weight * muIdSF * muIsoSF * muTrgSF * tauTrgSF;
-*/
+
 // 	cout<<" New Weight "<<(muIdSF * muIsoSF * muTrgSF * tauTrgSF)<<endl;  
 	
 	if(Sample.type != "susy")
 	  weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq0/Sample.PU_avg_weight);// * fMT2tree->SFWeight.TauTagge1/Sample.PU_avg_weight);//
       }
       
-      float myQuantity = -1.0;//fMT2tree->muTau[0].GetMT2();
+      float myQuantity = fMT2tree->muTau[0].GetMT2();
      
-   std::vector<int> Tau0;
-   std::vector<int> Mu0;
+ //   std::vector<int> Tau0;
+//    std::vector<int> Mu0;
 
-   for(int i=0; i<fMT2tree->NTaus; ++i){ 
-     if(fMT2tree->tau[i].PassTau_MuTau)
-       Tau0.push_back(i);
-   }
-   for(int i=0; i<fMT2tree->NMuons; ++i){
-     if(fMT2tree->muo[i].PassQCDMu0_MuMu)
-       Mu0.push_back(i);
-   }
-   std::pair<int,int> indecies = fMT2tree->MuTauParing(Tau0,Mu0);  	
+//    for(int i=0; i<fMT2tree->NTaus; ++i){ 
+//      if(fMT2tree->tau[i].PassTau_MuTau)
+//        Tau0.push_back(i);
+//    }
+//    for(int i=0; i<fMT2tree->NMuons; ++i){
+//      if(fMT2tree->muo[i].PassQCDMu0_MuMu)
+//        Mu0.push_back(i);
+//    }
+//    std::pair<int,int> indecies = fMT2tree->MuTauParing(Tau0,Mu0);  	
 
-   int selected = 0;
+//    int selected = 0;
 
-   if(indecies.first != -1 && indecies.second != -1){
-     float pairCharge = fMT2tree->tau[indecies.first].Charge + fMT2tree->muo[indecies.second].Charge;
+//    if(indecies.first != -1 && indecies.second != -1){
+//      float pairCharge = fMT2tree->tau[indecies.first].Charge + fMT2tree->muo[indecies.second].Charge;
      
-     if(pairCharge == 0){
-       myQuantity = fMT2tree->CalcMT2(0, false, fMT2tree->tau[indecies.first].lv, fMT2tree->muo[indecies.second].lv, fMT2tree->pfmet[0]);     
-       selected = 1;
-     }
-   }
+//      if(pairCharge == 0){
+//        myQuantity = fMT2tree->CalcMT2(0, false, fMT2tree->tau[indecies.first].lv, fMT2tree->muo[indecies.second].lv, fMT2tree->pfmet[0]);     
+//        selected = 1;
+//      }
+//    }
 
-   if(selected == 0)
-     continue;
+//    if(selected == 0)
+//      continue;
     
     if(data == 1){
       
@@ -8220,6 +8220,10 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
   TFile *savefile = new TFile(fileName.Data(), "RECREATE");
   savefile ->cd();
   h_stack->Write();
+  MT2[0]->Write();
+  MT2[1]->Write();
+  MT2[2]->Write();
+  MT2[3]->Write();
   MT2[4]->Write();
   MT2[5]->Write();
   MT2[6]->Write();
@@ -8246,6 +8250,30 @@ void MassPlotter::DrawMyPlots(TString myfileName){
   THStack* h_stack = (THStack*) file->Get("MT2");
 
   TLegend* Legend1 = (TLegend*)file->Get("TPave");
+/*
+  float xbin[18] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};
+  
+  THStack* h_stack     = new THStack(varname, "");
+  MT2_MC->Rebin(17,"hnew",xbin);
+  MT2_susy->Rebin(17,"hnew",xbin);
+  MT2_data->Rebin(17,"hnew",xbin);
+
+  h_stack  -> Add(MT2_MC);
+  h_stack  -> Add(MT2_susy);
+  h_stack  -> Add(MT2_data);
+//   h_stack  -> Add();
+
+
+  TLegend* Legend1 = new TLegend(.71,.54,.91,.92);
+  //  Legend1->AddEntry(MT2_QCD, "QCD", "f");
+  //  Legend1->AddEntry(MT2_Wjets, "W+jets", "f");
+  //Legend1->AddEntry(MT2[2], "Z+jets", "f");
+  //Legend1->AddEntry(MT2[3], "Top", "f");
+  Legend1->AddEntry(MT2_susy, "SMS", "l");
+  Legend1->AddEntry(MT2_data, "data", "l");
+*/
+
+
 
   printHisto(h_stack, MT2_data, MT2_MC, MT2_susy,  Legend1 , "MTC", "hist", true, "MT2", "Events", 0, -10, 2, true);
 
