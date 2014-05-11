@@ -34,7 +34,8 @@
 <<" misc.CSCTightHaloIDFlag==0 && misc.HBHENoiseFlag==0 " <<"&&"
 <<" misc.hcalLaserEventFlag==0 && misc.trackingFailureFlag==0 " <<"&&"
 <<" misc.eeBadScFlag==0 && misc.EcalDeadCellTriggerPrimitiveFlag==0 )" <<"&&("
-        << "(trigger.HLT_MuTau) " << ")))"; //Channel specific trigger
+        << "(trigger.HLT_MuTau) " << "&&" 
+        << "( 0 == 0 ) " << ")))"; //Channel specific trigger
     
 
   TString trigger = triggerStream.str().c_str();
@@ -53,25 +54,25 @@
 
   // You need to specify the channel
   TString myChan = "muTau[0]";
-  /*
+  
   // You need to carefully define the cut variables based on MT2"Channel".hh
   myChannelCuts.push_back(std::string(std::string(myChan) + ".tau0Ind >=0")); // First lepton index, channel specific
   myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0Ind >=0")); // Second lepton index, channel specific
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".chargeSum != 0"));
-  //myChannelCuts.push_back(std::string(std::string(myChan) + ".signalMuTau"));                                                                                                  
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".chargeSum == 0"));
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".signalMuTau"));
 
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".qcdMuTau")); 
+  //myChannelCuts.push_back(std::string(std::string(myChan) + ".qcdMuTau")); 
 
   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoElec"));
   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoMu"));
  //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0QCDInd != -1")); // First lepton index, channel specific
- */ //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu1QCDInd != -1"));
+ //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu1QCDInd != -1"));
     myChannelCuts.push_back("(muTau[0].lv.M() < 45 || muTau[0].lv.M() > 75)");
     myChannelCuts.push_back("muTau[0].lv.M() > 15");
   myChannelCuts.push_back("0 == 0");	//Place holder for Jet requirements
-  myChannelCuts.push_back("misc.MET > 30"); //Place holder for MET requirements
+//   myChannelCuts.push_back("misc.MET > 30"); //Place holder for MET requirements
 //    myChannelCuts.push_back(std::string(std::string(myChan) + ".DPhi < 2.5"));
-   myChannelCuts.push_back("NBJetsCSVM == 0");
+//    myChannelCuts.push_back("NBJetsCSVM == 0");
 //    myChannelCuts.push_back("muo[muTau[0].mu0Ind].MT > 125.0");
 
   // We need to make the cut stream
@@ -208,7 +209,7 @@ cutStream	<<" && ";
 
 //void MassPlotter::plotSig(TString var, TString cuts, TString xtitle, int nbins, double min, double max, bool flip_order, int type ){
   //tA->plotSig("muo[muTau[0].mu0Ind].MT", cuts,  "muo[muTau[0].mu0Ind].MT", 60, 0, 300, 0, 0, 1);
-  //tA->muTauAnalysis(cuts, trigger, 10000000000, "newIL_BCVM_LowZM_NonIsoMuOS");
+  //tA->muTauAnalysis(cuts, trigger, 10000000000, "newIL_Signal");
   tA->DrawMyPlots("newIL_BCVM_LowZM_NonIsoMuOS_Histos.root");
 
   /*

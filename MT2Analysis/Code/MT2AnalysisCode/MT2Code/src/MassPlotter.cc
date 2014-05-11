@@ -8247,37 +8247,54 @@ void MassPlotter::DrawMyPlots(TString myfileName){
   TH1* MT2_susy = (TH1*) file->Get("MT2_susy");
   TH1* MT2_data = (TH1*) file->Get("MT2_data");
 
-  THStack* h_stack = (THStack*) file->Get("MT2");
+  TH1* MT2_Wjets = (TH1*) file->Get("MT2_Wjets");
+  TH1* MT2_Zjets = (TH1*) file->Get("MT2_Zjets");
+  TH1* MT2_Top   = (TH1*) file->Get("MT2_Top");
+  TH1* MT2_QCD   = (TH1*) file->Get("MT2_QCD");
 
-  TLegend* Legend1 = (TLegend*)file->Get("TPave");
-/*
-  float xbin[18] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};
+//   THStack* h_stack = (THStack*) file->Get("MT2");
+
+//   TLegend* Legend1 = (TLegend*)file->Get("TPave");
+
+  double xbin[18] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};
   
-  THStack* h_stack     = new THStack(varname, "");
-  MT2_MC->Rebin(17,"hnew",xbin);
-  MT2_susy->Rebin(17,"hnew",xbin);
-  MT2_data->Rebin(17,"hnew",xbin);
+  THStack* h_stack     = new THStack("stack", "");
+  TH1F* hnew_data = (TH1F*)MT2_data->Rebin(17,"hnew_data",xbin);
+  TH1F* hnew_susy = (TH1F*)MT2_susy->Rebin(17,"hnew_susy",xbin);
 
-  h_stack  -> Add(MT2_MC);
-  h_stack  -> Add(MT2_susy);
-  h_stack  -> Add(MT2_data);
-//   h_stack  -> Add();
+  TH1F* hnew_MC = new TH1F("MC", "MC", 17, xbin);
+  TH1F* hnew_QCD   = (TH1F*)MT2_QCD->Rebin(17,"hnew_QCD",xbin);
+  hnew_MC->Add(hnew_QCD);
+  TH1F* hnew_Wjets = (TH1F*)MT2_Wjets->Rebin(17,"hnew_Wjets",xbin);
+  hnew_MC->Add(hnew_Wjets);
+  TH1F* hnew_Zjets = (TH1F*)MT2_Zjets->Rebin(17,"hnew_Zjets",xbin);
+  hnew_MC->Add(hnew_Zjets);
+  TH1F* hnew_Top   = (TH1F*)MT2_Top->Rebin(17,"hnew_Top",xbin);
+  hnew_MC->Add(hnew_Top);
+
+  h_stack  -> Add(hnew_QCD);
+  h_stack  -> Add(hnew_Wjets);
+  h_stack  -> Add(hnew_Zjets);
+  h_stack  -> Add(hnew_Top);
+
 
 
   TLegend* Legend1 = new TLegend(.71,.54,.91,.92);
-  //  Legend1->AddEntry(MT2_QCD, "QCD", "f");
-  //  Legend1->AddEntry(MT2_Wjets, "W+jets", "f");
-  //Legend1->AddEntry(MT2[2], "Z+jets", "f");
-  //Legend1->AddEntry(MT2[3], "Top", "f");
-  Legend1->AddEntry(MT2_susy, "SMS", "l");
-  Legend1->AddEntry(MT2_data, "data", "l");
-*/
+  Legend1->AddEntry(hnew_QCD, "QCD", "f");
+  Legend1->AddEntry(hnew_Wjets, "W+jets", "f");
+  Legend1->AddEntry(hnew_Zjets, "Z+jets", "f");
+  Legend1->AddEntry(hnew_Top, "Top", "f");
+  Legend1->AddEntry(hnew_susy, "SMS", "l");
+  Legend1->AddEntry(hnew_data, "data", "l");
+
+  printHisto(h_stack, hnew_data, hnew_MC, hnew_susy,  Legend1 , "MTC", "hist", true, "MT2", "Events", 0, -10, 2, true);
+
+  plotRatioStack(h_stack,  hnew_MC, hnew_data, hnew_susy, true, false, "MT2_ratio", Legend1, "MT2", "Events", 0, -10, 2, true,"png");
 
 
+//   printHisto(h_stack, MT2_data, MT2_MC, MT2_susy,  Legend1 , "MTC", "hist", true, "MT2", "Events", 0, -10, 2, true);
 
-  printHisto(h_stack, MT2_data, MT2_MC, MT2_susy,  Legend1 , "MTC", "hist", true, "MT2", "Events", 0, -10, 2, true);
-
-  plotRatioStack(h_stack,  MT2_MC, MT2_data, MT2_susy, true, false, "MT2_ratio", Legend1, "MT2", "Events", 0, -10, 2, true);
+//   plotRatioStack(h_stack,  MT2_MC, MT2_data, MT2_susy, true, false, "MT2_ratio", Legend1, "MT2", "Events", 0, -10, 2, true);
 
 
 
