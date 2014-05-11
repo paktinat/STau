@@ -55,10 +55,11 @@
   TString myChan = "doubleMu";
 
   // You need to carefully define the cut variables based on MT2"Channel".hh
- myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated")); 
   myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0Ind >=0")); // First lepton index, channel specific
   myChannelCuts.push_back(std::string(std::string(myChan) + ".mu1Ind >=0")); // Second lepton index, channel specific
   myChannelCuts.push_back(std::string(std::string(myChan) + ".chargeSum == 0"));
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated")); 
+
   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoElec"));
   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoMu"));
   //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0QCDInd != -1")); // First lepton index, channel specific
@@ -170,12 +171,12 @@ cutStream	<<" && ";
 * Loop over variables and plot
 */
 
-  for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
-tA->makePlot(vars[iVar], cuts, -10, -10 , -10, trigger, vars[iVar], ((Objectproperties*)props.At(iVar))->nBins,
-((Objectproperties*)props.At(iVar))->lowVal, ((Objectproperties*)props.At(iVar))->highVal, false, true, true,
-true, true, true, 1, true, false, "gif");
-  }
-    tA->makePlot("doubleMu[0].lv.M()",     cuts,    -10,  -10 , -10 ,   trigger , "doubleMu[0].lv.M()"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "gif");
+//  for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
+//tA->makePlot(vars[iVar], cuts, -10, -10 , -10, trigger, vars[iVar], ((Objectproperties*)props.At(iVar))->nBins,
+//((Objectproperties*)props.At(iVar))->lowVal, ((Objectproperties*)props.At(iVar))->highVal, false, true, true,
+//true, true, true, 1, true, false, "gif");
+//  }
+     tA->makePlot("doubleMu[0].lv.M()",     cuts,    -10,  -10 , -10 ,   trigger , "doubleMu[0].lv.M()"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "gif");
 
 
   /*

@@ -75,8 +75,6 @@
 
 
   //  myChannelCuts.push_back("(doubleEle[0].PairCharge == 0)");
-  
-
   myChannelCuts.push_back("0 == 0");	
  
  std::ostringstream cutStream;

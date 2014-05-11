@@ -58,7 +58,7 @@ using namespace std;
 		if(type == "pt"){	
 			nBins = 100;
 			lowVal = -2.;
-			highVal = 1000.;
+			highVal = 500.;
 		}
                 else if(type == "phi"){
                         nBins = 70;
@@ -926,7 +926,7 @@ void MassPlotter::plotSig(TString var, TString theCuts, TString xtitle, int nbin
 	        if(fSamples[i].type=="data")
 		weight = 1.0;
 
-	        TString btagweight = "SFWeight.BTagCSV40ge1";//"1.0";
+	        TString btagweight = "SFWeight.BTagCSV40eq0";//"1.0";
 
 	        TString selection;	
 		if(     fSamples[i].type=="mc" && fPUReweight && fbSFReWeight) selection = TString::Format("(%.15f*pileUp.Weight*%s) * (%s)",weight, btagweight.Data(), theCuts.Data());
@@ -4757,7 +4757,7 @@ void MassPlotter::Cout(int k, TH2F * Histo){
 
 void MassPlotter::printYield(){
 
-    cout<<"           & "<<MT2[0]->GetName()     << " & "<<MT2[2]->GetName()      <<" & "<<MT2[1]->GetName()      <<" & "<<MT2[3]->GetName()     <<" & "<<MT2[4]->GetName()<<"& "<<MT2[5]->GetName()     <<"\\"<<endl;
+    cout<<"           & "<<MT2[0]->GetName()     << " & "<<MT2[2]->GetName()      <<" & "<<MT2[1]->GetName()      <<" & "<<MT2[3]->GetName()     <<" & "<<MT2[4]->GetName()<<"& "<<MT2[6]->GetName()     <<"& "<<MT2[5]->GetName()     <<"\\"<<endl;
   
     int tmpxMT2bin[10];
   
@@ -4767,12 +4767,12 @@ void MassPlotter::printYield(){
     double err;
 
     MT2[4]->IntegralAndError(0,tmpxMT2bin[NumberOfMT2Bins],err);
-    cout<<" full selection & "<<MT2[0]->Integral()     << " & "<<MT2[2]->Integral()      <<" & "<<MT2[1]->Integral()      <<" & "<<MT2[3]->Integral()     <<" & "<<MT2[4]->Integral(0,tmpxMT2bin[NumberOfMT2Bins])<<" $pm$ "<<err<<" & "<<MT2[5]->Integral()     <<"\\"<<endl;
+    cout<<" full selection & "<<MT2[0]->Integral()     << " & "<<MT2[2]->Integral()      <<" & "<<MT2[1]->Integral()      <<" & "<<MT2[3]->Integral()     <<" & "<<MT2[4]->Integral(0,tmpxMT2bin[NumberOfMT2Bins])<<" $pm$ "<<err<<" & "<<MT2[6]->Integral()     <<" & "<<MT2[5]->Integral()     <<"\\"<<endl;
 
 
     for(int i = 0; i < NumberOfMT2Bins-1; i++){
       MT2[4]->IntegralAndError(tmpxMT2bin[i]+1,tmpxMT2bin[i+1],err);
-      cout<<"$"<<xMT2bin[i]<<"-"<<xMT2bin[i+1]<<"$ &      "<<MT2[0]->Integral(tmpxMT2bin[i]+1,tmpxMT2bin[i+1])<< " & "<<MT2[2]->Integral(tmpxMT2bin[i]+1,tmpxMT2bin[i+1]) <<" & "<<MT2[1]->Integral(tmpxMT2bin[i]+1,tmpxMT2bin[i+1]) <<" & "<<MT2[3]->Integral(tmpxMT2bin[i]+1,tmpxMT2bin[i+1])<<" & "<<MT2[4]->Integral(tmpxMT2bin[i]+1,tmpxMT2bin[i+1])<<" $pm$ "<<err<<" & "<<MT2[5]->Integral(tmpxMT2bin[i]+1,tmpxMT2bin[i+1])<<"\\"<<endl;
+      cout<<"$"<<xMT2bin[i]<<"-"<<xMT2bin[i+1]<<"$ &      "<<MT2[0]->Integral(tmpxMT2bin[i]+1,tmpxMT2bin[i+1])<< " & "<<MT2[2]->Integral(tmpxMT2bin[i]+1,tmpxMT2bin[i+1]) <<" & "<<MT2[1]->Integral(tmpxMT2bin[i]+1,tmpxMT2bin[i+1]) <<" & "<<MT2[3]->Integral(tmpxMT2bin[i]+1,tmpxMT2bin[i+1])<<" & "<<MT2[4]->Integral(tmpxMT2bin[i]+1,tmpxMT2bin[i+1])<<" $pm$ "<<err<<" & "<<MT2[6]->Integral(tmpxMT2bin[i]+1,tmpxMT2bin[i+1])<<" & "<<MT2[5]->Integral(tmpxMT2bin[i]+1,tmpxMT2bin[i+1])<<"\\"<<endl;
     }
   }
 
@@ -8015,19 +8015,243 @@ void MassPlotter::MakeCutFlowTable( std::vector<std::string> all_cuts ){
 }
 
 
-
-
-
-
-
-
-
-
-	double MassPlotter::DeltaPhi(double phi1, double phi2){
-		// From cmssw reco::deltaPhi()
-		double result = phi1 - phi2;
-		while( result >   TMath::Pi() ) result -= TMath::TwoPi();
-		while( result <= -TMath::Pi() ) result += TMath::TwoPi();
-		return TMath::Abs(result);
-	}
+double MassPlotter::DeltaPhi(double phi1, double phi2){
+  // From cmssw reco::deltaPhi()
+  double result = phi1 - phi2;
+  while( result >   TMath::Pi() ) result -= TMath::TwoPi();
+  while( result <= -TMath::Pi() ) result += TMath::TwoPi();
+  return TMath::Abs(result);
+}
  
+void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfileName){
+
+  TH1::SetDefaultSumw2();
+
+  TString  cnames[NumberOfSamples+1] = {"QCD", "Wjets", "Zjets", "Top", "MC", "susy","data"};
+  int      ccolor[NumberOfSamples+1] = {  401,     417,     419,   600,  500,      1,   632};
+  TString varname = "MT2";
+  for (int i=0; i<(NumberOfSamples+1); i++){
+    MT2[i] = new TH1D(varname+"_"+cnames[i], "", 80, 0, 400);
+    MT2[i] -> SetFillColor  (ccolor[i]);
+    MT2[i] -> SetLineColor  (ccolor[i]);
+    MT2[i] -> SetLineWidth  (2);
+    MT2[i] -> SetMarkerColor(ccolor[i]);
+    MT2[i] -> SetStats(false);
+  }
+
+  MT2[6] -> SetMarkerStyle(20);
+  MT2[6] -> SetMarkerColor(kBlack);
+  MT2[6] -> SetLineColor(kBlack);
+  
+  MT2[4] -> SetFillStyle(3004);
+  MT2[4] -> SetFillColor(kBlack);
+
+  cout<<" trigger "<<trigger<<endl;
+  cout<<" cuts "<<cuts<<endl;
+
+  for(int ii = 0; ii < fSamples.size(); ii++){
+    
+    TString myCuts = cuts;
+ 
+    int data = 0;
+    sample Sample = fSamples[ii];
+    
+    if(Sample.type == "data"){
+      data = 1;
+      myCuts += " && " + trigger;
+    }
+
+     
+    fMT2tree = new MT2tree();
+    Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
+
+    float Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
+
+    Weight *= 19600/15000.0;
+    std::cout << setfill('=') << std::setw(70) << "" << std::endl;
+    cout << "looping over :     " <<endl;	
+    cout << "   Name:           " << Sample.name << endl;
+    cout << "   File:           " << (Sample.file)->GetName() << endl;
+    cout << "   Events:         " << Sample.nevents  << endl;
+    cout << "   Events in tree: " << Sample.tree->GetEntries() << endl; 
+    cout << "   Xsection:       " << Sample.xsection << endl;
+    cout << "   kfactor:        " << Sample.kfact << endl;
+    cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
+    cout << "   Weight:         " << Weight <<endl;
+    std::cout << setfill('-') << std::setw(70) << "" << std::endl;
+   
+
+    Sample.tree->Draw(">>selList", myCuts);
+    TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
+    Sample.tree->SetEventList(myEvtList);
+
+    Long64_t nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
+
+
+    for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
+      //Sample.tree->GetEntry(jentry); 
+      Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
+
+      if ( fVerbose>2 && jentry % 100000 == 0 ){  
+	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+	fflush(stdout);
+      }
+ 
+
+      float weight = Weight;
+
+      if(data == 1)
+ 	weight = 1.0;
+      else{
+
+// 	cout<<" TauPt "<<fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt()<<endl;
+// 	cout<<" TauEta "<<fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Eta()<<endl;
+/*
+	float muIdSF = fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].GetMuIDSFmuTau();
+	
+//  	cout<<" muIdSF "<<muIdSF<<endl;
+	
+	float muIsoSF = fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].GetMuIsoSFmuTau();
+	
+//  	cout<<" muIsoSF "<<muIsoSF<<endl;
+
+	float muTrgSF = fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].GetMuTrgSFmuTau();
+	
+//  	cout<<" muTrgSF "<<muTrgSF<<endl;  
+      
+	float tauTrgSF = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].GetTauTrgSFmuTau();
+    
+//   	cout<<" tauTrgSF "<<tauTrgSF<<endl;  
+ 
+	weight = Weight * muIdSF * muIsoSF * muTrgSF * tauTrgSF;
+*/
+// 	cout<<" New Weight "<<(muIdSF * muIsoSF * muTrgSF * tauTrgSF)<<endl;  
+	
+	if(Sample.type != "susy")
+	  weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq0/Sample.PU_avg_weight);// * fMT2tree->SFWeight.TauTagge1/Sample.PU_avg_weight);//
+      }
+      
+      float myQuantity = -1.0;//fMT2tree->muTau[0].GetMT2();
+     
+   std::vector<int> Tau0;
+   std::vector<int> Mu0;
+
+   for(int i=0; i<fMT2tree->NTaus; ++i){ 
+     if(fMT2tree->tau[i].PassTau_MuTau)
+       Tau0.push_back(i);
+   }
+   for(int i=0; i<fMT2tree->NMuons; ++i){
+     if(fMT2tree->muo[i].PassQCDMu0_MuMu)
+       Mu0.push_back(i);
+   }
+   std::pair<int,int> indecies = fMT2tree->MuTauParing(Tau0,Mu0);  	
+
+   int selected = 0;
+
+   if(indecies.first != -1 && indecies.second != -1){
+     float pairCharge = fMT2tree->tau[indecies.first].Charge + fMT2tree->muo[indecies.second].Charge;
+     
+     if(pairCharge == 0){
+       myQuantity = fMT2tree->CalcMT2(0, false, fMT2tree->tau[indecies.first].lv, fMT2tree->muo[indecies.second].lv, fMT2tree->pfmet[0]);     
+       selected = 1;
+     }
+   }
+
+   if(selected == 0)
+     continue;
+    
+    if(data == 1){
+      
+      MT2[6]->Fill(myQuantity, weight);//data
+      
+    }else{
+      if(Sample.sname == "SUSY")
+	MT2[5]->Fill(myQuantity, weight);
+      else
+	MT2[4]->Fill(myQuantity, weight);
+      
+      if(Sample.sname == "Top")  
+	MT2[3]->Fill(myQuantity, weight);
+      else
+	if(Sample.sname == "DY")	
+	  MT2[2]->Fill(myQuantity, weight);
+	else
+	  if(Sample.sname == "Wtolnu")
+	    MT2[1]->Fill(myQuantity, weight);
+	  else
+	    if(Sample.sname == "QCD")
+	      MT2[0]->Fill(myQuantity, weight);
+    }}
+  
+  }//for(ii<fSamples)
+
+
+
+  for(int j = 0; j < (NumberOfSamples+1); j++){
+    AddOverAndUnderFlow(MT2[j], true, true);
+  }
+  printYield();
+
+  THStack* h_stack     = new THStack(varname, "");
+  for(int j = 0; j < (NumberOfSamples+1); j++){
+    //    MT2[j]->Rebin(3);
+    TH1F* mt2 = (TH1F*)MT2[j]->Clone();
+    mt2->SetName("mt2");
+    if(j < (NumberOfSamples - 1))
+      h_stack  -> Add(MT2[j]);
+    delete mt2;
+  }  
+
+  TLegend* Legend1 = new TLegend(.71,.54,.91,.92);
+  Legend1->AddEntry(MT2[0], "QCD", "f");
+  Legend1->AddEntry(MT2[1], "W+jets", "f");
+  Legend1->AddEntry(MT2[2], "Z+jets", "f");
+  Legend1->AddEntry(MT2[3], "Top", "f");
+  Legend1->AddEntry(MT2[5], "SMS", "l");
+  Legend1->AddEntry(MT2[6], "data", "l");
+  //   vector<TH1D*> h_signals;
+  //   h_signals.push_back(&(*MT2[5]));
+  //  TLegend *Legend1;
+
+  TString fileName = fOutputDir;
+  if(!fileName.EndsWith("/")) fileName += "/";
+  Util::MakeOutputDir(fileName);
+  fileName = fileName  + myfileName +"_Histos.root";
+  TFile *savefile = new TFile(fileName.Data(), "RECREATE");
+  savefile ->cd();
+  h_stack->Write();
+  MT2[4]->Write();
+  MT2[5]->Write();
+  MT2[6]->Write();
+  Legend1->Write();
+  savefile->Close();
+  std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
+
+  printHisto(h_stack, MT2[6], MT2[4], MT2[5],  Legend1 , "MTC", "hist", true, "MT2", "Events", 0, -10, 2, true);
+
+  plotRatioStack(h_stack,  MT2[4], MT2[6], MT2[5], true, false, "MT2_ratio", Legend1, "MT2", "Events", 0, -10, 2, true);
+}
+
+
+void MassPlotter::DrawMyPlots(TString myfileName){
+  TString fileName = fOutputDir;
+  if(!fileName.EndsWith("/")) fileName += "/";
+  fileName = fileName  + myfileName;
+  TFile *file = new TFile(fileName.Data(), "READ");
+  
+  TH1* MT2_MC = (TH1*) file->Get("MT2_MC");
+  TH1* MT2_susy = (TH1*) file->Get("MT2_susy");
+  TH1* MT2_data = (TH1*) file->Get("MT2_data");
+
+  THStack* h_stack = (THStack*) file->Get("MT2");
+
+  TLegend* Legend1 = (TLegend*)file->Get("TPave");
+
+  printHisto(h_stack, MT2_data, MT2_MC, MT2_susy,  Legend1 , "MTC", "hist", true, "MT2", "Events", 0, -10, 2, true);
+
+  plotRatioStack(h_stack,  MT2_MC, MT2_data, MT2_susy, true, false, "MT2_ratio", Legend1, "MT2", "Events", 0, -10, 2, true);
+
+
+
+
+}

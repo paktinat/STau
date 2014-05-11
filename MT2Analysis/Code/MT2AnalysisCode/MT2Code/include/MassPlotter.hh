@@ -248,6 +248,9 @@ public:
   void NewTauContamination(int sample_index, Long64_t nevents, int flag);//sample_index != -1 reads only a special sample, nevents determines the number of events to read
 
   void SpecialMakePlot(int nevents, TString cuts, TString trigger);
+  void muTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfilename);
+  void DrawMyPlots(TString myfileName);
+
 
   void setFlags(int flag); //To determine which analysis we look at HighHT/LowHT MT2(b) options are:
   // 5  :: LowHT  MT2  
@@ -287,8 +290,7 @@ private:
 	MT2tree* fMT2tree;
 	TTree*   fTree;
 
-  TH2F *h_SMSEvents, *h_mSugraEvents;
-
+        TH2F *h_SMSEvents, *h_mSugraEvents;
         void MakeMT2PredictionAndPlots(bool cleaned , double dPhisplit[], double fudgefactor);
         void PrintABCDPredictions(TString var, TString basecut, TString upper_cut, TString lower_cut, TF1* func_qcd, TF1* func_sub, TF1* func_qcd_model);
         void printEstimation(TH1D* h_pred, TH1D* h_pred_c, int nbins, float min, float max);
@@ -347,7 +349,7 @@ private:
   float xMT2bin[NumberOfMT2Bins];//bins of MT2
 
   static const int NumberOfSamples = 6;
-  TH1F* MT2[NumberOfSamples];
+  TH1* MT2[NumberOfSamples];
 
   //Few functions for debugging and ready for .tex printout
   void printYield();

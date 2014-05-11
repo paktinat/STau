@@ -64,6 +64,59 @@ public:
     return true;
   }
 
+  Float_t GetTauTrgSFmuTau(){
+    Float_t eta = fabs(this->lv.Eta());
+    Float_t pt = this->lv.Pt();
+
+    double alpha, sigma_cb, n, m0, norm;
+    //Fit parameters for 8 TeV data tau in muTau Table 15. AN-13-171
+      //data
+    if(eta < 1.5){
+      alpha = 0.137039;
+      n = 2.698437;
+      m0 = 18.604910;
+      sigma_cb = 0.276042;
+      norm = 0.940721;
+    } 
+    if(eta >= 1.5){
+      alpha = 0.148111;
+      n = 2.245081;
+      m0 = 18.701715;
+      sigma_cb = 0.216523;
+      norm = 0.895320;
+    }
+
+    float Fdata = Util::tauTauCrystalBallCDF(pt, m0, sigma_cb, alpha, n, norm);
+
+ 
+      //MC
+    if(eta < 1.5){
+      alpha = 2.262950;
+      n = 1.003322;
+      m0 = 18.532997;
+      sigma_cb = 1.027880;
+      norm = 5.297292;
+    }
+    if(eta >= 1.5){
+      alpha = 0.122828;
+      n = 12.577926;
+      m0 = 18.212782;
+      sigma_cb = 0.338119;
+      norm = 0.893975;
+    }
+   
+    float FMC = Util::tauTauCrystalBallCDF(pt, m0, sigma_cb, alpha, n, norm);
+
+
+    if(FMC != 0)
+      return Fdata/FMC;
+    else
+      return 1;
+
+  }
+
+
+
   TLorentzVector lv;
 
   Float_t  MT;
