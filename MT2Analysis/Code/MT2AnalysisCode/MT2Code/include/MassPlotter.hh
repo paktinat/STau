@@ -249,7 +249,7 @@ public:
 
   void SpecialMakePlot(int nevents, TString cuts, TString trigger);
   void muTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfilename);
-  void DrawMyPlots(TString myfileName);
+  void DrawMyPlots(TString myfileName, bool doRebin = false);
 
 
   void setFlags(int flag); //To determine which analysis we look at HighHT/LowHT MT2(b) options are:

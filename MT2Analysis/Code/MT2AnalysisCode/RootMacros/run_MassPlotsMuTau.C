@@ -56,24 +56,24 @@
   TString myChan = "muTau[0]";
   
   // You need to carefully define the cut variables based on MT2"Channel".hh
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".tau0Ind >=0")); // First lepton index, channel specific
+    myChannelCuts.push_back(std::string(std::string(myChan) + ".tau0Ind >=0")); // First lepton index, channel specific
   myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0Ind >=0")); // Second lepton index, channel specific
   myChannelCuts.push_back(std::string(std::string(myChan) + ".chargeSum == 0"));
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".signalMuTau"));
+ myChannelCuts.push_back(std::string(std::string(myChan) + ".signalMuTau"));
 
-  //myChannelCuts.push_back(std::string(std::string(myChan) + ".qcdMuTau")); 
+  //  myChannelCuts.push_back(std::string(std::string(myChan) + ".qcdMuTau")); 
 
   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoElec"));
   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoMu"));
  //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0QCDInd != -1")); // First lepton index, channel specific
  //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu1QCDInd != -1"));
-    myChannelCuts.push_back("(muTau[0].lv.M() < 45 || muTau[0].lv.M() > 75)");
-    myChannelCuts.push_back("muTau[0].lv.M() > 15");
-  myChannelCuts.push_back("0 == 0");	//Place holder for Jet requirements
-//   myChannelCuts.push_back("misc.MET > 30"); //Place holder for MET requirements
+ //   myChannelCuts.push_back("(muTau[0].lv.M() < 45 || muTau[0].lv.M() > 75)");
+    //     myChannelCuts.push_back("muTau[0].lv.M() > 15");
+//    myChannelCuts.push_back("misc.MET > 30"); //Place holder for MET requirements
 //    myChannelCuts.push_back(std::string(std::string(myChan) + ".DPhi < 2.5"));
-//    myChannelCuts.push_back("NBJetsCSVM == 0");
+  //  myChannelCuts.push_back("NBJetsCSVM == 0");
 //    myChannelCuts.push_back("muo[muTau[0].mu0Ind].MT > 125.0");
+  myChannelCuts.push_back("0 == 0");	//Place holder for Jet requirements
 
   // We need to make the cut stream
 
@@ -100,8 +100,8 @@ cutStream	<<" && ";
 * Plot the channel specific variables: add what you like to see ....
 */
 
-  vars.push_back(myChan + ".MT2"); props.Add(&PT);
-// vars.push_back(myChan + ".lv.M()"); props.Add(&PT);
+//  vars.push_back(myChan + ".MT2"); props.Add(&PT);
+ vars.push_back(myChan + ".lv.M()"); props.Add(&PT);
  //  vars.push_back(myChan + ".DPhi"); props.Add(&PHI);
 
 //   vars.push_back(myChan + ".lv.Pt()"); props.Add(&PT);
@@ -192,15 +192,15 @@ cutStream	<<" && ";
 */
   // variable, cuts, njet, nbjet, nlep, HLT, xtitle nbins bins flip_order, log , comp , ratio, stack, overlay
 
-//  for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
-//   tA->makePlot(vars[iVar], cuts, -10, -10 , -10, trigger, vars[iVar], ((Objectproperties*)props.At(iVar))->nBins,
-// 		 ((Objectproperties*)props.At(iVar))->lowVal, ((Objectproperties*)props.At(iVar))->highVal, false, true, true,
-// 		 true, true, true, 1, true, true, "png");
-//  }
+  // for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
+  //tA->makePlot(vars[iVar], cuts, -10, -10 , -10, trigger, vars[iVar], ((Objectproperties*)props.At(iVar))->nBins,
+	       //((Objectproperties*)props.At(iVar))->lowVal, ((Objectproperties*)props.At(iVar))->highVal, false, true, true,
+	       //	 true, true, true, 1, true, true, "png");
+  // }
 
-// for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
-//  tA->makePlot(vars[iVar], cuts, -10, 0 , -10, trigger, vars[iVar], 50, 0, 750, false, true, true, true, true, true, 1, true, true, "png");
-// }
+  //for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
+  // tA->makePlot(vars[iVar], cuts, -10, -10 , -10, trigger, vars[iVar], 100, 0, 1000, false, true, true, true, true, true, 1, true, true, "png");
+  //}
 
  //      tA->makePlot("doubleMu[0].lv.M()",     cuts,    -10,  -10 , -10 ,   trigger , "doubleMu[0].lv.M()"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 
@@ -209,8 +209,8 @@ cutStream	<<" && ";
 
 //void MassPlotter::plotSig(TString var, TString cuts, TString xtitle, int nbins, double min, double max, bool flip_order, int type ){
   //tA->plotSig("muo[muTau[0].mu0Ind].MT", cuts,  "muo[muTau[0].mu0Ind].MT", 60, 0, 300, 0, 0, 1);
-  //tA->muTauAnalysis(cuts, trigger, 10000000000, "newIL_Signal");
-  tA->DrawMyPlots("newIL_BCVM_LowZM_NonIsoMuOS_Histos.root");
+  //tA->muTauAnalysis(cuts, trigger, 10000000000, "MT2_NBCVM_LowZM_NonIsoMuOS");
+  tA->DrawMyPlots("MT2_MET_NBCVM_lowZM_SF_Signal_Histos.root",true);
 
   /*
 * Show cutflow table

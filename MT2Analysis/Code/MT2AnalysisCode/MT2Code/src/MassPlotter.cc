@@ -8061,13 +8061,11 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
       myCuts += " && " + trigger;
     }
 
-     
     fMT2tree = new MT2tree();
     Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
 
     float Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
 
-    Weight *= 19600/15000.0;
     std::cout << setfill('=') << std::setw(70) << "" << std::endl;
     cout << "looping over :     " <<endl;	
     cout << "   Name:           " << Sample.name << endl;
@@ -8080,13 +8078,11 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
     cout << "   Weight:         " << Weight <<endl;
     std::cout << setfill('-') << std::setw(70) << "" << std::endl;
    
-
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
     Sample.tree->SetEventList(myEvtList);
 
     Long64_t nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
-
 
     for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
       //Sample.tree->GetEntry(jentry); 
@@ -8097,7 +8093,6 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 	fflush(stdout);
       }
  
-
       float weight = Weight;
 
       if(data == 1)
@@ -8106,7 +8101,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 
 // 	cout<<" TauPt "<<fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt()<<endl;
 // 	cout<<" TauEta "<<fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Eta()<<endl;
-
+/*
 	float muIdSF = fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].GetMuIDSFmuTau();
 	
 //  	cout<<" muIdSF "<<muIdSF<<endl;
@@ -8120,45 +8115,45 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 //  	cout<<" muTrgSF "<<muTrgSF<<endl;  
       
 	float tauTrgSF = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].GetTauTrgSFmuTau();
-    
+  
 //   	cout<<" tauTrgSF "<<tauTrgSF<<endl;  
  
 	weight = Weight * muIdSF * muIsoSF * muTrgSF * tauTrgSF;
 
 // 	cout<<" New Weight "<<(muIdSF * muIsoSF * muTrgSF * tauTrgSF)<<endl;  
-	
+*/	
 	if(Sample.type != "susy")
 	  weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq0/Sample.PU_avg_weight);// * fMT2tree->SFWeight.TauTagge1/Sample.PU_avg_weight);//
       }
       
       float myQuantity = fMT2tree->muTau[0].GetMT2();
      
- //   std::vector<int> Tau0;
-//    std::vector<int> Mu0;
+   std::vector<int> Tau0;
+   std::vector<int> Mu0;
 
-//    for(int i=0; i<fMT2tree->NTaus; ++i){ 
-//      if(fMT2tree->tau[i].PassTau_MuTau)
-//        Tau0.push_back(i);
-//    }
-//    for(int i=0; i<fMT2tree->NMuons; ++i){
-//      if(fMT2tree->muo[i].PassQCDMu0_MuMu)
-//        Mu0.push_back(i);
-//    }
-//    std::pair<int,int> indecies = fMT2tree->MuTauParing(Tau0,Mu0);  	
+   for(int i=0; i<fMT2tree->NTaus; ++i){ 
+     if(fMT2tree->tau[i].PassTau_MuTau)
+       Tau0.push_back(i);
+   }
+   for(int i=0; i<fMT2tree->NMuons; ++i){
+     if(fMT2tree->muo[i].PassQCDMu0_MuMu)
+       Mu0.push_back(i);
+   }
+   std::pair<int,int> indecies = fMT2tree->MuTauParing(Tau0,Mu0);  	
 
-//    int selected = 0;
+   int selected = 0;
 
-//    if(indecies.first != -1 && indecies.second != -1){
-//      float pairCharge = fMT2tree->tau[indecies.first].Charge + fMT2tree->muo[indecies.second].Charge;
+   if(indecies.first != -1 && indecies.second != -1){
+     float pairCharge = fMT2tree->tau[indecies.first].Charge + fMT2tree->muo[indecies.second].Charge;
      
-//      if(pairCharge == 0){
-//        myQuantity = fMT2tree->CalcMT2(0, false, fMT2tree->tau[indecies.first].lv, fMT2tree->muo[indecies.second].lv, fMT2tree->pfmet[0]);     
-//        selected = 1;
-//      }
-//    }
+     if(pairCharge == 0){
+       myQuantity = fMT2tree->CalcMT2(0, false, fMT2tree->tau[indecies.first].lv, fMT2tree->muo[indecies.second].lv, fMT2tree->pfmet[0]);     
+       selected = 1;
+     }
+   }
 
-//    if(selected == 0)
-//      continue;
+   if(selected == 0)
+     continue;
     
     if(data == 1){
       
@@ -8230,6 +8225,8 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
   Legend1->Write();
   savefile->Close();
   std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
+  cout<<" trigger "<<trigger<<endl;
+  cout<<" cuts "<<cuts<<endl;
 
   printHisto(h_stack, MT2[6], MT2[4], MT2[5],  Legend1 , "MTC", "hist", true, "MT2", "Events", 0, -10, 2, true);
 
@@ -8237,7 +8234,8 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 }
 
 
-void MassPlotter::DrawMyPlots(TString myfileName){
+void MassPlotter::DrawMyPlots(TString myfileName, bool doRebin){
+ TH1::SetDefaultSumw2();
   TString fileName = fOutputDir;
   if(!fileName.EndsWith("/")) fileName += "/";
   fileName = fileName  + myfileName;
@@ -8247,56 +8245,96 @@ void MassPlotter::DrawMyPlots(TString myfileName){
   TH1* MT2_susy = (TH1*) file->Get("MT2_susy");
   TH1* MT2_data = (TH1*) file->Get("MT2_data");
 
-  TH1* MT2_Wjets = (TH1*) file->Get("MT2_Wjets");
-  TH1* MT2_Zjets = (TH1*) file->Get("MT2_Zjets");
-  TH1* MT2_Top   = (TH1*) file->Get("MT2_Top");
-  TH1* MT2_QCD   = (TH1*) file->Get("MT2_QCD");
+  if(doRebin){
+    TH1* MT2_Wjets = (TH1*) file->Get("MT2_Wjets");
+    TH1* MT2_Zjets = (TH1*) file->Get("MT2_Zjets");
+    TH1* MT2_Top   = (TH1*) file->Get("MT2_Top");
+    TH1* MT2_QCD   = (TH1*) file->Get("MT2_QCD");
 
-//   THStack* h_stack = (THStack*) file->Get("MT2");
-
-//   TLegend* Legend1 = (TLegend*)file->Get("TPave");
-
-  double xbin[18] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};
+    double xbin[18] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};      
+    //double xbin[18] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
   
-  THStack* h_stack     = new THStack("stack", "");
-  TH1F* hnew_data = (TH1F*)MT2_data->Rebin(17,"hnew_data",xbin);
-  TH1F* hnew_susy = (TH1F*)MT2_susy->Rebin(17,"hnew_susy",xbin);
+    THStack* h_stack     = new THStack("stack", "");
+    TH1F* hnew_data = (TH1F*)MT2_data->Rebin(17,"hnew_data",xbin);
+    TH1F* hnew_susy = (TH1F*)MT2_susy->Rebin(17,"hnew_susy",xbin);
 
-  TH1F* hnew_MC = new TH1F("MC", "MC", 17, xbin);
-  TH1F* hnew_QCD   = (TH1F*)MT2_QCD->Rebin(17,"hnew_QCD",xbin);
-  hnew_MC->Add(hnew_QCD);
-  TH1F* hnew_Wjets = (TH1F*)MT2_Wjets->Rebin(17,"hnew_Wjets",xbin);
-  hnew_MC->Add(hnew_Wjets);
-  TH1F* hnew_Zjets = (TH1F*)MT2_Zjets->Rebin(17,"hnew_Zjets",xbin);
-  hnew_MC->Add(hnew_Zjets);
-  TH1F* hnew_Top   = (TH1F*)MT2_Top->Rebin(17,"hnew_Top",xbin);
-  hnew_MC->Add(hnew_Top);
+    TH1F* hnew_MC   = (TH1F*)MT2_MC->Rebin(17,"hnew_MC",xbin);
+    hnew_MC->Scale(0);
+    TH1F* hnew_QCD   = (TH1F*)MT2_QCD->Rebin(17,"hnew_QCD",xbin);
+    hnew_MC->Add(hnew_QCD);
+    TH1F* hnew_Wjets = (TH1F*)MT2_Wjets->Rebin(17,"hnew_Wjets",xbin);
+    hnew_MC->Add(hnew_Wjets);
+    TH1F* hnew_Zjets = (TH1F*)MT2_Zjets->Rebin(17,"hnew_Zjets",xbin);
+    hnew_MC->Add(hnew_Zjets);
+    TH1F* hnew_Top   = (TH1F*)MT2_Top->Rebin(17,"hnew_Top",xbin);
+    hnew_MC->Add(hnew_Top);
 
-  h_stack  -> Add(hnew_QCD);
-  h_stack  -> Add(hnew_Wjets);
-  h_stack  -> Add(hnew_Zjets);
-  h_stack  -> Add(hnew_Top);
+    h_stack  -> Add(hnew_QCD);
+    h_stack  -> Add(hnew_Wjets);
+    h_stack  -> Add(hnew_Zjets);
+    h_stack  -> Add(hnew_Top);
 
-
-
-  TLegend* Legend1 = new TLegend(.71,.54,.91,.92);
-  Legend1->AddEntry(hnew_QCD, "QCD", "f");
-  Legend1->AddEntry(hnew_Wjets, "W+jets", "f");
-  Legend1->AddEntry(hnew_Zjets, "Z+jets", "f");
-  Legend1->AddEntry(hnew_Top, "Top", "f");
-  Legend1->AddEntry(hnew_susy, "SMS", "l");
-  Legend1->AddEntry(hnew_data, "data", "l");
-
-  printHisto(h_stack, hnew_data, hnew_MC, hnew_susy,  Legend1 , "MTC", "hist", true, "MT2", "Events", 0, -10, 2, true);
-
-  plotRatioStack(h_stack,  hnew_MC, hnew_data, hnew_susy, true, false, "MT2_ratio", Legend1, "MT2", "Events", 0, -10, 2, true,"png");
+    TLegend* Legend1 = new TLegend(.71,.54,.91,.92);
+    Legend1->AddEntry(hnew_QCD, "QCD", "f");
+    Legend1->AddEntry(hnew_Wjets, "W+jets", "f");
+    Legend1->AddEntry(hnew_Zjets, "Z+jets", "f");
+    Legend1->AddEntry(hnew_Top, "Top", "f");
+    Legend1->AddEntry(hnew_susy, "SMS", "l");
+    Legend1->AddEntry(hnew_data, "data", "l");
 
 
-//   printHisto(h_stack, MT2_data, MT2_MC, MT2_susy,  Legend1 , "MTC", "hist", true, "MT2", "Events", 0, -10, 2, true);
+    cout << "------------------------------------"                << endl
+	 << "QCD Integral:      " << hnew_QCD->Integral()  << endl
+	 << "W+jets Integral:   " << hnew_Wjets->Integral()  << endl
+	 << "Z+jets Integral:   " << hnew_Zjets->Integral()  << endl
+	 << "Top Integral:      " << hnew_Top->Integral()  << endl
+	 << "TOTAL BG:          " << hnew_QCD->Integral()+hnew_Wjets->Integral()+hnew_Zjets->Integral()+hnew_Top->Integral() <<endl
+	 << "SUSY:              " << hnew_susy->Integral()  << endl
+	 << "Data:              " << hnew_data->Integral()  << endl;
+    
+    //Same, but with errors
+    string OverallSamples[7] = {"QCD","W+jets","Z+Jets","Top","SUSY","Data","TOTAL BG"};
+    
+    TH1F* clone = (TH1F*) hnew_QCD->Clone();
+    clone->Rebin(clone->GetNbinsX());
+    cout << "QCD : " << clone->GetBinContent(1) << " +- " << clone->GetBinError(1) << endl;
 
-//   plotRatioStack(h_stack,  MT2_MC, MT2_data, MT2_susy, true, false, "MT2_ratio", Legend1, "MT2", "Events", 0, -10, 2, true);
+    clone = (TH1F*) hnew_Wjets->Clone();
+    clone->Rebin(clone->GetNbinsX());
+    cout << "Wjets : " << clone->GetBinContent(1) << " +- " << clone->GetBinError(1) << endl;
 
+    clone = (TH1F*) hnew_Zjets->Clone();
+    clone->Rebin(clone->GetNbinsX());
+    cout << "Zjets : " << clone->GetBinContent(1) << " +- " << clone->GetBinError(1) << endl;
 
+    clone = (TH1F*) hnew_Top->Clone();
+    clone->Rebin(clone->GetNbinsX());
+    cout << "Top : " << clone->GetBinContent(1) << " +- " << clone->GetBinError(1) << endl;
+   
+    clone = (TH1F*) hnew_MC->Clone();
+    clone->Rebin(clone->GetNbinsX());
+    cout << "Total BG : " << clone->GetBinContent(1) << " +- " << clone->GetBinError(1) << endl;
+    
+    clone = (TH1F*) hnew_data->Clone();
+    clone->Rebin(clone->GetNbinsX());
+    cout << "data : " << clone->GetBinContent(1) << " +- " << clone->GetBinError(1) << endl;
+ 
+    clone = (TH1F*) hnew_susy->Clone();
+    clone->Rebin(clone->GetNbinsX());
+    cout << "SUSY : " << clone->GetBinContent(1) << " +- " << clone->GetBinError(1) << endl;
+
+    printHisto(h_stack, hnew_data, hnew_MC, hnew_susy,  Legend1 , "MTC", "hist", true, "MT2", "Events", 0, -10, 2, true);
+
+    plotRatioStack(h_stack,  hnew_MC, hnew_data, hnew_susy, true, false, "MT2_ratio", Legend1, "MT2", "Events", 0, -10, 2, true,"png");
+  }else{
+    THStack* h_stack = (THStack*) file->Get("MT2");
+   
+    TLegend* Legend1 = (TLegend*)file->Get("TPave");
+
+    printHisto(h_stack, MT2_data, MT2_MC, MT2_susy,  Legend1 , "MTC", "hist", true, "MT2", "Events", 0, -10, 2, true);
+
+    plotRatioStack(h_stack,  MT2_MC, MT2_data, MT2_susy, true, false, "MT2_ratio", Legend1, "MT2", "Events", 0, -10, 2, true);
+  }
 
 
 }
