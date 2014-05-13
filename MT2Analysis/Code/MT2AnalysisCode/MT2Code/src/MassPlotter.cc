@@ -8031,7 +8031,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
   int      ccolor[NumberOfSamples+1] = {  401,     417,     419,   600,  500,      1,   632};
   TString varname = "MT2";
   for (int i=0; i<(NumberOfSamples+1); i++){
-    MT2[i] = new TH1D(varname+"_"+cnames[i], "", 80, 0, 400);
+    MT2[i] = new TH1D(varname+"_"+cnames[i], "", 1000, 0, 1000);
     MT2[i] -> SetFillColor  (ccolor[i]);
     MT2[i] -> SetLineColor  (ccolor[i]);
     MT2[i] -> SetLineWidth  (2);
@@ -8101,7 +8101,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 
 // 	cout<<" TauPt "<<fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt()<<endl;
 // 	cout<<" TauEta "<<fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Eta()<<endl;
-/*
+
 	float muIdSF = fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].GetMuIDSFmuTau();
 	
 //  	cout<<" muIdSF "<<muIdSF<<endl;
@@ -8121,13 +8121,13 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 	weight = Weight * muIdSF * muIsoSF * muTrgSF * tauTrgSF;
 
 // 	cout<<" New Weight "<<(muIdSF * muIsoSF * muTrgSF * tauTrgSF)<<endl;  
-*/	
+
 	if(Sample.type != "susy")
 	  weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq0/Sample.PU_avg_weight);// * fMT2tree->SFWeight.TauTagge1/Sample.PU_avg_weight);//
       }
       
-      float myQuantity = fMT2tree->muTau[0].GetMT2();
-     
+      float myQuantity = fMT2tree->muTau[0].GetLV().M();
+      /*     
    std::vector<int> Tau0;
    std::vector<int> Mu0;
 
@@ -8146,7 +8146,8 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
    if(indecies.first != -1 && indecies.second != -1){
      float pairCharge = fMT2tree->tau[indecies.first].Charge + fMT2tree->muo[indecies.second].Charge;
      
-     if(pairCharge == 0){
+     float Mass = (fMT2tree->tau[indecies.first].lv + fMT2tree->muo[indecies.second].lv).M();
+     if(pairCharge != 0 && (Mass > 15.0 && (Mass < 45.0 || Mass > 75))){
        myQuantity = fMT2tree->CalcMT2(0, false, fMT2tree->tau[indecies.first].lv, fMT2tree->muo[indecies.second].lv, fMT2tree->pfmet[0]);     
        selected = 1;
      }
@@ -8154,7 +8155,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 
    if(selected == 0)
      continue;
-    
+    */
     if(data == 1){
       
       MT2[6]->Fill(myQuantity, weight);//data
@@ -8234,7 +8235,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 }
 
 
-void MassPlotter::DrawMyPlots(TString myfileName, bool doRebin){
+void MassPlotter::DrawMyPlots(TString myfileName, double *xbin, int NumberOfBins){
  TH1::SetDefaultSumw2();
   TString fileName = fOutputDir;
   if(!fileName.EndsWith("/")) fileName += "/";
@@ -8245,28 +8246,25 @@ void MassPlotter::DrawMyPlots(TString myfileName, bool doRebin){
   TH1* MT2_susy = (TH1*) file->Get("MT2_susy");
   TH1* MT2_data = (TH1*) file->Get("MT2_data");
 
-  if(doRebin){
+  if(xbin != 0){
     TH1* MT2_Wjets = (TH1*) file->Get("MT2_Wjets");
     TH1* MT2_Zjets = (TH1*) file->Get("MT2_Zjets");
     TH1* MT2_Top   = (TH1*) file->Get("MT2_Top");
     TH1* MT2_QCD   = (TH1*) file->Get("MT2_QCD");
-
-    double xbin[18] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};      
-    //double xbin[18] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
   
     THStack* h_stack     = new THStack("stack", "");
-    TH1F* hnew_data = (TH1F*)MT2_data->Rebin(17,"hnew_data",xbin);
-    TH1F* hnew_susy = (TH1F*)MT2_susy->Rebin(17,"hnew_susy",xbin);
+    TH1F* hnew_data = (TH1F*)MT2_data->Rebin(NumberOfBins,"hnew_data",xbin);
+    TH1F* hnew_susy = (TH1F*)MT2_susy->Rebin(NumberOfBins,"hnew_susy",xbin);
 
-    TH1F* hnew_MC   = (TH1F*)MT2_MC->Rebin(17,"hnew_MC",xbin);
+    TH1F* hnew_MC   = (TH1F*)MT2_MC->Rebin(NumberOfBins,"hnew_MC",xbin);
     hnew_MC->Scale(0);
-    TH1F* hnew_QCD   = (TH1F*)MT2_QCD->Rebin(17,"hnew_QCD",xbin);
+    TH1F* hnew_QCD   = (TH1F*)MT2_QCD->Rebin(NumberOfBins,"hnew_QCD",xbin);
     hnew_MC->Add(hnew_QCD);
-    TH1F* hnew_Wjets = (TH1F*)MT2_Wjets->Rebin(17,"hnew_Wjets",xbin);
+    TH1F* hnew_Wjets = (TH1F*)MT2_Wjets->Rebin(NumberOfBins,"hnew_Wjets",xbin);
     hnew_MC->Add(hnew_Wjets);
-    TH1F* hnew_Zjets = (TH1F*)MT2_Zjets->Rebin(17,"hnew_Zjets",xbin);
+    TH1F* hnew_Zjets = (TH1F*)MT2_Zjets->Rebin(NumberOfBins,"hnew_Zjets",xbin);
     hnew_MC->Add(hnew_Zjets);
-    TH1F* hnew_Top   = (TH1F*)MT2_Top->Rebin(17,"hnew_Top",xbin);
+    TH1F* hnew_Top   = (TH1F*)MT2_Top->Rebin(NumberOfBins,"hnew_Top",xbin);
     hnew_MC->Add(hnew_Top);
 
     h_stack  -> Add(hnew_QCD);
