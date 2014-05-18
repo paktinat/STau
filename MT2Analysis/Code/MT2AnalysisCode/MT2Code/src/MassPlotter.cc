@@ -7995,26 +7995,43 @@ double MassPlotter::DeltaPhi(double phi1, double phi2){
    cout<<" trigger "<<trigger<<endl;
    cout<<" cuts "<<cuts<<endl;
   
-  
-    Double_t xbin[20]={0.0,10,20,30,40,50,60,70,80,90,100,120,140,160,180,200,250,300,400,500};
-    TH1F* hAllTauPt = new TH1F("", "",19,xbin);
+ 
+  Double_t xbin[20]={0.0,10,20,30,40,50,60,70,80,90,100,120,140,160,180,200,250,300,400,500};
     
-    TH1F* hPassTauPtLoose3hit= new TH1F("", "", 19,xbin);
-    TH1F* hPassTauPtMedium3hit= new TH1F("", "",19,xbin);
-    TH1F* hPassTauPtTight3hit= new TH1F("", "",19,xbin);
+    TH1F* hAllTauPt = new TH1F("hAllTauPt", "hAllTauPt",19,xbin);
+    
+    TH1F* hPassTauPtLoose3hit= new TH1F("hPassTauPtLoose3hit", "hPassTauPtLoose3hit", 19,xbin);
+    TH1F* hPassTauPtMedium3hit= new TH1F("hPassTauPtMedium3hit", "hPassTauPtMedium3hit",19,xbin);
+    TH1F* hPassTauPtTight3hit= new TH1F("hPassTauPtTight3hit", "hPassTauPtTight3hit",19,xbin);
    
      
-    TH1F* hPassTauPtLooseMVA2= new TH1F("", "", 19,xbin);
+   /*  TH1F* hPassTauPtLooseMVA2= new TH1F("", "", 19,xbin);
     TH1F* hPassTauPtMediumMVA2= new TH1F("", "", 19,xbin);
     TH1F* hPassTauPtTightMVA2= new TH1F("", "",19, xbin);
    
     TH1F* hPassTauPtVLoose= new TH1F("", "", 19,xbin) ;
     TH1F* hPassTauPtLoose= new TH1F("", "",19, xbin);
     TH1F* hPassTauPtMedium= new TH1F("", "",19,xbin);
-    TH1F* hPassTauPtTight= new TH1F("", "", 19,xbin);
+    TH1F* hPassTauPtTight= new TH1F("", "", 19,xbin);*/
     
-      
-     
+    TH1F* hAllTauPhi = new TH1F("hAllTauPhi", "hAllTauPhi",18,-3,3);
+    
+    TH1F* hPassTauPhiLoose3hit= new TH1F("hPassTauPhiLoose3hit", "hPassTauPhiLoose3hit",18,-3,3 );
+    TH1F* hPassTauPhiMedium3hit= new TH1F("hPassTauPhiMedium3hit", "hPassTauPhiMedium3hit",18,-3,3);
+    TH1F* hPassTauPhiTight3hit= new TH1F("hPassTauPhiTight3hit", "hPassTauPhiTight3hit",18,-3,3);
+   
+   
+    TH1F* hAllTauEta = new TH1F("hAllTauEta", "hAllTauEta",25,-2.5,2.5);
+    
+    TH1F* hPassTauEtaLoose3hit= new TH1F("hPassTauEtaLoose3hit", "hPassTauEtaLoose3hit",25,-2.5,2.5);
+    TH1F* hPassTauEtaMedium3hit= new TH1F("hPassTauEtaMedium3hit", "hPassTauEtaMedium3hit",25,-2.5,2.5);
+    TH1F* hPassTauEtaTight3hit= new TH1F("hPassTauEtaTight3hit", "hPassTauEtaTight3hit",25,-2.5,2.5); 
+   
+    TH1F* hAllTauNvertices = new TH1F("hAllTauNvertices", "hAllTauNvertices",25,0,50);
+    
+    TH1F* hPassTauNverticesLoose3hit= new TH1F("hPassTauNverticesLoose3hit", "PassTauNverticesLoose3hit",25,0,50);
+    TH1F* hPassTauNverticesMedium3hit= new TH1F("hPassTauNverticesMedium3hit", "hPassTauNverticesMedium3hit",25,0,50);
+    TH1F* hPassTauNverticesTight3hit= new TH1F("hPassTauNverticesTight3hit", "hPassTauNverticesTight3hit",25,0,50); 
 
    
     for(int ii = 0; ii < fSamples.size(); ii++){
@@ -8059,8 +8076,8 @@ double MassPlotter::DeltaPhi(double phi1, double phi2){
       Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
      
       if ( fVerbose>2 && jentry % 100000 == 0 ){
-fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
-fflush(stdout);
+        fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+        fflush(stdout);
       } 
   
     float weight = 0;
@@ -8077,11 +8094,9 @@ fflush(stdout);
 // hltObjectLV = fMT2tree->hltObject[l].lv;
 // }
 
-
+         float mindR=0.7;
          int jetcounter=0;
          for(int i=0; i<fMT2tree->NJets; ++i){
-        
- 	 
          if(fMT2tree->jet[i].isPFIDLoose==false) continue;
          if (!((fMT2tree->jet[i].lv.Pt() > 20) && (fabs(fMT2tree->jet[i].lv.Eta())<2.3)))
          continue;
@@ -8089,17 +8104,30 @@ fflush(stdout);
         if (jetcounter==1) 
        
          continue;
+
+        if    (!(fMT2tree->muo[0].IsTightMuon && fMT2tree->muo[0].lv.Pt() >25 && fabs(fMT2tree->muo[0].lv.Eta())<2.1
+               && fMT2tree-> muo[0].Iso04<0.06  &&  fMT2tree->muo[0].MT <50))
+         continue;
          
-         hAllTauPt->Fill(fMT2tree->jet[i].lv.Pt(), weight);
-           
-          
-         if    (fMT2tree->jet[i].isTauMatch < 0)
+         float deltaR = Util::GetDeltaR(fMT2tree->jet[i].lv.Eta(),fMT2tree->muo[0].lv.Eta(),fMT2tree->jet[i].lv.Phi() ,fMT2tree->muo[0].lv.Phi());
+
+          if (deltaR < mindR )
+            continue;
+
+
+         hAllTauPt->Fill(fMT2tree->jet[i].lv.Pt(), weight); 
+         hAllTauPhi->Fill(fMT2tree->jet[i].lv.Phi(), weight);
+         hAllTauEta->Fill(fMT2tree->jet[i].lv.Eta(), weight); 
+         hAllTauNvertices->Fill(fMT2tree->pileUp.NVertices, weight);
+         
+           if    (fMT2tree->jet[i].isTauMatch < 0)
 	 continue;
 	 int matchedTauInd = fMT2tree->jet[i].isTauMatch;
 
 	
 	 if(!( (fabs(fMT2tree->tau[matchedTauInd].lv.Eta())<2.3) &&  (fMT2tree->tau[matchedTauInd].lv.Pt()>20) )) 
 	  continue;	      
+     
         if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 2)
          hPassTauPtLoose3hit->Fill(fMT2tree->jet[i].lv.Pt(), weight);
         if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 3)
@@ -8107,25 +8135,43 @@ fflush(stdout);
         if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 4)
          hPassTauPtTight3hit->Fill(fMT2tree->jet[i].lv.Pt(), weight);
          
-        
-            
-          if(fMT2tree->tau[matchedTauInd].IsolationMVA2 >=2)
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 2)
+         hPassTauPhiLoose3hit->Fill(fMT2tree->jet[i].lv.Phi(), weight);
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 3)
+         hPassTauPhiMedium3hit->Fill(fMT2tree->jet[i].lv.Phi(), weight);
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 4)
+         hPassTauPhiTight3hit->Fill(fMT2tree->jet[i].lv.Phi(), weight);
+      
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 2)
+         hPassTauEtaLoose3hit->Fill(fMT2tree->jet[i].lv.Eta(), weight);
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 3)
+         hPassTauEtaMedium3hit->Fill(fMT2tree->jet[i].lv.Eta(), weight);
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 4)
+         hPassTauEtaTight3hit->Fill(fMT2tree->jet[i].lv.Eta(), weight);     
+       
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 2)
+         hPassTauNverticesLoose3hit->Fill(fMT2tree->pileUp.NVertices, weight);
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 3)
+         hPassTauNverticesMedium3hit->Fill(fMT2tree->pileUp.NVertices, weight);
+        if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 4)
+         hPassTauNverticesTight3hit->Fill(fMT2tree->pileUp.NVertices, weight);  
+       /* if(fMT2tree->tau[matchedTauInd].IsolationMVA2 >=2)
          hPassTauPtLooseMVA2->Fill(fMT2tree->jet[i].lv.Pt(), weight);
          if(fMT2tree->tau[matchedTauInd].IsolationMVA2 >=3)
         hPassTauPtMediumMVA2->Fill(fMT2tree->jet[i].lv.Pt(), weight);
          if(fMT2tree->tau[matchedTauInd].IsolationMVA2 >=4)
-        hPassTauPtTightMVA2->Fill(fMT2tree->jet[i].lv.Pt(), weight);
+        hPassTauPtTightMVA2->Fill(fMT2tree->jet[i].lv.Pt(), weight);*/
 
        
         
-        if( fMT2tree->tau[matchedTauInd].CombinedIsolation>= 1)
+      /*  if( fMT2tree->tau[matchedTauInd].CombinedIsolation>= 1)
          hPassTauPtVLoose->Fill(fMT2tree->jet[i].lv.Pt(), weight);
         if( fMT2tree->tau[matchedTauInd].CombinedIsolation>= 2)
          hPassTauPtLoose->Fill(fMT2tree->jet[i].lv.Pt(), weight);
         if( fMT2tree->tau[matchedTauInd].CombinedIsolation>= 3)
          hPassTauPtMedium->Fill(fMT2tree->jet[i].lv.Pt(), weight);
         if( fMT2tree->tau[matchedTauInd].CombinedIsolation >= 4)
-         hPassTauPtTight->Fill(fMT2tree->jet[i].lv.Pt(), weight);
+         hPassTauPtTight->Fill(fMT2tree->jet[i].lv.Pt(), weight);*/
 
 
 }
@@ -8134,18 +8180,33 @@ fflush(stdout);
          
   }
   
-   hPassTauPtLooseMVA2 ->Divide(hAllTauPt);
-   hPassTauPtMediumMVA2->Divide(hAllTauPt);
-   hPassTauPtTightMVA2->Divide(hAllTauPt);
+   //hPassTauPtLooseMVA2 ->Divide(hAllTauPt);
+  // hPassTauPtMediumMVA2->Divide(hAllTauPt);
+  // hPassTauPtTightMVA2->Divide(hAllTauPt);
   
    hPassTauPtLoose3hit->Divide(hAllTauPt);
    hPassTauPtMedium3hit->Divide(hAllTauPt);
    hPassTauPtTight3hit->Divide(hAllTauPt);
   
-  hPassTauPtVLoose->Divide(hAllTauPt);
-  hPassTauPtLoose->Divide(hAllTauPt);
-  hPassTauPtMedium->Divide(hAllTauPt);
-  hPassTauPtTight->Divide(hAllTauPt);
+   hPassTauEtaLoose3hit->Divide(hAllTauEta);
+   hPassTauEtaMedium3hit->Divide(hAllTauEta);
+   hPassTauEtaTight3hit->Divide(hAllTauEta);
+   
+   hPassTauPhiLoose3hit->Divide(hAllTauPhi);
+   hPassTauPhiMedium3hit->Divide(hAllTauPhi);
+   hPassTauPhiTight3hit->Divide(hAllTauPhi);
+    
+   hPassTauNverticesLoose3hit->Divide(hAllTauNvertices);
+   hPassTauNverticesMedium3hit->Divide(hAllTauNvertices);
+   hPassTauNverticesTight3hit->Divide(hAllTauNvertices);
+  /* hPassTauEtaLoose3hit->Divide(hAllTauEta);
+   hPassTauEtaMedium3hit->Divide(hAllTauEta);
+   hPassTauEtaTight3hit->Divide(hAllTauEta);
+  */
+ // hPassTauPtVLoose->Divide(hAllTauPt);
+ // hPassTauPtLoose->Divide(hAllTauPt);
+ // hPassTauPtMedium->Divide(hAllTauPt);
+ // hPassTauPtTight->Divide(hAllTauPt);
   
   /*TCanvas *myCanvasMVA= new TCanvas();
   hPassTauPtLooseMVA2->SetMarkerColor(4);
@@ -8168,8 +8229,8 @@ fflush(stdout);
   hPassTauPtTightMVA2->SetLineStyle(22);
   hPassTauPtTightMVA2->SetLineWidth(2);
   hPassTauPtTightMVA2->Draw("same");*/
-  
-TCanvas *myCanvas3hit= new TCanvas();
+
+TCanvas *myCanvasPt3hit= new TCanvas();
 hPassTauPtLoose3hit->SetMarkerColor(4);
 hPassTauPtLoose3hit->SetMarkerStyle(20);
 hPassTauPtLoose3hit->SetLineColor(4);
@@ -8189,6 +8250,103 @@ hPassTauPtTight3hit->SetLineColor(6);
 hPassTauPtTight3hit->SetLineStyle(22);
 hPassTauPtTight3hit->SetLineWidth(2);
 hPassTauPtTight3hit->Draw("same"); 
+
+
+
+TCanvas *myCanvasEta3hit= new TCanvas();
+hPassTauEtaLoose3hit->SetMarkerColor(4);
+hPassTauEtaLoose3hit->SetMarkerStyle(20);
+hPassTauEtaLoose3hit->SetLineColor(4);
+hPassTauEtaLoose3hit->SetLineStyle(20);
+hPassTauEtaLoose3hit->SetLineWidth(2);
+hPassTauEtaLoose3hit->Draw();
+
+hPassTauEtaMedium3hit->SetMarkerColor(3);
+hPassTauEtaMedium3hit->SetMarkerStyle(21);
+hPassTauEtaMedium3hit->SetLineColor(3);
+hPassTauEtaMedium3hit->SetLineStyle(21);
+hPassTauEtaMedium3hit->SetLineWidth(2);
+hPassTauEtaMedium3hit->Draw("same");
+
+hPassTauEtaTight3hit->SetMarkerColor(6);
+hPassTauEtaTight3hit->SetMarkerStyle(22);
+hPassTauEtaTight3hit->SetLineColor(6);
+hPassTauEtaTight3hit->SetLineStyle(22);
+hPassTauEtaTight3hit->SetLineWidth(2);
+hPassTauEtaTight3hit->Draw("same"); 
+
+TCanvas *myCanvasPhi3hit= new TCanvas();
+hPassTauPhiLoose3hit->SetMarkerColor(4);
+hPassTauPhiLoose3hit->SetMarkerStyle(20);
+hPassTauPhiLoose3hit->SetLineColor(4);
+hPassTauPhiLoose3hit->SetLineStyle(20);
+hPassTauPhiLoose3hit->SetLineWidth(2);
+hPassTauPhiLoose3hit->Draw();
+
+hPassTauPhiMedium3hit->SetMarkerColor(3);
+hPassTauPhiMedium3hit->SetMarkerStyle(21);
+hPassTauPhiMedium3hit->SetLineColor(3);
+hPassTauPhiMedium3hit->SetLineStyle(21);
+hPassTauPhiMedium3hit->SetLineWidth(2);
+hPassTauPhiMedium3hit->Draw("same");
+
+hPassTauPhiTight3hit->SetMarkerColor(6);
+hPassTauPhiTight3hit->SetMarkerStyle(22);
+hPassTauPhiTight3hit->SetLineColor(6);
+hPassTauPhiTight3hit->SetLineStyle(22);
+hPassTauPhiTight3hit->SetLineWidth(2);
+hPassTauPhiTight3hit->Draw("same"); 
+
+TCanvas *myCanvas3hit= new TCanvas();
+hPassTauNverticesLoose3hit->SetMarkerColor(4);
+hPassTauNverticesLoose3hit->SetMarkerStyle(20);
+hPassTauNverticesLoose3hit->SetLineColor(4);
+hPassTauNverticesLoose3hit->SetLineStyle(20);
+hPassTauNverticesLoose3hit->SetLineWidth(2);
+hPassTauNverticesLoose3hit->Draw();
+
+hPassTauNverticesMedium3hit->SetMarkerColor(3);
+hPassTauNverticesMedium3hit->SetMarkerStyle(21);
+hPassTauNverticesMedium3hit->SetLineColor(3);
+hPassTauNverticesMedium3hit->SetLineStyle(21);
+hPassTauNverticesMedium3hit->SetLineWidth(2);
+hPassTauNverticesMedium3hit->Draw("same");
+
+hPassTauNverticesTight3hit->SetMarkerColor(6);
+hPassTauNverticesTight3hit->SetMarkerStyle(22);
+hPassTauNverticesTight3hit->SetLineColor(6);
+hPassTauNverticesTight3hit->SetLineStyle(22);
+hPassTauNverticesTight3hit->SetLineWidth(2);
+hPassTauNverticesTight3hit->Draw("same"); 
+
+
+
+
+
+
+
+
+
+/*TCanvas *myCanvas3hit= new TCanvas();
+hPassTauEtaLoose3hit->SetMarkerColor(4);
+hPassTauEtaLoose3hit->SetMarkerStyle(20);
+hPassTauEtaLoose3hit->SetLineColor(4);
+hPassTauEtaLoose3hit->SetLineStyle(20);
+hPassTauEtaLoose3hit->SetLineWidth(2);
+hPassTauEtaLoose3hit->Draw();
+hPassTauEtaMedium3hit->SetMarkerColor(3);
+hPassTauEtaMedium3hit->SetMarkerStyle(21);
+hPassTauEtaMedium3hit->SetLineColor(3);
+hPassTauEtaMedium3hit->SetLineStyle(21);
+hPassTauEtaMedium3hit->SetLineWidth(2);
+hPassTauEtaMedium3hit->Draw("same");
+
+hPassTauEtaTight3hit->SetMarkerColor(6);
+hPassTauEtaTight3hit->SetMarkerStyle(22);
+hPassTauEtaTight3hit->SetLineColor(6);
+hPassTauEtaTight3hit->SetLineStyle(22);
+hPassTauEtaTight3hit->SetLineWidth(2);
+hPassTauEtaTight3hit->Draw("same");*/
  /*
 TCanvas *myCanvas8hit=new TCanvas();
 hPassTauPtLoose->SetMarkerColor(4);
