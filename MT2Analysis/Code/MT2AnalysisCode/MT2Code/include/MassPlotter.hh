@@ -67,6 +67,62 @@ public:
 };
 typedef std::vector<Objectproperties> VOP;
 
+class ExtendedObjectProperty : public TObject {
+public:
+  ExtendedObjectProperty( TString type, TString name, TString branchName , int nbins, double min, double max) :
+    Type(type),
+    Name(name),
+    BName(branchName),
+    nBins(nbins),
+    Min(min),
+    Max(max),
+    theH( name , name , nbins, min, max)
+  {
+  }; 
+
+  void SetBranchAddress( TTree* tree ){
+    if(Type == "I")
+      tree->SetBranchAddress( BName , &iVal , &theBranch );
+    else if(Type == "F")
+      tree->SetBranchAddress( BName , &fVal , &theBranch );
+    else if(Type == "D")
+      tree->SetBranchAddress( BName , &dVal , &theBranch );
+
+    else
+      cout << Type << " is not implemented yet (file:" <<  __FILE__ << ":" << __LINE__ << ")" << endl;
+  };
+
+  void Fill(double w = 1.0){
+    if(Type == "I")
+      theH.Fill( iVal , w);
+    else if(Type == "F")
+      theH.Fill( fVal , w);
+    else if(Type == "D")
+      theH.Fill( dVal , w);
+
+    else
+      cout << Type << " is not implemented yet(file:" <<  __FILE__ << ":" << __LINE__ << ")" << endl;
+    
+  }
+
+  int iVal;
+  double dVal;
+  float fVal;
+
+  TBranch* theBranch;
+
+  TString Type;
+  TString Name;
+  TString BName;
+  int nBins;
+  double Min;
+  double Max;
+
+  TH1D theH;
+
+};
+typedef std::vector<ExtendedObjectProperty*> VEOP;
+
 class MassPlotter  {
 
 public:
@@ -251,6 +307,7 @@ public:
   void muTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfilename);
   void DrawMyPlots(TString myfileName, double *xbin, int NumberOfBins);
 
+  void eleTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfilename , TList props);
 
   void setFlags(int flag); //To determine which analysis we look at HighHT/LowHT MT2(b) options are:
   // 5  :: LowHT  MT2  

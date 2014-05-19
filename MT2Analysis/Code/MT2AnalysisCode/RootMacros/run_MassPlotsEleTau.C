@@ -21,7 +21,7 @@
 
   tA->SetSave(false);
   tA->setVerbose(verbose);
-  tA->init(samples);
+  // tA->init(samples);
   tA->SetIsPhoton(false);
 
   /*
@@ -66,11 +66,13 @@
   //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu1QCDInd != -1"));
 
   std::string invmass = std::string(std::string(myChan) + ".lv.M()");
-  myChannelCuts.push_back(std::string( invmass +  " > 12." ) );
+  myChannelCuts.push_back(std::string( invmass +  " > 15." ) );
+  myChannelCuts.push_back("(" + invmass +" < 45.0 || " + invmass  + " > 75)");
+  myChannelCuts.push_back("misc.MET > 50"); 
+  myChannelCuts.push_back("NBJets40CSVM == 0");
+
 
   myChannelCuts.push_back("0 == 0");	//Place holder for Jet requirements
-  //myChannelCuts.push_back("misc.MET > 30"); //Place holder for MET requirements
-  //myChannelCuts.push_back("NBJets40CSVT > 1");
 
 
   // We need to make the cut stream
@@ -102,7 +104,8 @@
     /* channel independent multi-vars*/ false ,
     /*         pile up information   */ false ,
     /*         cut flow table        */ false ,
-    /*         selected plots        */ true
+    /*         selected plots        */ false  ,
+    /*         run eleTauAnalysis    */ true  
   };
     
   /*
@@ -253,6 +256,18 @@
     tA->MakeCutFlowTable( myChannelCuts );
 
 
+  }
+
+  if(WhatToDo[6]){
+
+    TList allProps;
+
+    ExtendedObjectProperty* eleTauMT2 = new ExtendedObjectProperty("F" , "EleTauMT2" , "eleTau.MT2" , 100 , 0 , 200 );
+    allProps.Add( eleTauMT2 );
+
+    tA->eleTauAnalysis(cuts, trigger, 100, "EleTau_Signal_METBJetsCuts" , allProps);
+    //    tA->DrawMyPlots("EleTau_Signal_METBJetsCuts_Histos.root");
+    //    tA->DrawMyPlots("EleTau_Signal_Histos.root");
   }
 
 }
