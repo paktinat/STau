@@ -1,6 +1,6 @@
 {
   TString outputdir = "../MassPlots/";
-  TString samples = "./samples/samplesMineTauPlusX.dat"; 
+  TString samples = "./samples/samplesMineSmallTest.dat";
 
   int verbose =3;
 
@@ -21,7 +21,7 @@
 
   tA->SetSave(false);
   tA->setVerbose(verbose);
-  // tA->init(samples);
+  tA->init(samples);
   tA->SetIsPhoton(false);
 
   /*
@@ -262,10 +262,10 @@
 
     TList allProps;
 
-    ExtendedObjectProperty* eleTauMT2 = new ExtendedObjectProperty("F" , "EleTauMT2" , "eleTau.MT2" , 100 , 0 , 200 );
+    ExtendedObjectProperty* eleTauMT2 = new ExtendedObjectProperty( "ElePt" , "ele[eleTau[0].ele0Ind].lv.Pt()" , 100 , 0 , 200 );
     allProps.Add( eleTauMT2 );
 
-    tA->eleTauAnalysis(cuts, trigger, 100, "EleTau_Signal_METBJetsCuts" , allProps);
+    tA->eleTauAnalysis(cuts, trigger, 100, "EleTau_Signal_METBJetsCuts" , &allProps);
     //    tA->DrawMyPlots("EleTau_Signal_METBJetsCuts_Histos.root");
     //    tA->DrawMyPlots("EleTau_Signal_Histos.root");
   }

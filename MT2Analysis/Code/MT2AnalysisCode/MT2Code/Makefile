@@ -55,7 +55,7 @@ all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared
  shared: $(SHARED)
  $(SHARED): $(OBJS)
 	@echo "Creating library $(SHARED)"
-	$(LD) $(LDFLAGS) $(SOFLAGS) $(OBJS) -o $(SHARED)
+	$(LD) $(LDFLAGS) $(GLIBS) $(SOFLAGS) $(OBJS) -o $(SHARED)
 	@echo "$(SHARED) successfully compiled!"
 
 #	mv shlib/libDiLeptonAnalysis.so /scratch/$$USERNAME/RunMT2Analyzer

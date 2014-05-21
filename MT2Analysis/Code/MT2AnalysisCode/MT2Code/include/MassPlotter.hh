@@ -12,6 +12,7 @@
 #include "THStack.h"
 #include "TTree.h"
 #include "TH2.h"
+#include "TTreeFormula.h"
 #include <map>
 
 static const int gNMT2bins                   = 19;
@@ -69,57 +70,119 @@ typedef std::vector<Objectproperties> VOP;
 
 class ExtendedObjectProperty : public TObject {
 public:
-  ExtendedObjectProperty( TString type, TString name, TString branchName , int nbins, double min, double max) :
-    Type(type),
+  ExtendedObjectProperty( TString name, TString formula , int nbins, double min, double max) :
     Name(name),
-    BName(branchName),
+    Formula(formula),
     nBins(nbins),
     Min(min),
     Max(max),
-    theH( name , name , nbins, min, max)
+    tFormula(0),
+    NumberOfHistos(7)
   {
+
+    TH1::SetDefaultSumw2();
+   
+
+    TString  cnames[] = {"QCD", "Wjets", "Zjets", "Top", "MC", "susy","data"};
+    int      ccolor[] = {  401,     417,     419,   600,  500,      1,   632};
+    TString varname = Name;
+    for (int i=0; i<NumberOfHistos ; i++){
+
+      histoNames.push_back( cnames[i] );
+
+      TH1* theH = allHistos[ cnames[i] ] = new TH1D(varname+"_"+cnames[i], "", nBins, Min, Max);
+      theH -> SetFillColor  (ccolor[i]);
+      theH -> SetLineColor  (ccolor[i]);
+      theH -> SetLineWidth  (2);
+      theH -> SetMarkerColor(ccolor[i]);
+      theH -> SetStats(false);
+
+      if(i == 6){
+	theH -> SetMarkerStyle(20);
+	theH -> SetMarkerColor(kBlack);
+	theH -> SetLineColor(kBlack);
+      }
+      if( i == 4){
+	theH -> SetFillStyle(3004);
+	theH -> SetFillColor(kBlack);
+      }
+    }
+
   }; 
 
-  void SetBranchAddress( TTree* tree ){
-    if(Type == "I")
-      tree->SetBranchAddress( BName , &iVal , &theBranch );
-    else if(Type == "F")
-      tree->SetBranchAddress( BName , &fVal , &theBranch );
-    else if(Type == "D")
-      tree->SetBranchAddress( BName , &dVal , &theBranch );
+  void SetTree( TTree* tree ){
+    
+    if(tFormula == 0){
+      tFormula = new TTreeFormula( Name.Data() , Formula.Data() , tree );
+    }
+    else{
+      tFormula->SetTree( tree );
+      tFormula->UpdateFormulaLeaves(); 
+    }
 
-    else
-      cout << Type << " is not implemented yet (file:" <<  __FILE__ << ":" << __LINE__ << ")" << endl;
   };
 
-  void Fill(double w = 1.0){
-    if(Type == "I")
-      theH.Fill( iVal , w);
-    else if(Type == "F")
-      theH.Fill( fVal , w);
-    else if(Type == "D")
-      theH.Fill( dVal , w);
-
-    else
-      cout << Type << " is not implemented yet(file:" <<  __FILE__ << ":" << __LINE__ << ")" << endl;
+  void Fill(TString sample, double w = 1.0){
     
+    dVal = tFormula->EvalInstance(0);
+
+    TH1* theH = allHistos[ sample ] ;
+
+    theH->Fill( dVal , w);
+
   }
 
-  int iVal;
+
+  void AddOverAndUnderFlow(TH1 * Histo, bool overflow, bool underflow){
+    // Add underflow & overflow bins
+    // This failed for older ROOT version when the first(last) bin is empty
+    // and there are underflow (overflow) events --- must check whether this 
+    // is still the case
+    if(underflow){
+      Histo->SetBinContent(1, Histo->GetBinContent(0) + Histo->GetBinContent(1));
+      Histo->SetBinError(1, sqrt(Histo->GetBinError(0)*Histo->GetBinError(0)+
+			      Histo->GetBinError(1)*Histo->GetBinError(1) ));
+      Histo->SetBinContent(0, 0.0);
+    } if(overflow){
+      Histo->SetBinContent(Histo->GetNbinsX(),
+			   Histo->GetBinContent(Histo->GetNbinsX()  )+ 
+			   Histo->GetBinContent(Histo->GetNbinsX()+1) );
+      Histo->SetBinError(Histo->GetNbinsX(),
+			 sqrt(Histo->GetBinError(Histo->GetNbinsX()  )*
+			      Histo->GetBinError(Histo->GetNbinsX()  )+
+			      Histo->GetBinError(Histo->GetNbinsX()+1)*
+			      Histo->GetBinError(Histo->GetNbinsX()+1)  ));
+      Histo->SetBinContent(Histo->GetNbinsX() + 1, 0.0);
+    }
+  };
+
+
+  void Write( TDirectory* dir ){
+    dir->mkdir(  Name  );
+
+    for(int j = 0; j < (NumberOfHistos); j++){
+      TH1* theH = allHistos[ histoNames[j] ];
+      AddOverAndUnderFlow(theH, true, true);
+    }
+
+    
+  };
+
   double dVal;
-  float fVal;
 
-  TBranch* theBranch;
-
-  TString Type;
   TString Name;
-  TString BName;
+  TString Formula;
+
+  TTreeFormula* tFormula;
+
   int nBins;
+
   double Min;
   double Max;
 
-  TH1D theH;
-
+  int NumberOfHistos;
+  std::vector<TString> histoNames;
+  std::map<TString , TH1*> allHistos;
 };
 typedef std::vector<ExtendedObjectProperty*> VEOP;
 
@@ -307,7 +370,7 @@ public:
   void muTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfilename);
   void DrawMyPlots(TString myfileName, double *xbin, int NumberOfBins);
 
-  void eleTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfilename , TList props);
+  void eleTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfilename , TList* props);
 
   void setFlags(int flag); //To determine which analysis we look at HighHT/LowHT MT2(b) options are:
   // 5  :: LowHT  MT2  

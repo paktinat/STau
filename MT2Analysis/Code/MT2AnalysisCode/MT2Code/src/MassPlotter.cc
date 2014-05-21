@@ -2,6 +2,7 @@
 *   Small Class to make plots for MassAnalysis                               *
 *****************************************************************************/
 
+#include "TList.h"
 #include "MassPlotter.hh"
 
 #include "TLorentzVector.h"
@@ -8338,7 +8339,7 @@ void MassPlotter::DrawMyPlots(TString myfileName, double *xbin, int NumberOfBins
 }
 
 
-void MassPlotter::eleTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfileName , TList allProps){
+void MassPlotter::eleTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfileName , TList* allProps){
 
   TH1::SetDefaultSumw2();
 
@@ -8381,9 +8382,9 @@ void MassPlotter::eleTauAnalysis(TString cuts, TString trigger, Long64_t nevents
 
      
     fMT2tree = new MT2tree();
-    Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
+    //Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
 
-    ((ExtendedObjectProperty*)allProps.At(0))->SetBranchAddress( Sample.tree );
+    ((ExtendedObjectProperty*)(allProps->At(0)))->SetTree( Sample.tree );
 
     float Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
 
@@ -8427,12 +8428,12 @@ void MassPlotter::eleTauAnalysis(TString cuts, TString trigger, Long64_t nevents
 
 	int eleIndex = fMT2tree->eleTau[0].GetEleIndex0();
 
-	float eleIdSF = fMT2tree->ele[eleIndex].GetIDSFeleTau();
-	float eleIsoSF = fMT2tree->ele[eleIndex].GetIsoSFeleTau();
-	float eleTrgSF = fMT2tree->ele[eleIndex].GetTrgSFeleTau();
-	float tauTrgSF = fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].GetTauTrgSFeleTau();
+// 	float eleIdSF = fMT2tree->ele[eleIndex].GetIDSFeleTau();
+// 	float eleIsoSF = fMT2tree->ele[eleIndex].GetIsoSFeleTau();
+// 	float eleTrgSF = fMT2tree->ele[eleIndex].GetTrgSFeleTau();
+// 	float tauTrgSF = fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].GetTauTrgSFeleTau();
 
-	weight = Weight * eleIdSF * eleIsoSF * eleTrgSF * tauTrgSF;
+//	weight = Weight * eleIdSF * eleIsoSF * eleTrgSF * tauTrgSF;
 
 	if(Sample.type != "susy")
 	  weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq0/Sample.PU_avg_weight);
@@ -8448,7 +8449,7 @@ void MassPlotter::eleTauAnalysis(TString cuts, TString trigger, Long64_t nevents
     }else{
 
 
-      ((ExtendedObjectProperty*)allProps.At(0))->Fill( weight );
+      ((ExtendedObjectProperty*)(allProps->At(0)))->Fill( weight );
 
       if(Sample.sname == "SUSY")
 	MT2[5]->Fill(myQuantity, weight);
@@ -8511,7 +8512,7 @@ void MassPlotter::eleTauAnalysis(TString cuts, TString trigger, Long64_t nevents
   MT2[5]->Write();
   MT2[6]->Write();
 
-  ((ExtendedObjectProperty*)allProps.At(0))->theH.Write();
+  //((ExtendedObjectProperty*)(allProps->At(0)))->theH.Write();
 
   Legend1->Write();
   savefile->Close();
