@@ -369,6 +369,7 @@ public:
   void SpecialMakePlot(int nevents, TString cuts, TString trigger);
   void muTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfilename);
   void DrawMyPlots(TString myfileName, double *xbin, int NumberOfBins);
+  void EleEleAnalysis(TString, TString, Long64_t, TString);
 
   void eleTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfilename , TList* props);
 
