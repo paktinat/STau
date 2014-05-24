@@ -660,9 +660,15 @@ bool MT2Analysis::FillMT2TreeBasics(){
 	  fMT2tree->GenWeight = fTR->GenWeight;
 	}
 	if(isScan){
-	  fMT2tree->Susy.MassGlu = fTR->MassGlu;
-	  fMT2tree->Susy.MassChi= fTR->MassChi;
-	  fMT2tree->Susy.MassLSP= fTR->MassLSP;
+// 	  fMT2tree->Susy.MassGlu = fTR->MassGlu;
+// 	  fMT2tree->Susy.MassChi= fTR->MassChi;
+// 	  fMT2tree->Susy.MassLSP= fTR->MassLSP;
+//Saeid To recover the conflict in the naming of TChipChimSTauSnu_50_100_280
+	  fMT2tree->Susy.MassGlu = fTR->MassLSP; //SMother of the particles
+	  fMT2tree->Susy.MassChi= fTR->MassGlu + fTR->MassChi * (fTR->MassLSP - fTR->MassGlu)/100.0;//Stau or Sneutrino Tau Mass
+	  fMT2tree->Susy.MassLSP= fTR->MassGlu;  //LSP
+//Saeid
+
 	  fMT2tree->Susy.M0= fTR->M0;
 	  fMT2tree->Susy.M12= fTR->M12;
 	  fMT2tree->Susy.A0= fTR->A0;
@@ -671,21 +677,7 @@ bool MT2Analysis::FillMT2TreeBasics(){
 	}
 
 	// Pile UP info and reco vertices -------------------------------------------------------
-	if(!fisData){
-		fMT2tree->pileUp.PUnumInt          = fTR->PUnumInteractions;        
-		fMT2tree->pileUp.PUtrueNumInt      = fTR->PUnumTrueInteractions;
-		fMT2tree->pileUp.PUnumIntLate      = fTR->PUOOTnumInteractionsLate;   // branch added in V02-03-01 
-		fMT2tree->pileUp.PUnumIntEarly     = fTR->PUOOTnumInteractionsEarly;  // branch added in V02-03-01 
-		fMT2tree->pileUp.PtHat             = fTR->PtHat;
-		fMT2tree->pileUp.PUScenario        = (int) fPUScenario;
 
-		if       (fPUScenario==noPU  )  {fMT2tree->pileUp.Weight            = 1;}
-		else if  (fPUScenario==MC2012)  {fMT2tree->pileUp.Weight            = GetPUWeight(fTR->PUnumTrueInteractions);}
-		if(fVerbose > 3) {
-			cout << "fPUScenario " << fPUScenario <<  " fTR->PUnumInteractions " <<  fTR->PUnumInteractions << " weight "  
-		     	     << " fMT2tree->pileUp.Weight "         << fMT2tree->pileUp.Weight << endl; 
-		}
-	}
 	fMT2tree->pileUp.Rho               = fTR->Rho; // ATTENTION: this rho is from KT6 PF jets without pf-CHS
 	int nvertex=0;
 	for(int i=0; i<fTR->NVrtx; ++i){
@@ -695,6 +687,24 @@ bool MT2Analysis::FillMT2TreeBasics(){
 		nvertex++;
 	}
 	fMT2tree->pileUp.NVertices=nvertex;
+
+
+	if(!fisData){
+                fMT2tree->pileUp.PUnumInt          = fTR->PUnumInteractions;        
+		fMT2tree->pileUp.PUtrueNumInt      = isScan? nvertex : fTR->PUnumTrueInteractions;
+		fMT2tree->pileUp.PUnumIntLate      = fTR->PUOOTnumInteractionsLate;   // branch added in V02-03-01 
+		fMT2tree->pileUp.PUnumIntEarly     = fTR->PUOOTnumInteractionsEarly;  // branch added in V02-03-01 
+		fMT2tree->pileUp.PtHat             = fTR->PtHat;
+		fMT2tree->pileUp.PUScenario        = (int) fPUScenario;
+
+		if       (fPUScenario==noPU  )  {fMT2tree->pileUp.Weight            = 1;}
+// 		else if  (fPUScenario==MC2012)  {fMT2tree->pileUp.Weight            = GetPUWeight(fTR->PUnumTrueInteractions);}
+		else if  (fPUScenario==MC2012)  {fMT2tree->pileUp.Weight            = GetPUWeight(fMT2tree->pileUp.PUtrueNumInt);}
+		if(fVerbose > 3) {
+			cout << "fPUScenario " << fPUScenario <<  " fMT2tree->pileUp.PUtrueNumInt " <<  fMT2tree->pileUp.PUtrueNumInt << " weight "  
+		     	     << " fMT2tree->pileUp.Weight "         << fMT2tree->pileUp.Weight << endl; 
+		}
+	}
 
 	// _________
 

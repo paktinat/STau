@@ -212,14 +212,14 @@
 
 //void MassPlotter::plotSig(TString var, TString cuts, TString xtitle, int nbins, double min, double max, bool flip_order, int type ){
   //tA->plotSig("muo[muTau[0].mu0Ind].MT", cuts,  "muo[muTau[0].mu0Ind].MT", 60, 0, 300, 0, 0, 1);
-  tA->muTauAnalysis(cuts, trigger, 10000000000, "MT2_NBCVM_NonIsoMuSS_LoosenIso196");
+  //tA->muTauAnalysis(cuts, trigger, 10000000000, "MT2_NBCVM_NonIsoMuSS_LoosenIso196");
   int NumberOfBins = 17;
   //double * xbin;
   
   double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};      //MT2
   //double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
 
-  //tA->DrawMyPlots("MT2_NBCVM_NonIsoMuOS_LoosenIso_Histos.root", xbin, NumberOfBins);
+  tA->DrawMyPlots("MT2_NBCVM_NonIsoMuSS_LoosenIso196_Histos.root", xbin, NumberOfBins);
 
   /*
 * Show cutflow table

@@ -61,7 +61,7 @@ void MT2Analyzer::Loop(){
 			fMT2Analysis        ->Analyze();
 			double PUWeight = 0;
 			//PU mean weight
-			if (fPu=="MC2012"){
+			if (fPu=="MC2012" && !isScan){
 			  	PUWeight  = fMT2Analysis->GetPUWeight(fTR->PUnumTrueInteractions);
 			} else {
 			  	PUWeight  = 1;
@@ -72,7 +72,10 @@ void MT2Analyzer::Loop(){
 
 			if(isScan){
 			  fMT2Analysis->fH2_mSugraEvents->Fill(fTR->M0, fTR->M12);
-			  fMT2Analysis->fH2_SMSEvents->Fill(fTR->MassGlu, fTR->MassLSP);
+// 			  fMT2Analysis->fH2_SMSEvents->Fill(fTR->MassGlu, fTR->MassLSP);
+//Saeid To recover the conflict in the naming of TChipChimSTauSnu_50_100_280
+			  fMT2Analysis->fH2_SMSEvents->Fill(fTR->MassLSP, fTR->MassGlu);
+//Saeid
 			  if(fTR->process>0) fMT2Analysis->fH_mSugraSubProcEvents[fTR->process]->Fill(fTR->M0, fTR->M12);
 			}
 
