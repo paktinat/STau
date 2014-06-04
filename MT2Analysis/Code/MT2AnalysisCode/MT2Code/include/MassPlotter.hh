@@ -369,10 +369,10 @@ public:
   void SpecialMakePlot(int nevents, TString cuts, TString trigger);
   void muTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfilename);
   void DrawMyPlots(TString myfileName, double *xbin, int NumberOfBins);
-  void EleEleAnalysis(TString, TString, Long64_t, TString);
-
+  void EleEleAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfileName);
+  
   void eleTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfilename , TList* props);
-
+  void elemuAnalysis(TString cuts,  TString trigger, Long64_t nevents, TString myfileName );
   void setFlags(int flag); //To determine which analysis we look at HighHT/LowHT MT2(b) options are:
   // 5  :: LowHT  MT2  
   // 7  :: HighHT MT2 
