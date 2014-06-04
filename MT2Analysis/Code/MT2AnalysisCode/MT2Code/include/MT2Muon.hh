@@ -105,7 +105,7 @@ public:
       }
  
   Float_t GetMuTrgSFelemu(){
-    Float_t eta = this->lv.Eta();
+    Float_t eta = fabs(this->lv.Eta());
     Float_t pt = this->lv.Pt();
     if (10.0 < pt <= 15.0){
      if(0 <= eta < 0.8)
