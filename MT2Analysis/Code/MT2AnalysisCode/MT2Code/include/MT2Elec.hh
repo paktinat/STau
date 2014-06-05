@@ -278,52 +278,52 @@ return ele17[i]*ele8[j]+ele17[j]*ele8[i]-ele17[i]*ele8[i];
     Float_t eta = fabs(this->lv.Eta());
     Float_t pt = this->lv.Pt();
 
-   if (10.0 < pt <= 15.0){
-       if(0 <= eta < 0.8)
+   if (10.0 < pt && pt <= 15.0){
+       if(0 <= eta  && eta < 0.8)
        return 0.7654; 
-       if (0.8 <= eta < 1.5)
+       if (0.8 <= eta && eta < 1.5)
        return 0.7693;
-      if (1.5 <= eta < 2.3)
+      if (1.5 <= eta && eta  < 2.3)
        return 0.5719 ;
      }
-    if (15.0 < pt <= 20.0){
-       if(0 <= eta < 0.8)
+    if (15.0 < pt && pt <= 20.0){
+       if(0 <= eta  && eta < 0.8)
        return 0.8394; 
-       if (0.8 <= eta < 1.5)
+       if (0.8 <= eta  && eta < 1.5)
        return 0.8457;
-      if (1.5 <= eta < 2.3)
+      if (1.5 <= eta  && eta < 2.3)
        return 0.7024;
      }
-   if (20.0 < pt <= 25.0){
-       if(0 <= eta < 0.8)
+   if (20.0 < pt  && pt<= 25.0){
+       if(0 <= eta  && eta < 0.8)
        return 0.8772; 
-       if (0.8 <= eta < 1.5)
+       if (0.8 <= eta   && eta< 1.5)
        return 0.8530;
-      if (1.5 <= eta < 2.3)
+      if (1.5 <= eta && eta < 2.3)
        return 0.7631;
      }
-    if (25.0 < pt <= 30.0){
-       if(0 <= eta < 0.8)
+    if (25.0 < pt && pt <= 30.0){
+       if(0 <= eta  && eta < 0.8)
        return 0.9006; 
-       if (0.8 <= eta < 1.5)
+       if (0.8 <= eta && eta < 1.5)
        return 0.8874;
-      if (1.5 <= eta < 2.3)
+      if (1.5 <= eta && eta < 2.3)
        return 0.8092;
      }
-       if (30.0 < pt <= 35.0){
-       if(0 <= eta < 0.8)
+       if (30.0 < pt  && pt <= 35.0){
+       if(0 <= eta  && eta < 0.8)
        return 0.9261; 
-       if (0.8 <= eta < 1.5)
+       if (0.8 <= eta && eta < 1.5)
        return 0.9199;
-      if (1.5 <= eta < 2.3)
+      if (1.5 <= eta  && eta < 2.3)
        return 0.8469;
      }
-       if (35.0 < pt){
-       if(0 <= eta < 0.8)
+       if (35.0 < pt ){
+       if(0 <= eta  && eta < 0.8)
        return 0.9514; 
-       if (0.8 <= eta < 1.5)
+       if (0.8 <= eta && eta < 1.5)
        return 0.9445;
-      if (1.5 <= eta < 2.3)
+      if (1.5 <= eta  && eta < 2.3)
        return 0.9078;
      }
       }  
@@ -331,60 +331,60 @@ return ele17[i]*ele8[j]+ele17[j]*ele8[i]-ele17[i]*ele8[i];
  Float_t GetEleTrgSFelemu(){
     Float_t eta = fabs(this->lv.Eta());
     Float_t pt = this->lv.Pt();
-    if (10.0 < pt <= 15.0){ 
-     if(0 <= eta < 0.8)
+    if (10.0 < pt && pt <= 15.0){ 
+     if(0 <= eta  && eta < 0.8)
        return  0.7270; 
-       if (0.8 <= eta < 1.5)
+       if (0.8 <= eta && eta < 1.5)
        return 0.7380 ;
-      if (1.5 <= eta<2.3)
+      if (1.5 <= eta && eta <2.3)
         return 0.6899  ;
      
        }
 
-   if (15.0 < pt <= 20.0){
-     if(0 <= eta < 0.8)
+   if (15.0 < pt && pt <= 20.0){
+     if(0 <= eta  && eta < 0.8)
        return 0.8752 ;
-       if (0.8 <= eta < 1.5)
+       if (0.8 <= eta && eta < 1.5)
        return 0.9059;
-      if (1.5 <= eta<2.3)
+      if (1.5 <= eta && eta <2.3)
        return   0.8635  ;
       
        }
    
-   if (20.0 < pt <= 25.0){
-     if(0 <= eta < 0.8)
+   if (20.0 < pt && pt <= 25.0){
+     if(0 <= eta  && eta < 0.8)
        return  0.9142 ;	
-       if (0.8 <= eta < 1.5)
+       if (0.8 <= eta && eta < 1.5)
        return 0.9484 ;
-      if (1.5 <= eta<2.3)
+      if (1.5 <= eta && eta <2.3)
        return 0.9356 ;
       
        }
 
-   if (25.0 < pt <= 30.0){
-     if(0 <= eta < 0.8)
+   if (25.0 < pt && pt <= 30.0){
+     if(0 <= eta && eta < 0.8)
        return 0.9368 ; 
-       if (0.8 <= eta < 1.5)
+       if (0.8 <= eta && eta < 1.5)
        return 0.9630;
-      if (1.5 <= eta< 2.3)
+      if (1.5 <= eta && eta < 2.3)
        return 0.9466;
       
        }
-   if ( 30 <pt <= 35.0){
-     if(0 <= eta < 0.8)
+   if ( 30 <pt && pt <= 35.0){
+     if(0 <= eta && eta < 0.8)
        return  0.9499 ;
-       if (0.8 <= eta < 1.5)
+       if (0.8 <= eta && eta  < 1.5)
        return 0.9642 ;
-      if (1.5 <= eta  < 2.3)
+      if (1.5 <= eta   && eta < 2.3)
       return 0.9735 ;
       
        }
      if ( 35.0 <pt ){
-     if(0 <= eta < 0.8)
+     if(0 <= eta  && eta < 0.8)
        return 0.9689 ;
-       if (0.8 <= eta < 1.5)
+       if (0.8 <= eta && eta  < 1.5)
        return 0.9809;
-      if (1.5 <= eta  < 2.3)
+      if (1.5 <= eta && eta < 2.3)
       return 0.9802;
    
        }

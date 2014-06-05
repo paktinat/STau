@@ -42,64 +42,64 @@ public:
     Float_t eta = fabs(this->lv.Eta());
     Float_t pt = this->lv.Pt();
 
-   if (10.0 < pt <= 15.0){
-       if(0 <= eta < 0.8)
+   if (10.0 < pt  && pt <= 15.0){
+       if(0 <= eta && eta < 0.8)
        return  0.9771 ;
-       if (0.8 <= eta < 1.2)
+       if (0.8 <= eta  && eta < 1.2)
        return 0.9746;
-      if (1.2 <= eta < 1.6)
+      if (1.2 <= eta && eta  < 1.6)
        return 0.9644;
-      if (1.6 <= eta < 2.1)
+      if (1.6 <= eta && eta  < 2.1)
        return 0.9891 ;}
   
-   if   (15.0 < pt <= 20.0){
-       if(0 <= eta < 0.8)
+   if   (15.0 < pt  && pt <= 20.0){
+       if(0 <= eta && eta  < 0.8)
        return 0.9548; 
-       if (0.8 <= eta < 1.2)
+       if (0.8 <= eta  && eta < 1.2)
        return 0.9701 ;
-      if (1.2 <= eta < 1.6)
+      if (1.2 <= eta  && eta < 1.6)
        return 0.9766; 
-      if (1.6 <= eta < 2.1)
+      if (1.6 <= eta  && eta < 2.1)
        return 0.9892 ;}
 
-   if   (20.0 < pt <= 25.0){
-       if(0 <= eta < 0.8)
+   if   (20.0 < pt && pt <= 25.0){
+       if(0 <= eta && eta  < 0.8)
        return  0.9648;
-       if (0.8 <= eta < 1.2)
+       if (0.8 <= eta && eta  < 1.2)
        return  0.9836;
-      if (1.2 <= eta < 1.6)
+      if (1.2 <= eta  && eta < 1.6)
        return 0.9820;
-      if (1.6 <= eta < 2.1)
+      if (1.6 <= eta  && eta < 2.1)
        return 	0.9909 ;}
 
-   if   (25.0 < pt <= 30.0){
-       if(0 <= eta < 0.8)
+   if   (25.0 < pt && pt <= 30.0){
+       if(0 <= eta  && eta < 0.8)
        return 0.9676 ; 
-       if (0.8 <= eta < 1.2)
+       if (0.8 <= eta  && eta < 1.2)
        return 0.9817;
-      if (1.2 <= eta < 1.6)
+      if (1.2 <= eta && eta  < 1.6)
        return 0.9886;
-      if (1.6 <= eta < 2.1)
+      if (1.6 <= eta  && eta < 2.1)
        return 0.9883 ;}
 
-   if   (30.0 < pt <= 35.0){
-       if(0 <= eta < 0.8)
+   if   (30.0 < pt && pt  <= 35.0){
+       if(0 <= eta && eta  < 0.8)
        return  0.9730 ; 
-       if (0.8 <= eta < 1.2)
+       if (0.8 <= eta && eta < 1.2)
        return 0.9833; 
-      if (1.2 <= eta < 1.6)
+      if (1.2 <= eta  && eta < 1.6)
        return 0.9910;
-      if (1.6 <= eta < 2.1)
+      if (1.6 <= eta && eta  < 2.1)
        return 0.9900;
 }
   if   (35.0 < pt){
-       if(0 <= eta < 0.8)
+       if(0 <= eta  && eta< 0.8)
        return 0.9826;
-       if (0.8 <= eta < 1.2)
+       if (0.8 <= eta && eta < 1.2)
        return 0.9841 ;
-      if (1.2 <= eta < 1.6)
+      if (1.2 <= eta && eta < 1.6)
        return 0.9900;
-      if (1.6 <= eta < 2.1)
+      if (1.6 <= eta  && eta< 2.1)
        return  	0.9886;}
 
       }
@@ -107,68 +107,68 @@ public:
   Float_t GetMuTrgSFelemu(){
     Float_t eta = fabs(this->lv.Eta());
     Float_t pt = this->lv.Pt();
-    if (10.0 < pt <= 15.0){
-     if(0 <= eta < 0.8)
+    if (10.0 < pt   && pt<= 15.0){
+     if(0 <= eta  && eta < 0.8)
        return  0.9701 ;
-       if (0.8 <= eta < 1.2)
+       if (0.8 <= eta && eta < 1.2)
        return 0.9419 ;
-      if (1.2 <= eta<1.6)
+      if (1.2 <= eta && eta  <1.6)
         return 0.9303;
-      if (1.6 <= eta < 2.1)
+      if (1.6 <= eta && eta < 2.1)
        return 0.8623;
        }
 
-   if (15.0 < pt <= 20.0){
-     if(0 <= eta < 0.8)
+   if (15.0 < pt && pt<= 20.0){
+     if(0 <= eta && eta< 0.8)
        return 0.9720 ; 
-       if (0.8 <= eta < 1.2)
+       if (0.8 <= eta && eta  < 1.2)
        return 0.9305;
-      if (1.2 <= eta<1.6)
+      if (1.2 <= eta && eta <1.6)
        return   0.9267 ;
-      if (1.6 <= eta < 2.1)
+      if (1.6 <= eta && eta  < 2.1)
        return 0.8995 ;
        }
 
    
-   if (20.0 < pt <= 25.0){
-     if(0 <= eta < 0.8)
+   if (20.0 < pt && pt  <= 25.0){
+     if(0 <= eta  && eta < 0.8)
        return 0.9764; 
-       if (0.8 <= eta < 1.2)
+       if (0.8 <= eta && eta < 1.2)
        return 0.9439;
-      if (1.2 <= eta<1.6)
+      if (1.2 <= eta && eta <1.6)
        return 0.9366;
-      if (1.6 <= eta < 2.1)
+      if (1.6 <= eta && eta < 2.1)
        return 0.9134;
        }
 
-   if (25.0 < pt <= 30.0){
-     if(0 <= eta < 0.8)
+   if (25.0 < pt && pt <= 30.0){
+     if(0 <= eta  && eta < 0.8)
        return  0.9725 ;
-       if (0.8 <= eta < 1.2)
+       if (0.8 <= eta && eta < 1.2)
        return 0.9405;
-      if (1.2 <= eta< 1.6)
+      if (1.2 <= eta && eta < 1.6)
        return  	0.9218;
-      if (1.6 <= eta < 2.1)
+      if (1.6 <= eta  && eta < 2.1)
        return 0.8824;
        }
-   if ( 30 <pt <= 35.0){
-     if(0 <= eta < 0.8)
+   if ( 30 <pt && pt <= 35.0){
+     if(0 <= eta && eta  < 0.8)
        return  	0.9785 ; 
-       if (0.8 <= eta < 1.2)
+       if (0.8 <= eta && eta < 1.2)
        return 0.9342;
-      if (1.2 <= eta  < 1.6)
+      if (1.2 <= eta && eta < 1.6)
       return 0.9184;
-      if (1.6 <= eta < 2.1)
+      if (1.6 <= eta && eta < 2.1)
        return 0.8990;
        }
      if ( 35.0 <pt ){
-     if(0 <= eta < 0.8)
+     if(0 <= eta  && eta < 0.8)
        return 0.9679; 
-       if (0.8 <= eta < 1.2)
+       if (0.8 <= eta  && eta < 1.2)
        return 0.9310;
-      if (1.2 <= eta  < 1.6)
+      if (1.2 <= eta  && eta < 1.6)
       return  	0.9092;
-      if (1.6 <= eta < 2.1)
+      if (1.6 <= eta  && eta < 2.1)
        return 0.9016;
        }
 }/*Float_t GetMuTrgSFelemu(){
