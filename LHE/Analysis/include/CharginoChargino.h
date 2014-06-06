@@ -17,6 +17,8 @@ public:
 
   TLorentzVector CalcMET();
   double CalcMT2(float testmass=0);
+  double CalcMCT();
+
   int CalcDecayMode();
 
   float CharginoMass;

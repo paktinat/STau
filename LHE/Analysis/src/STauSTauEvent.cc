@@ -10,8 +10,25 @@ TLorentzVector STauSTauEvent::CalcMET()
   return tmp;
 }
 
-double STauSTauEvent::CalcMT2(){
-  float testmass = 0;
+double STauSTauEvent::CalcMCT(){
+  double ret = 0.0;
+
+
+  TLorentzVector visible1 = STauP.SMChild.p4;
+  TLorentzVector visible2 = STauM.SMChild.p4;
+  
+  double a = visible2.Et() + visible1.Et();
+  a = (a*a) ;
+
+  double b = ( visible1.Px() - visible2.Px() )*( visible1.Px() - visible2.Px() );
+  b += ( visible1.Py() - visible2.Py() )*( visible1.Py() - visible2.Py() );
+
+  ret = sqrt( a - b);
+
+  return ret;
+}
+
+double STauSTauEvent::CalcMT2(float testmass){
   bool massive = false;
   TLorentzVector visible1 = STauP.SMChild.p4;
   TLorentzVector visible2 = STauM.SMChild.p4;

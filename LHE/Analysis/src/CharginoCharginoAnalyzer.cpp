@@ -70,6 +70,7 @@ int main(int argc, char *argv[]){
 
   TH2D hmaxmt2_testmass0( "maxmt2_testmass0" , "testmass0" , 20 , 100 , 500 , 25 , 0 , 500 );
   TH2D hmaxmt2_testmasslsp( "maxmt2_testmasslsp" , "testmass_lsp" , 20 , 100 , 500 , 25 , 0 , 500 );
+  TH2D hmaxmct( "maxmct" , "MCT" , 20 , 100 , 500 , 25 , 0 , 500 );
 
   int decaymode = atoi( argv[3] );
 
@@ -107,6 +108,11 @@ int main(int argc, char *argv[]){
     double mt2_massive =  analyzer.theEvent->CalcMT2( analyzer.theEvent->LSPMass ) ;
     if( mt2_massive > value1)
       hmaxmt2_testmasslsp.SetBinContent( bin_id , mt2_massive);
+
+    value1 = hmaxmct.GetBinContent(  bin_id );
+    double mct =  analyzer.theEvent->CalcMCT() ;
+    if( mct > value1)
+      hmaxmct.SetBinContent( bin_id , mct);
   }
 
   
@@ -114,11 +120,20 @@ int main(int argc, char *argv[]){
   TFile* fout = new TFile(argv[2] , "RECREATE");
   fout->cd();
   met.Write();
-  met.hAll.Write();
+
+  diTauPt30.hPass.Write();
+
   diTauPt30.Write();
   diTauPt20.Write();
   mt2_100.Write();
   decayMode.Write();
+
+
+
+  hmaxmct.Write();
+  hmaxmt2_testmasslsp.Write();
+  hmaxmt2_testmass0.Write();
+  
   fout->Close();
 
   TCanvas c("Canvas");

@@ -12,7 +12,8 @@ public:
   SLepton STauM;
 
   TLorentzVector CalcMET();
-  double CalcMT2();
+  double CalcMT2(float lspmass=0);
+  double CalcMCT();
 
   float MET;
   float MT2;

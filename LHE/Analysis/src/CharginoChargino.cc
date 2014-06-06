@@ -21,6 +21,39 @@ TLorentzVector CharginoChargino::CalcMET(){
   MET = ret;
   return tmp;
 }
+
+double CharginoChargino::CalcMCT(){
+  double ret = 0.0;
+
+
+  TLorentzVector visible1;
+  if( CharginoN.DecaysToSTau() )
+    visible1 = CharginoN.SusyChild.SMChild.p4;
+  else
+    visible1 = CharginoN.SMChild.p4;
+
+
+  TLorentzVector visible2;
+  if( CharginoP.DecaysToSTau() )
+    visible2 = CharginoP.SusyChild.SMChild.p4;
+  else
+    visible2 = CharginoP.SMChild.p4;
+
+
+  //TLorentzVector MET = CalcMET();
+
+  
+  double a = visible2.Et() + visible1.Et();
+  a = (a*a) ;
+
+  double b = ( visible1.Px() - visible2.Px() )*( visible1.Px() - visible2.Px() );
+  b += ( visible1.Py() - visible2.Py() )*( visible1.Py() - visible2.Py() );
+
+  ret = sqrt( a - b);
+
+  return ret;
+}
+
 double CharginoChargino::CalcMT2(float testmass){
 
   bool massive = false;

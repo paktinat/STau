@@ -63,8 +63,12 @@ STauSTauAnalyzer::STauSTauAnalyzer(TString fileName){
 int main(int argc, char *argv[]){
   HistoManager met("MET40");
   HistoManager diTauPt20("diTauPt20");
-  HistoManager diTauPt30("diTauPt30");
+  HistoManager diTauPt30("diTauPt45");
   HistoManager mt2_100("mt2_100");
+
+  TH2D hmaxmt2_testmass0( "maxmt2_testmass0" , "testmass0" ,45 , 50 , 500 , 48 , 0 , 480);
+  TH2D hmaxmt2_testmasslsp( "maxmt2_testmasslsp" , "testmass_lsp" , 45 , 50 , 500 , 48 , 0 , 480);
+  TH2D hmaxmct( "maxmct" , "MCT" , 45 , 50 , 500 , 48 , 0 , 480);
 
   STauSTauAnalyzer analyzer( argv[1] );
   for(int i=0; i<analyzer.tree->GetEntries() ; i++){
@@ -73,17 +77,41 @@ int main(int argc, char *argv[]){
 
     met.Fill( analyzer.theEvent->MET > 40 , analyzer.theEvent->STauMass , analyzer.theEvent->LSPMass );
     diTauPt20.Fill( analyzer.theEvent->STauP.SMChild.p4.Pt() > 20 && analyzer.theEvent->STauM.SMChild.p4.Pt() > 20 , analyzer.theEvent->STauMass , analyzer.theEvent->LSPMass );
-    diTauPt30.Fill( analyzer.theEvent->STauP.SMChild.p4.Pt() > 30 && analyzer.theEvent->STauM.SMChild.p4.Pt() > 30 , analyzer.theEvent->STauMass , analyzer.theEvent->LSPMass );
+    diTauPt30.Fill( analyzer.theEvent->STauP.SMChild.p4.Pt() > 45 && analyzer.theEvent->STauM.SMChild.p4.Pt() > 45 , analyzer.theEvent->STauMass , analyzer.theEvent->LSPMass );
     mt2_100.Fill( analyzer.theEvent->MT2 > 100 , analyzer.theEvent->STauMass , analyzer.theEvent->LSPMass );
+
+    int bin_id = hmaxmt2_testmasslsp.FindBin( analyzer.theEvent->STauMass , analyzer.theEvent->LSPMass );
+    double value1 = hmaxmt2_testmass0.GetBinContent(  bin_id );
+    double mt2_mass0 = analyzer.theEvent->CalcMT2();
+    if( mt2_mass0 > value1 )
+      hmaxmt2_testmass0.SetBinContent( bin_id , mt2_mass0);
+
+    value1 = hmaxmt2_testmasslsp.GetBinContent(  bin_id );
+    double mt2_massive =  analyzer.theEvent->CalcMT2( analyzer.theEvent->LSPMass ) ;
+    if( mt2_massive > value1)
+      hmaxmt2_testmasslsp.SetBinContent( bin_id , mt2_massive);
+
+    value1 = hmaxmct.GetBinContent(  bin_id );
+    double mct =  analyzer.theEvent->CalcMCT() ;
+    if( mct > value1)
+      hmaxmct.SetBinContent( bin_id , mct);
   }
 
   TFile* fout = new TFile(argv[2] , "RECREATE");
   fout->cd();
   met.Write();
   met.hAll.Write();
+
+  diTauPt30.hPass.Write();
+
   diTauPt30.Write();
   diTauPt20.Write();
   mt2_100.Write();
+
+  hmaxmct.Write();
+  hmaxmt2_testmasslsp.Write();
+  hmaxmt2_testmass0.Write();
+
   fout->Close();
 
   TCanvas c("Canvas");
