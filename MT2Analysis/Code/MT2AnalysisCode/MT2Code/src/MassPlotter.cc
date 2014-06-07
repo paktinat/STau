@@ -8322,10 +8322,10 @@ float Ele1IdIsoSF = fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].GetEleIDIsoSFE
 
 // cout<<" muIsoSF "<<muIsoSF<<endl;
 
-  float EleTrgSF = fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].GetEleTrgSFEleEle(fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.Pt(),fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.Eta(),fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Pt(),fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Eta());
+	float EleTrgSF = fMT2tree->GetDoubleEleTrgSF();
 // float Ele1TrgSF = fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].fMT2tree->GetEleTrgSFEleEle();
 
-    cout<<" EleTrgSF "<< EleTrgSF <<endl;
+   // cout<<" EleTrgSF "<< EleTrgSF <<endl;
 // cout<<" Ele1TrgSF "<< Ele1TrgSF <<ndl;
       
 // float tauTrgSF = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].GetTauTrgSFmuTau();

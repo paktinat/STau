@@ -1043,6 +1043,7 @@ public:
   MT2DoubleEle doubleEle[1]; 
 
   void  FillDoubleEle();
+  double  GetDoubleEleTrgSF();
 
 
   //chenarani   

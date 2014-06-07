@@ -129,3 +129,6 @@ void  MT2tree::FillDoubleEle(){
       } } }
 
 }
+
+double MT2tree::GetDoubleEleTrgSF(){
+    return ((ele[doubleEle[0].Ele0Ind].GetEleTrigSFleg17() * ele[doubleEle[0].Ele1Ind].GetEleTrigSFleg8()) + (ele[doubleEle[0].Ele0Ind].GetEleTrigSFleg8()  * ele[doubleEle[0].Ele1Ind].GetEleTrigSFleg17()) - (ele[doubleEle[0].Ele0Ind].GetEleTrigSFleg17() * ele[doubleEle[0].Ele1Ind].GetEleTrigSFleg17())) ;}
