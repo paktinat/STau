@@ -8024,12 +8024,116 @@ double MassPlotter::DeltaPhi(double phi1, double phi2){
   return TMath::Abs(result);
 }
  
+void MassPlotter::TauFakeRate(TString cuts, TString trigger, Long64_t nevents, TString myfileName){
+ TH1::SetDefaultSumw2();
+
+ 
+ TH2F *hPtEtaAll  = new TH2F("hPtEtaAll", "hPtEtaAll",  60, -3.0, 3.0, 1000, 0, 1000);
+ TH2F *hPtEtaPass = new TH2F("hPtEtaPass","hPtEtaPass", 60, -3.0, 3.0, 1000, 0, 1000);
+ 
+
+ for(int ii = 0; ii < fSamples.size(); ii++){
+    
+   TString myCuts = cuts;
+ 
+   int data = 0;
+   sample Sample = fSamples[ii];
+    
+   if(Sample.type == "data"){
+     data = 1;
+     myCuts += " && " + trigger;
+   }else 
+     continue;
+   
+
+   fMT2tree = new MT2tree();
+   Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
+
+   float Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
+
+   std::cout << setfill('=') << std::setw(70) << "" << std::endl;
+    cout << "looping over :     " <<endl;	
+    cout << "   Name:           " << Sample.name << endl;
+    cout << "   File:           " << (Sample.file)->GetName() << endl;
+    cout << "   Events:         " << Sample.nevents  << endl;
+    cout << "   Events in tree: " << Sample.tree->GetEntries() << endl; 
+    cout << "   Xsection:       " << Sample.xsection << endl;
+    cout << "   kfactor:        " << Sample.kfact << endl;
+    cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
+    cout << "   Weight:         " << Weight <<endl;
+    std::cout << setfill('-') << std::setw(70) << "" << std::endl;
+   
+    Sample.tree->Draw(">>selList", myCuts);
+    TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
+    Sample.tree->SetEventList(myEvtList);
+
+    Long64_t nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
+
+    for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
+      //Sample.tree->GetEntry(jentry); 
+      Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
+
+      if ( fVerbose>2 && jentry % 100000 == 0 ){  
+	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+	fflush(stdout);
+      }
+
+     float weight = Weight;
+
+      if(data == 1)
+ 	weight = 1.0;
+      else{
+	if(Sample.type != "susy")
+	  weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq0/Sample.PU_avg_weight);//* fMT2tree->SFWeight.TauTagge1/Sample.PU_avg_weight);//
+      }      
+
+      int jetCounter = 0;
+      
+      for(int j=0; j<fMT2tree->NJets; ++j){ 
+	if(fMT2tree->jet[j].isPFIDLoose==false) continue;
+	if (!((fMT2tree->jet[j].lv.Pt() > 20)  &&  fabs(fMT2tree->jet[j].lv.Eta()<2.3)))  
+	  continue;
+	
+	jetCounter++;
+
+	if (jetCounter==1)
+	  continue;
+
+	if(fMT2tree->jet[j].isTauMatch < 0)
+	  continue;
+      
+	int tauIndex =  fMT2tree->jet[j].isTauMatch;
+	
+	hPtEtaAll->Fill(fMT2tree->tau[tauIndex].lv.Eta(), fMT2tree->tau[tauIndex].lv.Pt()); 
+
+	if(fMT2tree->tau[tauIndex].ElectronRej > 0 && fMT2tree->tau[tauIndex].MuonRej2 == 3)
+	  hPtEtaPass->Fill(fMT2tree->tau[tauIndex].lv.Eta(), fMT2tree->tau[tauIndex].lv.Pt()); 
+
+      }
+
+    }}
+ TString fileName = fOutputDir;
+  if(!fileName.EndsWith("/")) fileName += "/";
+  Util::MakeOutputDir(fileName);
+  fileName = fileName  + myfileName +"_FRHistos.root";
+  TFile *savefile = new TFile(fileName.Data(), "RECREATE");
+  savefile ->cd();
+  hPtEtaAll->Write();
+  hPtEtaPass->Write();
+  savefile->Close();
+  std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
+  cout<<" trigger "<<trigger<<endl;
+  cout<<" cuts "<<cuts<<endl;
+}
+
+
+
 void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfileName){
 
   TH1::SetDefaultSumw2();
 
-  TString cnames[NumberOfSamples+1] = {"QCD", "Wjets", "Zjets", "Top", "MC", "susy","data"};
-  int ccolor[NumberOfSamples+1] = { 401, 417, 419, 600, 500, 1, 632};
+  TString  cnames[NumberOfSamples+1] = {"QCD", "Wjets", "Zjets", "Top", "MC", "susy","data"};
+  int      ccolor[NumberOfSamples+1] = { 401,       417,    419,   600,  500,      1, 632};
   TString varname = "MT2";
   for (int i=0; i<(NumberOfSamples+1); i++){
     MT2[i] = new TH1D(varname+"_"+cnames[i], "", 1000, 0, 1000);
@@ -8068,15 +8172,15 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
     float Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
 
     std::cout << setfill('=') << std::setw(70) << "" << std::endl;
-    cout << "looping over : " <<endl;	
-    cout << " Name: " << Sample.name << endl;
-    cout << " File: " << (Sample.file)->GetName() << endl;
-    cout << " Events: " << Sample.nevents << endl;
-    cout << " Events in tree: " << Sample.tree->GetEntries() << endl;
-    cout << " Xsection: " << Sample.xsection << endl;
-    cout << " kfactor: " << Sample.kfact << endl;
-    cout << " avg PU weight: " << Sample.PU_avg_weight << endl;
-    cout << " Weight: " << Weight <<endl;
+    cout << "looping over :     " <<endl;	
+    cout << "   Name:           " << Sample.name << endl;
+    cout << "   File:           " << (Sample.file)->GetName() << endl;
+    cout << "   Events:         " << Sample.nevents  << endl;
+    cout << "   Events in tree: " << Sample.tree->GetEntries() << endl; 
+    cout << "   Xsection:       " << Sample.xsection << endl;
+    cout << "   kfactor:        " << Sample.kfact << endl;
+    cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
+    cout << "   Weight:         " << Weight <<endl;
     std::cout << setfill('-') << std::setw(70) << "" << std::endl;
    
     Sample.tree->Draw(">>selList", myCuts);
@@ -8090,97 +8194,119 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
       Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
 
       if ( fVerbose>2 && jentry % 100000 == 0 ){
-fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
-fflush(stdout);
+	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+	fflush(stdout);
       }
+
+      int tauIndex = -1;//fMT2tree->muTau[0].GetTauIndex0();
+
  
       float weight = Weight;
 
       if(data == 1)
-  weight = 1.0;
+	weight = 1.0;
       else{
 
-// cout<<" TauPt "<<fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt()<<endl;
-// cout<<" TauEta "<<fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Eta()<<endl;
+	// cout<<" TauPt "<<fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt()<<endl;
+	// cout<<" TauEta "<<fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Eta()<<endl;
 
-float muIdSF = fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].GetMuIDSFmuTau();
+	float muIdSF = fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].GetMuIDSFmuTau();
 
-// cout<<" muIdSF "<<muIdSF<<endl;
+	// cout<<" muIdSF "<<muIdSF<<endl;
 
-float muIsoSF = fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].GetMuIsoSFmuTau();
+	float muIsoSF = fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].GetMuIsoSFmuTau();
 
-// cout<<" muIsoSF "<<muIsoSF<<endl;
+	// cout<<" muIsoSF "<<muIsoSF<<endl;
 
-float muTrgSF = fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].GetMuTrgSFmuTau();
+	float muTrgSF = fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].GetMuTrgSFmuTau();
 
-// cout<<" muTrgSF "<<muTrgSF<<endl;
+	// cout<<" muTrgSF "<<muTrgSF<<endl;
       
-float tauTrgSF = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].GetTauTrgSFmuTau();
+	float tauTrgSF = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].GetTauTrgSFmuTau();
   
-// cout<<" tauTrgSF "<<tauTrgSF<<endl;
+	// cout<<" tauTrgSF "<<tauTrgSF<<endl;
  
-weight = Weight * muIdSF * muIsoSF * muTrgSF * tauTrgSF;
+	weight = Weight * muIdSF * muIsoSF * muTrgSF * tauTrgSF;
 
-// cout<<" New Weight "<<(muIdSF * muIsoSF * muTrgSF * tauTrgSF)<<endl;
+	// cout<<" New Weight "<<(muIdSF * muIsoSF * muTrgSF * tauTrgSF)<<endl;
 
-if(Sample.type != "susy")
-weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq0/Sample.PU_avg_weight);// * fMT2tree->SFWeight.TauTagge1/Sample.PU_avg_weight);//
+	if(Sample.type != "susy")
+	  weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq0/Sample.PU_avg_weight);// * fMT2tree->SFWeight.TauTagge1/Sample.PU_avg_weight);//
       }
       
       float myQuantity = fMT2tree->muTau[0].GetLV().M();
       /*
-std::vector<int> Tau0;
-std::vector<int> Mu0;
+	std::vector<int> Tau0;
+	std::vector<int> Mu0;
 
-for(int i=0; i<fMT2tree->NTaus; ++i){
-if(fMT2tree->tau[i].PassTau_MuTau)
-Tau0.push_back(i);
-}
-for(int i=0; i<fMT2tree->NMuons; ++i){
-if(fMT2tree->muo[i].PassQCDMu0_MuMu)
-Mu0.push_back(i);
-}
-std::pair<int,int> indecies = fMT2tree->MuTauParing(Tau0,Mu0);
+	for(int i=0; i<fMT2tree->NTaus; ++i){
+	if(fMT2tree->tau[i].PassTau_MuTau)
+	Tau0.push_back(i);
+	}
+	for(int i=0; i<fMT2tree->NMuons; ++i){
+	if(fMT2tree->muo[i].PassQCDMu0_MuMu)
+	Mu0.push_back(i);
+	}
+	std::pair<int,int> indecies = fMT2tree->MuTauParing(Tau0,Mu0);
 
-int selected = 0;
+	int selected = 0;
 
-if(indecies.first != -1 && indecies.second != -1){
-float pairCharge = fMT2tree->tau[indecies.first].Charge + fMT2tree->muo[indecies.second].Charge;
-float Mass = (fMT2tree->tau[indecies.first].lv + fMT2tree->muo[indecies.second].lv).M();
-if(pairCharge != 0 && (Mass > 15.0 && (Mass < 45.0 || Mass > 75))){
-myQuantity = fMT2tree->CalcMT2(0, false, fMT2tree->tau[indecies.first].lv, fMT2tree->muo[indecies.second].lv, fMT2tree->pfmet[0]);
-selected = 1;
-}
-}
+	if(indecies.first != -1 && indecies.second != -1){
+	float pairCharge = fMT2tree->tau[indecies.first].Charge + fMT2tree->muo[indecies.second].Charge;
+	float Mass = (fMT2tree->tau[indecies.first].lv + fMT2tree->muo[indecies.second].lv).M();
+	if(pairCharge != 0 && (Mass > 15.0 && (Mass < 45.0 || Mass > 75))){
+	myQuantity = fMT2tree->CalcMT2(0, false, fMT2tree->tau[indecies.first].lv, fMT2tree->muo[indecies.second].lv, fMT2tree->pfmet[0]);
+	tauIndex = indecies.first;
+	selected = 1;
+	}
+	}
 
-if(selected == 0)
-continue;
-*/
-    if(data == 1){
+  //    int jetCounter = 0;
       
-      MT2[6]->Fill(myQuantity, weight);//data
+//       for(int j=0; j<fMT2tree->NJets; ++j){ 
+// 	if(fMT2tree->jet[j].isPFIDLoose==false) continue;
+// 	if (!((fMT2tree->jet[j].lv.Pt() > 20)  &&  fabs(fMT2tree->jet[j].lv.Eta()<2.3)))  
+// 	  continue;
+	
+// 	jetCounter++;
+
+// 	if (jetCounter==1)
+// 	  continue;
+
+// 	if(fMT2tree->jet[j].isTauMatch < 0)
+// 	  continue;
+// 	myQuantity = fMT2tree->tau[fMT2tree->jet[j].isTauMatch].lv.Pt();
+
+
+	if(selected == 0)
+	continue;
+      */
+      if(data == 1){
       
-    }else{
-      if(Sample.sname == "SUSY")
-MT2[5]->Fill(myQuantity, weight);
-      else
-MT2[4]->Fill(myQuantity, weight);
+	MT2[6]->Fill(myQuantity, weight);//data
       
-      if(Sample.sname == "Top")
-MT2[3]->Fill(myQuantity, weight);
-      else
-if(Sample.sname == "DY")	
-MT2[2]->Fill(myQuantity, weight);
-else
-if(Sample.sname == "Wtolnu")
-MT2[1]->Fill(myQuantity, weight);
-else
-if(Sample.sname == "QCD")
-MT2[0]->Fill(myQuantity, weight);
-    }}
+      }else{
+	if(Sample.sname == "SUSY")
+	  MT2[5]->Fill(myQuantity, weight);
+	else
+	  MT2[4]->Fill(myQuantity, weight);
+      
+	if(Sample.sname == "Top")
+	  MT2[3]->Fill(myQuantity, weight);
+	else
+	  if(Sample.sname == "DY")	
+	    MT2[2]->Fill(myQuantity, weight);
+	  else
+	    if(Sample.sname == "Wtolnu"){
+	      float pt = fMT2tree->tau[tauIndex].lv.Pt();
+	      weight *= 1.157 - 7.361E-3 * pt + 4.370E-5 * pt * pt - 1.188E-7*pt * pt * pt;
+	      MT2[1]->Fill(myQuantity, weight);}
+	    else
+	      if(Sample.sname == "QCD")
+		MT2[0]->Fill(myQuantity, weight);
+      }}
   
   }//for(ii<fSamples)
-
 
 
   for(int j = 0; j < (NumberOfSamples+1); j++){
@@ -8191,11 +8317,8 @@ MT2[0]->Fill(myQuantity, weight);
   THStack* h_stack = new THStack(varname, "");
   for(int j = 0; j < (NumberOfSamples+1); j++){
     // MT2[j]->Rebin(3);
-    TH1F* mt2 = (TH1F*)MT2[j]->Clone();
-    mt2->SetName("mt2");
     if(j < (NumberOfSamples - 1))
       h_stack -> Add(MT2[j]);
-    delete mt2;
   }
 
   TLegend* Legend1 = new TLegend(.71,.54,.91,.92);

@@ -368,6 +368,7 @@ public:
 
   void SpecialMakePlot(int nevents, TString cuts, TString trigger);
   void muTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfilename);
+  void TauFakeRate(TString cuts, TString trigger, Long64_t nevents, TString myfilename);
   void DrawMyPlots(TString myfileName, double *xbin, int NumberOfBins);
   void EleEleAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfileName);
   

@@ -105,9 +105,7 @@ public:
       norm = 0.893975;
     }
    
-    float FMC = Util::tauTauCrystalBallCDF(pt, m0, sigma_cb, alpha, n, norm);
-
-
+    float FMC = 1.0;//Util::tauTauCrystalBallCDF(pt, m0, sigma_cb, alpha, n, norm);
     if(FMC != 0)
       return Fdata/FMC;
     else
