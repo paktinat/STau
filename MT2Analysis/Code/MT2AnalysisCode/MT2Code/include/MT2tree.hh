@@ -1045,6 +1045,10 @@ public:
   void  FillDoubleEle();
   double  GetDoubleEleTrgSF();
 
+  double GetPtRatioEEchannel();
+  double GetPositronDecayAngleinZframeEEchannel();
+  double MinMetLepDPhiEEchannel();
+  double PositronAngleWithZBeamPlaneEEchannel();
 
   //chenarani   
   MT2DoubleMuon doubleMu[1];

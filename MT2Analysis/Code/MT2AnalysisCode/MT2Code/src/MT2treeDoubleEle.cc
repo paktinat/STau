@@ -132,3 +132,68 @@ void  MT2tree::FillDoubleEle(){
 
 double MT2tree::GetDoubleEleTrgSF(){
     return ((ele[doubleEle[0].Ele0Ind].GetEleTrigSFleg17() * ele[doubleEle[0].Ele1Ind].GetEleTrigSFleg8()) + (ele[doubleEle[0].Ele0Ind].GetEleTrigSFleg8()  * ele[doubleEle[0].Ele1Ind].GetEleTrigSFleg17()) - (ele[doubleEle[0].Ele0Ind].GetEleTrigSFleg17() * ele[doubleEle[0].Ele1Ind].GetEleTrigSFleg17())) ;}
+
+
+
+double MT2tree::GetPtRatioEEchannel(){
+  return (doubleEle[0].lv.Pt() / (ele[doubleEle[0].Ele0Ind].lv.Pt() + ele[doubleEle[0].Ele1Ind].lv.Pt())) ;
+}
+
+
+double MT2tree::GetPositronDecayAngleinZframeEEchannel(){
+
+  if ( ele[doubleEle[0].Ele0Ind].Charge == 1 ){
+
+    //    std::cout<<"Px:"<<ele[doubleEle[0].Ele0Ind].lv.Px()<<"..."<<"Py:"<<ele[doubleEle[0].Ele0Ind].lv.Py()<<"..."<<"Pz:"<<ele[doubleEle[0].Ele0Ind].lv.Pz()<<endl;
+    ele[doubleEle[0].Ele0Ind].lv.Boost(-doubleEle[0].lv.BoostVector());
+    //    std::cout<<"Boosted Px:"<<ele[doubleEle[0].Ele0Ind].lv.Px()<<"..."<<"Boosted Py:"<<ele[doubleEle[0].Ele0Ind].lv.Py()<<"..."<<"Boosted Pz:"<<ele[doubleEle[0].Ele0Ind].lv.Pz()<<endl;
+    TVector3 a0 = ele[doubleEle[0].Ele0Ind].lv.Vect();
+    TVector3 q0 = doubleEle[0].lv.Vect();
+    //    std::cout<<"Angle of aO and q0:"<<a0.Angle(q0)<<endl; 
+    return(a0.Angle(q0));
+  }
+  else if ( ele[doubleEle[0].Ele1Ind].Charge == 1 ){
+    ele[doubleEle[0].Ele1Ind].lv.Boost(-doubleEle[0].lv.BoostVector());
+    TVector3 a1 = ele[doubleEle[0].Ele1Ind].lv.Vect();
+    TVector3 q1 = doubleEle[0].lv.Vect();
+    return(a1.Angle(q1));
+  }
+
+}
+
+double MT2tree::MinMetLepDPhiEEchannel() {
+
+  TLorentzVector MET = (0.0,0.0,0.0,0.0);
+   MET = pfmet[0];
+
+  if ( ele[doubleEle[0].Ele0Ind].Charge == 1 ){
+    return ele[doubleEle[0].Ele0Ind].lv.DeltaPhi(MET);
+  }
+  else if ( ele[doubleEle[0].Ele1Ind].Charge == 1 ){
+    return ele[doubleEle[0].Ele1Ind].lv.DeltaPhi(MET);
+  }
+}
+
+
+double MT2tree::PositronAngleWithZBeamPlaneEEchannel() {
+
+  TVector3 z = (0,0,1);
+  TVector3 a = doubleEle[0].lv.Vect();
+  TVector3 pl = z.Cross(a);
+  const double pi = 3.14159265358979323846 ;
+  if ( ele[doubleEle[0].Ele0Ind].Charge == 1 ){
+    ele[doubleEle[0].Ele0Ind].lv.Boost(-doubleEle[0].lv.BoostVector());
+    TVector3 a0 = ele[doubleEle[0].Ele0Ind].lv.Vect();
+    double ang0 = pi/2 - pl.Angle(a0);
+    return(ang0);
+  }
+  else if ( ele[doubleEle[0].Ele1Ind].Charge == 1 ){
+    ele[doubleEle[0].Ele1Ind].lv.Boost(-doubleEle[0].lv.BoostVector());
+    TVector3 a1 = ele[doubleEle[0].Ele1Ind].lv.Vect();
+    double ang1 = pi/2 - pl.Angle(a1);
+    return(ang1);
+
+  }
+
+}
+

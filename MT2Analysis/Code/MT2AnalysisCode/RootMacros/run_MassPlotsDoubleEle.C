@@ -1,9 +1,10 @@
 {
   TString outputdir = "../MassPlots/";
   
-  TString samples = "./samples/samplesMineDoubleElectronQCDHtBin.dat";
+  //  TString samples = "./samples/samplesMineDoubleElectronQCDHtBin-SMS005.dat";
+  TString samples = "./samples/samplesMineDoubleElectronQCDHtBin-SMS050.dat";
   //  TString samples = "./samples/samplesMineDoubleElectronQCDPtBin.dat";
-  //   TString samples = "./samples/samplesMineQCD.dat";
+  //     TString samples = "./samples/samplesMineQCD.dat";
 
   Int_t channel = 22; //2* 11 (Electron PDG Id)
 
@@ -47,6 +48,8 @@
      std::vector<std::string> myChannelCuts;
      myChannelCuts.push_back(std::string(trigger));
 
+     myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 125)  && (Susy.MassGlu - Susy.MassLSP) < 175))");
+
   // You need to specify the channel
     TString myChan = "doubleEle[0]";
 
@@ -58,10 +61,18 @@
       myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)");
   // myChannelCuts.push_back("(((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 2) || ((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == -2))");
 
+      //      myChannelCuts.push_back(std::string(std::string(myChan) + ".DPhi > 3.2"));
+
+      //      myChannelCuts.push_back("PositronAngleWithZBeamPlaneEEchannel()"); 
+      //      myChannelCuts.push_back("GetPositronDecayAngleinZframeEEchannel()"); 
+      //      myChannelCuts.push_back("GetPtRatioEEchannel()"); 
+      //      myChannelCuts.push_back("MinMetLepDPhiEEchannel()"); 
+
+
 
       //    myChannelCuts.push_back("((doubleEle[0].lv.M() > 12 && doubleEle[0].lv.M() < 75) || (doubleEle[0].lv.M() > 105))");
-    myChannelCuts.push_back("NBJetsCSVM==0");
-    myChannelCuts.push_back("misc.MET > 50");
+      //    myChannelCuts.push_back("NBJetsCSVM==0");
+      //  myChannelCuts.push_back("misc.MET > 50");
     //    myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 70"));
   //  myChannelCuts.push_back("misc.LeadingJPt > 350");
   //  myChannelCuts.push_back("misc.Jet0Pass > 0");
@@ -181,20 +192,72 @@ tA->makePlot(vars3[iVar3], cuts, -10, -10 , -10, trigger, vars3[iVar3],20,0,20 ,
 
 //########  // variable, cuts, njet, nbjet, nlep, HLT, xtitle nbins bins flip_order, log , comp , ratio, stack, overlay
 
-// tA->makePlot("doubleEle[0].lv.Eta()",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle[0].lv.Eta()"            ,70,-3.5,3.5,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
- // tA->makePlot("doubleEle[0].lv.Pt()",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle[0].lv.Pt()"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-  tA->makePlot("doubleEle[0].lv.M()",     cuts,    -10,  0 , -10 ,   trigger , "doubleEle[0].lv.M()"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
- // tA->makePlot("doubleEle[0].MT2",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle[0].MT2"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-// tA->makePlot("doubleEle[0].MT2Imbalanced",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle[0].MT2Imbalanced"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-// tA->makePlot("pileUp.NVertices",     cuts,    -10,  -10 , -10 ,   trigger , "pileUp.NVertices"            ,60,0,60,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-// tA->makePlot("misc.MET",     cuts,    -10,  -10 , -10 ,   trigger , "misc.MET."            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
- // tA->makePlot("NBJetsCSVM",     cuts,    -10,  -10 , -10 ,   trigger , "NBJetsCSVM"            ,5,0,5,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-// tA->makePlot("ele[doubleEle[0].Ele0Ind].MT",     cuts,    -10,  -10 , -10 ,   trigger , "ele[doubleEle[0].Ele0Ind].MT"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-// tA->makePlot("misc.LeadingJPt",     cuts,    -10,  -10 , -10 ,   trigger , "misc.LeadingJPt"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+//tA->makePlot("doubleEle[0].lv.Eta()",     cuts,    -10,  -10 , -10 ,   trigger , "Di-Electron Eta"            ,70,-3.5,3.5,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+// tA->makePlot("doubleEle[0].lv.Pt()",     cuts,    -10,  -10 , -10 ,   trigger , "Di-electron Pt()"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+   //  tA->makePlot("doubleEle[0].lv.M()",     cuts,    -10,  -10 , -10 ,   trigger , "Di-Electron InvMass"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+   // tA->makePlot("doubleEle[0].MT2",     cuts,    -10,  -10 , -10 ,   trigger , "Di-Electron M_T2"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+    //tA->makePlot("doubleEle[0].MT2Imbalanced",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle[0].MT2Imbalanced"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+    //tA->makePlot("pileUp.NVertices",     cuts,    -10,  -10 , -10 ,   trigger , "pileUp.NVertices"            ,60,0,60,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+   //tA->makePlot("misc.MET",     cuts,    -10,  -10 , -10 ,   trigger , "MET"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+   // tA->makePlot("NBJetsCSVM",     cuts,    -10,  -10 , -10 ,   trigger , "NBJetsCSVM"            ,5,0,5,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+   //tA->makePlot("ele[doubleEle[0].Ele0Ind].MT",     cuts,    -10,  -10 , -10 ,   trigger , "First Electron M_T"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+   //tA->makePlot("ele[doubleEle[0].Ele1Ind].MT",     cuts,    -10,  -10 , -10 ,   trigger , "Second Electron M_T"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+//tA->makePlot("misc.LeadingJPt",     cuts,    -10,  -10 , -10 ,   trigger , "misc.LeadingJPt"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 
-// tA->makePlot("doubleEle[0].Ele1Ind",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle[0].Ele1Ind"            ,10,-5,5,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+//tA->makePlot("doubleEle[0].Ele1Ind",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle[0].Ele1Ind"            ,10,-5,5,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+//tA->makePlot("GetPtRatio()",     cuts,    -10,  -10 , -10 ,   trigger , "Pt Ratio"            ,50,0,50,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+//tA->makePlot("GetPositronDecayAngleinZframe()",     cuts,    -10,  -10 , -10 ,   trigger , "Positron Decay Angle in Z-frame"            ,50,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+
 
 
 //tA->MakeCutFlowTable( myChannelCuts );
 
+//  tA->NonIsoOStoNonIsoSSRatio(cuts, trigger, 100000, "MT2");
+  tA->EleEleAnalysis(cuts, trigger, 100, "MT2");
+  int NumberOfBins = 21;
+  double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,115.0,130.0,145.0,160.0,180.0,200.0,230.0,260.0,290.0,340.0,400.0};      //MT2
+   // double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
+
+ tA->DrawMyPlots("MT2_Histos.root", xbin, NumberOfBins);
+   // double * xbin;
+   // double xbin[NumberOfBins+1] = {0.0,50.0,100.0,150.0,200.0,250.0,300};
+
+   //   //tA->muTauAnalysis(cuts, trigger, 10000000000, "MT2_NBCVM_NonIsoMuSS_LoosenIso196");
+   //   int NumberOfBins = 17;
+   //   //double * xbin;
+  
+   //   double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};      //MT2
+   //   //double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
+
+   //   tA->DrawMyPlots("MT2_NBCVM_NonIsoMuSS_LoosenIso196_Histos.root", xbin, NumberOfBins);
+   // //tA->plotSig("muo[muTau[0].mu0Ind].MT", cuts,  "muo[muTau[0].mu0Ind].MT", 60, 0, 300, 0, 0, 1);
+
+   //    tA->plotSig("ele[doubleEle[0].Ele0Ind].MT", cuts,  "ele[doubleEle[0].Ele0Ind].MT", 60, 0, 300, 0, 0, 1);
+   // tA->plotSig("ele[doubleEle[0].Ele1Ind].MT", cuts,  "ele[doubleEle[0].Ele1Ind].MT", 60, 0, 300, 0, 0, 1);
+   //    tA->plotSig("NBJetsCSVM", cuts,  "NBJetsCSVM", 60, 0, 300, 0, 0, 1);
+   // tA->plotSig("misc.MET", cuts,  "misc.MET", 60, 0, 300, 0, 0, 1);
+   // tA->plotSig("doubleEle[0].MT2", cuts,  "doubleEle[0].MT2", 60, 0, 300, 0, 0, 1);
+   // tA->plotSig("doubleEle[0].lv.M()", cuts,  "doubleEle[0].lv.M()", 60, 0, 300, 0, 0, 1);
+   // tA->plotSig("doubleEle[0].Pt_ratio", cuts,  "doubleEle[0].Pt_ratio", 60, 0, 300, 0, 0, 1);
+   // tA->plotSig("doubleEle[0].lv.Eta()", cuts,  "doubleEle[0].lv.Eta()", 30, -2.5, 2.5, 0, 0, 1);
+
+
+   //   tA->plotSig("doubleEle[0].DPhi", cuts,  "di-electron deltaPhi", 20, -5, 5, 0, 0, 1);
+   //      tA->plotSig("GetPtRatioEEchannel()", cuts,  "Pt Ratio", 10, 0, 1, 0, 0, 1);
+   //   tA->plotSig("GetPositronDecayAngleinZframeEEchannel()", cuts,  "Positron Decay Angle in Z Frame", 20, -5, 5, 0, 0, 1);
+   //         tA->plotSig("MinMetLepDPhiEEchannel()", cuts,  "MinMetLepDPhi", 20, -5, 5, 0, 0, 1);  
+   //        tA->plotSig("PositronAngleWithZBeamPlaneEEchannel()", cuts,  "Positron Angle with Z Beam Plane", 20, -5, 5, 0, 0, 1);
+
+//  tA->makePlot("doubleEle[0].DPhi",     cuts,    -10,  -10 , -10 ,   trigger , "Delta Phi"            ,20,-5,5,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+
+//  tA->makePlot("PositronAngleWithZBeamPlaneEEchannel()",     cuts,    -10,  -10 , -10 ,   trigger , "Positron Angle with Z Beam Plane"            ,20,-5,5,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+
+//  tA->makePlot("GetPositronDecayAngleinZframeEEchannel()",     cuts,    -10,  -10 , -10 ,   trigger , "Positron Decay Angle in Z Frame"            ,20,-5,5,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+
+//  tA->makePlot("GetPtRatioEEchannel()",     cuts,    -10,  -10 , -10 ,   trigger , "Pt Ratio"            ,10,0,1,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+
+//  tA->makePlot("MinMetLepDPhiEEchannel()",     cuts,    -10,  -10 , -10 ,   trigger , "MinMetLepDPhi"            ,20,-5,5,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+
+
 }
+
