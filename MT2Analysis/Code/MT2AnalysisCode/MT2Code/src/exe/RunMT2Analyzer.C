@@ -144,17 +144,18 @@ int main(int argc, char* argv[]) {
 		cout << "ERROR: need puScenario" << puScenario << " required input files."  << endl; exit(-1);
 	}
 	//setofcuts   ="../../MT2_cuts/"+setofcuts+".dat";
-	setofcuts   ="/dataLOCAL/paktinat/Projects/MT2/MT2_TauFR_V02-03-02/MT2Analysis/Code/MT2_cuts/"+setofcuts+".dat";
+	setofcuts   =GETDATALOCALPATH(MT2Analysis/Code/MT2_cuts/)+setofcuts+".dat";
+	cout << setofcuts << endl; 
 	//	setofcuts   ="/dataLOCAL/MT2Top/CutsMT2/"+setofcuts+".dat";
-	if(data_PileUp.length()!=0   ){data_PileUp ="/dataLOCAL/MT2Top/Certification/pileUp_data/"+ data_PileUp;}
-	if(mc_PileUp.length()  !=0   ){mc_PileUp   ="/dataLOCAL/MT2Top/Certification/pileUp_mc/"  +   mc_PileUp;}
-	if(jsonFileName.length() !=0 ){jsonFileName="/dataLOCAL/MT2Top/Certification/JSONfiles/"  +jsonFileName;}
+	if(data_PileUp.length()!=0   ){data_PileUp =GETDATALOCALPATH(Certification/pileUp_data/)+ data_PileUp;}
+	if(mc_PileUp.length()  !=0   ){mc_PileUp   =GETDATALOCALPATH(Certification/pileUp_mc/)  +   mc_PileUp;}
+	if(jsonFileName.length() !=0 ){jsonFileName=GETDATALOCALPATH(Certification/JSONfiles/)  +jsonFileName;}
 //	setofcuts   ="/shome/pnef/Projects/CMSAnalysis/MT2Analysis/Code/MT2_cuts/"+setofcuts+".dat";
 //	if(data_PileUp.length()!=0   ){data_PileUp ="/shome/pnef/Projects/CMSAnalysis/MT2Analysis/Code/Certification/pileUp_data/"+data_PileUp;}
 //	if(mc_PileUp.length()  !=0   ){mc_PileUp   ="/shome/pnef/Projects/CMSAnalysis/MT2Analysis/Code/Certification/pileUp_mc/"  + mc_PileUp;}
 //	if(jsonFileName.length() !=0 ){jsonFileName="/shome/pnef/Projects/CMSAnalysis/MT2Analysis/Code/Certification/"            +jsonFileName;}
-	if(btagFileName.length() !=0 ){btagFileName="/dataLOCAL/MT2Top/Efficiencies/"            + btagFileName;}
-	if(htauFileName.length() !=0 ){htauFileName="/dataLOCAL/MT2Top/Efficiencies/"            + htauFileName;}
+	if(btagFileName.length() !=0 ){btagFileName=GETDATALOCALPATH(Efficiencies/)            + btagFileName;}
+	if(htauFileName.length() !=0 ){htauFileName=GETDATALOCALPATH(Efficiencies/)            + htauFileName;}
 
 
 

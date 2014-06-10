@@ -19,7 +19,7 @@
 
 import sys, subprocess, os,re
 from datetime import datetime
-#from ROOT import TTree, TFile, gDirectory
+from ROOT import TTree, TFile, gDirectory
 
 usage = "Usage: makeTreeClassBase.py filename.root [list]"
 

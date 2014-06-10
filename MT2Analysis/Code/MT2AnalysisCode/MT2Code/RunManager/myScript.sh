@@ -17,7 +17,7 @@ OUTFILES=
 
 # Output files to be copied to the SE
 # (as above the file path must be given relative to the working directory)
-SEOUTFILES="output_$myVar.root"
+SEOUTFILES="output_$1.root"
 
 SOURCEFILES=sourcefile
 
@@ -40,13 +40,16 @@ DBG=0
 # The SE's user home area (SRMv2 URL)
 #USER_SRM_HOME="srm://t3se01.psi.ch:8443/srm/managerv2?SFN=/pnfs/psi.ch/cms/trivcat/store/user/" saeid
 #USER_SRM_HOME="srm://se1.particles.ipm.ac.ir:8446/srm/managerv2?SFN=/dpm/particles.ipm.ac.ir/home/cms/store/user/"
-USER_SRM_HOME="rfio:///dpm/particles.ipm.ac.ir/home/cms/store/user/"
-
+#USER_SRM_HOME="rfio:///dpm/particles.ipm.ac.ir/home/cms/store/user/"
+#FOR EOS:
+USER_SRM_HOME="srm://srm-eoscms.cern.ch:8443/srm/v2/server?SFN=/eos/cms/store/user/" 
 
 # Top working directory on worker node's local disk. The batch
 # job working directory will be created below this
 #TOPWORKDIR=/scratch/`whoami`
-TOPWORKDIR=/home/`whoami`
+USERNAME__=`whoami`
+FIRSTCharOfUserName=${USERNAME__:0:1}
+TOPWORKDIR=/afs/cern.ch/work/${FIRSTCharOfUserName}/`whoami`/
 
 # Basename of job sandbox (job workdir will be $TOPWORKDIR/$JOBDIR)
 JOBDIR=jobdir
@@ -167,7 +170,7 @@ for f in $SOURCEFILES; do
   CURRDATE=`date +%s`
   RUNTIME=$(echo "($CURRDATE - $DATE_START)/(60)" | bc -l)
   echo "-----> running since $RUNTIME min <-------------------------"
-  RUNMIN=$(echo $RUNTIME | awk -F . '{print $myVar}')
+  RUNMIN=$(echo $RUNTIME | awk -F . '{print $1}')
   echo $RUNMIN
   if [ "$RUNMIN" -gt "55" ]; then echo "WARNING: runtime hits 1 hour.."; fi
 done

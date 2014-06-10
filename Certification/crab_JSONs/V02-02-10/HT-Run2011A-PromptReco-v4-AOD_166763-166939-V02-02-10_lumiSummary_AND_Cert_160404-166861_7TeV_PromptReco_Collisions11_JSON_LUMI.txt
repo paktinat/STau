@@ -1,0 +1,50 @@
+[Warning] : run 166763 :ls 646 has 0 dead counts or 0 zerobias bit counts, but inst!=0
+[Warning] : run 166787 :ls 361 has 0 dead counts or 0 zerobias bit counts, but inst!=0
+[Warning] : run 166842 :ls 165 has 0 dead counts or 0 zerobias bit counts, but inst!=0
+|    Run | Delivered LS | Delivered (/μb) |          Selected LS | Recorded (/μb) | Effective (/μb) |
+|        |              |                  |                      |                 |     HLT_HT550_v5 |
+--------------------------------------------------------------------------------------------------------
+| 166763 |          684 |     13496951.485 |  [46-168], [174-650] |    12867708.237 |     12867708.237 |
+| 166781 |          392 |      8873213.167 | [41-111], [115-115], |     7617166.367 |      7617166.367 |
+|        |              |                  |           [117-233], |                 |                  |
+|        |              |                  | [236-253], [255-382] |                 |                  |
+| 166782 |          581 |     11757396.538 |              [1-569] |    11353072.246 |     11353072.246 |
+| 166784 |          389 |      7039622.963 |     [1-90], [94-95], |     5397394.628 |      5397394.628 |
+|        |              |                  |           [120-131], |                 |                  |
+|        |              |                  |           [150-161], |                 |                  |
+|        |              |                  | [165-276], [281-364] |                 |                  |
+| 166787 |          383 |      5946826.863 |    [1-55], [60-127], |     5728768.720 |      5728768.720 |
+|        |              |                  |            [132-364] |                 |                  |
+| 166839 |          309 |      6621197.998 | [43-173], [178-297], |     5068923.347 |      5068923.347 |
+|        |              |                  |            [299-301] |                 |                  |
+| 166841 |         1023 |     19930175.894 |  [1-797], [801-809], |    17682323.166 |     17682323.166 |
+|        |              |                  |           [816-818], |                 |                  |
+|        |              |                  |           [822-833], |                 |                  |
+|        |              |                  |           [843-845], |                 |                  |
+|        |              |                  |           [852-866], |                 |                  |
+|        |              |                  |           [915-926], |                 |                  |
+|        |              |                  |           [930-977], |                 |                  |
+|        |              |                  |           [984-984], |                 |                  |
+|        |              |                  |           [988-992], |                 |                  |
+|        |              |                  |          [998-1002], |                 |                  |
+|        |              |                  |          [1015-1015] |                 |                  |
+| 166842 |          187 |      2780653.713 |              [1-169] |     2731203.192 |      2731203.192 |
+| 166860 |           36 |       804824.563 |               [1-21] |      389767.675 |       389767.675 |
+| 166861 |           50 |      1100317.288 |        [1-6], [8-13] |      176324.613 |       176324.613 |
+
+ ==  =  Total : 
+| Delivered LS | Delivered (/μb) | Selected LS | Recorded (/μb) | Effective  (/μb) |
+|              |                  |             |                 |      HLT_HT550_v5 |
+---------------------------------------------------------------------------------------
+|         4034 |     78351180.472 |        3539 |    69012652.190 |      69012652.190 |
+
+[WARNING] : run 166784 : total non-GOOD LS: UNKNOWN 313, BAD 0, SUSPECT 0
+[WARNING] : run 166787 : total non-GOOD LS: UNKNOWN 356, BAD 0, SUSPECT 0
+[WARNING] : run 166763 : total non-GOOD LS: UNKNOWN 600, BAD 0, SUSPECT 0
+[WARNING] : run 166860 : total non-GOOD LS: UNKNOWN 21, BAD 0, SUSPECT 0
+[WARNING] : run 166861 : total non-GOOD LS: UNKNOWN 12, BAD 0, SUSPECT 0
+[WARNING] : run 166839 : total non-GOOD LS: UNKNOWN 255, BAD 0, SUSPECT 0
+[WARNING] : run 166841 : total non-GOOD LS: UNKNOWN 911, BAD 0, SUSPECT 0
+[WARNING] : run 166842 : total non-GOOD LS: UNKNOWN 170, BAD 0, SUSPECT 0
+[WARNING] : run 166781 : total non-GOOD LS: UNKNOWN 335, BAD 0, SUSPECT 0
+[WARNING] : run 166782 : total non-GOOD LS: UNKNOWN 569, BAD 0, SUSPECT 0

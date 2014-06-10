@@ -1,0 +1,47 @@
+#include <iostream>
+#include "TRandom.h"
+#include "TSystem.h"
+
+void simpleTest(void){
+gSystem->Load("libFWCoreFWLite.so"); 
+AutoLibraryLoader::enable();
+TRandom *ran = new TRandom();
+
+//----------- Correction Object ------------------------------
+vector<JetCorrectorParameters> JetCorPar;
+JetCorrectorParameters *par1 = new JetCorrectorParameters("/shome/pnef/MT2Analysis/Code/JESuncertainty/GR_R_42_V19_AK5PF/GR_R_42_V19_AK5PF_L1FastJet.txt");
+JetCorrectorParameters *par2 = new JetCorrectorParameters("/shome/pnef/MT2Analysis/Code/JESuncertainty/GR_R_42_V19_AK5PF/GR_R_42_V19_AK5PF_L2Relative.txt");
+JetCorrectorParameters *par3 = new JetCorrectorParameters("/shome/pnef/MT2Analysis/Code/JESuncertainty/GR_R_42_V19_AK5PF/GR_R_42_V19_AK5PF_L3Absolute.txt");   
+JetCorrectorParameters *par4 = new JetCorrectorParameters("/shome/pnef/MT2Analysis/Code/JESuncertainty/GR_R_42_V19_AK5PF/GR_R_42_V19_AK5PF_L2L3Residual.txt");   
+JetCorPar.push_back(*par1);
+JetCorPar.push_back(*par2);
+JetCorPar.push_back(*par3);     
+JetCorPar.push_back(*par4);     
+FactorizedJetCorrector *JetCor = new FactorizedJetCorrector(JetCorPar);
+//----------- Uncertainty Object -----------------------------
+JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty("/shome/pnef/MT2Analysis/Code/JESuncertainty/GR_R_42_V19_AK5PF/GR_R_42_V19_AK5PF_Uncertainty.txt");
+
+float etafake,ptfake;
+double unc;
+// HT std jet: pt 146.242, eta -1.21218, area 0.777918, rho 5.7784
+//
+//
+const unsigned int NJets=3;
+double eta[NJets]  ={-1.21218, -1.21095, 1.39696};
+double pt[NJets]   ={146.242,  144.728 , 131.795};
+double rho[NJets]  ={5.7784 ,  4.07357 , 1.74587};
+double area[NJets] ={0.777918, 0.777918, 0.807838};
+
+
+for(int i=0; i<NJets; ++i){
+JetCor->setJetEta(eta[i]);
+JetCor->setRho(rho[i]);
+JetCor->setJetA(area[i]);
+JetCor->setJetPt(pt[i]); // IMPORTANT: the correction is a function of the RAW pt
+double jec = JetCor->getCorrection();     
+jecUnc->setJetEta(eta[i]);
+jecUnc->setJetPt(jec*pt[i]); // IMPORTANT: the uncertainty is a function of the CORRECTED pt
+unc = jecUnc->getUncertainty(true);
+cout<<"Eta = "<<eta[i]<<", Raw pt = "<<pt[i]<<", Corrected pt = "<<jec*pt[i]<<", Uncertainty of the corrected pt = "<<unc<<endl;  
+}
+}

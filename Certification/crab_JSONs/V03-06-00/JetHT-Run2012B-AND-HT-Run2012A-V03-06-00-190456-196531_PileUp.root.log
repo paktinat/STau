@@ -1,0 +1,7 @@
+General configuration
+	outputfile:  PileupCalc.root
+	Action:  true luminosity distribution will be calculated
+	input selection file:  HT-Run2012A-PromptReco-v1-AOD-V03-06-00_OR_JetHT-Run2012B-PromptReco-v1-AOD-V03-06-00_AND_Cert_190456-196531_8TeV_PromptReco_Collisions12_JSON.txt
+	MinBiasXsec:  69400.0
+	maxPileupBin:  60
+	numPileupBins:  60

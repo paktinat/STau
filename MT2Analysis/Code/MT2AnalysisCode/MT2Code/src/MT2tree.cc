@@ -1042,19 +1042,19 @@ Int_t MT2tree::GetNTaus(float minJPt, float maxJEta, int iso, int elerej, int mu
 	if(iso>=0){//normal: 1 to 4
 		if(tau[i].CombinedIsolation<iso)             continue;
 	} else if(iso<-10){//mva: -12 to -14
-		if(tau[i].IsolationMVA2<(-iso-10))   continue;
+	  if(tau[i].IsolationMVA2<(-iso-10))   continue;
 	} else{//3hits: -2 to -4
-		if(tau[i].CombinedIsolation3Hits<(-iso))     continue;
+	  if(tau[i].CombinedIsolation3Hits<(-iso))     continue;
 	}
 	if(elerej>=0){
-		if(tau[i].ElectronRej<elerej)        continue;
+	  if(tau[i].ElectronRej<elerej)        continue;
 	} else{//mva3
-		if(tau[i].ElectronRejMVA3<(-elerej)) continue;
+	  if(tau[i].ElectronRejMVA3<(-elerej)) continue;
 	}
 	if(muorej>=0){
-		if(tau[i].MuonRej<muorej)            continue;
+	  if(tau[i].MuonRej<muorej)            continue;
 	} else{
-		if(tau[i].MuonRej2<(-muorej))        continue;
+	  if(tau[i].MuonRej2<(-muorej))        continue;
 	}
 	//if(tau[i].Isolation<iso)        continue;
 	//if(tau[i].ElectronRej<elerej)   continue;
