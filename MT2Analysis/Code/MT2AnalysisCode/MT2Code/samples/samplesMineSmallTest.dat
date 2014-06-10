@@ -1,0 +1,30 @@
+#########################################################################################
+GENERAL
+Path         ///dataLOCAL/MT2Tau/RootFiles/
+________________________________________________________________________________________
+# list of samples
+#
+## -------- SMS --------
+SAMPLE
+Name            TStau
+SName           SUSY
+ShapeName       Signal
+File            TChipChimSTauSnu_NTupleProducer_53X_MC/TChipChimSTauSnu_250_0_MassTree_V2_2.root
+Xsection        0.152 pb
+Kfact           1.
+Lumi            19600.0
+Type            susy
+Color           1
+
+## -------- QCD ----------------
+
+SAMPLE
+Name		QCD_HT_100To250
+SName		QCD
+ShapeName	QCD
+File            TauTau_V2_2/QCD-HT-100To250-TuneZ2star-8TeV-madgraph-pythia-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+Xsection  	1.036E7 pb 
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401

@@ -68,124 +68,6 @@ public:
 };
 typedef std::vector<Objectproperties> VOP;
 
-class ExtendedObjectProperty : public TObject {
-public:
-  ExtendedObjectProperty( TString name, TString formula , int nbins, double min, double max) :
-    Name(name),
-    Formula(formula),
-    nBins(nbins),
-    Min(min),
-    Max(max),
-    tFormula(0),
-    NumberOfHistos(7)
-  {
-
-    TH1::SetDefaultSumw2();
-   
-
-    TString  cnames[] = {"QCD", "Wjets", "Zjets", "Top", "MC", "susy","data"};
-    int      ccolor[] = {  401,     417,     419,   600,  500,      1,   632};
-    TString varname = Name;
-    for (int i=0; i<NumberOfHistos ; i++){
-
-      histoNames.push_back( cnames[i] );
-
-      TH1* theH = allHistos[ cnames[i] ] = new TH1D(varname+"_"+cnames[i], "", nBins, Min, Max);
-      theH -> SetFillColor  (ccolor[i]);
-      theH -> SetLineColor  (ccolor[i]);
-      theH -> SetLineWidth  (2);
-      theH -> SetMarkerColor(ccolor[i]);
-      theH -> SetStats(false);
-
-      if(i == 6){
-	theH -> SetMarkerStyle(20);
-	theH -> SetMarkerColor(kBlack);
-	theH -> SetLineColor(kBlack);
-      }
-      if( i == 4){
-	theH -> SetFillStyle(3004);
-	theH -> SetFillColor(kBlack);
-      }
-    }
-
-  }; 
-
-  void SetTree( TTree* tree ){
-    
-    if(tFormula == 0){
-      tFormula = new TTreeFormula( Name.Data() , Formula.Data() , tree );
-    }
-    else{
-      tFormula->SetTree( tree );
-      tFormula->UpdateFormulaLeaves(); 
-    }
-
-  };
-
-  void Fill(TString sample, double w = 1.0){
-    
-    dVal = tFormula->EvalInstance(0);
-
-    TH1* theH = allHistos[ sample ] ;
-
-    theH->Fill( dVal , w);
-
-  }
-
-
-  void AddOverAndUnderFlow(TH1 * Histo, bool overflow, bool underflow){
-    // Add underflow & overflow bins
-    // This failed for older ROOT version when the first(last) bin is empty
-    // and there are underflow (overflow) events --- must check whether this 
-    // is still the case
-    if(underflow){
-      Histo->SetBinContent(1, Histo->GetBinContent(0) + Histo->GetBinContent(1));
-      Histo->SetBinError(1, sqrt(Histo->GetBinError(0)*Histo->GetBinError(0)+
-			      Histo->GetBinError(1)*Histo->GetBinError(1) ));
-      Histo->SetBinContent(0, 0.0);
-    } if(overflow){
-      Histo->SetBinContent(Histo->GetNbinsX(),
-			   Histo->GetBinContent(Histo->GetNbinsX()  )+ 
-			   Histo->GetBinContent(Histo->GetNbinsX()+1) );
-      Histo->SetBinError(Histo->GetNbinsX(),
-			 sqrt(Histo->GetBinError(Histo->GetNbinsX()  )*
-			      Histo->GetBinError(Histo->GetNbinsX()  )+
-			      Histo->GetBinError(Histo->GetNbinsX()+1)*
-			      Histo->GetBinError(Histo->GetNbinsX()+1)  ));
-      Histo->SetBinContent(Histo->GetNbinsX() + 1, 0.0);
-    }
-  };
-
-
-  void Write( TDirectory* dir ){
-    dir->mkdir(  Name  );
-
-    for(int j = 0; j < (NumberOfHistos); j++){
-      TH1* theH = allHistos[ histoNames[j] ];
-      AddOverAndUnderFlow(theH, true, true);
-    }
-
-    
-  };
-
-  double dVal;
-
-  TString Name;
-  TString Formula;
-
-  TTreeFormula* tFormula;
-
-  int nBins;
-
-  double Min;
-  double Max;
-
-  int NumberOfHistos;
-  std::vector<TString> histoNames;
-  std::map<TString , TH1*> allHistos;
-};
-typedef std::vector<ExtendedObjectProperty*> VEOP;
-
 class MassPlotter  {
 
 public:
@@ -372,7 +254,6 @@ public:
   void DrawMyPlots(TString myfileName, double *xbin, int NumberOfBins);
   void EleEleAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfileName);
   
-  void eleTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfilename , TList* props);
   void elemuAnalysis(TString cuts,  TString trigger, Long64_t nevents, TString myfileName );
   void setFlags(int flag); //To determine which analysis we look at HighHT/LowHT MT2(b) options are:
   // 5  :: LowHT  MT2  

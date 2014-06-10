@@ -5,9 +5,9 @@ ROOTGLIBS      = $(shell root-config --glibs)
 INCLUDES       = -I./include -I../TESCO/include -I${CMSSW_RELEASE_BASE}/src/CondFormats/JetMETObjects/interface -I${CMSSW_RELEASE_BASE}/src/ -I${CMS_PATH}/${SCRAM_ARCH}/external/zlib/1.2.3/include -I${CMS_PATH}/${SCRAM_ARCH}/external/boost/1.47.0/include/ -I${CMS_PATH}/${SCRAM_ARCH}/lcg/roofit/5.32.03-cms16/include/
 
 CXX            = g++
-CXXFLAGS       = -g -fPIC -fno-var-tracking -Wno-deprecated -D_GNU_SOURCE -O2 -std=c++0x $(INCLUDES) 
+CXXFLAGS       = -fPIC -fno-var-tracking -Wno-deprecated -D_GNU_SOURCE -O2 -std=c++0x $(INCLUDES) 
 LD             = g++
-LDFLAGS        = -g 
+LDFLAGS        = 
 #SOFLAGS        = -O --no_exceptions  -dynamiclib -flat_namespace -undefined suppress
 SOFLAGS        = -O  -shared  -fPIC -flat_namespace 
 
@@ -27,7 +27,7 @@ SRCS           = ../TESCO/src/base/TreeClassBase.cc ../TESCO/src/base/TreeReader
 		 src/MT2Analysis.cc src/MT2AnalysisElec.cc src/MT2AnalysisMuon.cc src/MT2AnalysisTau.cc \
                  ../TESCO/src/helper/TMctLib.cc ../TESCO/src/helper/mctlib.cc ../TESCO/src/helper/OnTheFlyCorrections.cc \
                  ../TESCO/src/helper/Davismt2.cc   ../TESCO/src/helper/TopSearch.cc ../TESCO/src/helper/Hemisphere.cc  src/MT2Analyzer.cc \
-                 src/MassPlotter.cc ../TESCO/src/helper/PUWeight.C \
+                 src/MassPlotter.cc src/MassPlotterEleTau.cc ../TESCO/src/helper/PUWeight.C \
 		 src/QuickAnalysis.cc src/QuickAnalyzer.cc  src/MT2Shapes.cc \
                  ../TESCO/src/helper/Lumi3DReWeighting_standalone.cc src/helper/EventFilterFromListStandAlone.cc\
 #                 src/ZInvEstFromW.cc \
@@ -50,7 +50,7 @@ SHARED=shlib/libDiLeptonAnalysis.so
 .PHONY : clean purge all depend PhysQC
 
 # Rules ====================================
-all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared
+all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared RunEleTauAnalyzer
 
  shared: $(SHARED)
  $(SHARED): $(OBJS)
@@ -61,17 +61,20 @@ all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared
 #	mv shlib/libDiLeptonAnalysis.so /scratch/$$USERNAME/RunMT2Analyzer
 #	mv /scratch/$$USERNAME/RunMT2Analyzer shlib/libDiLeptonAnalysis.so
 
-RunMT2Analyzer: src/exe/RunMT2Analyzer.C $(OBJS)
+RunEleTauAnalyzer: src/exe/MakeEleTauPlots.C $(SHARED)
+	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -o $@ $^	
+
+RunMT2Analyzer: src/exe/RunMT2Analyzer.C $(SHARED)
 	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -o $@ $^	
 #	mv RunMT2Analyzer /scratch/$$USERNAME/RunMT2Analyzer
 #	mv /scratch/$$USERNAME/RunMT2Analyzer RunMT2Analyzer
 
-RunQuickAnalyzer: src/exe/RunQuickAnalyzer.C $(OBJS)
+RunQuickAnalyzer: src/exe/RunQuickAnalyzer.C  $(SHARED)
 	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -o $@ $^	
 #	mv RunQuickAnalyzer /scratch/$$USERNAME/RunQuickAnalyzer
 #	mv /scratch/$$USERNAME/RunQuickAnalyzer RunQuickAnalyzer
 
-MakeMassPlots: src/exe/MakeMassPlots.C $(OBJS)
+MakeMassPlots: src/exe/MakeMassPlots.C  $(SHARED)
 	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -o $@ $^
 #	mv MakeMassPlots /scratch/$$USERNAME/MakeMassPlots
 #	mv /scratch/$$USERNAME/MakeMassPlots MakeMassPlots
@@ -88,7 +91,7 @@ clean:
 	$(RM) RunMT2Analyzer
 	$(RM) RunQuickAnalyzer
 	$(RM) MakeMassPlots
-
+	$(RM) RunEleTauAnalyzer
 purge:
 	$(RM) $(OBJS)
 
