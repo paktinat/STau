@@ -1,5 +1,6 @@
 #include "MT2tree.hh"
 #include <iostream>
+#include <math.h>
 using namespace std;
 #include "helper/Utilities.hh"
 void MT2tree::FillEleMu(){
@@ -88,7 +89,19 @@ void MT2tree::FillEleMu(){
 	}  
       eleMu[0].DPhi =(fabs(Util::DeltaPhi(muo[eleMu[0].mu0Ind].lv.Phi(), ele[eleMu[0].ele0Ind].lv.Phi())));
       eleMu[0].MT2    = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, pfmet[0]);
-      eleMu[0].lv = muo[eleMu[0].mu0Ind].lv + muo[eleMu[0].ele0Ind].lv;
+      eleMu[0].lv = muo[eleMu[0].mu0Ind].lv + ele[eleMu[0].ele0Ind].lv;
+    
+     
+     float PvisibleX = ele[eleMu[0].ele0Ind].lv.Px() + muo[eleMu[0].mu0Ind].lv.Px();
+     float PvisibleY = ele[eleMu[0].ele0Ind].lv.Py() + muo[eleMu[0].mu0Ind].lv.Py();
+     
+     float ZetaX=(1/sqrt(2))* (ele[eleMu[0].ele0Ind].lv.Px() /sqrt(ele[eleMu[0].ele0Ind].lv.Px()*ele[eleMu[0].ele0Ind].lv.Px()+ele[eleMu[0].ele0Ind].lv.Py()*ele[eleMu[0].ele0Ind].lv.Py()) + muo[eleMu[0].mu0Ind].lv.Px()/ sqrt(muo[eleMu[0].mu0Ind].lv.Px()*muo[eleMu[0].mu0Ind].lv.Px()+muo[eleMu[0].mu0Ind].lv.Py()*muo[eleMu[0].mu0Ind].lv.Py()));
+       
+     float ZetaY=(1/sqrt(2))* (ele[eleMu[0].ele0Ind].lv.Py() /sqrt(ele[eleMu[0].ele0Ind].lv.Px()*ele[eleMu[0].ele0Ind].lv.Px()+ele[eleMu[0].ele0Ind].lv.Py()*ele[eleMu[0].ele0Ind].lv.Py())
+   + muo[eleMu[0].mu0Ind].lv.Py()/sqrt(muo[eleMu[0].mu0Ind].lv.Px()*muo[eleMu[0].mu0Ind].lv.Px()+ muo[eleMu[0].mu0Ind].lv.Py()*muo[eleMu[0].mu0Ind].lv.Py()));
+
+      float Pvisible_dot_Zeta = PvisibleX * ZetaX +  PvisibleY * ZetaY;
+      float Pvisible_dot_Zeta_met = PvisibleX * ZetaX +  PvisibleY * ZetaY + (pfmet[0].Pt()*(ZetaX +ZetaY)) ;
       //cout<<"met.Pt() "<<met.Pt()<<endl;
       eleMu[0].MT2Imbalanced = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, -(eleMu[0].lv));
       if(fVerbose > 3) cout<<"  eleMu[0].MT2Imbalanced  "<<eleMu[0].MT2Imbalanced <<endl;
