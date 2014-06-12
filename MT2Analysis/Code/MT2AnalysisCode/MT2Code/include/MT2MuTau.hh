@@ -20,6 +20,9 @@ public:
     signalMuTau = false;
     qcdMuTau = false;
     DPhi = -9.;
+    pVisibleZeta = -9.99;
+    pZeta        = -9.99;
+    pZetaImbalanced = -9.99;
   };
 
   //Setters
@@ -34,8 +37,13 @@ public:
   void SetBeingSignal(bool input){ signalMuTau = input; };
   void SetBeingQCD(bool input){ qcdMuTau = input; };
   void SetDPhi(float input){DPhi = input;};
+  void SetPVisibleZeta(float input){pVisibleZeta = input;};
+  void SetPZeta(float input){pZeta = input;};
+  void SetPZetaImbalanced(float input){pZeta = input;};
 
   //Getters
+  float GetPVisibleZeta(){return pVisibleZeta;};
+  float GetPZeta(){return pZeta;};
   int GetTauIndex0(){ return tau0Ind; };
   int GetMuIndex0(){ return mu0Ind; };
   int GetSumCharge(){ return chargeSum; };
@@ -89,6 +97,9 @@ private:
   bool signalMuTau;
   bool qcdMuTau;
   float DPhi;
+  float pZeta;
+  float pZetaImbalanced;
+  float pVisibleZeta; 
   ClassDef(MT2MuTau, 1)
 
     };

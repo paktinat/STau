@@ -3154,6 +3154,43 @@ Float_t MT2tree::MHTMETDPhi(){
 	return MHT[0].DeltaPhi(pfmet[0]);
 }
 
+Float_t MT2tree::PZeta(TLorentzVector Lep1, TLorentzVector Lep2, TLorentzVector met){
+
+  float Pvisible_dot_Zeta = PVisibleZeta(Lep1, Lep2);
+
+  float Lep1Mag = sqrt(Lep1.Px()*Lep1.Px()+ Lep1.Py()*Lep1.Py()+ Lep1.Pz()*Lep1.Pz());
+  float Lep2Mag = sqrt(Lep2.Px()*Lep2.Px()+ Lep2.Py()*Lep2.Py()+ Lep2.Pz()*Lep2.Pz());
+
+  float ZetaX= (1/sqrt(2.)) * (Lep1.Px()/Lep1Mag + Lep2.Px()/Lep2Mag);
+  float ZetaY= (1/sqrt(2.)) * (Lep1.Py()/Lep1Mag + Lep2.Py()/Lep2Mag);
+  float ZetaZ= (1/sqrt(2.)) * (Lep1.Pz()/Lep1Mag + Lep2.Pz()/Lep2Mag);
+
+
+  float P_met_dot_Zeta =  Pvisible_dot_Zeta + (met.Px()*ZetaX + met.Py()*ZetaY) ;
+  return P_met_dot_Zeta;
+}
+
+Float_t MT2tree::PVisibleZeta(TLorentzVector Lep1, TLorentzVector Lep2){
+
+  float PvisibleX    = Lep1.Px() + Lep2.Px();
+  float PvisibleY    = Lep1.Py() + Lep2.Py();
+  float PvisibleZ    = Lep1.Pz() + Lep2.Pz();
+
+  float Lep1Mag = sqrt(Lep1.Px()*Lep1.Px()+ Lep1.Py()*Lep1.Py()+ Lep1.Pz()*Lep1.Pz());
+  float Lep2Mag = sqrt(Lep2.Px()*Lep2.Px()+ Lep2.Py()*Lep2.Py()+ Lep2.Pz()*Lep2.Pz());
+
+  float ZetaX= (1/sqrt(2.)) * (Lep1.Px()/Lep1Mag + Lep2.Px()/Lep2Mag);
+  float ZetaY= (1/sqrt(2.)) * (Lep1.Py()/Lep1Mag + Lep2.Py()/Lep2Mag);
+  float ZetaZ= (1/sqrt(2.)) * (Lep1.Pz()/Lep1Mag + Lep2.Pz()/Lep2Mag);
+  
+  float Pvisible_dot_Zeta = PvisibleX * ZetaX + PvisibleY * ZetaY + PvisibleZ * ZetaZ;
+  
+  return Pvisible_dot_Zeta;
+}
+   
+    
+  
+    
 
 
 // ----------------------------------------------------------------------------------------------------------

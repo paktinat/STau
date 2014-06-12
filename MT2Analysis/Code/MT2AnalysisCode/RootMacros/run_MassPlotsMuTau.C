@@ -54,7 +54,8 @@
 
   // You need to specify the channel
   TString myChan = "muTau[0]";
-  /*
+  /*  
+      myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP) < 175.0 && (Susy.MassGlu - Susy.MassLSP) > 125.0))"); 
   // You need to carefully define the cut variables based on MT2"Channel".hh
   myChannelCuts.push_back(std::string(std::string(myChan) + ".tau0Ind >=0")); // First lepton index, channel specific
   myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0Ind >=0")); // Second lepton index, channel specific
@@ -195,11 +196,11 @@
 */
   // variable, cuts, njet, nbjet, nlep, HLT, xtitle nbins bins flip_order, log , comp , ratio, stack, overlay
 
-//   for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
-//     tA->makePlot(vars[iVar], cuts, -10, 0 , -10, trigger, vars[iVar], ((Objectproperties*)props.At(iVar))->nBins,
-// 		 ((Objectproperties*)props.At(iVar))->lowVal, ((Objectproperties*)props.At(iVar))->highVal, false, true, true,
-//   	       	 true, true, true, 1, true, true, "png");
-//   }
+  for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
+    tA->makePlot(vars[iVar], cuts, -10, 0 , -10, trigger, vars[iVar], ((Objectproperties*)props.At(iVar))->nBins,
+		 ((Objectproperties*)props.At(iVar))->lowVal, ((Objectproperties*)props.At(iVar))->highVal, false, true, true,
+  	       	 true, true, true, 1, true, true, "png");
+  }
 
 //   for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
 //    tA->makePlot(vars[iVar], cuts, -10, -10 , -10, trigger, vars[iVar], 20, 0, 300, false, true, true, true, true, true, 1, true, true, "png");
@@ -212,7 +213,7 @@
 
 //void MassPlotter::plotSig(TString var, TString cuts, TString xtitle, int nbins, double min, double max, bool flip_order, int type ){
   //tA->plotSig("muo[muTau[0].mu0Ind].MT", cuts,  "muo[muTau[0].mu0Ind].MT", 60, 0, 300, 0, 0, 1);
-  tA->muTauAnalysis(cuts, trigger, 10000000000, "MT2_NBCVM_ZlowMass_MET_dataSF_WjetsWeight_NonIsoTauLooseNotTight");
+  //tA->muTauAnalysis(cuts, trigger, 10000000000, "MT2_NBCVM_ZlowMass_MET_dataSF_WjetsWeight_NonIsoTauLooseNotTight");
   //tA->TauFakeRate(cuts, trigger, 10000000000, "PtEta_TightMuonRej2_LooseEleRej_Over_TauEtaLooseIso3hit_Jet0Pass_LeadingJPt350");
   int NumberOfBins = 17;
   //double * xbin;

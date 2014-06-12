@@ -909,6 +909,9 @@ public:
   Float_t BJetMETdPhi(int algo, float value, float minJPt, float maxJEta, int PFJID);
   Float_t MHTMETDPhi();
 
+  Float_t PZeta(TLorentzVector Lep1, TLorentzVector Lep2, TLorentzVector met);
+  Float_t PVisibleZeta(TLorentzVector Lep1, TLorentzVector Lep2);
+
   // MT2 & friends
   Float_t GetMT2            (Float_t testmass=0, bool massive=false,       Int_t PFJID=1, Float_t minJPt=20, Float_t maxJEta=2.4, 
 		              Int_t hemi_seed=2,   Int_t hemi_association=3, Int_t met=1 );

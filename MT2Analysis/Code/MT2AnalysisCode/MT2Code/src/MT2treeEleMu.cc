@@ -54,22 +54,10 @@ void MT2tree::FillEleMu(){
     eleMu[0].MT2    = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, pfmet[0]);
     eleMu[0].lv = muo[eleMu[0].mu0Ind].lv +ele[eleMu[0].ele0Ind].lv;
 
-     float PvisibleX = ele[eleMu[0].ele0Ind].lv.Px() + muo[eleMu[0].mu0Ind].lv.Px();
-     float PvisibleY = ele[eleMu[0].ele0Ind].lv.Py() + muo[eleMu[0].mu0Ind].lv.Py();
-     float PvisibleZ = ele[eleMu[0].ele0Ind].lv.Pz() + muo[eleMu[0].mu0Ind].lv.Pz();
- 
-     float ZetaX= (1/sqrt(2))* (ele[eleMu[0].ele0Ind].lv.Px() /sqrt(ele[eleMu[0].ele0Ind].lv.Px()*ele[eleMu[0].ele0Ind].lv.Px()+ele[eleMu[0].ele0Ind].lv.Py()*ele[eleMu[0].ele0Ind].lv.Py()+ele[eleMu[0].ele0Ind].lv.Pz()*ele[eleMu[0].ele0Ind].lv.Pz()) + muo[eleMu[0].mu0Ind].lv.Px()/ sqrt(muo[eleMu[0].mu0Ind].lv.Px()*muo[eleMu[0].mu0Ind].lv.Px()+muo[eleMu[0].mu0Ind].lv.Py()*muo[eleMu[0].mu0Ind].lv.Py()+ muo[eleMu[0].mu0Ind].lv.Pz()*muo[eleMu[0].mu0Ind].lv.Pz() ));
-       
-     float ZetaY=(1/sqrt(2))* (ele[eleMu[0].ele0Ind].lv.Py() /sqrt(ele[eleMu[0].ele0Ind].lv.Px()*ele[eleMu[0].ele0Ind].lv.Px()+ele[eleMu[0].ele0Ind].lv.Py()*ele[eleMu[0].ele0Ind].lv.Py()+ele[eleMu[0].ele0Ind].lv.Pz()*ele[eleMu[0].ele0Ind].lv.Pz())
-   + muo[eleMu[0].mu0Ind].lv.Py()/sqrt(muo[eleMu[0].mu0Ind].lv.Px()*muo[eleMu[0].mu0Ind].lv.Px()+ muo[eleMu[0].mu0Ind].lv.Py()*muo[eleMu[0].mu0Ind].lv.Py()+ muo[eleMu[0].mu0Ind].lv.Pz()*muo[eleMu[0].mu0Ind].lv.Pz()));
-
-     float ZetaZ=(1/sqrt(2))* (ele[eleMu[0].ele0Ind].lv.Pz() /sqrt(ele[eleMu[0].ele0Ind].lv.Px()*ele[eleMu[0].ele0Ind].lv.Px()+ele[eleMu[0].ele0Ind].lv.Py()*ele[eleMu[0].ele0Ind].lv.Py()+ ele[eleMu[0].ele0Ind].lv.Pz()*ele[eleMu[0].ele0Ind].lv.Pz())
-   + muo[eleMu[0].mu0Ind].lv.Pz()/sqrt(muo[eleMu[0].mu0Ind].lv.Px()*muo[eleMu[0].mu0Ind].lv.Px()+ muo[eleMu[0].mu0Ind].lv.Py()*muo[eleMu[0].mu0Ind].lv.Py()+ muo[eleMu[0].mu0Ind].lv.Pz()*muo[eleMu[0].mu0Ind].lv.Pz()));
-
-      float Pvisible_dot_Zeta = PvisibleX * ZetaX +  PvisibleY * ZetaY+ PvisibleZ * ZetaZ;
-      float P_dot_Zeta_met =  Pvisible_dot_Zeta + (pfmet[0].Px()*ZetaX + pfmet[0].Py()*ZetaY + pfmet[0].Py()*ZetaY ) ;
+    float Pvisible_dot_Zeta = PVisibleZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv);
+    float P_met_dot_Zeta    = PZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv, pfmet[0]);
       
-      cout<<"Pvisible_dot_Zeta1" << Pvisible_dot_Zeta <<endl;
+    cout<<" Pvisible_dot_Zeta0 " << Pvisible_dot_Zeta <<" P_met_dot_Zeta " << P_met_dot_Zeta <<endl;
     
     //if(fVerbose > 3) 
     cout<<" met.Pt() "<<eleMu[0].lv.Pt()<<endl;
@@ -111,22 +99,11 @@ void MT2tree::FillEleMu(){
       eleMu[0].MT2    = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, pfmet[0]);
       eleMu[0].lv = muo[eleMu[0].mu0Ind].lv + ele[eleMu[0].ele0Ind].lv;
     
-     
-     float PvisibleX = ele[eleMu[0].ele0Ind].lv.Px() + muo[eleMu[0].mu0Ind].lv.Px();
-     float PvisibleY = ele[eleMu[0].ele0Ind].lv.Py() + muo[eleMu[0].mu0Ind].lv.Py();
-     float PvisibleZ = ele[eleMu[0].ele0Ind].lv.Pz() + muo[eleMu[0].mu0Ind].lv.Pz();
+      float Pvisible_dot_Zeta = PVisibleZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv);
+      float P_met_dot_Zeta    = PZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv, pfmet[0]);
+      
+      cout<<" Pvisible_dot_Zeta1 " << Pvisible_dot_Zeta <<" P_met_dot_Zeta " << P_met_dot_Zeta <<endl;
  
-     float ZetaX= (1/sqrt(2))* (ele[eleMu[0].ele0Ind].lv.Px() /sqrt(ele[eleMu[0].ele0Ind].lv.Px()*ele[eleMu[0].ele0Ind].lv.Px()+ele[eleMu[0].ele0Ind].lv.Py()*ele[eleMu[0].ele0Ind].lv.Py()+ele[eleMu[0].ele0Ind].lv.Pz()*ele[eleMu[0].ele0Ind].lv.Pz()) + muo[eleMu[0].mu0Ind].lv.Px()/ sqrt(muo[eleMu[0].mu0Ind].lv.Px()*muo[eleMu[0].mu0Ind].lv.Px()+muo[eleMu[0].mu0Ind].lv.Py()*muo[eleMu[0].mu0Ind].lv.Py()+ muo[eleMu[0].mu0Ind].lv.Pz()*muo[eleMu[0].mu0Ind].lv.Pz() ));
-       
-     float ZetaY=(1/sqrt(2))* (ele[eleMu[0].ele0Ind].lv.Py() /sqrt(ele[eleMu[0].ele0Ind].lv.Px()*ele[eleMu[0].ele0Ind].lv.Px()+ele[eleMu[0].ele0Ind].lv.Py()*ele[eleMu[0].ele0Ind].lv.Py()+ele[eleMu[0].ele0Ind].lv.Pz()*ele[eleMu[0].ele0Ind].lv.Pz())
-   + muo[eleMu[0].mu0Ind].lv.Py()/sqrt(muo[eleMu[0].mu0Ind].lv.Px()*muo[eleMu[0].mu0Ind].lv.Px()+ muo[eleMu[0].mu0Ind].lv.Py()*muo[eleMu[0].mu0Ind].lv.Py()+ muo[eleMu[0].mu0Ind].lv.Pz()*muo[eleMu[0].mu0Ind].lv.Pz()));
-
-     float ZetaZ=(1/sqrt(2))* (ele[eleMu[0].ele0Ind].lv.Pz() /sqrt(ele[eleMu[0].ele0Ind].lv.Px()*ele[eleMu[0].ele0Ind].lv.Px()+ele[eleMu[0].ele0Ind].lv.Py()*ele[eleMu[0].ele0Ind].lv.Py()+ ele[eleMu[0].ele0Ind].lv.Pz()*ele[eleMu[0].ele0Ind].lv.Pz())
-   + muo[eleMu[0].mu0Ind].lv.Pz()/sqrt(muo[eleMu[0].mu0Ind].lv.Px()*muo[eleMu[0].mu0Ind].lv.Px()+ muo[eleMu[0].mu0Ind].lv.Py()*muo[eleMu[0].mu0Ind].lv.Py()+ muo[eleMu[0].mu0Ind].lv.Pz()*muo[eleMu[0].mu0Ind].lv.Pz()));
-
-      float Pvisible_dot_Zeta = PvisibleX * ZetaX +  PvisibleY * ZetaY+ PvisibleZ * ZetaZ;
-      float P_dot_Zeta_met =  Pvisible_dot_Zeta + pfmet[0].Px()*ZetaX + pfmet[0].Py()*ZetaY + pfmet[0].Py()*ZetaY  ;
-     
       //cout<<"met.Pt() "<<met.Pt()<<endl;
      
       eleMu[0].MT2Imbalanced = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, -(eleMu[0].lv));

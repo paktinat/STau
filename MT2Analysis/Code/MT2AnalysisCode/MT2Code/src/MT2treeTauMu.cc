@@ -76,6 +76,9 @@ void MT2tree::FillMuTau(){
     muTau[0].SetMuVeto(this->HasNoVetoMuForMuTau(indecies.second));
     muTau[0].SetBeingSignal((muTau[0].isDesirableEvent() && muTau[0].GetSumCharge() == 0));
     muTau[0].SetBeingQCD((muTau[0].isDesirableEvent() && muTau[0].GetSumCharge() != 0));
+    muTau[0].SetPVisibleZeta(PVisibleZeta(tau[indecies.first].lv, muo[indecies.second].lv));
+    muTau[0].SetPZeta(PZeta(tau[indecies.first].lv, muo[indecies.second].lv, pfmet[0])); 
+    muTau[0].SetPZetaImbalanced(PZeta(tau[indecies.first].lv, muo[indecies.second].lv, (-muTau[0].GetLV()))); 
     if(this->fVerbose > 3 )
       muTau[0].printObject();
   }

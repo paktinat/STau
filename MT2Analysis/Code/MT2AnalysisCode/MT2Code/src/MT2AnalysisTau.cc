@@ -155,12 +155,12 @@ bool MT2Analysis::IsGoodTauLooseID(int i){
 }
 
 bool MT2Analysis::IsGoodTau(int i){
-       if(fTR->TauPt[i]                          < 15.0         ) return false;    
+       if(fTR->TauPt[i]                          < 20.0         ) return false;    
        if(fabs(fTR->TauEta[i])                   > 2.3          ) return false;
        if(fTR->TauDecayModeFinding[i]            < 0.5          ) return false;  
        //if(fTR->TauLooseElectronRejection[i]      < 0.5          ) return false;//have to take this as we apply tau veto
        //if(fTR->TauLooseMuonRejection[i]          < 0.5          ) return false;//loose WP is the same for '2' version, no problem
        //if(fTR->TauLooseCombinedIsoDBSumPtCorr[i] < 0.5          ) return false;//should contain also the "3hits" ones, small inefficiency for MVA2.
-       if(fTR->TauLooseCombinedIsoDBSumPtCorr3Hits[i] < 0.5          ) return false;//should contain also the "3hits" ones, small inefficiency for MVA2.
+       //if(fTR->TauLooseCombinedIsoDBSumPtCorr3Hits[i] < 0.5          ) return false;//should contain also the "3hits" ones, small inefficiency for MVA2.
        return true;
 }
