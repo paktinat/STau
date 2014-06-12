@@ -1,0 +1,4 @@
+rm -rf haddcommand
+echo "hadd -f /tmp/TuaFR_RunD.root" > haddcommand
+eos ls /eos/cms/store/user/hbakhshi/JetHT/CostemizedV1_02_JetHT-Run2012D-22Jan2013-v1-AOD/67f7f9e65cf53f9b12fada994b056063_MT2Trees | awk '{print "root://eoscms//eos/cms/store/user/hbakhshi/JetHT/CostemizedV1_02_JetHT-Run2012D-22Jan2013-v1-AOD/67f7f9e65cf53f9b12fada994b056063_MT2Trees/" $1 }' | tr '\n' ' ' >> haddcommand
+echo >> haddcommand

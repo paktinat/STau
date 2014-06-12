@@ -18,6 +18,6 @@ eos1="/afs/cern.ch/project/eos/installation/0.3.15/bin/eos.select"
  
 $eos1 mkdir -p $eosoutdir
 $eos1 cp $WORKDIR/$output $eosoutdir/
-rm -rf $output
+rm -rf $WORKDIR/$output
 
 

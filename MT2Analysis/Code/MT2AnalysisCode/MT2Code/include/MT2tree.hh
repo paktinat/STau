@@ -501,6 +501,8 @@ public:
 	  lv.SetPxPyPzE(lv.Px()/corr, lv.Py()/corr, lv.Pz()/corr, lv.E()/corr);
   }
   void smearedJet(TLorentzVector genMatch, TH2* lut_, double smearBy_ /*Nsigma*/ = 1, double shiftBy_ /*residualVariation*/ = 0){
+
+    return;
   //http://cmslxr.fnal.gov/lxr/source/PhysicsTools/PatUtils/interface/SmearedJetProducerT.h#209	
         TRandom3 rnd_;
 	double smearFactor = 1.;  
