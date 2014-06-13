@@ -1,12 +1,15 @@
 ########################
 # Submit description file for mathematica
 ########################
-executable     = run.sh
+executable     = ./runMT2TreeProducer.sh
 universe       = vanilla 
-output         = df.out
-error          = df.error             
-log            = test.log                                                    
-Arguments      = -h	
+notification   = Always
+notify_user    = USERNAME@cern.ch
+output         = JOBNAME.out$(Process) 
+error          = JOBNAME.err$(Process) 
+log            = JOBNAME.log
+initialdir     = JOBNAME
+Arguments      = ARGS
 
 transfer_executable=True
 should_transfer_files = IF_NEEDED
@@ -14,6 +17,6 @@ should_transfer_files = IF_NEEDED
 +DESIRED_Sites="UCSD"
 +Owner = undefined 
 notification=Never 
-x509userproxy=/tmp/x509up_u31562
+x509userproxy=PROXYFILENAME
                                 
-queue
+queue NJOBS

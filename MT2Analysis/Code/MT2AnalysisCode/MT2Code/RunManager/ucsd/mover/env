@@ -1,0 +1,12 @@
+#! /bin/bash
+
+
+export GLITE_VERSION=gLite-3.2.11-1
+. /code/osgcode/ucsdt2/$GLITE_VERSION/etc/profile.d/grid-env.sh
+
+export LCG_GFAL_INFOSYS=lcg-bdii.cern.ch:2170
+export GLOBUS_TCP_PORT_RANGE=20000,25000
+. /code/osgcode/ucsdt2/Crab/etc/crab.sh
+
+voms-proxy-init -voms cms -valid 200:00
+

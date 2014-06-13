@@ -1,0 +1,2 @@
+DoubleMuRunAEleTau1 /DoubleMu/hbakhshi-V03-09-01_RunA-EleTau-9bc3a6bb0ab58621fcde9a392f5df1a3/USER hbakhshi 5 $(Process) /hadoop/cms/store/user/hbakhshi/DoubleMu/V03-09-01_RunA-EleTau/9bc3a6bb0ab58621fcde9a392f5df1a3_MT2Trees/ 0 data TauFR	
+DoubleMuRunAEleTau2 /DoubleMu/hbakhshi-V03-09-01_RunA-EleTau-9bc3a6bb0ab58621fcde9a392f5df1a3/USER hbakhshi 18 $(Process) /hadoop/cms/store/user/hbakhshi/DoubleMu/V03-09-01_RunA-EleTau/9bc3a6bb0ab58621fcde9a392f5df1a3_MT2Trees/ 0 data TauFR	
