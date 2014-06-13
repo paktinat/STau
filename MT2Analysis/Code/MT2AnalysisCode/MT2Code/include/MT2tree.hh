@@ -1045,13 +1045,16 @@ public:
   //Eskandari   
   MT2DoubleEle doubleEle[1]; 
 
-  void  FillDoubleEle();
-  double  GetDoubleEleTrgSF();
+  void   FillDoubleEle();
+  double GetDoubleEleTrgSF();
 
-  double GetPtRatioEEchannel();
-  double GetPositronDecayAngleinZframeEEchannel();
-  double MinMetLepDPhiEEchannel();
-  double PositronAngleWithZBeamPlaneEEchannel();
+  double PtRatioEE();
+  double PositronDecayAngleinZframeEE();
+  double MinMetLepDPhiEE();
+  double PositronAngleWithZBeamPlaneEE();
+  double GetPVisibleZetaEE();
+  double GetPZetaEE();
+  double GetPZetaImbEE();
 
   //chenarani   
   MT2DoubleMuon doubleMu[1];

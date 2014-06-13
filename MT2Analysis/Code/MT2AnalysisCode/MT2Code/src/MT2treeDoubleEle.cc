@@ -135,12 +135,12 @@ double MT2tree::GetDoubleEleTrgSF(){
 
 
 
-double MT2tree::GetPtRatioEEchannel(){
+double MT2tree::PtRatioEE(){
   return (doubleEle[0].lv.Pt() / (ele[doubleEle[0].Ele0Ind].lv.Pt() + ele[doubleEle[0].Ele1Ind].lv.Pt())) ;
 }
 
 
-double MT2tree::GetPositronDecayAngleinZframeEEchannel(){
+double MT2tree::PositronDecayAngleinZframeEE(){
 
   if ( ele[doubleEle[0].Ele0Ind].Charge == 1 ){
 
@@ -150,32 +150,37 @@ double MT2tree::GetPositronDecayAngleinZframeEEchannel(){
     TVector3 a0 = ele[doubleEle[0].Ele0Ind].lv.Vect();
     TVector3 q0 = doubleEle[0].lv.Vect();
     //    std::cout<<"Angle of aO and q0:"<<a0.Angle(q0)<<endl; 
-    return(a0.Angle(q0));
+    return(fabs(a0.Angle(q0)));
   }
   else if ( ele[doubleEle[0].Ele1Ind].Charge == 1 ){
     ele[doubleEle[0].Ele1Ind].lv.Boost(-doubleEle[0].lv.BoostVector());
     TVector3 a1 = ele[doubleEle[0].Ele1Ind].lv.Vect();
     TVector3 q1 = doubleEle[0].lv.Vect();
-    return(a1.Angle(q1));
+    return(fabs(a1.Angle(q1)));
   }
 
 }
 
-double MT2tree::MinMetLepDPhiEEchannel() {
+double MT2tree::MinMetLepDPhiEE() {
 
   TLorentzVector MET = (0.0,0.0,0.0,0.0);
    MET = pfmet[0];
 
-  if ( ele[doubleEle[0].Ele0Ind].Charge == 1 ){
-    return ele[doubleEle[0].Ele0Ind].lv.DeltaPhi(MET);
-  }
-  else if ( ele[doubleEle[0].Ele1Ind].Charge == 1 ){
-    return ele[doubleEle[0].Ele1Ind].lv.DeltaPhi(MET);
-  }
+//   if ( ele[doubleEle[0].Ele0Ind].Charge == 1 ){
+//     return ele[doubleEle[0].Ele0Ind].lv.DeltaPhi(MET);
+//   }
+//   else if ( ele[doubleEle[0].Ele1Ind].Charge == 1 ){
+//     return ele[doubleEle[0].Ele1Ind].lv.DeltaPhi(MET);
+//   }
+
+float metele1 = ele[doubleEle[0].Ele0Ind].lv.DeltaPhi(MET);
+float metele2 = ele[doubleEle[0].Ele1Ind].lv.DeltaPhi(MET);
+
+ return (min(metele1,metele2));
 }
 
 
-double MT2tree::PositronAngleWithZBeamPlaneEEchannel() {
+double MT2tree::PositronAngleWithZBeamPlaneEE() {
 
   TVector3 z = (0,0,1);
   TVector3 a = doubleEle[0].lv.Vect();
@@ -185,15 +190,28 @@ double MT2tree::PositronAngleWithZBeamPlaneEEchannel() {
     ele[doubleEle[0].Ele0Ind].lv.Boost(-doubleEle[0].lv.BoostVector());
     TVector3 a0 = ele[doubleEle[0].Ele0Ind].lv.Vect();
     double ang0 = pi/2 - pl.Angle(a0);
-    return(ang0);
+    return(fabs(ang0));
   }
   else if ( ele[doubleEle[0].Ele1Ind].Charge == 1 ){
     ele[doubleEle[0].Ele1Ind].lv.Boost(-doubleEle[0].lv.BoostVector());
     TVector3 a1 = ele[doubleEle[0].Ele1Ind].lv.Vect();
     double ang1 = pi/2 - pl.Angle(a1);
-    return(ang1);
+    return(fabs(ang1));
 
   }
 
 }
 
+double MT2tree::GetPVisibleZetaEE(){
+ return(PVisibleZeta(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv));
+}
+
+double MT2tree::GetPZetaEE(){
+  return(PZeta(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, pfmet[0]));
+}
+double MT2tree::GetPZetaImbEE(){
+  return(PZeta(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, -(doubleEle[0].lv)));
+}
+
+// PZeta(tau[indecies.first].lv, muo[indecies.second].lv, pfmet[0]));
+// PZetaImbalanced(PZeta(tau[indecies.first].lv, muo[indecies.second].lv, (-muTau[0].GetLV())));

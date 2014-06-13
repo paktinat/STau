@@ -1,8 +1,14 @@
+
 {
   TString outputdir = "../MassPlots/";
   
+
+      TString samples = "./samples/samplesMineDoubleElectronQCDBCtoE-SMS050.dat";
+  //        TString samples = "./samples/samplesMineDoubleElectronQCDHtBin-SMS050.dat";
+  //      TString samples = "./samples/samplesMineDoubleElectronQCDPtBin-SMS050.dat";
   //  TString samples = "./samples/samplesMineDoubleElectronQCDHtBin-SMS005.dat";
-  TString samples = "./samples/samplesMineDoubleElectronQCDHtBin-SMS050.dat";
+  //  TString samples = "./samples/samplesMineDoubleElectronQCDHtBin-SMS005.dat";
+
   //  TString samples = "./samples/samplesMineDoubleElectronQCDPtBin.dat";
   //     TString samples = "./samples/samplesMineQCD.dat";
 
@@ -213,12 +219,12 @@ tA->makePlot(vars3[iVar3], cuts, -10, -10 , -10, trigger, vars3[iVar3],20,0,20 ,
 //tA->MakeCutFlowTable( myChannelCuts );
 
 //  tA->NonIsoOStoNonIsoSSRatio(cuts, trigger, 100000, "MT2");
-  tA->EleEleAnalysis(cuts, trigger, 100, "MT2");
+  tA->EleEleAnalysis(cuts, trigger, 10000000000000, "MT2_HT");
   int NumberOfBins = 21;
   double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,115.0,130.0,145.0,160.0,180.0,200.0,230.0,260.0,290.0,340.0,400.0};      //MT2
    // double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
 
- tA->DrawMyPlots("MT2_Histos.root", xbin, NumberOfBins);
+ tA->DrawMyPlots("MT2_HT_Histos.root", xbin, NumberOfBins);
    // double * xbin;
    // double xbin[NumberOfBins+1] = {0.0,50.0,100.0,150.0,200.0,250.0,300};
 
