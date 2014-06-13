@@ -33,12 +33,12 @@
 #include <map>
 #include <string>
 #include <cmath>
-#include "/dataLOCAL/paktinat/Projects/MT2/MT2_V02-03-02/MT2Analysis/Code/MT2AnalysisCode/MT2Code/include/MT2tree.hh"
-#include "/dataLOCAL/paktinat/Projects/MT2/MT2_V02-03-02/MT2Analysis/Code/MT2AnalysisCode/TESCO/include/helper/Utilities.hh"
+#include "MT2tree.hh"
+#include "helper/Utilities.hh"
 
 using namespace std;
 
-void load(const char* filename = "/dataLOCAL/paktinat/Projects/MT2/MT2_V02-03-02/MT2Analysis/Code/MT2AnalysisCode/MT2Code/samples/samplesMine.dat");
+void load(const char* filename = GETDATALOCALPATH(MT2Analysis/Code/MT2AnalysisCode/MT2Code/samples/samplesMine.dat) );
 void GetBEfficiency_InputHistograms();
 
 struct sample{
@@ -86,9 +86,9 @@ void GetBEfficiency_InputHistograms(){
 //	TString samples         = "/shome/haweber/MT2Analysis_8TeV/Code/MT2AnalysisCode/RootMacros/samples/samples_type1MET_CHS_53X_MET.dat";//MET
 //	TString samples         = "/shome/haweber/MT2Analysis_8TeV/Code/MT2AnalysisCode/RootMacros/samples/samples_type1MET_CHS_53X_HT.dat";//HT
 //	TString samples         = "/shome/haweber/MT2Analysis_8TeV/Code/MT2AnalysisCode/RootMacros/samples/samples_type1MET_CHS_53X_MET_newTTbar.dat";//MET
-	TString samples         = "/dataLOCAL/paktinat/Projects/MT2/MT2_V02-03-02/MT2Analysis_8TeV/Code/MT2AnalysisCode/RootMacros/samples/samplesMine.dat";//HT
+	TString samples         = GETDATALOCALPATH(MT2Analysis_8TeV/Code/MT2AnalysisCode/RootMacros/samples/samplesMine.dat);//HT
 //	TString samples         = "/shome/haweber/MT2Analysis_8TeV/Code/MT2AnalysisCode/RootMacros/samples/samples_type1MET_CHS_53X_METorHT.dat";//HT
-	TString outputdir 	= "/dataLOCAL/paktinat/Projects/MT2/MT2_V02-03-02/MT2Analysis/Code/Efficiencies/InputHistos/";//if not empty end with slash
+	TString outputdir 	= GETDATALOCALPATH(Projects/MT2/MT2_V02-03-02/MT2Analysis/Code/Efficiencies/InputHistos/);//if not empty end with slash
 //	TString outputdir 	= "/shome/haweber/MT2Analysis_8TeV/Code/Efficiencies/test/InputHistos/";//if not empty end with slash
 	Util::MakeOutputDir(outputdir);
 //	TString outputname 	= "BEfficiencies_histos_DileptonicStop_CSVM.root";

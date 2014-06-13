@@ -5,7 +5,7 @@ using namespace std;
 
 OnTheFlyCorrections::OnTheFlyCorrections(string gt, bool isdata){
 
-  string path = "/dataLOCAL/MT2Top/JetEnergyCorrection/"+gt;                                                                                      
+  string path = GETDATALOCALPATH(JetEnergyCorrection/)  + gt;
   //string path = "/shome/paktinat/Top/CMSSW_5_3_7_patch5/src/MT2_Tau_V02-03-02/MT2Analysis/Code/MT2AnalysisCode/TESCO/src/helper/JetCorrectionFiles/";
   JetCorrectorParameters *ResJetPar = new JetCorrectorParameters(path+"/"+gt+"_L2L3Residual_AK5PF.txt");
   JetCorrectorParameters *L3JetPar  = new JetCorrectorParameters(path+"/"+gt+"_L3Absolute_AK5PF.txt");

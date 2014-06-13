@@ -92,7 +92,7 @@ void MT2Analysis::Begin(const char* filename){
 	TDirectory *dir = gDirectory;
 
 	if (fisData )
-	  myFilter = new EventFilterFromListStandAlone("/dataLOCAL/MT2Tau/data/HCALLaser2012AllDatasets.txt.gz");
+	  myFilter = new EventFilterFromListStandAlone(GETDATALOCALPATH(data/HCALLaser2012AllDatasets.txt.gz) );
 
 	//define btagging files
 	bool existing=true;
@@ -1762,7 +1762,7 @@ void MT2Analysis::GetLeptonJetIndices(){
 	  CorrToMETFromJetSmearing.SetXYZT(0.0, 0.0, 0.0, 0.0);
 	  vector<float> jpt;
 	  vector<int>   fJets;
-	  TFile *Lutfile = new TFile("/dataLOCAL/MT2Top/JetResolutions/pfJetResolutionMCtoDataCorrLUT.root","READ");
+	  TFile *Lutfile = new TFile(GETDATALOCALPATH(JetResolutions/pfJetResolutionMCtoDataCorrLUT.root),"READ");
 	  //	  TFile *Lutfile = new TFile("/shome/paktinat/Top/CMSSW_5_3_7_patch5/src/MT2Analysis_V02-03-02/Code/MT2AnalysisCode/MT2Code/pfJetResolutionMCtoDataCorrLUT.root","READ");
 
 	  TH2F* lutHisto = (TH2F*) Lutfile->Get("pfJetResolutionMCtoDataCorrLUT");
@@ -2205,8 +2205,8 @@ const float MT2Analysis::EffAreaPhoton(float abseta){
 
 // Jets and JES uncertainty
 void MT2Analysis::Initialize_JetCorrectionUncertainty(){
-	string PF  ="/dataLOCAL/MT2Top/JetEnergyCorrection/"+fJEC+"/"+fJEC+ (fisCHSJets?"_Uncertainty_AK5PFchs.txt":"_Uncertainty_AK5PF.txt");
-	string Calo="/dataLOCAL/MT2Top/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_Uncertainty_AK5Calo.txt";
+  string PF  =GETDATALOCALPATH(JetEnergyCorrection/) +fJEC+"/"+fJEC+ (fisCHSJets?"_Uncertainty_AK5PFchs.txt":"_Uncertainty_AK5PF.txt");
+  string Calo=GETDATALOCALPATH(JetEnergyCorrection/)+fJEC+"/"+fJEC+"_Uncertainty_AK5Calo.txt";
 
 	//string PF  ="/shome/haweber/MT2Analysis_8TeV/Code/JetEnergyCorrection/"+fJEC+"/"+fJEC+ (fisCHSJets?"_Uncertainty_AK5PFchs.txt":"_Uncertainty_AK5PF.txt");
         //string Calo="/shome/haweber/MT2Analysis_8TeV/Code/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_Uncertainty_AK5Calo.txt";
@@ -2223,17 +2223,17 @@ void MT2Analysis::Initialize_JetCorrectionUncertainty(){
 }
 
 void MT2Analysis::Initialize_JetEnergyCorrection(){
-	string Calo_L2  ="/dataLOCAL/MT2Top/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_L2Relative_AK5Calo.txt";
-	string Calo_L3  ="/dataLOCAL/MT2Top/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_L3Absolute_AK5Calo.txt";
-	string Calo_RES ="/dataLOCAL/MT2Top/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_L2L3Residual_AK5Calo.txt";
-	string PF_L1    ="/dataLOCAL/MT2Top/JetEnergyCorrection/"+fJEC+"/"+fJEC+(fisCHSJets?"_L1FastJet_AK5PFchs.txt"    :"_L1FastJet_AK5PF.txt");
-	string PF_L2    ="/dataLOCAL/MT2Top/JetEnergyCorrection/"+fJEC+"/"+fJEC+(fisCHSJets?"_L2Relative_AK5PFchs.txt"   :"_L2Relative_AK5PF.txt");
-	string PF_L3    ="/dataLOCAL/MT2Top/JetEnergyCorrection/"+fJEC+"/"+fJEC+(fisCHSJets?"_L3Absolute_AK5PFchs.txt"   :"_L3Absolute_AK5PF.txt");
-	string PF_RES   ="/dataLOCAL/MT2Top/JetEnergyCorrection/"+fJEC+"/"+fJEC+(fisCHSJets?"_L2L3Residual_AK5PFchs.txt" :"_L2L3Residual_AK5PF.txt");
-	string rawPF_L1 ="/dataLOCAL/MT2Top/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_L1FastJet_AK5PF.txt";
-	string rawPF_L2 ="/dataLOCAL/MT2Top/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_L2Relative_AK5PF.txt";
-	string rawPF_L3 ="/dataLOCAL/MT2Top/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_L3Absolute_AK5PF.txt";
-	string rawPF_RES="/dataLOCAL/MT2Top/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_L2L3Residual_AK5PF.txt";
+  string Calo_L2  =GETDATALOCALPATH(JetEnergyCorrection/)+fJEC+"/"+fJEC+"_L2Relative_AK5Calo.txt";
+  string Calo_L3  =GETDATALOCALPATH(JetEnergyCorrection/)+fJEC+"/"+fJEC+"_L3Absolute_AK5Calo.txt";
+  string Calo_RES =GETDATALOCALPATH(JetEnergyCorrection/)+fJEC+"/"+fJEC+"_L2L3Residual_AK5Calo.txt";
+  string PF_L1    =GETDATALOCALPATH(JetEnergyCorrection/)+fJEC+"/"+fJEC+(fisCHSJets?"_L1FastJet_AK5PFchs.txt"    :"_L1FastJet_AK5PF.txt");
+  string PF_L2    =GETDATALOCALPATH(JetEnergyCorrection/)+fJEC+"/"+fJEC+(fisCHSJets?"_L2Relative_AK5PFchs.txt"   :"_L2Relative_AK5PF.txt");
+  string PF_L3    =GETDATALOCALPATH(JetEnergyCorrection/)+fJEC+"/"+fJEC+(fisCHSJets?"_L3Absolute_AK5PFchs.txt"   :"_L3Absolute_AK5PF.txt");
+  string PF_RES   =GETDATALOCALPATH(JetEnergyCorrection/)+fJEC+"/"+fJEC+(fisCHSJets?"_L2L3Residual_AK5PFchs.txt" :"_L2L3Residual_AK5PF.txt");
+  string rawPF_L1 =GETDATALOCALPATH(JetEnergyCorrection/)+fJEC+"/"+fJEC+"_L1FastJet_AK5PF.txt";
+  string rawPF_L2 =GETDATALOCALPATH(JetEnergyCorrection/)+fJEC+"/"+fJEC+"_L2Relative_AK5PF.txt";
+  string rawPF_L3 =GETDATALOCALPATH(JetEnergyCorrection/)+fJEC+"/"+fJEC+"_L3Absolute_AK5PF.txt";
+  string rawPF_RES=GETDATALOCALPATH(JetEnergyCorrection/)+fJEC+"/"+fJEC+"_L2L3Residual_AK5PF.txt";
 	/*
         string Calo_L2  ="/shome/haweber/MT2Analysis_8TeV/Code/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_L2Relative_AK5Calo.txt";
         string Calo_L3  ="/shome/haweber/MT2Analysis_8TeV/Code/JetEnergyCorrection/"+fJEC+"/"+fJEC+"_L3Absolute_AK5Calo.txt";

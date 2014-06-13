@@ -1,0 +1,23 @@
+total 40
+-rw------- 1 cuser28 cuser28 9809 Jun 12 07:20 x509up_u31562
+-rwxr-xr-x 1 cuser28 cuser28   90 Jun 12 07:20 condor_exec.exe
+-rw-r--r-- 1 cuser28 cuser28 4528 Jun 12 07:20 .job.ad
+drwxr-xr-x 3 cuser28 cuser28 4096 Jun 12 07:20 ..
+-rw-r--r-- 1 cuser28 cuser28 7387 Jun 12 07:20 .machine.ad
+-rw-r--r-- 1 cuser28 cuser28    0 Jun 12 07:20 _condor_stdout
+-rw-r--r-- 1 cuser28 cuser28    0 Jun 12 07:20 _condor_stderr
+drwx------ 2 cuser28 cuser28 4096 Jun 12 07:20 .
++++++++++++++++++++++++++++
+/data2/condor_local/execute/dir_26430/glide_6wWWal/execute/dir_7653
+++++++++++++++++
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/sda2              20G  4.0G   15G  22% /
+tmpfs                  32G     0   32G   0% /dev/shm
+/dev/sda3             225G   14G  201G   7% /data1
+/dev/sdb2             244G   11G  221G   5% /data2
+t2gw01.t2.ucsd.edu:/export/apps
+                      668G  2.4G  632G   1% /share/apps
+cvmfs2                 20G  2.7G   17G  14% /cvmfs/cms.cern.ch
+fuse_dfs              2.6P  2.4P  212T  93% /hadoop
+169.228.130.4:/code/osgcode
+                      1.1T  679G  440G  61% /code/osgcode

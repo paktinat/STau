@@ -1,0 +1,26 @@
+[Warning] : run 162811 :ls 339 has 0 dead counts or 0 zerobias bit counts, but inst!=0
+[Warning] : run 162828 :ls 83 has 0 dead counts or 0 zerobias bit counts, but inst!=0
+|    Run | Delivered LS | Delivered (/μb) |         Selected LS | Recorded (/μb) |   Effective (/μb) |
+|        |              |                  |                     |                 | HLT_HT250_MHT60_v2 |
+---------------------------------------------------------------------------------------------------------
+| 162803 |          147 |       499912.536 |          [128-131], |      401329.327 |              0.000 |
+|        |              |                  | [133-139], [60-127] |                 |                    |
+| 162808 |           62 |       317129.166 |    [16-29], [32-49] |      161134.951 |              0.000 |
+| 162811 |          347 |      1599066.151 |             [1-339] |     1573775.838 |        1573775.838 |
+| 162826 |           42 |       185023.934 |              [1-24] |       98659.080 |          98659.080 |
+| 162828 |          150 |       338070.648 |              [1-85] |      334380.297 |         334380.297 |
+
+ ==  =  Total : 
+| Delivered LS | Delivered (/μb) | Selected LS | Recorded (/μb) |  Effective  (/μb) |
+|              |                  |             |                 | HLT_HT250_MHT60_v2 |
+----------------------------------------------------------------------------------------
+|          748 |      2939202.435 |         559 |     2569279.493 |        2006815.214 |
+
+[WARNING] : run 162808 : total non-GOOD LS: UNKNOWN 32, BAD 0, SUSPECT 0
+[WARNING] : run 162826 : total non-GOOD LS: UNKNOWN 24, BAD 0, SUSPECT 0
+[WARNING] : run 162803 : total non-GOOD LS: UNKNOWN 79, BAD 0, SUSPECT 0
+[WARNING] : run 162828 : total non-GOOD LS: UNKNOWN 85, BAD 0, SUSPECT 0
+[WARNING] : run 162811 : total non-GOOD LS: UNKNOWN 340, BAD 0, SUSPECT 0
+
+!!!! WARNING : the two runs that give 0 lumi for the hltpath do in fact fire
+the trigger!!! bug in LumiCalc?? use recorded lumi!!

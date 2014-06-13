@@ -1,0 +1,19 @@
+########################
+# Submit description file for mathematica
+########################
+executable     = run.sh
+universe       = vanilla 
+output         = df.out
+error          = df.error             
+log            = test.log                                                    
+Arguments      = -h	
+
+transfer_executable=True
+should_transfer_files = IF_NEEDED
+#when_to_transfer_output = ON_EXIT
++DESIRED_Sites="UCSD"
++Owner = undefined 
+notification=Never 
+x509userproxy=/tmp/x509up_u31562
+                                
+queue

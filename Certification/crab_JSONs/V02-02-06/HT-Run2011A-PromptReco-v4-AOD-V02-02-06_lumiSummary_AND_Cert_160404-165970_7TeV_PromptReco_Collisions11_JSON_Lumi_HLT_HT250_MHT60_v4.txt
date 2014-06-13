@@ -1,0 +1,89 @@
+[Warning] : run 165364 :ls 1298 has 0 dead counts or 0 zerobias bit counts, but inst!=0
+[Warning] : run 165506 :ls 168 has 0 dead counts or 0 zerobias bit counts, but inst!=0
+[Warning] : run 165514 :ls 562 has 0 dead counts or 0 zerobias bit counts, but inst!=0
+[Warning] : run 165570 :ls 944 has 0 dead counts or 0 zerobias bit counts, but inst!=0
+[Warning] : run 165970 :ls 331 has 0 dead counts or 0 zerobias bit counts, but inst!=0
+|    Run | Delivered LS | Delivered (/μb) |          Selected LS | Recorded (/μb) |   Effective (/μb) |
+|        |              |                  |                      |                 | HLT_HT250_MHT60_v4 |
+----------------------------------------------------------------------------------------------------------
+| 165088 |          391 |         6461.866 |            [107-266] |        3666.398 |           3666.398 |
+| 165098 |          439 |        34365.940 |           [124-187], |       24626.008 |             12.313 |
+|        |              |                  |           [190-193], |                 |                    |
+|        |              |                  |           [195-248], |                 |                    |
+|        |              |                  |           [250-254], |                 |                    |
+|        |              |                  |           [256-331], |                 |                    |
+|        |              |                  | [333-367], [369-415] |                 |                    |
+| 165099 |          125 |         9569.015 |              [1-105] |        7897.838 |           7897.838 |
+| 165102 |          200 |        15915.095 |              [1-185] |       14709.529 |              7.355 |
+| 165103 |          451 |        42808.246 |   [1-185], [187-440] |       41595.527 |          41595.527 |
+| 165120 |          108 |       408680.311 |     [96-97], [82-95] |       72562.547 |              0.000 |
+| 165121 |          713 |      2904421.452 |              [1-466] |     1935721.529 |        1935721.529 |
+| 165205 |          259 |      2337930.284 |             [80-248] |     1643994.340 |           3287.989 |
+| 165208 |          184 |      1675088.596 |              [1-101] |      901562.373 |           1803.125 |
+| 165364 |         1351 |     19320520.801 | [45-111], [114-147], |    17574243.070 |          25106.062 |
+|        |              |                  |           [160-807], |                 |                    |
+|        |              |                  |          [809-1220], |                 |                    |
+|        |              |                  |          [1260-1301] |                 |                    |
+| 165402 |           48 |       438088.596 |               [1-28] |      402829.700 |            575.471 |
+| 165415 |         1427 |     20163660.421 |   [58-85], [88-640], |    18619960.520 |          26599.944 |
+|        |              |                  |           [643-707], |                 |                    |
+|        |              |                  |           [712-777], |                 |                    |
+|        |              |                  |          [780-1356], |                 |                    |
+|        |              |                  |          [1360-1383] |                 |                    |
+| 165467 |          735 |     12676514.131 |             [39-708] |    11278599.970 |          11278.600 |
+| 165472 |          917 |     12788763.601 |   [1-184], [186-882] |    12252512.305 |          17503.589 |
+| 165486 |          117 |      2236609.564 |             [37-102] |     1363702.359 |           1363.702 |
+| 165487 |          158 |      2983292.361 |              [1-150] |     2859517.290 |           2859.517 |
+| 165506 |          178 |      2202791.235 |             [54-169] |     1829481.454 |           1829.481 |
+| 165514 |          584 |     12226712.058 | [72-244], [246-560], |    10765537.875 |          15379.340 |
+|        |              |                  |            [562-566] |                 |                    |
+| 165525 |          138 |      2617113.654 |               [1-31] |      546026.896 |            546.027 |
+| 165537 |          304 |      5124498.076 |     [1-20], [22-295] |     4626270.693 |           4626.271 |
+| 165548 |          630 |      9018270.117 |  [1-363], [365-381], |     8210129.063 |          16420.258 |
+|        |              |                  |            [384-589] |                 |                    |
+| 165558 |           85 |       993659.563 |               [1-62] |      769302.091 |           1538.604 |
+| 165567 |          641 |     13063284.124 | [54-109], [114-309], |    11635283.419 |          11635.283 |
+|        |              |                  |            [315-631] |                 |                    |
+| 165570 |          968 |     16207270.129 |       [1-2], [5-83], |    15612515.326 |          22303.593 |
+|        |              |                  |  [88-942], [944-945] |                 |                    |
+| 165617 |          414 |      9433236.991 |   [26-52], [54-143], |     5839973.085 |           5839.973 |
+|        |              |                  |            [145-288] |                 |                    |
+| 165620 |           87 |      1217279.362 |              [14-19] |      123171.133 |            123.171 |
+| 165633 |          525 |     10702830.028 |    [56-62], [64-64], |     9486954.292 |           4743.477 |
+|        |              |                  |  [66-317], [319-500] |                 |                    |
+| 165970 |          348 |      7237535.000 |  [67-329], [331-334] |     6350351.184 |                N/A |
+
+ ==  =  Total : 
+| Delivered LS | Delivered (/μb) | Selected LS | Recorded (/μb) |  Effective  (/μb) |
+|              |                  |             |                 | HLT_HT250_MHT60_v4 |
+----------------------------------------------------------------------------------------
+|        12525 |    168087170.617 |       10302 |   144792697.814 |        2164264.438 |
+
+[WARNING] : run 165120 : total non-GOOD LS: UNKNOWN 16, BAD 0, SUSPECT 0
+[WARNING] : run 165121 : total non-GOOD LS: UNKNOWN 466, BAD 0, SUSPECT 0
+[WARNING] : run 165506 : total non-GOOD LS: UNKNOWN 117, BAD 0, SUSPECT 0
+[WARNING] : run 165633 : total non-GOOD LS: UNKNOWN 442, BAD 0, SUSPECT 0
+[WARNING] : run 165514 : total non-GOOD LS: UNKNOWN 494, BAD 0, SUSPECT 0
+[WARNING] : run 165102 : total non-GOOD LS: UNKNOWN 185, BAD 0, SUSPECT 0
+[WARNING] : run 165525 : total non-GOOD LS: UNKNOWN 31, BAD 0, SUSPECT 0
+[WARNING] : run 165402 : total non-GOOD LS: UNKNOWN 28, BAD 0, SUSPECT 0
+[WARNING] : run 165103 : total non-GOOD LS: UNKNOWN 439, BAD 0, SUSPECT 0
+[WARNING] : run 165537 : total non-GOOD LS: UNKNOWN 294, BAD 0, SUSPECT 0
+[WARNING] : run 165415 : total non-GOOD LS: UNKNOWN 1313, BAD 0, SUSPECT 0
+[WARNING] : run 165548 : total non-GOOD LS: UNKNOWN 586, BAD 0, SUSPECT 0
+[WARNING] : run 165558 : total non-GOOD LS: UNKNOWN 62, BAD 0, SUSPECT 0
+[WARNING] : run 165364 : total non-GOOD LS: UNKNOWN 1203, BAD 0, SUSPECT 0
+[WARNING] : run 165567 : total non-GOOD LS: UNKNOWN 569, BAD 0, SUSPECT 0
+[WARNING] : run 165472 : total non-GOOD LS: UNKNOWN 881, BAD 0, SUSPECT 0
+[WARNING] : run 165570 : total non-GOOD LS: UNKNOWN 939, BAD 0, SUSPECT 0
+[WARNING] : run 165970 : total non-GOOD LS: UNKNOWN 268, BAD 0, SUSPECT 0
+[WARNING] : run 165205 : total non-GOOD LS: UNKNOWN 169, BAD 0, SUSPECT 0
+[WARNING] : run 165208 : total non-GOOD LS: UNKNOWN 101, BAD 0, SUSPECT 0
+[WARNING] : run 165467 : total non-GOOD LS: UNKNOWN 670, BAD 0, SUSPECT 0
+[WARNING] : run 165088 : total non-GOOD LS: UNKNOWN 160, BAD 0, SUSPECT 0
+[WARNING] : run 165098 : total non-GOOD LS: UNKNOWN 285, BAD 0, SUSPECT 0
+[WARNING] : run 165099 : total non-GOOD LS: UNKNOWN 105, BAD 0, SUSPECT 0
+[WARNING] : run 165486 : total non-GOOD LS: UNKNOWN 66, BAD 0, SUSPECT 0
+[WARNING] : run 165487 : total non-GOOD LS: UNKNOWN 151, BAD 0, SUSPECT 0
+[WARNING] : run 165617 : total non-GOOD LS: UNKNOWN 261, BAD 0, SUSPECT 0
+[WARNING] : run 165620 : total non-GOOD LS: UNKNOWN 6, BAD 0, SUSPECT 0
