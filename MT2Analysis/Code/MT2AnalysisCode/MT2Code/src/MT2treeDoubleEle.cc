@@ -140,8 +140,13 @@ double MT2tree::GetDiLepPtRatioEE(){
 }
 
 double MT2tree::GetPositiveChargedLeptonDecayAngleinZframeEE(){
-  return(PositiveChargedLeptonDecayAngleinZframe(ele[doubleEle[0].Ele0Ind].Charge, ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].Charge, ele[doubleEle[0].Ele1Ind].lv));
+  if (ele[doubleEle[0].Ele0Ind].Charge == 1){
+  return(PositiveChargedLeptonDecayAngleinZframe(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv));
    }
+  else if (ele[doubleEle[0].Ele1Ind].Charge == 1){
+    return(PositiveChargedLeptonDecayAngleinZframe(ele[doubleEle[0].Ele1Ind].lv, ele[doubleEle[0].Ele0Ind].lv));
+  }
+}
 
 
 double MT2tree::GetMinMetLepDPhiEE(){
@@ -149,9 +154,13 @@ return(MinMetLepDPhi(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv)
 }
 
 double MT2tree::GetPositiveChargedLepWithZBeamPlaneEE() {
-  return(PositiveChargedLepWithZBeamPlane(ele[doubleEle[0].Ele0Ind].Charge, ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].Charge, ele[doubleEle[0].Ele1Ind].lv));
-
- }
+  if (ele[doubleEle[0].Ele0Ind].Charge == 1){
+  return(PositiveChargedLepWithZBeamPlane(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv));
+   }
+  else if (ele[doubleEle[0].Ele1Ind].Charge == 1){
+    return(PositiveChargedLepWithZBeamPlane(ele[doubleEle[0].Ele1Ind].lv, ele[doubleEle[0].Ele0Ind].lv));
+  }
+}
  
 double MT2tree::GetPVisibleZetaEE(){
  return(PVisibleZeta(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv));

@@ -913,9 +913,9 @@ public:
   Float_t PVisibleZeta(TLorentzVector Lep1, TLorentzVector Lep2);
 
   double DiLepPtRatio(TLorentzVector Lep1lv, TLorentzVector Lep2lv);
-  double PositiveChargedLeptonDecayAngleinZframe(int Lep1Index, TLorentzVector Lep1lv,int Lep2Index, TLorentzVector Lep2lv);
+  double PositiveChargedLeptonDecayAngleinZframe(TLorentzVector LepPluslv, TLorentzVector LepNeglv);
   double MinMetLepDPhi(TLorentzVector Lep1lv, TLorentzVector Lep2lv);
-  double PositiveChargedLepWithZBeamPlane(int Lep1Index, TLorentzVector Lep1lv,int Lep2Index, TLorentzVector Lep2lv);
+  double PositiveChargedLepWithZBeamPlane(TLorentzVector LepPluslv, TLorentzVector LepNeglv);
 
 
   // MT2 & friends
