@@ -30,8 +30,18 @@ public:
     PassTau1_TauTau = -1;
     PassTau_ElTau = -1;
     PassTau_MuTau = -1;
+    PassQCDTau_ElTau = -1;
+    PassQCDLooseTau_ElTau = -1;
+    PassQCDTau_MuTau = -1;
+    PassQCDLooseTau_MuTau = -1;
+
     PassQCDTau0_TauTau = -1;
     PassQCDTau1_TauTau = -1;
+    trgSFmuTau      = -0.99;
+    trgSFeleTau     = -0.99;
+    WjetsSFTauPlusX = -0.99;
+    energySF        = -0.99;
+    decayMode       = -0.99;
   }
 
   void SetLV(const TLorentzVector v){
@@ -166,7 +176,12 @@ public:
 
   }
 
+  Float_t GetWjetsSFTauPlusX(){
+    Float_t pt = this->lv.Pt();
 
+    return (1.157 - 7.361E-3 * pt + 4.370E-5 * pt * pt - 1.188E-7*pt * pt * pt);
+
+  }
 
   TLorentzVector lv;
 
@@ -187,10 +202,22 @@ public:
   Bool_t   isLooseID3Hits;
   Bool_t   isLooseIDMVA;
 
+  Float_t trgSFmuTau;
+  Float_t trgSFeleTau;
+  Float_t WjetsSFTauPlusX;
+
+  Float_t energySF;
+  Int_t   decayMode;
+
+
   Int_t PassTau0_TauTau;
   Int_t PassTau1_TauTau;
   Int_t PassTau_ElTau;
   Int_t PassTau_MuTau;
+  Int_t PassQCDTau_ElTau;
+  Int_t PassQCDLooseTau_ElTau;
+  Int_t PassQCDTau_MuTau;
+  Int_t PassQCDLooseTau_MuTau;
 
   Int_t PassQCDTau0_TauTau;
   Int_t PassQCDTau1_TauTau;

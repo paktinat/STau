@@ -864,22 +864,6 @@ public:
   Float_t  JetPt      (int ijet=0, int PFJID=0, float minJPt=20, float maxJEta=2.4);
   Int_t    GetNTaus   (float minJPt=20, float maxJEta=2.4, int iso=2, int elerej=1, int muorej=3);
   
-  int getDoubleEleCharge(){
-    int charge1 = 0;
-    int charge2 = 0;
-    if(doubleEle[0].Ele0Ind != -1)
-      charge1 = ele[doubleEle[0].Ele0Ind].Charge;
-    
-    if(doubleEle[0].Ele1Ind != -1)
-      charge2 = ele[doubleEle[0].Ele1Ind].Charge;
-
-    if(charge1 != 0 && charge2 != 0)
-      return charge1+charge2;
-    else
-      return -1;
-  }
-
-
   // HT, MHT, ...
   Float_t GetHT         (int PFJID=0, float minJPt=50, float maxJEta=2.4);
   TLorentzVector GetMHTlv(int PFJID=0, float minJPt=20, float maxJEta=2.4, bool inclLepts=false);
@@ -1076,36 +1060,6 @@ public:
   void  FillMuTau();
   void  FillEleTau();
   void  FillEleMu();
-//   double DoubleMuInvMass(){//ele/muo/tau
-// 	if(doubleMu.mu0Ind != -1 && doubleMu.mu1Ind != -1)
-// 		return ((muo[doubleMu.mu0Ind].lv +muo[doubleMu.mu1Ind].lv).M());
-// 	return -1.;
-//   }	
-//   double DoubleTauInvMass(){
-// 	if(doubleTau.GetTauIndex0() != -1 && doubleTau.GetTauIndex1() != -1)
-// 		return ((tau[doubleTau.GetTauIndex0()].lv +tau[doubleTau.GetTauIndex1()].lv).M());
-// 	return -1.;
-//   }	
-//   double DoubleEleInvMass(){
-// 	if(doubleEle.Ele0Ind != -1 && doubleEle.Ele1Ind != -1)
-// 		return ((ele[doubleEle.Ele0Ind].lv +ele[doubleEle.Ele1Ind].lv).M());
-// 	return -1.;
-//   }	
-//   double EleMuInvMass(){
-// 	if(eleMu[0].mu0Ind != -1 && eleMu[0].ele0Ind != -1)
-// 		return ((ele[eleMu[0].ele0Ind].lv + muo[eleMu[0].mu0Ind].lv).M());
-// 	return -1.;
-//   }	
-//   double TauMuInvMass(){
-// 	if(muTau.GetTauIndex0() != -1 && muTau.GetMuIndex0() != -1)
-// 		return ((tau[muTau.GetTauIndex0()].lv + muo[muTau.GetMuIndex0()].lv).M());
-// 	return -1.;
-//   }	
-//   double TauEleInvMass(){
-// 	if(eleTau.GetTauIndex0() != -1 && eleTau.GetEleIndex0() != -1)
-// 		return ((tau[eleTau.GetTauIndex0()].lv + ele[eleTau.GetEleIndex0()].lv).M());
-// 	return -1.;
-//   }	
 
   int fVerbose;
 
