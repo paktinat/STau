@@ -912,6 +912,12 @@ public:
   Float_t PZeta(TLorentzVector Lep1, TLorentzVector Lep2, TLorentzVector met);
   Float_t PVisibleZeta(TLorentzVector Lep1, TLorentzVector Lep2);
 
+  double DiLepPtRatio(TLorentzVector Lep1lv, TLorentzVector Lep2lv);
+  double PositiveChargedLeptonDecayAngleinZframe(int Lep1Index, TLorentzVector Lep1lv,int Lep2Index, TLorentzVector Lep2lv);
+  double MinMetLepDPhi(TLorentzVector Lep1lv, TLorentzVector Lep2lv);
+  double PositiveChargedLepWithZBeamPlane(int Lep1Index, TLorentzVector Lep1lv,int Lep2Index, TLorentzVector Lep2lv);
+
+
   // MT2 & friends
   Float_t GetMT2            (Float_t testmass=0, bool massive=false,       Int_t PFJID=1, Float_t minJPt=20, Float_t maxJEta=2.4, 
 		              Int_t hemi_seed=2,   Int_t hemi_association=3, Int_t met=1 );
@@ -1048,10 +1054,11 @@ public:
   void   FillDoubleEle();
   double GetDoubleEleTrgSF();
 
-  double PtRatioEE();
-  double PositronDecayAngleinZframeEE();
-  double MinMetLepDPhiEE();
-  double PositronAngleWithZBeamPlaneEE();
+  double GetDiLepPtRatioEE();
+  double GetPositiveChargedLeptonDecayAngleinZframeEE();
+  double GetMinMetLepDPhiEE();
+  double GetPositiveChargedLepWithZBeamPlaneEE();
+
   double GetPVisibleZetaEE();
   double GetPZetaEE();
   double GetPZetaImbEE();

@@ -3189,6 +3189,67 @@ Float_t MT2tree::PVisibleZeta(TLorentzVector Lep1, TLorentzVector Lep2){
 }
    
     
+
+double MT2tree::DiLepPtRatio(TLorentzVector Lep1lv, TLorentzVector Lep2lv){
+
+ TLorentzVector diLeplv = Lep1lv+Lep2lv;
+
+return (diLeplv.Pt() / (Lep1lv.Pt() + Lep2lv.Pt())) ;
+}
+
+
+double MT2tree::PositiveChargedLeptonDecayAngleinZframe(int Lep1Charge, TLorentzVector Lep1lv,int Lep2Charge, TLorentzVector Lep2lv){
+
+     TLorentzVector diLeplv = Lep1lv+Lep2lv;
+   if ( Lep1Charge == 1 ){
+     Lep1lv.Boost(-diLeplv.BoostVector());
+     TVector3 a0 =  Lep1lv.Vect();
+     TVector3 q0 =  diLeplv.Vect();
+    return(fabs(a0.Angle(q0)));
+  }
+  else if (Lep2Charge == 1 ){
+    Lep2lv.Boost(-diLeplv.BoostVector());
+    TVector3 a1 =  Lep2lv.Vect();
+    TVector3 q1 =  diLeplv.Vect();
+    return(fabs(a1.Angle(q1)));
+  }
+
+}
+double MT2tree::MinMetLepDPhi(TLorentzVector Lep1lv, TLorentzVector Lep2lv) {
+
+  TLorentzVector MET = (0.0,0.0,0.0,0.0);
+   MET = pfmet[0];
+
+float metele1 = Lep1lv.DeltaPhi(MET);
+float metele2 = Lep2lv.DeltaPhi(MET);
+
+ return (min(metele1,metele2));
+}
+
+
+ double MT2tree::PositiveChargedLepWithZBeamPlane(int Lep1Charge, TLorentzVector Lep1lv,int Lep2Charge, TLorentzVector Lep2lv) {
+
+ TLorentzVector diLeplv = Lep1lv+Lep2lv;
+  TVector3 z = (0,0,1);
+  TVector3 a = diLeplv.Vect();
+  TVector3 pl = z.Cross(a);
+  const double pi = 3.14159265358979323846 ;
+
+  if ( Lep1Charge == 1 ){
+    Lep1lv.Boost(-diLeplv.BoostVector());
+    TVector3 a0 = Lep1lv.Vect();
+    double ang0 = pi/2 - pl.Angle(a0);
+    return(fabs(ang0));
+  }
+  else if ( Lep2Charge == 1 ){
+    Lep2lv.Boost(-diLeplv.BoostVector());
+    TVector3 a1 = Lep2lv.Vect();
+    double ang1 = pi/2 - pl.Angle(a1);
+    return(fabs(ang1));
+
+  }
+}
+
   
     
 

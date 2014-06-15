@@ -8459,11 +8459,11 @@ weight = Weight * Ele0IdIsoSF * Ele1IdIsoSF * EleTrgSF;// * Ele1TrgSF;// muIdSF 
 
 // cout<<" New Weight "<<(muIdSF * muIsoSF * muTrgSF * tauTrgSF)<<endl;
 
-if(Sample.type != "susy")
-weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq0/Sample.PU_avg_weight);// * fMT2tree->SFWeight.TauTagge1/Sample.PU_avg_weight);//
+//if(Sample.type != "susy")
+//weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq0/Sample.PU_avg_weight);// * fMT2tree->SFWeight.TauTagge1/Sample.PU_avg_weight);//
       }
       
-      float myQuantity = fMT2tree->doubleEle[0].lv.M();
+      float myQuantity = fMT2tree->doubleEle[0].MT2;
       /*
 std::vector<int> Tau0;
 std::vector<int> Mu0;
