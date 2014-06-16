@@ -6,9 +6,11 @@ cd mover
 #get a proxy by running voms-proxy-init -voms cms
 
 #get the list of files for the datasets you want to move by running
-python FileList.py -q 'DAS_QUERY'
+python FileList.py -q 'DAS_QUERY' -d 2
 
 #give the valid query string between ''
+#if dataset is listed in phys02 instance use -d 2
+
 #for each dataset in the query it creates a file which includes the name of the files of teh dataset
 
 #to start moving the files of each dataset run

@@ -1,3 +1,6 @@
 RunMT2Analyzer 
 RunQuickAnalyzer
 MakeMassPlots
+RunEleTauAnalyzer
+RunMT2Analyzer
+obj/dict_MT2tree.h

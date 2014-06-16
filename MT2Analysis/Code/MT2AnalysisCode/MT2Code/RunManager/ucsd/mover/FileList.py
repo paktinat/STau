@@ -16,6 +16,7 @@ from dbs.apis.dbsClient import DbsApi
 if __name__ == "__main__":
     parser = OptionParser(usage='%prog --query=</specify/dataset/query>')
     parser.add_option("-q", "--query", dest="query", help="Query", metavar="/specify/dataset/query")
+    parser.add_option("-d", "--dbs" , dest="dbs" , help="DBS Version" , type="int" , default=3)
     (options, args) = parser.parse_args()
 
     if not (options.query):
@@ -23,7 +24,9 @@ if __name__ == "__main__":
         parser.error('Mandatory option is --query')
 
     url = "https://cmsweb.cern.ch/dbs/prod/phys03/DBSWriter"
-
+    if options.dbs == 2:
+        url = "https://cmsweb.cern.ch/dbs/prod/phys02/DBSReader"
+    
     api = DbsApi(url)
 
     datasets = api.listDatasets(dataset=options.query)

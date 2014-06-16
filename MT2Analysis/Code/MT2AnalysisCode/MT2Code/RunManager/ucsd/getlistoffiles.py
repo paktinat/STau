@@ -56,6 +56,7 @@ if __name__ == "__main__":
 
     printvar = "" 
     for i in range( options.iteration * options.nfiles , options.iteration * options.nfiles + options.nfiles ):
-        printvar += files[i] + " "
+        if i < len(files):
+            printvar += files[i] + " "
 
     print printvar

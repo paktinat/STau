@@ -17,7 +17,13 @@ cutset=$8
 debugmode=1
 
 export CMS_PATH=/code/osgcode/cmssoft/cms
-export SCRAM_ARCH=slc5_amd64_gcc462
+VERSION_SLC=$(lsb_release -r -s)
+if (( `expr $VERSION_SLC \< 6.0` )); then
+    export SCRAM_ARCH=slc5_amd64_gcc462
+else
+    export SCRAM_ARCH=slc6_amd64_gcc472
+fi
+echo $SCRAM_ARCH
 . ${CMS_PATH}/cmsset_default.sh
 
 export GLITE_VERSION=gLite-3.2.11-1 
@@ -38,15 +44,17 @@ cd MT2Analysis/Code/MT2AnalysisCode/MT2Code
 make
 
 cd RunManager/ucsd/
-ListOfFilesToRunOn=`python getlistoffiles.py -u $usernametoreplace  -d $dataset  -n $nfiles -i $iteration`
+ListOfFilesToRunOn=`python getlistoffiles.py -u $usernametoreplace  -d $dataset  -n $nfiles -i $iteration -c`
 
 cd ../..
 if [ "$debugmode" == "1" ]; then
     echo "./RunMT2Analyzer -d . -i $processid -t $sampletype -m $cutset  -e -E -c -o MT2tree_$iteration.root $ListOfFilesToRunOn"
+    mkdir $outputdir
     cp ./MT2tree_$iteration.root $outputdir
     rm -rf ./MT2tree_$iteration.root
 else
     echo "./RunMT2Analyzer -d . -i $processid -t $sampletype -m $cutset  -e -E -c -o MT2tree_$iteration.root $ListOfFilesToRunOn"
+    echo "mkdir $outputdir"
     echo "cp ./MT2tree_$iteration.root $outputdir"
     echo "rm -rf ./MT2tree_$iteration.root"
 fi
