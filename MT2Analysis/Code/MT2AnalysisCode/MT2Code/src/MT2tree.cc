@@ -3199,21 +3199,20 @@ return (diLeplv.Pt() / (Lep1lv.Pt() + Lep2lv.Pt())) ;
 
 
 float MT2tree::PositiveChargedLeptonDecayAngleinZframe(TLorentzVector LepPluslv, TLorentzVector LepNeglv){
-
   TLorentzVector diLeplv =  LepPluslv + LepNeglv;
-     LepPluslv.Boost(-diLeplv.BoostVector());
-     TVector3 a0 =  LepPluslv.Vect();
-     TVector3 q0 =  diLeplv.Vect();
-    return(fabs(a0.Angle(q0)));
-  }
+  LepPluslv.Boost(-diLeplv.BoostVector());
+  TVector3 a0 =  LepPluslv.Vect();
+  TVector3 q0 =  diLeplv.Vect();
+  return(fabs(a0.Angle(q0)));
+}
 
 float MT2tree::MinMetLepDPhi(TLorentzVector Lep1lv, TLorentzVector Lep2lv) {
 
   TLorentzVector MET = (0.0,0.0,0.0,0.0);
    MET = pfmet[0];
 
-float metele1 = Lep1lv.DeltaPhi(MET);
-float metele2 = Lep2lv.DeltaPhi(MET);
+   float metele1 = fabs(Lep1lv.DeltaPhi(MET));
+   float metele2 = fabs(Lep2lv.DeltaPhi(MET));
 
  return (min(metele1,metele2));
 }

@@ -58,10 +58,10 @@ public:
   void SetMuIsoSF(float input){muIsoSF = input;};
   void SetTauWjetsSF(float input){tauWjetsSF = input;};
   void SetIsolated(int input){ Isolated = input;};
-  void SetDiLepPtRatio(int input){diLepPtRatio= input; };
-  void SetPlusLepZAngle(int input){plusLepZAngle= input; };
-  void SetPlusLepZBeamAngle(int input){plusLepZBeamAngle= input; };
-  void SetMinMetLepDPhi(int input){minMetLepDPhi= input; };
+  void SetDiLepPtRatio(float input){diLepPtRatio= input; };
+  void SetPlusLepZAngle(float input){plusLepZAngle= input; };
+  void SetPlusLepZBeamAngle(float input){plusLepZBeamAngle= input; };
+  void SetMinMetLepDPhi(float input){minMetLepDPhi= input; };
 
 
   //Getters
