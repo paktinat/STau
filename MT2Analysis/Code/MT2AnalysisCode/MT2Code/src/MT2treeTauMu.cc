@@ -112,11 +112,20 @@ void MT2tree::FillMuTau(){
     muTau[0].SetPVisibleZeta(PVisibleZeta(tau[indecies.first].lv, muo[indecies.second].lv));
     muTau[0].SetPZeta(PZeta(tau[indecies.first].lv, muo[indecies.second].lv, pfmet[0])); 
     muTau[0].SetPZetaImbalanced(PZeta(tau[indecies.first].lv, muo[indecies.second].lv, (-muTau[0].GetLV()))); 
-   muTau[0].SetTauTrgSF(tau[indecies.first].trgSFmuTau);
+    muTau[0].SetTauTrgSF(tau[indecies.first].trgSFmuTau);
     muTau[0].SetMuTrgSF(muo[indecies.second].trgSFmuTau);
- muTau[0].SetMuIdSF(muo[indecies.second].idSFmuTau);
+    muTau[0].SetMuIdSF(muo[indecies.second].idSFmuTau);
     muTau[0].SetMuIsoSF(muo[indecies.second].isoSFmuTau);
     muTau[0].SetTauWjetsSF(tau[indecies.first].WjetsSFTauPlusX);
+    muTau[0].SetDiLepPtRatio(DiLepPtRatio(tau[indecies.first].lv, muo[indecies.second].lv));
+    if(muo[indecies.second].Charge >= tau[indecies.first].Charge){
+      muTau[0].SetPlusLepZAngle(PositiveChargedLeptonDecayAngleinZframe(muo[indecies.second].lv, tau[indecies.first].lv));
+      muTau[0].SetPlusLepZBeamAngle(PositiveChargedLepWithZBeamPlane(muo[indecies.second].lv, tau[indecies.first].lv));
+    }else{
+      muTau[0].SetPlusLepZAngle(PositiveChargedLeptonDecayAngleinZframe(tau[indecies.first].lv, muo[indecies.second].lv));
+      muTau[0].SetPlusLepZBeamAngle(PositiveChargedLepWithZBeamPlane(tau[indecies.first].lv, muo[indecies.second].lv));
+    }
+    muTau[0].SetMinMetLepDPhi(MinMetLepDPhi(tau[indecies.first].lv, muo[indecies.second].lv));
     if(this->fVerbose > 3 )
       muTau[0].printObject();
   }
@@ -142,10 +151,20 @@ void MT2tree::FillMuTau(){
       muTau[0].SetPZeta(PZeta(tau[indecies.first].lv, muo[indecies.second].lv, pfmet[0])); 
       muTau[0].SetPZetaImbalanced(PZeta(tau[indecies.first].lv, muo[indecies.second].lv, (-muTau[0].GetLV()))); 
       muTau[0].SetTauTrgSF(tau[indecies.first].trgSFmuTau);
-//       muTau[0].SetMuTrgSF(muo[indecies.second].trgSFmuTau);
-//       muTau[0].SetMuIdSF(muo[indecies.second].idSFmuTau);
-//       muTau[0].SetMuIsoSF(muo[indecies.second].isoSFmuTau);
+      muTau[0].SetMuTrgSF(muo[indecies.second].trgSFmuTau);
+      muTau[0].SetMuIdSF(muo[indecies.second].idSFmuTau);
+      muTau[0].SetMuIsoSF(muo[indecies.second].isoSFmuTau);
       muTau[0].SetTauWjetsSF(tau[indecies.first].WjetsSFTauPlusX);
+      muTau[0].SetDiLepPtRatio(DiLepPtRatio(tau[indecies.first].lv, muo[indecies.second].lv));
+      if(muo[indecies.second].Charge >= tau[indecies.first].Charge){
+	muTau[0].SetPlusLepZAngle(PositiveChargedLeptonDecayAngleinZframe(muo[indecies.second].lv, tau[indecies.first].lv));
+	muTau[0].SetPlusLepZBeamAngle(PositiveChargedLepWithZBeamPlane(muo[indecies.second].lv, tau[indecies.first].lv));
+      }else{
+	muTau[0].SetPlusLepZAngle(PositiveChargedLeptonDecayAngleinZframe(tau[indecies.first].lv, muo[indecies.second].lv));
+	muTau[0].SetPlusLepZBeamAngle(PositiveChargedLepWithZBeamPlane(tau[indecies.first].lv, muo[indecies.second].lv));
+      }
+      muTau[0].SetMinMetLepDPhi(MinMetLepDPhi(tau[indecies.first].lv, muo[indecies.second].lv));
+ 
       if(this->fVerbose > 3 )
 	muTau[0].printObject();
     }else{//QCD NonIso Mu and non Iso Tau
@@ -174,6 +193,16 @@ void MT2tree::FillMuTau(){
  	muTau[0].SetMuIdSF(muo[indecies.second].idSFmuTau);
  	muTau[0].SetMuIsoSF(muo[indecies.second].isoSFmuTau);
 	muTau[0].SetTauWjetsSF(tau[indecies.first].WjetsSFTauPlusX);
+	muTau[0].SetDiLepPtRatio(DiLepPtRatio(tau[indecies.first].lv, muo[indecies.second].lv));
+	if(muo[indecies.second].Charge >= tau[indecies.first].Charge){
+	  muTau[0].SetPlusLepZAngle(PositiveChargedLeptonDecayAngleinZframe(muo[indecies.second].lv, tau[indecies.first].lv));
+	  muTau[0].SetPlusLepZBeamAngle(PositiveChargedLepWithZBeamPlane(muo[indecies.second].lv, tau[indecies.first].lv));
+	}else{
+	  muTau[0].SetPlusLepZAngle(PositiveChargedLeptonDecayAngleinZframe(tau[indecies.first].lv, muo[indecies.second].lv));
+	  muTau[0].SetPlusLepZBeamAngle(PositiveChargedLepWithZBeamPlane(tau[indecies.first].lv, muo[indecies.second].lv));
+	}
+	muTau[0].SetMinMetLepDPhi(MinMetLepDPhi(tau[indecies.first].lv, muo[indecies.second].lv));
+	
 	if(this->fVerbose > 3 )
 	  muTau[0].printObject();}
     }

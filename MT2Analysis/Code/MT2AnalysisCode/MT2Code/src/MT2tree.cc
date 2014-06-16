@@ -3190,7 +3190,7 @@ Float_t MT2tree::PVisibleZeta(TLorentzVector Lep1, TLorentzVector Lep2){
    
     
 
-double MT2tree::DiLepPtRatio(TLorentzVector Lep1lv, TLorentzVector Lep2lv){
+float MT2tree::DiLepPtRatio(TLorentzVector Lep1lv, TLorentzVector Lep2lv){
 
  TLorentzVector diLeplv = Lep1lv+Lep2lv;
 
@@ -3198,7 +3198,7 @@ return (diLeplv.Pt() / (Lep1lv.Pt() + Lep2lv.Pt())) ;
 }
 
 
-double MT2tree::PositiveChargedLeptonDecayAngleinZframe(TLorentzVector LepPluslv, TLorentzVector LepNeglv){
+float MT2tree::PositiveChargedLeptonDecayAngleinZframe(TLorentzVector LepPluslv, TLorentzVector LepNeglv){
 
   TLorentzVector diLeplv =  LepPluslv + LepNeglv;
      LepPluslv.Boost(-diLeplv.BoostVector());
@@ -3207,7 +3207,7 @@ double MT2tree::PositiveChargedLeptonDecayAngleinZframe(TLorentzVector LepPluslv
     return(fabs(a0.Angle(q0)));
   }
 
-double MT2tree::MinMetLepDPhi(TLorentzVector Lep1lv, TLorentzVector Lep2lv) {
+float MT2tree::MinMetLepDPhi(TLorentzVector Lep1lv, TLorentzVector Lep2lv) {
 
   TLorentzVector MET = (0.0,0.0,0.0,0.0);
    MET = pfmet[0];
@@ -3219,7 +3219,7 @@ float metele2 = Lep2lv.DeltaPhi(MET);
 }
 
 
-double MT2tree::PositiveChargedLepWithZBeamPlane(TLorentzVector LepPluslv, TLorentzVector LepNeglv){
+float MT2tree::PositiveChargedLepWithZBeamPlane(TLorentzVector LepPluslv, TLorentzVector LepNeglv){
 
   TLorentzVector diLeplv =  LepPluslv + LepNeglv;
   TVector3 z = (0,0,1);

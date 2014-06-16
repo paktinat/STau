@@ -29,6 +29,10 @@ public:
     muIsoSF   = -.99;
     tauWjetsSF= -.99;
     Isolated  = -2.0;//IsoMU and IsoTau 1, IsoMu and NonIsoTau, 0 and NonIsoMu and NonIsoTau -1
+    diLepPtRatio= -2.0;
+    plusLepZAngle= -4.0;
+    plusLepZBeamAngle= -4.0;
+    minMetLepDPhi= -4.0;
 
   };
 
@@ -46,7 +50,7 @@ public:
   void SetDPhi(float input){DPhi = input;};
   void SetPVisibleZeta(float input){pVisibleZeta = input;};
   void SetPZeta(float input){pZeta = input;};
-  void SetPZetaImbalanced(float input){pZeta = input;};
+  void SetPZetaImbalanced(float input){pZetaImbalanced = input;};
 
   void SetTauTrgSF(float input){tauTrgSF = input;};
   void SetMuTrgSF(float input){muTrgSF = input;};
@@ -54,9 +58,17 @@ public:
   void SetMuIsoSF(float input){muIsoSF = input;};
   void SetTauWjetsSF(float input){tauWjetsSF = input;};
   void SetIsolated(int input){ Isolated = input;};
+  void SetDiLepPtRatio(int input){diLepPtRatio= input; };
+  void SetPlusLepZAngle(int input){plusLepZAngle= input; };
+  void SetPlusLepZBeamAngle(int input){plusLepZBeamAngle= input; };
+  void SetMinMetLepDPhi(int input){minMetLepDPhi= input; };
 
 
   //Getters
+  float GetDiLepPtRatio(){return diLepPtRatio;};
+  float GetPlusLepZAngle(){return plusLepZAngle;};
+  float GetPlusLepZBeamAngle(){return plusLepZBeamAngle;};
+  float GetMinMetLepDPhi(){return minMetLepDPhi;};
   int GetIsolated(){return Isolated;};
   float GetTauTrgSF(){return tauTrgSF;};
   float GetMuTrgSF(){return muTrgSF;};
@@ -65,6 +77,7 @@ public:
   float GetTauWjetsSF(){return tauWjetsSF;};
   float GetPVisibleZeta(){return pVisibleZeta;};
   float GetPZeta(){return pZeta;};
+  float GetPZetaImbalanced(){return pZetaImbalanced;};
   int GetTauIndex0(){ return tau0Ind; };
   int GetMuIndex0(){ return mu0Ind; };
   int GetSumCharge(){ return chargeSum; };
@@ -127,6 +140,12 @@ private:
   float muIsoSF;
   float tauWjetsSF;
   int Isolated;
+
+  float diLepPtRatio;
+  float plusLepZAngle;
+  float plusLepZBeamAngle;
+  float minMetLepDPhi;
+
 
   ClassDef(MT2MuTau, 1)
 
