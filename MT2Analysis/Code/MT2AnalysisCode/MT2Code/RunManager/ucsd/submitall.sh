@@ -53,12 +53,20 @@ while read p; do
 
        njobs=$(expr $nfilesinds \/ $nfilesperjob)
        njobs=$(expr $njobs + 1)
-       
+
+       usernametoreplace=${splitted[2]}
+       commitid=${splitted[8]}
+       outdir=$(python createoutdir.py -d $datasetname -u $usernametoreplace -a $commitid)
+
+     
+       arguments="$arguments $outdir"
+
        echo "creating jobs for $jobname"
        echo -e "\t DS : $datasetname"
        echo -e "\t NFilesPerJob : $nfilesperjob"
        echo -e "\t NFilesInDS : $nfilesinds"
        echo -e "\t NJobs : $njobs"
+       echo -e "\t OutDir : $outdir"
        
        sed -e "s|USERNAME|$username|g" -e "s|PROXYFILENAME|$vomsfile|g" -e "s|JOBNAME|$jobname|g" -e "s|ARGS|$arguments|g" condorTemplate -e "s|NJOBS|$njobs|g"  > condor_$jobname
 
@@ -71,8 +79,9 @@ while read p; do
 	   echo -e "\t the current $jobname directory will be used"
        fi
 
-       if [[ $2 -eq "submit" ]]; then
+       if [[ $2 = "submit" ]]; then
 	   condor_submit condor_$jobname
+	   echo -e "\t Submitted"
        fi
    fi
 done < $1

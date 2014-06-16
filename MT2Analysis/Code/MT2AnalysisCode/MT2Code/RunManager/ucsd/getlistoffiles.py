@@ -27,6 +27,14 @@ if __name__ == "__main__":
 
     files_ = api.listFiles(dataset=options.ds)
 
+    if len( files_ ) == 0:
+        url = "https://cmsweb.cern.ch/dbs/prod/phys02/DBSReader"
+        api = DbsApi( url )
+        files_ = api.listFiles(dataset=options.ds)
+
+    if len( files_ ) == 0:
+        print "Dataset wasn't found"
+
     producerusername = ''
     sss = files_[0]['logical_file_name'].split('/')
     for i in range(0,len(sss)):

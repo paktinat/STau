@@ -11,4 +11,11 @@ if __name__ == "__main__":
     api = DbsApi(url)
 
     files_ = api.listFiles(dataset=options.ds)
+
+    if len( files_ ) == 0:
+        url = "https://cmsweb.cern.ch/dbs/prod/phys02/DBSReader"
+        api = DbsApi( url )
+        files_ = api.listFiles(dataset=options.ds)
+
+
     print len(files_)
