@@ -23,6 +23,13 @@ public:
     pVisibleZeta = -9.99;
     pZeta        = -9.99;
     pZetaImbalanced = -9.99;
+    tauTrgSF  = -.99;
+    muTrgSF   = -.99;
+    muIdSF    = -.99;
+    muIsoSF   = -.99;
+    tauWjetsSF= -.99;
+    Isolated  = -2.0;//IsoMU and IsoTau 1, IsoMu and NonIsoTau, 0 and NonIsoMu and NonIsoTau -1
+
   };
 
   //Setters
@@ -41,7 +48,21 @@ public:
   void SetPZeta(float input){pZeta = input;};
   void SetPZetaImbalanced(float input){pZeta = input;};
 
+  void SetTauTrgSF(float input){tauTrgSF = input;};
+  void SetMuTrgSF(float input){muTrgSF = input;};
+  void SetMuIdSF(float input){muIdSF = input;};
+  void SetMuIsoSF(float input){muIsoSF = input;};
+  void SetTauWjetsSF(float input){tauWjetsSF = input;};
+  void SetIsolated(int input){ Isolated = input;};
+
+
   //Getters
+  int GetIsolated(){return Isolated;};
+  float GetTauTrgSF(){return tauTrgSF;};
+  float GetMuTrgSF(){return muTrgSF;};
+  float GetMuIdSF(){return  muIdSF;};
+  float GetMuIsoSF(){return muIsoSF;};
+  float GetTauWjetsSF(){return tauWjetsSF;};
   float GetPVisibleZeta(){return pVisibleZeta;};
   float GetPZeta(){return pZeta;};
   int GetTauIndex0(){ return tau0Ind; };
@@ -100,6 +121,13 @@ private:
   float pZeta;
   float pZetaImbalanced;
   float pVisibleZeta; 
+  float tauTrgSF;
+  float muTrgSF;
+  float muIdSF;
+  float muIsoSF;
+  float tauWjetsSF;
+  int Isolated;
+
   ClassDef(MT2MuTau, 1)
 
     };

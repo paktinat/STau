@@ -699,9 +699,9 @@ bool MT2Analysis::FillMT2TreeBasics(){
 
 		if       (fPUScenario==noPU  )  {fMT2tree->pileUp.Weight            = 1;}
 // 		else if  (fPUScenario==MC2012)  {fMT2tree->pileUp.Weight            = GetPUWeight(fTR->PUnumTrueInteractions);}
-		else if  (fPUScenario==MC2012)  {fMT2tree->pileUp.Weight            = GetPUWeight(fMT2tree->pileUp.PUtrueNumInt);}
-		if(fVerbose > 3) {
-			cout << "fPUScenario " << fPUScenario <<  " fMT2tree->pileUp.PUtrueNumInt " <<  fMT2tree->pileUp.PUtrueNumInt << " weight "  
+//		else if  (fPUScenario==MC2012)  {fMT2tree->pileUp.Weight            = GetPUWeight(fMT2tree->pileUp.PUtrueNumInt);}
+		else if  (fPUScenario==MC2012)  {fMT2tree->pileUp.Weight            = GetPUWeight(fMT2tree->pileUp.NVertices);}		if(fVerbose > 3) {
+			cout << "fPUScenario " << fPUScenario <<  " fMT2tree->pileUp.NVertices " <<  fMT2tree->pileUp.NVertices << " weight "  
 		     	     << " fMT2tree->pileUp.Weight "         << fMT2tree->pileUp.Weight << endl; 
 		}
 	}

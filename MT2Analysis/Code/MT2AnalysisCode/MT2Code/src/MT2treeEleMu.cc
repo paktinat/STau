@@ -56,11 +56,11 @@ void MT2tree::FillEleMu(){
 
     float Pvisible_dot_Zeta = PVisibleZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv);
     float P_met_dot_Zeta    = PZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv, pfmet[0]);
+    if(fVerbose > 3){
+      cout<<" Pvisible_dot_Zeta0 " << Pvisible_dot_Zeta <<" P_met_dot_Zeta " << P_met_dot_Zeta <<endl;
       
-    cout<<" Pvisible_dot_Zeta0 " << Pvisible_dot_Zeta <<" P_met_dot_Zeta " << P_met_dot_Zeta <<endl;
-    
-    //if(fVerbose > 3) 
-    cout<<" met.Pt() "<<eleMu[0].lv.Pt()<<endl;
+      cout<<" met.Pt() "<<eleMu[0].lv.Pt()<<endl;
+    }
     eleMu[0].MT2Imbalanced = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, (-eleMu[0].lv));
     if(fVerbose > 3) cout<<"  eleMu[0].MT2Imbalanced  "<<eleMu[0].MT2Imbalanced <<endl;
   } 
@@ -101,10 +101,11 @@ void MT2tree::FillEleMu(){
     
       float Pvisible_dot_Zeta = PVisibleZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv);
       float P_met_dot_Zeta    = PZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv, pfmet[0]);
-      
-      cout<<" Pvisible_dot_Zeta1 " << Pvisible_dot_Zeta <<" P_met_dot_Zeta " << P_met_dot_Zeta <<endl;
- 
-      //cout<<"met.Pt() "<<met.Pt()<<endl;
+      if(fVerbose > 3){
+	cout<<" Pvisible_dot_Zeta0 " << Pvisible_dot_Zeta <<" P_met_dot_Zeta " << P_met_dot_Zeta <<endl;
+	
+	cout<<" met.Pt() "<<eleMu[0].lv.Pt()<<endl;
+      }
      
       eleMu[0].MT2Imbalanced = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, -(eleMu[0].lv));
       if(fVerbose > 3) cout<<"  eleMu[0].MT2Imbalanced  "<<eleMu[0].MT2Imbalanced <<endl;

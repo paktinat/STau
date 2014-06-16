@@ -813,6 +813,8 @@ public:
   std::pair<int,int> GetQCDDoubleTau();
   std::pair<int,int> GetSignalDoubleTau();
   std::pair<int,int> GetTauMu();
+  std::pair<int,int> GetTauMuFakeRate();
+  std::pair<int,int> GetTauMuQCD();
   std::pair<int,int> GetTauEG();
   //double corrMETPhi;
   double correctMETPhi(){

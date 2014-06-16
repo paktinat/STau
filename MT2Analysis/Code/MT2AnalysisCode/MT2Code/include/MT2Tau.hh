@@ -179,8 +179,11 @@ public:
   Float_t GetWjetsSFTauPlusX(){
     Float_t pt = this->lv.Pt();
 
-    return (1.157 - 7.361E-3 * pt + 4.370E-5 * pt * pt - 1.188E-7*pt * pt * pt);
-
+    float weight = (1.157 - 7.361E-3 * pt + 4.370E-5 * pt * pt - 1.188E-7*pt * pt * pt);
+    if(weight > 0)
+      return weight;
+    else 
+      return 1.0;
   }
 
   TLorentzVector lv;
