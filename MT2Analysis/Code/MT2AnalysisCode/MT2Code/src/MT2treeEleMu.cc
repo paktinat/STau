@@ -35,7 +35,7 @@ void MT2tree::FillEleMu(){
 
   if(eleMu[0].ele0Ind != -1 && eleMu[0].mu0Ind !=-1){
  
-    eleMu[0].Isolated=true;
+    eleMu[0].Isolated=1;
     eleMu[0].charge = muo[eleMu[0].mu0Ind].Charge + ele[eleMu[0].ele0Ind].Charge; //check two good muon charge
 
 
@@ -54,34 +54,34 @@ void MT2tree::FillEleMu(){
     eleMu[0].MT2    = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, pfmet[0]);
     eleMu[0].lv = muo[eleMu[0].mu0Ind].lv +ele[eleMu[0].ele0Ind].lv;
 
-    float Pvisible_dot_Zeta = PVisibleZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv);
-    float P_met_dot_Zeta    = PZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv, pfmet[0]);
-    if(fVerbose > 3){
-      cout<<" Pvisible_dot_Zeta0 " << Pvisible_dot_Zeta <<" P_met_dot_Zeta " << P_met_dot_Zeta <<endl;
-      
-      cout<<" met.Pt() "<<eleMu[0].lv.Pt()<<endl;
-    }
+     eleMu[0].Pvisible_dot_Zeta = PVisibleZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv);
+     eleMu[0].P_met_dot_Zeta= PZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv, pfmet[0]);
+     eleMu[0].PZetaImbalanced=PZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv, (-eleMu[0].lv));
+  
+ 
+    //if(fVerbose > 3) 
+    cout<<" met.Pt() "<<eleMu[0].lv.Pt()<<endl;
     eleMu[0].MT2Imbalanced = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, (-eleMu[0].lv));
     if(fVerbose > 3) cout<<"  eleMu[0].MT2Imbalanced  "<<eleMu[0].MT2Imbalanced <<endl;
   } 
-     else{
+   else {
     eleMu[0].mu0Ind=-1;
     eleMu[0].ele0Ind = -1;
     for(int i=0; i<NMuons; i++)
       {
-	if  (muo[i].PassQCDMu0_EleMu ==1) 
+	if  (muo[i].PassQCDMu0Iso_1_EleMu ==1) 
 	  if (eleMu[0].mu0Ind==-1){  
 	    eleMu[0].mu0Ind = i;
 	    continue;}
       } 
     for(int i=0; i<NEles; i++){    
-      if  (ele[i].PassQCDele0_EleMu) //muon i pass first good muon conditions.
+      if  (ele[i].PassQCDele0Iso_1_EleMu) //muon i pass first good muon conditions.
 	if (eleMu[0].ele0Ind==-1) {  //Default value
 	  eleMu[0].ele0Ind = i; 
 	  continue;
 	}
     } if(eleMu[0].ele0Ind != -1 && eleMu[0].mu0Ind !=-1){
-      eleMu[0].Isolated=false;
+      eleMu[0].Isolated=0;
       eleMu[0].charge = muo[eleMu[0].mu0Ind].Charge + ele[eleMu[0].ele0Ind].Charge; //check two good muon charge
       if(fVerbose > 3)
 	{ 
@@ -99,16 +99,54 @@ void MT2tree::FillEleMu(){
       eleMu[0].MT2    = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, pfmet[0]);
       eleMu[0].lv = muo[eleMu[0].mu0Ind].lv + ele[eleMu[0].ele0Ind].lv;
     
-      float Pvisible_dot_Zeta = PVisibleZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv);
-      float P_met_dot_Zeta    = PZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv, pfmet[0]);
-      if(fVerbose > 3){
-	cout<<" Pvisible_dot_Zeta0 " << Pvisible_dot_Zeta <<" P_met_dot_Zeta " << P_met_dot_Zeta <<endl;
-	
-	cout<<" met.Pt() "<<eleMu[0].lv.Pt()<<endl;
-      }
+     eleMu[0].Pvisible_dot_Zeta = PVisibleZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv);
+     eleMu[0].P_met_dot_Zeta= PZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv, pfmet[0]);
+     eleMu[0].PZetaImbalanced= PZeta (ele[ eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv, (-eleMu[0].lv));
+      
+      //cout<<"met.Pt() "<<met.Pt()<<endl;
      
       eleMu[0].MT2Imbalanced = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, -(eleMu[0].lv));
       if(fVerbose > 3) cout<<"  eleMu[0].MT2Imbalanced  "<<eleMu[0].MT2Imbalanced <<endl;
     }
-  }
+  
+   else  {
+       eleMu[0].mu0Ind  =-1;
+       eleMu[0].ele0Ind =-1;
+      
+        for(int i=0; i<NMuons; i++)
+    {
+      if  (muo[i].PassMu0_EleMu ==1) //muon i pass first good muon conditions.
+	if (eleMu[0].mu0Ind==-1){  //Default value
+	  eleMu[0].mu0Ind = i;
+	  continue;
+	} //one good muon is
+
+      if  (muo[i].RejMu1_EleMu ==1){
+	eleMu[0].HasNoVetomuoForEleMu=false;
+      }
+    } 
+      for(int i=0; i<NEles; i++){    
+      if  (ele[i].PassLooseEle0_EleMu ==1) //muon i pass first good muon conditions.
+	if (eleMu[0].ele0Ind==-1) {  //Default value
+	  eleMu[0].ele0Ind = i; 
+	  continue;
+	}}
+     if(eleMu[0].ele0Ind != -1 && eleMu[0].mu0Ind !=-1){
+      eleMu[0].Isolated=-1;
+      eleMu[0].charge = muo[eleMu[0].mu0Ind].Charge + ele[eleMu[0].ele0Ind].Charge; //check two good muon charge
+    
+      eleMu[0].DPhi =(fabs(Util::DeltaPhi(muo[eleMu[0].mu0Ind].lv.Phi(), ele[eleMu[0].ele0Ind].lv.Phi())));
+      eleMu[0].MT2    = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, pfmet[0]);
+      eleMu[0].lv = muo[eleMu[0].mu0Ind].lv + ele[eleMu[0].ele0Ind].lv;
+    
+     eleMu[0].Pvisible_dot_Zeta = PVisibleZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv);
+     eleMu[0].P_met_dot_Zeta= PZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv, pfmet[0]);
+     eleMu[0].PZetaImbalanced= PZeta (ele[ eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv, (-eleMu[0].lv));
+      
+      
+     
+      eleMu[0].MT2Imbalanced = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, -(eleMu[0].lv));
+      if(fVerbose > 3) cout<<"  eleMu[0].MT2Imbalanced  "<<eleMu[0].MT2Imbalanced <<endl;
+    }
 }
+}}

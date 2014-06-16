@@ -17,12 +17,15 @@ public:
     charge            = -10;
     MT2               = -1.;
     DPhi              =-9.;
-    
+    Pvisible_dot_Zeta =-9.99;
+    P_met_dot_Zeta   =-9.99;
+    PZetaImbalanced  =-9.99;
+
     MT2Imbalanced     = -1.; 
     HasNoVetomuoForEleMu=true;
     HasNoVetoElecForEleMu=true;
     isSignalEleMu = false;
-    Isolated      =false;
+    Isolated      =-9.;
   }
   
   TLorentzVector lv;
@@ -31,12 +34,14 @@ public:
   Int_t    charge;
   Float_t  MT2;
   Float_t  DPhi;
- 
+  Float_t  Pvisible_dot_Zeta;
+  Float_t  P_met_dot_Zeta ;
+  Float_t  PZetaImbalanced ;
   Float_t  MT2Imbalanced ;
   bool     HasNoVetomuoForEleMu;
   bool     HasNoVetoElecForEleMu;
   bool	   isSignalEleMu;
-  bool  Isolated;
+  Int_t  Isolated;
   ClassDef(MT2EleMu, 1)
     }; 
 #endif

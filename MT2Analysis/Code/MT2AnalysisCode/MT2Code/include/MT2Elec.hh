@@ -39,8 +39,10 @@ public:
   PassQCDMediumE1_EE =-1;
   PassQCDNonIsoE1_EE =-1;
   PassQCDNonIsoE0_EE=-1;
-  
-  PassQCDele0_EleMu =-1;
+  PassLooseEle0_EleMu=-1;
+  PassQCDele0Iso_1_EleMu=-1; 
+  PassQCDele0Iso_2_EleMu=-1 ;
+  PassQCDele0Iso_3_EleMu=-1;
   }
   void SetLV(const TLorentzVector v){lv = v;}
 
@@ -432,8 +434,10 @@ Float_t GetEleTrgSFelemu(){
   Int_t PassQCDNonIsoE0_EE;
   Int_t PassE0_EE;
   Int_t PassE1_EE;
- 
-  Int_t PassQCDele0_EleMu;
+  Int_t PassLooseEle0_EleMu;
+  Int_t PassQCDele0Iso_1_EleMu;
+  Int_t PassQCDele0Iso_2_EleMu;
+  Int_t PassQCDele0Iso_3_EleMu;
   ClassDef(MT2Elec, 12)
 };
 #endif

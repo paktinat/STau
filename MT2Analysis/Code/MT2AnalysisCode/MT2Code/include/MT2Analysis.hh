@@ -248,7 +248,7 @@ private:
 
         bool IsGoodMT2ElectronMVANoTrigLoose(const int index);
         bool IsGoodMT2ElectronMVANoTrigTight(const int index);
-
+        bool IsGoodMT2LooseElectronforEleMu(const int index);
 
 
 	const float EffArea(float abseta);

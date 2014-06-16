@@ -61,10 +61,17 @@ void MT2Analysis::FillMT2Elecs(){
 		if((fMT2tree->ele[i].PassQCDMediumE0_EE==1)||(IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) && (ElePFIso04(fElecs[i])<0.5) && fTR->ElPt[fElecs[i]] < 20 &&(ElePFIso04(fElecs[i]) >0.25)))
 		  fMT2tree->ele[i].PassQCDMediumE1_EE= 1;
 		
-             
+                  fMT2tree->ele[i].PassLooseEle0_EleMu = (IsGoodMT2LooseElectronforEleMu(fElecs[i])&& fTR->ElPt [fElecs[i]]>20
+&&  fTR->ElEta[fElecs[i]]<2.5 &&  fMT2tree->ele[i].Iso04<0.2) ?1 :0;         
    
-		fMT2tree->ele[i].PassQCDele0_EleMu = ((IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) && fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<2.3 &&fTR->ElEta[fElecs[i]]>1.479&& fMT2tree->ele[i].Iso04>0.5 )||(IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) &&fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<1.479&&
+		fMT2tree->ele[i].PassQCDele0Iso_1_EleMu = ((IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) && fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<2.3 &&fTR->ElEta[fElecs[i]]>1.479&& fMT2tree->ele[i].Iso04>0.5 )||(IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) &&fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<1.479&&
 fMT2tree->ele[i].Iso04>0.5 )) ? 1 : 0;
+                 fMT2tree->ele[i].PassQCDele0Iso_2_EleMu = ((IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) && fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<2.3 &&fTR->ElEta[fElecs[i]]>1.479&& fMT2tree->ele[i].Iso04>0.3 )||(IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) &&fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<1.479&&
+fMT2tree->ele[i].Iso04>0.3)) ? 1 : 0;
+                 fMT2tree->ele[i].PassQCDele0Iso_3_EleMu = ((IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) && fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<2.3 &&fTR->ElEta[fElecs[i]]>1.479&& fMT2tree->ele[i].Iso04>0.7 )||(IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) &&fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<1.479&&
+fMT2tree->ele[i].Iso04>0.7 )) ? 1 : 0;
+
+
 	}
 }
 //************************************************************************************************
@@ -226,6 +233,23 @@ bool MT2Analysis::IsGoodMT2ElectronVetoIDforEleMu(const int index){
 
 	return true;
 }
+//loose Electron for QCD estimation 
+bool MT2Analysis::IsGoodMT2LooseElectronforEleMu(const int index){
+  	if(!(fabs(fTR->ElEta[index]) < 2.5) ) 
+	  return false;
+
+        if (!(IsGoodMT2ElectronMVANoTrigLoose(index)))
+	  return false;
+
+	// Vertex
+	//if(!(abs(fTR->ElD0PV[index])<0.02))
+	 // return false;
+	if(!(abs(fTR->ElDzPV[index])<0.02))                              
+	  return false;
+         float pfIso = ElePFIso04(index);
+        if(!( pfIso  < 0.2) )
+	    return false; 
+         return true;} 
 
 // Electron Selector for Electron-Muon Channel
 bool MT2Analysis::IsGoodMT2ElectronSelIDforEleMu(const int index){

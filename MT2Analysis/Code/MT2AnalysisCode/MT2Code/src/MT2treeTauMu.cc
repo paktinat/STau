@@ -112,10 +112,10 @@ void MT2tree::FillMuTau(){
     muTau[0].SetPVisibleZeta(PVisibleZeta(tau[indecies.first].lv, muo[indecies.second].lv));
     muTau[0].SetPZeta(PZeta(tau[indecies.first].lv, muo[indecies.second].lv, pfmet[0])); 
     muTau[0].SetPZetaImbalanced(PZeta(tau[indecies.first].lv, muo[indecies.second].lv, (-muTau[0].GetLV()))); 
-    muTau[0].SetTauTrgSF(tau[indecies.first].trgSFmuTau);
-//     muTau[0].SetMuTrgSF(muo[indecies.second].trgSFmuTau);
-//     muTau[0].SetMuIdSF(muo[indecies.second].idSFmuTau);
-//     muTau[0].SetMuIsoSF(muo[indecies.second].isoSFmuTau);
+   muTau[0].SetTauTrgSF(tau[indecies.first].trgSFmuTau);
+    muTau[0].SetMuTrgSF(muo[indecies.second].trgSFmuTau);
+ muTau[0].SetMuIdSF(muo[indecies.second].idSFmuTau);
+    muTau[0].SetMuIsoSF(muo[indecies.second].isoSFmuTau);
     muTau[0].SetTauWjetsSF(tau[indecies.first].WjetsSFTauPlusX);
     if(this->fVerbose > 3 )
       muTau[0].printObject();
@@ -170,9 +170,9 @@ void MT2tree::FillMuTau(){
 	muTau[0].SetPZeta(PZeta(tau[indecies.first].lv, muo[indecies.second].lv, pfmet[0])); 
 	muTau[0].SetPZetaImbalanced(PZeta(tau[indecies.first].lv, muo[indecies.second].lv, (-muTau[0].GetLV()))); 
 	muTau[0].SetTauTrgSF(tau[indecies.first].trgSFmuTau);
-// 	muTau[0].SetMuTrgSF(muo[indecies.second].trgSFmuTau);
-// 	muTau[0].SetMuIdSF(muo[indecies.second].idSFmuTau);
-// 	muTau[0].SetMuIsoSF(muo[indecies.second].isoSFmuTau);
+ 	muTau[0].SetMuTrgSF(muo[indecies.second].trgSFmuTau);
+ 	muTau[0].SetMuIdSF(muo[indecies.second].idSFmuTau);
+ 	muTau[0].SetMuIsoSF(muo[indecies.second].isoSFmuTau);
 	muTau[0].SetTauWjetsSF(tau[indecies.first].WjetsSFTauPlusX);
 	if(this->fVerbose > 3 )
 	  muTau[0].printObject();}
