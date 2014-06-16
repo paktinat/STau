@@ -7,14 +7,21 @@ ifndef CMS_PATH
 endif
 STauBaseDir = $(shell git rev-parse --show-toplevel)
 
-INCLUDES       = -I./include -I../TESCO/include -I${CMSSW_RELEASE_BASE}/src/CondFormats/JetMETObjects/interface -I${CMSSW_RELEASE_BASE}/src/ -I${CMS_PATH}/${SCRAM_ARCH}/external/zlib/1.2.3/include -I${CMS_PATH}/${SCRAM_ARCH}/external/boost/1.47.0/include/ -I${CMS_PATH}/${SCRAM_ARCH}/lcg/roofit/5.32.03-cms16/include/
+
+BOOSTINC = $(shell scram tool tag boost INCLUDE)
+ZLIBINC  = $(shell scram tool tag zlib INCLUDE)
+ZLIBLIB  = $(shell scram tool tag zlib LIBDIR)
+ROOFITINC = $(shell scram tool tag roofitcore INCLUDE)
+ROOFITLIB = $(shell scram tool tag roofitcore LIBDIR)
+
+INCLUDES       = -I./include -I../TESCO/include -I${CMSSW_RELEASE_BASE}/src/CondFormats/JetMETObjects/interface -I${CMSSW_RELEASE_BASE}/src/ -I${ZLIBINC} -I${BOOSTINC} -I${ROOFITINC}
 
 CXX            = g++
 CXXFLAGS       = -fPIC -fno-var-tracking -Wno-deprecated -D_GNU_SOURCE -O2 -D'GETDATALOCALPATH(arg)=(std::string("$(STauBaseDir)/") + std::string(\#arg)).c_str()'  -std=c++0x $(INCLUDES) 
 LD             = g++
 LDFLAGS        = 
 #SOFLAGS        = -O --no_exceptions  -dynamiclib -flat_namespace -undefined suppress
-SOFLAGS        = -O  -shared  -fPIC -flat_namespace 
+SOFLAGS        = -O  -shared  -fPIC #-flat_namespace 
 
 
 CXXFLAGS      += $(ROOTCFLAGS)
@@ -24,7 +31,7 @@ CMSSW_BASE_VERSION = $(filter CMSSW%, $(subst _patch, , $(CMSSW_VERSION) ))
 
 NGLIBS         = $(ROOTGLIBS) -lMinuit -lMinuit2 -lTreePlayer
 GLIBS          = $(filter-out -lNew, $(NGLIBS)) 
-GLIBS         += -L$(CMSSW_RELEASE_BASE)/lib/$(SCRAM_ARCH) -L$(CMS_PATH)/slc5_amd64_gcc462/cms/cmssw/$(CMSSW_BASE_VERSION)/lib/$(SCRAM_ARCH) -L${CMS_PATH}/${SCRAM_ARCH}/lcg/roofit/5.32.03-cms16/lib -lFWCoreFWLite -lFWCoreUtilities -lDataFormatsCommon -lDataFormatsFWLite -lCondFormatsJetMETObjects -lRooFit -lRooFitCore -L${CMS_PATH}/${SCRAM_ARCH}/external/zlib/1.2.3/lib -lz
+GLIBS         += -L$(CMSSW_RELEASE_BASE)/lib/$(SCRAM_ARCH) -L$(CMS_PATH)/slc5_amd64_gcc462/cms/cmssw/$(CMSSW_BASE_VERSION)/lib/$(SCRAM_ARCH) -L$(ROOFITLIB) -lFWCoreFWLite -lFWCoreUtilities -lDataFormatsCommon -lDataFormatsFWLite -lCondFormatsJetMETObjects -lRooFit -lRooFitCore -L$(ZLIBLIB) -lz
 
 SRCS           = ../TESCO/src/base/TreeClassBase.cc ../TESCO/src/base/TreeReader.cc ../TESCO/src/base/TreeAnalyzerBase.cc ../TESCO/src/base/UserAnalysisBase.cc \
                  src/MT2tree.cc src/MT2treeDoubleMu.cc src/MT2treeDoubleEle.cc src/MT2treeEleMu.cc \

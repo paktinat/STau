@@ -20,6 +20,7 @@ if __name__ == "__main__":
     (options, args) = parser.parse_args()
 
 
+    os.environ['USER'] = 'hbakhshi'
     hadoopbasename = "/hadoop/cms/"
 
     url = "https://cmsweb.cern.ch/dbs/prod/phys03/DBSWriter"
