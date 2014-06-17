@@ -16,7 +16,6 @@ should_transfer_files = IF_NEEDED
 #when_to_transfer_output = ON_EXIT
 +DESIRED_Sites="UCSD"
 +Owner = undefined 
-notification=Never 
 x509userproxy=PROXYFILENAME
                                 
 queue NJOBS

@@ -1,4 +1,5 @@
-#! /bin/bash -vx
+#! /bin/bash 
+#-vx
 
 #sample command
 # "/DoubleMu/hbakhshi-V03-09-01_RunA-EleTau-9bc3a6bb0ab58621fcde9a392f5df1a3/USER" hbakhshi 8 1 0 data TauFR 22def0c673eac3687b5be93a0b60dbee775adb8d /tmp/hbakhshi/
@@ -16,7 +17,9 @@ commitid=$8
 
 outputdir=$9
 
-debugmode=1
+debugmode=0
+
+WORKINGDIR=`pwd`
 
 export CMS_PATH=/code/osgcode/cmssoft/cms
 VERSION_SLC=$(lsb_release -r -s)
@@ -38,6 +41,11 @@ export GLOBUS_TCP_PORT_RANGE=20000,25000
 scramv1 project CMSSW CMSSW_5_3_14
 cd CMSSW_5_3_14/src/
 eval `scramv1 runtime -sh`
+
+vomsfile=`voms-proxy-info | grep path | awk -F ":" '{print $2}' |  tr -d ' '`
+#this variable is needed by dbsApi for authentication
+export X509_USER_PROXY=${vomsfile}
+echo $X509_USER_PROXY
 
 git clone "https://github.com/paktinat/STau" 
 cd STau/

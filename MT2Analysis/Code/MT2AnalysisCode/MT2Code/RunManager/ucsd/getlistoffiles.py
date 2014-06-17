@@ -4,6 +4,8 @@ import sys
 import os
 from dbs.apis.dbsClient import DbsApi
 
+
+
 def GetFileIndex( filename ):
     fn = os.path.basename( filename )
     return int( fn.split("_")[3] )
