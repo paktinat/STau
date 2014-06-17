@@ -17,8 +17,9 @@ if __name__ == "__main__":
     parser.add_option("-u", "--username", dest="username", help="the username in ucsd se")
     parser.add_option("-n", "--nfiles", dest="nfiles", help="number of files to return" , type="int")
     parser.add_option("-i", "--iteration", dest="iteration", help="the number of job" , type="int")
-    parser.add_option("-c", "--check", dest="check", help="check if the file exists in /hadoop/" , action="store_true" ,  default=False)    
-        
+    parser.add_option("-c", "--check", dest="check", help="check if the file exists in /hadoop/" , action="store_true" ,  default=False)
+    parser.add_option("-x", "--xfile", dest="xfile")
+    
     (options, args) = parser.parse_args()
 
 
@@ -26,13 +27,13 @@ if __name__ == "__main__":
     hadoopbasename = "/hadoop/cms/"
 
     url = "https://cmsweb.cern.ch/dbs/prod/phys03/DBSWriter"
-    api = DbsApi(url)
+    api = DbsApi(url , cert=options.xfile, key=options.xfile )
 
     files_ = api.listFiles(dataset=options.ds)
 
     if len( files_ ) == 0:
         url = "https://cmsweb.cern.ch/dbs/prod/phys02/DBSReader"
-        api = DbsApi( url )
+        api = DbsApi( url , cert=options.xfile , key=options.xfile)
         files_ = api.listFiles(dataset=options.ds)
 
     if len( files_ ) == 0:

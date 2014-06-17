@@ -55,7 +55,7 @@ cd MT2Analysis/Code/MT2AnalysisCode/MT2Code
 make
 
 cd RunManager/ucsd/
-ListOfFilesToRunOn=`python getlistoffiles.py -u $usernametoreplace  -d $dataset  -n $nfiles -i $iteration -c`
+ListOfFilesToRunOn=`python getlistoffiles.py -u $usernametoreplace  -d $dataset  -n $nfiles -i $iteration -x $X509_USER_PROXY -c`
 
 cd ../..
 if [ "$debugmode" == "1" ]; then
