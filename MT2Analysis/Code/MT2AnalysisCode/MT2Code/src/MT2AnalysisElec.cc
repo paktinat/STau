@@ -27,8 +27,14 @@ void MT2Analysis::FillMT2Elecs(){
 		//fMT2tree->ele[i].IDVetoEE   = IsGoodMT2ElectronVetoIDforEleEle(fElecs[i]);
 		fMT2tree->ele[i].IDSelEE    = IsGoodMT2ElectronSelIDforEleEle(fElecs[i]);
 
-		fMT2tree->ele[i].IDVetoEMU   = IsGoodMT2ElectronVetoIDforEleMu(fElecs[i]);
-		fMT2tree->ele[i].IDSelEMU    = IsGoodMT2ElectronSelIDforEleMu(fElecs[i]);
+		fMT2tree->ele[i].IDVetoEMU   = IsGoodMT2ElectronVetoIDforEleMu(fElecs[i]); 
+
+                fMT2tree->ele[i].eleidisoSFeleMu = fMT2tree->ele[i].GetEleIDISOSFelemu();              
+               
+                fMT2tree->ele[i].eletrgSFeleMu   = fMT2tree->ele[i].GetEleTrgSFelemu();
+		
+                
+                fMT2tree->ele[i].IDSelEMU    = IsGoodMT2ElectronSelIDforEleMu(fElecs[i]);
 
 		fMT2tree->ele[i].IDVetoETau   = IsGoodMT2ElectronVetoIDforEleTau(fElecs[i]);
 		fMT2tree->ele[i].IDSelETau    = IsGoodMT2ElectronSelIDforEleTau(fElecs[i]);

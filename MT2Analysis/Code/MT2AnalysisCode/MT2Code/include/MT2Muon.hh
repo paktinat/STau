@@ -19,9 +19,11 @@ public:
     PassMu0_MuMu  = -1;
     PassMu1_MuMu  = -1;
     PassQCDMu0_MuMu  = -1;
-    trgSFmuTau   =-9;
-    idSFmuTau    =-9;
-    isoSFmuTau    =-9;
+    trgSFmuTau   =0.99;
+    idSFmuTau    =-0.99;
+    isoSFmuTau    =-0.99;
+    muidisoSFeleMu  =-0.99;
+    mutrgSFeleMu   =-0.99;
     PassQCDMu1_MuMu  = -1;
     PassQCDMu0Iso_1_EleMu =-1;
     PassLooseEle0_EleMu=-1;
@@ -412,7 +414,8 @@ public:
   Int_t    PassQCDMu0Iso_2_EleMu ;
   Int_t    PassQCDMu0Iso_3_EleMu ;
   Int_t    PassLooseEle0_EleMu;
-
+  Float_t  muidisoSFeleMu ;
+  Float_t  mutrgSFeleMu   ;
   Float_t  trgSFmuTau;
   Float_t  idSFmuTau;
   Float_t  isoSFmuTau;

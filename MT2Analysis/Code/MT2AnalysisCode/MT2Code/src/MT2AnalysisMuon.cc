@@ -20,10 +20,16 @@ void MT2Analysis::FillMT2Muons(){
 	for (int i=0; i<fMuons.size(); ++i) {
 	  	fMT2tree->muo[i].lv.SetPtEtaPhiM(fTR->MuPt [fMuons[i]], fTR->MuEta[fMuons[i]], fTR->MuPhi[fMuons[i]], 0.106); 
 		fMT2tree->muo[i].MT       = fMT2tree->GetMT(fMT2tree->muo[i].lv, fMT2tree->muo[i].lv.M(), fMT2tree->pfmet[0], 0.);            
-                fMT2tree->muo[i].isoSFmuTau = fMT2tree->muo[i].GetMuIsoSFmuTau();              
-                fMT2tree->muo[i].idSFmuTau   = fMT2tree->muo[i].GetMuIDSFmuTau();
+                fMT2tree->muo[i].isoSFmuTau   = fMT2tree->muo[i].GetMuIsoSFmuTau();              
+                fMT2tree->muo[i].idSFmuTau    = fMT2tree->muo[i].GetMuIDSFmuTau();
                 
                 fMT2tree->muo[i].trgSFmuTau   = fMT2tree->muo[i].GetMuTrgSFmuTau();
+
+                fMT2tree->muo[i].muidisoSFeleMu = fMT2tree->muo[i].GetMuIDISOSFelemu();              
+               
+                fMT2tree->muo[i].mutrgSFeleMu   = fMT2tree->muo[i].GetMuTrgSFelemu();
+
+
 		fMT2tree->muo[i].Charge   = fTR->MuCharge[fMuons[i]];	
 		fMT2tree->muo[i].Iso      = MuPFIso(fMuons[i]);
 		fMT2tree->muo[i].Iso04    = MuPFIso04(fMuons[i]);

@@ -57,8 +57,24 @@ void MT2tree::FillEleMu(){
      eleMu[0].Pvisible_dot_Zeta = PVisibleZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv);
      eleMu[0].P_met_dot_Zeta= PZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv, pfmet[0]);
      eleMu[0].PZetaImbalanced=PZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv, (-eleMu[0].lv));
-  
- 
+   
+      eleMu[0].DiLepPtRatio=DiLepPtRatio(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv);
+      eleMu[0].MinMetLepDPhi=MinMetLepDPhi(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv);
+
+    if( muo[eleMu[0].mu0Ind].Charge >= ele[eleMu[0].ele0Ind].Charge){
+	 eleMu[0].PlusLepZAngle=PositiveChargedLeptonDecayAngleinZframe(muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv);
+	 eleMu[0].PlusLepZBeamAngle=PositiveChargedLepWithZBeamPlane(muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv);
+      }else{
+	eleMu[0].PlusLepZAngle=PositiveChargedLeptonDecayAngleinZframe(ele[eleMu[0].ele0Ind].lv,muo[eleMu[0].mu0Ind].lv);
+	 eleMu[0].PlusLepZBeamAngle=PositiveChargedLepWithZBeamPlane(ele[eleMu[0].ele0Ind].lv,muo[eleMu[0].mu0Ind].lv);
+}
+      
+      eleMu[0].MuTrgSF=(muo[eleMu[0].mu0Ind].mutrgSFeleMu);
+      eleMu[0].MuIdIsoSF=(muo[eleMu[0].mu0Ind].muidisoSFeleMu);
+      eleMu[0].EleTrgSF=(ele[eleMu[0].ele0Ind].eletrgSFeleMu);
+      eleMu[0].EleIdIsoSF=(ele[eleMu[0].ele0Ind].eleidisoSFeleMu);
+
+
     if(fVerbose > 3) 
       cout<<" met.Pt() "<<eleMu[0].lv.Pt()<<endl;
     eleMu[0].MT2Imbalanced = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, (-eleMu[0].lv));
@@ -103,7 +119,23 @@ void MT2tree::FillEleMu(){
      eleMu[0].P_met_dot_Zeta= PZeta(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv, pfmet[0]);
      eleMu[0].PZetaImbalanced= PZeta (ele[ eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv, (-eleMu[0].lv));
       
-      //cout<<"met.Pt() "<<met.Pt()<<endl;
+    eleMu[0].DiLepPtRatio=DiLepPtRatio(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv);
+      eleMu[0].MinMetLepDPhi=MinMetLepDPhi(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv);
+
+    if( muo[eleMu[0].mu0Ind].Charge >= ele[eleMu[0].ele0Ind].Charge){
+	 eleMu[0].PlusLepZAngle=PositiveChargedLeptonDecayAngleinZframe(muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv);
+	 eleMu[0].PlusLepZBeamAngle=PositiveChargedLepWithZBeamPlane(muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv);
+      }else{
+	eleMu[0].PlusLepZAngle=PositiveChargedLeptonDecayAngleinZframe(ele[eleMu[0].ele0Ind].lv,muo[eleMu[0].mu0Ind].lv);
+	 eleMu[0].PlusLepZBeamAngle=PositiveChargedLepWithZBeamPlane(ele[eleMu[0].ele0Ind].lv,muo[eleMu[0].mu0Ind].lv);
+}  
+
+      eleMu[0].MuTrgSF=(muo[eleMu[0].mu0Ind].mutrgSFeleMu);
+      eleMu[0].MuIdIsoSF=(muo[eleMu[0].mu0Ind].muidisoSFeleMu);
+      eleMu[0].EleTrgSF=(ele[eleMu[0].ele0Ind].eletrgSFeleMu);
+      eleMu[0].EleIdIsoSF=(ele[eleMu[0].ele0Ind].eleidisoSFeleMu);
+
+//cout<<"met.Pt() "<<met.Pt()<<endl;
      
       eleMu[0].MT2Imbalanced = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, -(eleMu[0].lv));
       if(fVerbose > 3) cout<<"  eleMu[0].MT2Imbalanced  "<<eleMu[0].MT2Imbalanced <<endl;
@@ -144,9 +176,24 @@ void MT2tree::FillEleMu(){
      eleMu[0].PZetaImbalanced= PZeta (ele[ eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv, (-eleMu[0].lv));
       
       
+      eleMu[0].DiLepPtRatio=DiLepPtRatio(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv);
+      eleMu[0].MinMetLepDPhi=MinMetLepDPhi(ele[eleMu[0].ele0Ind].lv, muo[eleMu[0].mu0Ind].lv);
+
+    if( muo[eleMu[0].mu0Ind].Charge >= ele[eleMu[0].ele0Ind].Charge){
+	 eleMu[0].PlusLepZAngle=PositiveChargedLeptonDecayAngleinZframe(muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv);
+	 eleMu[0].PlusLepZBeamAngle=PositiveChargedLepWithZBeamPlane(muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv);
+      }else{
+	eleMu[0].PlusLepZAngle=PositiveChargedLeptonDecayAngleinZframe(ele[eleMu[0].ele0Ind].lv,muo[eleMu[0].mu0Ind].lv);
+	 eleMu[0].PlusLepZBeamAngle=PositiveChargedLepWithZBeamPlane(ele[eleMu[0].ele0Ind].lv,muo[eleMu[0].mu0Ind].lv);
+}
+      eleMu[0].MuTrgSF=(muo[eleMu[0].mu0Ind].mutrgSFeleMu);
+      eleMu[0].MuIdIsoSF=(muo[eleMu[0].mu0Ind].muidisoSFeleMu);
+      eleMu[0].EleTrgSF=(ele[eleMu[0].ele0Ind].eletrgSFeleMu);
+      eleMu[0].EleIdIsoSF=(ele[eleMu[0].ele0Ind].eleidisoSFeleMu);
      
-      eleMu[0].MT2Imbalanced = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, -(eleMu[0].lv));
-      if(fVerbose > 3) cout<<"  eleMu[0].MT2Imbalanced  "<<eleMu[0].MT2Imbalanced <<endl;
+ eleMu[0].MT2Imbalanced = CalcMT2(0, 0,muo[eleMu[0].mu0Ind].lv,ele[eleMu[0].ele0Ind].lv, -(eleMu[0].lv));
+     
+       if(fVerbose > 3) cout<<"  eleMu[0].MT2Imbalanced  "<<eleMu[0].MT2Imbalanced <<endl;
     }
 }
 }}

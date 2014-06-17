@@ -29,12 +29,14 @@ public:
 
   IDVetoETau = -1;
   IDSelETau = -1;
+  eleidisoSFeleMu= -0.99;
+  eletrgSFeleMu  = -0.99;
   
 
   IDVetoMuTau = -1;
   IDVetoTauTau = -1;
-   PassE0_EE=-1;
-   PassE1_EE=-1;
+  PassE0_EE=-1;
+  PassE1_EE=-1;
   PassQCDMediumE0_EE =-1;
   PassQCDMediumE1_EE =-1;
   PassQCDNonIsoE1_EE =-1;
@@ -425,7 +427,7 @@ Float_t GetEleTrgSFelemu(){
 
   Int_t IDVetoETau;
   Int_t IDSelETau;
-
+ 
   Int_t IDVetoMuTau;
   Int_t IDVetoTauTau;
   Int_t PassQCDMediumE0_EE ;
@@ -438,6 +440,9 @@ Float_t GetEleTrgSFelemu(){
   Int_t PassQCDele0Iso_1_EleMu;
   Int_t PassQCDele0Iso_2_EleMu;
   Int_t PassQCDele0Iso_3_EleMu;
+
+  Float_t  eleidisoSFeleMu;
+  Float_t  eletrgSFeleMu  ;
   ClassDef(MT2Elec, 12)
 };
 #endif

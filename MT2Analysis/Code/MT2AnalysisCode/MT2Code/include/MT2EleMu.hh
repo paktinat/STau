@@ -26,6 +26,14 @@ public:
     HasNoVetoElecForEleMu=true;
     isSignalEleMu = false;
     Isolated      =-9.;
+    DiLepPtRatio= -2.0;
+    PlusLepZAngle= -4.0;
+    PlusLepZBeamAngle= -4.0;
+    MinMetLepDPhi= -4.0;
+    MuTrgSF= -.99;
+    MuIdIsoSF= -.99;
+    EleTrgSF= -.99;
+    EleIdIsoSF= -.99;
   }
   
   TLorentzVector lv;
@@ -41,7 +49,16 @@ public:
   bool     HasNoVetomuoForEleMu;
   bool     HasNoVetoElecForEleMu;
   bool	   isSignalEleMu;
-  Int_t  Isolated;
+  Int_t  Isolated; 
+  Float_t DiLepPtRatio;
+  Float_t PlusLepZAngle;
+  Float_t PlusLepZBeamAngle;
+  Float_t MinMetLepDPhi;
+  Float_t MuTrgSF;
+  Float_t MuIdIsoSF;
+  Float_t EleTrgSF;
+  Float_t EleIdIsoSF;
+
   ClassDef(MT2EleMu, 1)
     }; 
 #endif
