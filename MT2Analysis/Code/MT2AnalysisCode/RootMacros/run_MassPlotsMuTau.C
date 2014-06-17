@@ -1,7 +1,8 @@
 {
   TString outputdir = "../MassPlots/";
-  TString samples = "./samples/samplesMineTauPlusX.dat"; 
+  //  TString samples = "./samples/samplesMineTauPlusX.dat"; 
   //TString samples = "./samples/samplesMineQCD.dat";
+  TString samples = "./samples/samplesMineTest.dat";  
   int verbose =3;
 
   gSystem->CompileMacro("../MT2Code/src/MassPlotter.cc", "kf");//"k", "f"
@@ -23,7 +24,9 @@
   tA->setVerbose(verbose);
   tA->init(samples);
   tA->SetIsPhoton(false);
-
+  //To define the channel and turn on/off the channel specific SF. They are applied by default.
+  //void SetMuTauChannel(bool muIdSF = true, bool muIsoSF = true, bool muTrgSF = true, bool tauTrgSF = true, bool tauWjetsSF = true)
+  tA->SetMuTauChannel();
   /*
 * Define preselections including trigger
 */
@@ -54,8 +57,8 @@
 
   // You need to specify the channel
   TString myChan = "muTau[0]";
-  /*  
-      myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP) < 175.0 && (Susy.MassGlu - Susy.MassLSP) > 125.0))"); 
+ 
+  //  myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP) < 175.0 && (Susy.MassGlu - Susy.MassLSP) > 125.0))"); 
   // You need to carefully define the cut variables based on MT2"Channel".hh
   myChannelCuts.push_back(std::string(std::string(myChan) + ".tau0Ind >=0")); // First lepton index, channel specific
   myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0Ind >=0")); // Second lepton index, channel specific
@@ -70,7 +73,7 @@
   //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu1QCDInd != -1"));
   myChannelCuts.push_back("(muTau[0].lv.M() < 45 || muTau[0].lv.M() > 75)");
     myChannelCuts.push_back("muTau[0].lv.M() > 15");
-*/  myChannelCuts.push_back("misc.MET > 30"); //Place holder for MET requirements
+  myChannelCuts.push_back("misc.MET > 30"); //Place holder for MET requirements
   //    myChannelCuts.push_back(std::string(std::string(myChan) + ".DPhi < 2.5"));
   myChannelCuts.push_back("NBJetsCSVM == 0");
   //myChannelCuts.push_back("misc.Jet0Pass");

@@ -1,61 +1,51 @@
 #########################################################################################
 GENERAL
-Path         ///dataLOCAL/MT2Tau/RootFiles/
+Path         ///dataLOCAL/paktinat/Projects/MT2/CMSSW_5_3_7_patch5/src/MT2_Tau_V02-03-02_DevV2/MT2Analysis/Code/MT2AnalysisCode/MT2Code/
 ________________________________________________________________________________________
 # list of samples
 #
+## -------- SMS --------
+SAMPLE
+Name            TStau
+SName           SUSY
+ShapeName       Signal
+File            output_0_0.root
+Xsection        0.152 pb
+Kfact           1.
+Lumi            19600.0
+Type            susy
+Color           1
+
 ## -------- QCD ----------------
 SAMPLE
 Name		QCD_HT_100To250
 SName		QCD
 ShapeName	QCD
-File            TauTau_V2_2/QCD-HT-100To250-TuneZ2star-8TeV-madgraph-pythia-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+File            output_0_0.root
 Xsection  	1.036E7 pb 
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
-#
-SAMPLE
-Name		QCD_HT_250To500
-SName		QCD
-ShapeName	QCD
-File            TauTau_V2_2/QCD-HT-250To500-TuneZ2star-8TeV-madgraph-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1-2.root
-Xsection 	276000.0 pb
-Kfact           1.59
-Lumi            19600.0
-Type		mc
-Color		401
+
 #
 # -------- electroweak --------
-SAMPLE
-Name		WWJetsTo2L2Nu
-SName		Wtolnu
-ShapeName	WJets  
-File            TauTau_V2_2/WWJetsTo2L2Nu-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection  	5.8   #4.7 pb 
-Kfact           1.	
-Lumi            19600.0
-Type            mc
-Color		417
-
 SAMPLE
 Name		WJetsToLNu
 SName		Wtolnu
 ShapeName	WJets
-File            TauTau_V2_2/WJetsToLNu-TuneZ2Star-8TeV-madgraph-tarball-Summer12-DR53X-PU-S10-START53-V7A-v2.root
+File            output_0_0.root
 Xsection  	36257.2
 Kfact           1.
 Lumi            19600.0
 Type            mc
 Color		417
-
 ## --------- Data ---------------------------
 SAMPLE
 Name		Run2012A_TauPlusX
 SName		TauPlusX-Data
 ShapeName	Data
-File            TauTau_V2_2/TauPlusX-Run2012A-2.root
+File            output_0_0.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.

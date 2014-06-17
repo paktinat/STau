@@ -82,6 +82,16 @@ MassPlotter::MassPlotter(){
 	fisPhoton=false;
 	fPUReweight=true;
 	fbSFReWeight=true;
+	myChannel = "TBD";
+	
+	//Put all channel specific weights true, You can 
+	//muTau
+	fMuIdSF=true;
+	fMuIsoSF=true;
+	fMuTrgSF=true;
+	fTauTrgSF=true;
+	fTauWjetsSF=true;
+
 // Default constructor, no samples are set
   cout.precision(2);
   cout.setf(ios::fixed,ios::floatfield);
@@ -91,28 +101,51 @@ MassPlotter::MassPlotter(){
 //____________________________________________________________________________
 MassPlotter::MassPlotter(TString outputdir){
 // Explicit constructor with output directory
-	setOutputDir(outputdir);
-	fSave=true;
+       	fSave=true;
 	fisPhoton=false;
 	fPUReweight=true;
 	fbSFReWeight=true;
+	myChannel = "TBD";
+	
+	//Put all channel specific weights true, You can 
+	//muTau
+	fMuIdSF=true;
+	fMuIsoSF=true;
+	fMuTrgSF=true;
+	fTauTrgSF=true;
+	fTauWjetsSF=true;
+
+// Default constructor, no samples are set
   cout.precision(2);
   cout.setf(ios::fixed,ios::floatfield);
-
+	setOutputDir(outputdir);
 }
 
 //____________________________________________________________________________
 MassPlotter::MassPlotter(TString outputdir, TString outputfile){
 // Explicit constructor with output directory and output file
-	setOutputDir(outputdir);
-	setOutputFile(outputfile);
+//	MassPlotter();
 	fSave=true;
 	fisPhoton=false;
 	fPUReweight=true;
 	fbSFReWeight=true;
+	myChannel = "TBD";
+	
+	//Put all channel specific weights true, You can 
+	//muTau
+	fMuIdSF=true;
+	fMuIsoSF=true;
+	fMuTrgSF=true;
+	fTauTrgSF=true;
+	fTauWjetsSF=true;
+
+// Default constructor, no samples are set
   cout.precision(2);
   cout.setf(ios::fixed,ios::floatfield);
 
+
+	setOutputDir(outputdir);
+	setOutputFile(outputfile);
 }
 
 //____________________________________________________________________________
@@ -1288,27 +1321,49 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 		if(!add_underflow) theCuts = theCuts + "&&" + nMinCut;
 		theCuts = theCuts + "&&" + maincuts;
 		if(basecuts!="") theCuts = theCuts + "&&" + basecuts;
-		if(Samples[i].type=="data" && HLT!="") theCuts += " &&("+HLT+")"; // triggers for data
-
-		TString btagweight = "1.00"; //stored btag weights up to >=3, default is weight==1 to avoid non-existing weights
-		if(nbjets>=0 && nbjets<=3) btagweight = TString::Format("SFWeight.BTagCSV40eq%d",abs(nbjets));
-		else if(nbjets>=-3)        btagweight = TString::Format("SFWeight.BTagCSV40ge%d",abs(nbjets));
-
+		
 		TString selection;
-		if(     Samples[i].type!="data" && fPUReweight && fbSFReWeight) selection = TString::Format("(%.15f*pileUp.Weight*%s) * (%s)",weight, btagweight.Data(), theCuts.Data());
-		else if(Samples[i].type!="data" && fPUReweight                ) selection = TString::Format("(%.15f*pileUp.Weight) * (%s)",   weight,                    theCuts.Data());
-		else if(Samples[i].type!="data" &&                fbSFReWeight) selection = TString::Format("(%.15f*%s) * (%s)",              weight, btagweight.Data(), theCuts.Data());
-		else                                                            selection = TString::Format("(%.15f) * (%s)",                 weight,                    theCuts.Data()); 
 
-		if(     Samples[i].type=="susy")  selection = TString::Format("(%.15f) * (%s)",weight, theCuts.Data());
+		if(Samples[i].type=="data"){
+		  if(HLT!="")
+		    theCuts += " &&("+HLT+")"; // triggers for data
+		  selection = TString::Format("(%.15f) * (%s)",                 weight,   theCuts.Data());
+		}else{
+		  
+		  TString btagweight = "1.00"; //stored btag weights up to >=3, default is weight==1 to avoid non-existing weights
+		  if(nbjets>=0 && nbjets<=3) btagweight = TString::Format("SFWeight.BTagCSV40eq%d",abs(nbjets));
+		  else if(nbjets>=-3)        btagweight = TString::Format("SFWeight.BTagCSV40ge%d",abs(nbjets));
+
+		  TString ChannelSpecificSF;// = "1.00";
+		  
+		  if(myChannel == "muTau"){
+		    if(fMuIdSF)
+		      ChannelSpecificSF += "muTau[0].muIdSF";
+		    if(fMuIsoSF)
+		      ChannelSpecificSF += "*muTau[0].muIsoSF";
+		    if(fMuTrgSF)
+		      ChannelSpecificSF += "*muTau[0].muTrgSF";
+		    if(fTauTrgSF)
+		      ChannelSpecificSF += "*muTau[0].tauTrgSF";
+		    if(fTauWjetsSF && (Samples[i].sname == "Wtolnu"))
+		      ChannelSpecificSF += "*muTau[0].tauWjetsSF";	  
+		  }else 
+		    ChannelSpecificSF = "pileUp.Weight";
+		  
+
+		if(fPUReweight && fbSFReWeight) selection = TString::Format("(%.15f*pileUp.Weight*%s*%s) * (%s)",weight, btagweight.Data(), ChannelSpecificSF.Data(), theCuts.Data());
+ 		else if(fPUReweight)  selection = TString::Format("(%.15f*pileUp.Weight*%s) * (%s)",   weight,                    ChannelSpecificSF.Data(), theCuts.Data());
+		else if(fbSFReWeight) selection = TString::Format("(%.15f*%s*%s) * (%s)",              weight, btagweight.Data(), ChannelSpecificSF.Data(), theCuts.Data());
+		else                  selection = TString::Format("(%.15f*%s) * (%s)",                 weight,                    ChannelSpecificSF.Data(), theCuts.Data()); 
+
+// 		if(     Samples[i].type=="susy")  selection = TString::Format("(%.15f) * (%s)",weight, theCuts.Data());
 
 	//	TString selection;
 	//	if(Samples[i].type!="data" && fPUReweight) selection      = TString::Format("(%.15f*pileUp.Weight) * (%s)",weight,theCuts.Data());
 	//	else                                       selection      = TString::Format("(%.15f) * (%s)"              ,weight,theCuts.Data()); 
-		  
+		}
 		if(fVerbose>2) cout << "  +++++++ Drawing      " << variable  << endl
 				    << "  +++++++ with cuts:   " << setw(40)  << selection << endl;
-
 
 		int nev = Samples[i].tree->Draw(variable.Data(),selection.Data(),"goff");
 

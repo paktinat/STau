@@ -274,6 +274,21 @@ public:
   void SortHighMT2(float MT2cut, Long64_t nevents);
   void MyMakePlot(Long64_t nevents);
   void MySmallMakePlot(Long64_t nevents);
+  
+  void SetMuTauChannel(bool muIdSF = true, bool muIsoSF = true, bool muTrgSF = true, bool tauTrgSF = true, bool tauWjetsSF = true){
+    if(myChannel != "TBD" && myChannel != "muTau")
+      cout<<"The channel is already defined as "<<myChannel<<endl;
+
+    myChannel = "muTau";
+
+    fMuIdSF     = muIdSF;
+    fMuIsoSF    = muIsoSF;
+    fMuTrgSF    = muTrgSF;
+    fTauTrgSF   = tauTrgSF;
+    fTauWjetsSF = tauWjetsSF;
+  }
+
+
 
   void QCD();
   double DeltaPhi(double phi1, double phi2);
@@ -289,6 +304,15 @@ private:
 	bool fEventsPerGeV;
 	bool fPUReweight;
 	bool fbSFReWeight;
+        TString myChannel;
+        bool fMuIdSF;
+        bool fMuIsoSF;
+        bool fMuTrgSF;
+        bool fTauTrgSF;
+        bool fTauWjetsSF;
+  
+
+
 
 	MT2tree* fMT2tree;
 	TTree*   fTree;
