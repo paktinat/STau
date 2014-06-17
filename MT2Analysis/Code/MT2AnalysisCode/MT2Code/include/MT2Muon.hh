@@ -35,6 +35,8 @@ public:
     PassMu0_EleMu    = -1;
     RejMu1_EleMu     = -1;
     RejMu_TauTau     = -1;
+    RejMu_EE         = -1;
+
   }
   
   void SetLV(const TLorentzVector v){
@@ -425,6 +427,8 @@ public:
   Int_t    PassMu0_EleMu;
   Int_t    RejMu1_EleMu;
   Int_t    RejMu_TauTau;
+  Int_t    RejMu_EE ;
+
   ClassDef(MT2Muon, 9)
 };
 #endif

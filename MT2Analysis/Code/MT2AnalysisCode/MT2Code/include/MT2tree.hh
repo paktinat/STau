@@ -1038,6 +1038,9 @@ public:
   MT2DoubleEle doubleEle[1]; 
 
   void   FillDoubleEle();
+  void  FillQCDSyst03forEE();
+  void  FillQCDSyst07forEE();
+
   double GetDoubleEleTrgSF();
 
   double GetDiLepPtRatioEE();
@@ -1048,6 +1051,8 @@ public:
   double GetPVisibleZetaEE();
   double GetPZetaEE();
   double GetPZetaImbEE();
+  double VetoExtraEleforEE();
+  double VetoMuforEE();
 
   //chenarani   
   MT2DoubleMuon doubleMu[1];

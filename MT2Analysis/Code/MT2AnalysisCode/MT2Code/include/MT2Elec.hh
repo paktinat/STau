@@ -37,14 +37,26 @@ public:
   IDVetoTauTau = -1;
   PassE0_EE=-1;
   PassE1_EE=-1;
+  RejE2_EE =-1;
+  PassE0_EE=-1;
+  PassE1_EE=-1;
   PassQCDMediumE0_EE =-1;
   PassQCDMediumE1_EE =-1;
   PassQCDNonIsoE1_EE =-1;
   PassQCDNonIsoE0_EE=-1;
+
+  QCDSyst03E0_EE = -1;  
+  QCDSyst07E0_EE = -1;  
+  QCDSyst03E1_EE = -1;  
+  QCDSyst07E1_EE = -1;  
+
+  PassQCDele0_EleMu =-1;
+
   PassLooseEle0_EleMu=-1;
   PassQCDele0Iso_1_EleMu=-1; 
   PassQCDele0Iso_2_EleMu=-1 ;
   PassQCDele0Iso_3_EleMu=-1;
+
   }
   void SetLV(const TLorentzVector v){lv = v;}
 
@@ -434,8 +446,17 @@ Float_t GetEleTrgSFelemu(){
   Int_t PassQCDMediumE1_EE ;
   Int_t PassQCDNonIsoE1_EE ;
   Int_t PassQCDNonIsoE0_EE;
+  Int_t QCDSyst03E0_EE ;  
+  Int_t QCDSyst07E0_EE ;  
+  Int_t QCDSyst03E1_EE ;  
+  Int_t QCDSyst07E1_EE ;  
+
   Int_t PassE0_EE;
   Int_t PassE1_EE;
+
+  Int_t RejE2_EE;
+  Int_t PassQCDele0_EleMu;
+
   Int_t PassLooseEle0_EleMu;
   Int_t PassQCDele0Iso_1_EleMu;
   Int_t PassQCDele0Iso_2_EleMu;
@@ -443,6 +464,7 @@ Float_t GetEleTrgSFelemu(){
 
   Float_t  eleidisoSFeleMu;
   Float_t  eletrgSFeleMu  ;
+
   ClassDef(MT2Elec, 12)
 };
 #endif

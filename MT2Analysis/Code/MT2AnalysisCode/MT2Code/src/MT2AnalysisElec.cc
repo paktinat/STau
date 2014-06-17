@@ -24,7 +24,7 @@ void MT2Analysis::FillMT2Elecs(){
 		//fMT2tree->ele[i].IDMedium = IsGoodMT2ElectronMediumID(fElecs[i]);
 		//fMT2tree->ele[i].IDLoose  = IsGoodMT2ElectronLooseID(fElecs[i]);
 
-		//fMT2tree->ele[i].IDVetoEE   = IsGoodMT2ElectronVetoIDforEleEle(fElecs[i]);
+		//		fMT2tree->ele[i].IDVetoEE   = IsGoodMT2ElectronVetoIDforEleEle(fElecs[i]);
 		fMT2tree->ele[i].IDSelEE    = IsGoodMT2ElectronSelIDforEleEle(fElecs[i]);
 
 		fMT2tree->ele[i].IDVetoEMU   = IsGoodMT2ElectronVetoIDforEleMu(fElecs[i]); 
@@ -46,6 +46,7 @@ void MT2Analysis::FillMT2Elecs(){
                 fMT2tree->ele[i].PassE0_EE  = (fMT2tree->ele[i].IDSelEE && fTR->ElPt[fElecs[i]] > 20) ? 1 : 0;	
 
                 fMT2tree->ele[i].PassE1_EE  = (fMT2tree->ele[i].PassE0_EE || (fMT2tree->ele[i].IDSelEE && fTR->ElPt[fElecs[i]] < 20)) ? 1 : 0;	
+                fMT2tree->ele[i].RejE2_EE  = IsGoodMT2ElectronVetoIDforEleTau(fElecs[i]);
 
                 fMT2tree->ele[i].IDSelStop = IsGoodMT2ElectronSelIDforStop(fElecs[i]);
                
@@ -66,20 +67,43 @@ void MT2Analysis::FillMT2Elecs(){
 		fMT2tree->ele[i].PassQCDMediumE1_EE= 0;
 		if((fMT2tree->ele[i].PassQCDMediumE0_EE==1)||(IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) && (ElePFIso04(fElecs[i])<0.5) && fTR->ElPt[fElecs[i]] < 20 &&(ElePFIso04(fElecs[i]) >0.25)))
 		  fMT2tree->ele[i].PassQCDMediumE1_EE= 1;
+
 		
                   fMT2tree->ele[i].PassLooseEle0_EleMu = (IsGoodMT2LooseElectronforEleMu(fElecs[i])&& fTR->ElPt [fElecs[i]]>20
 &&  fTR->ElEta[fElecs[i]]<2.5 &&  fMT2tree->ele[i].Iso04<0.2) ?1 :0;         
    
 		fMT2tree->ele[i].PassQCDele0Iso_1_EleMu = ((IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) && fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<2.3 &&fTR->ElEta[fElecs[i]]>1.479&& fMT2tree->ele[i].Iso04>0.5 )||(IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) &&fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<1.479&&
 fMT2tree->ele[i].Iso04>0.5 )) ? 1 : 0;
+
+
+               fMT2tree->ele[i].QCDSyst03E0_EE= 0;
+		if(IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) && fTR->ElPt[fElecs[i]] > 20 && (ElePFIso04(fElecs[i]) >0.3))
+               fMT2tree->ele[i].QCDSyst03E0_EE= 1;
+
+               fMT2tree->ele[i].QCDSyst03E1_EE= 0;
+		if((fMT2tree->ele[i].QCDSyst03E0_EE==1)||(IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) && fTR->ElPt[fElecs[i]] < 20&&(ElePFIso04(fElecs[i]) >0.3)))
+		  fMT2tree->ele[i].QCDSyst03E1_EE= 1;
+
+               fMT2tree->ele[i].QCDSyst07E0_EE= 0;
+		if(IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) && fTR->ElPt[fElecs[i]] > 20 && (ElePFIso04(fElecs[i]) >0.7))
+               fMT2tree->ele[i].QCDSyst07E0_EE= 1;
+
+               fMT2tree->ele[i].QCDSyst03E1_EE= 0;
+		if((fMT2tree->ele[i].QCDSyst07E1_EE==1)||(IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) && fTR->ElPt[fElecs[i]] < 20&&(ElePFIso04(fElecs[i]) >0.7)))
+		  fMT2tree->ele[i].QCDSyst07E1_EE= 1;
+
+
                  fMT2tree->ele[i].PassQCDele0Iso_2_EleMu = ((IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) && fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<2.3 &&fTR->ElEta[fElecs[i]]>1.479&& fMT2tree->ele[i].Iso04>0.3 )||(IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) &&fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<1.479&&
 fMT2tree->ele[i].Iso04>0.3)) ? 1 : 0;
                  fMT2tree->ele[i].PassQCDele0Iso_3_EleMu = ((IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) && fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<2.3 &&fTR->ElEta[fElecs[i]]>1.479&& fMT2tree->ele[i].Iso04>0.7 )||(IsGoodMT2ElectronSelIDforQCDEleEle(fElecs[i]) &&fTR->ElPt [fElecs[i]]>10 &&  fTR->ElEta[fElecs[i]]<1.479&&
 fMT2tree->ele[i].Iso04>0.7 )) ? 1 : 0;
 
 
+
 	}
 }
+
+
 //************************************************************************************************
 bool MT2Analysis::IsGoodMT2ElectronSelIDforStop(const int index){
   if(!(fabs(fTR->ElEta[index]) < 2.4) ) return false;
