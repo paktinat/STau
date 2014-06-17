@@ -33,6 +33,18 @@ void  MT2tree::FillDoubleEle(){
 
     doubleEle[0].PairCharge = ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge;
 
+    doubleEle[0].Ele0IdIsoSF  = ele[doubleEle[0].Ele0Ind].EleIDIsoSFEleEle;
+    doubleEle[0].Ele1IdIsoSF  = ele[doubleEle[0].Ele1Ind].EleIDIsoSFEleEle;
+    doubleEle[0].DiEleTrgSF   = GetDoubleEleTrgSF();
+    doubleEle[0].PZetaVisible = GetPVisibleZetaEE();
+    doubleEle[0].PZeta        = GetPZetaEE();
+    doubleEle[0].PZetaImb     = GetPZetaImbEE();
+    doubleEle[0].DiLepPtRatio =  GetDiLepPtRatioEE();
+    doubleEle[0].PositveLepAngInZFrame     = GetPositiveChargedLeptonDecayAngleinZframeEE();
+    doubleEle[0].PositveLepAngwithZBeamPlane =GetPositiveChargedLepWithZBeamPlaneEE();
+    doubleEle[0].MinMetLepDPhi= GetMinMetLepDPhiEE();
+
+
     if(fVerbose > 3){
       std::cout<<"EleIndex0: "<< doubleEle[0].Ele0Ind << endl <<"EleIndex1: "<< doubleEle[0].Ele1Ind << endl;
       std::cout<<"Pair Charge1: "<< doubleEle[0].PairCharge <<endl;
@@ -74,6 +86,18 @@ void  MT2tree::FillDoubleEle(){
       doubleEle[0].MT2Imbalanced = CalcMT2(0, 0,ele[doubleEle[0].Ele0Ind].lv,ele[doubleEle[0].Ele1Ind].lv, -(doubleEle[0].lv));
 
       doubleEle[0].PairCharge = ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge;
+
+      doubleEle[0].Ele0IdIsoSF  = ele[doubleEle[0].Ele0Ind].EleIDIsoSFEleEle;
+      doubleEle[0].Ele1IdIsoSF  = ele[doubleEle[0].Ele1Ind].EleIDIsoSFEleEle;
+      doubleEle[0].DiEleTrgSF   = GetDoubleEleTrgSF();
+      doubleEle[0].PZetaVisible = GetPVisibleZetaEE();
+      doubleEle[0].PZeta        = GetPZetaEE();
+      doubleEle[0].PZetaImb     = GetPZetaImbEE();
+      doubleEle[0].DiLepPtRatio =  GetDiLepPtRatioEE();
+      doubleEle[0].PositveLepAngInZFrame     = GetPositiveChargedLeptonDecayAngleinZframeEE();
+      doubleEle[0].PositveLepAngwithZBeamPlane =GetPositiveChargedLepWithZBeamPlaneEE();
+      doubleEle[0].MinMetLepDPhi= GetMinMetLepDPhiEE();
+
 
       if(fVerbose > 3){
          
@@ -118,6 +142,18 @@ void  MT2tree::FillDoubleEle(){
 	doubleEle[0].MT2Imbalanced = CalcMT2(0, 0,ele[doubleEle[0].Ele0Ind].lv,ele[doubleEle[0].Ele1Ind].lv, -(doubleEle[0].lv));
 
 	doubleEle[0].PairCharge = ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge;
+
+	doubleEle[0].Ele0IdIsoSF  = ele[doubleEle[0].Ele0Ind].EleIDIsoSFEleEle;
+	doubleEle[0].Ele1IdIsoSF  = ele[doubleEle[0].Ele1Ind].EleIDIsoSFEleEle;
+	doubleEle[0].DiEleTrgSF   = GetDoubleEleTrgSF();
+	doubleEle[0].PZetaVisible = GetPVisibleZetaEE();
+	doubleEle[0].PZeta        = GetPZetaEE();
+	doubleEle[0].PZetaImb     = GetPZetaImbEE();
+	doubleEle[0].DiLepPtRatio =  GetDiLepPtRatioEE();
+	doubleEle[0].PositveLepAngInZFrame     = GetPositiveChargedLeptonDecayAngleinZframeEE();
+	doubleEle[0].PositveLepAngwithZBeamPlane =GetPositiveChargedLepWithZBeamPlaneEE();
+	doubleEle[0].MinMetLepDPhi= GetMinMetLepDPhiEE();
+
 
 	if(fVerbose > 3){
 	  std::cout<<"EleIndex0: "<< doubleEle[0].Ele0Ind << endl <<"EleIndex1: "<< doubleEle[0].Ele1Ind << endl;
@@ -165,6 +201,18 @@ void  MT2tree::FillQCDSyst03forEE(){
 
 	doubleEle[0].PairCharge = ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge;
 
+	doubleEle[0].Ele0IdIsoSF  = ele[doubleEle[0].Ele0Ind].EleIDIsoSFEleEle;
+	doubleEle[0].Ele1IdIsoSF  = ele[doubleEle[0].Ele1Ind].EleIDIsoSFEleEle;
+	doubleEle[0].DiEleTrgSF   = GetDoubleEleTrgSF();
+	doubleEle[0].PZetaVisible = GetPVisibleZetaEE();
+	doubleEle[0].PZeta        = GetPZetaEE();
+	doubleEle[0].PZetaImb     = GetPZetaImbEE();
+	doubleEle[0].DiLepPtRatio =  GetDiLepPtRatioEE();
+	doubleEle[0].PositveLepAngInZFrame     = GetPositiveChargedLeptonDecayAngleinZframeEE();
+	doubleEle[0].PositveLepAngwithZBeamPlane =GetPositiveChargedLepWithZBeamPlaneEE();
+	doubleEle[0].MinMetLepDPhi= GetMinMetLepDPhiEE();
+
+
 	if(fVerbose > 3){
 	  std::cout<<"EleIndex0: "<< doubleEle[0].Ele0Ind << endl <<"EleIndex1: "<< doubleEle[0].Ele1Ind << endl;
 	  std::cout<<"Pair Charge3: "<< doubleEle[0].PairCharge <<endl;
@@ -208,6 +256,18 @@ void  MT2tree::FillQCDSyst07forEE(){
 	doubleEle[0].MT2Imbalanced = CalcMT2(0, 0,ele[doubleEle[0].Ele0Ind].lv,ele[doubleEle[0].Ele1Ind].lv, -(doubleEle[0].lv));
 
 	doubleEle[0].PairCharge = ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge;
+
+	doubleEle[0].Ele0IdIsoSF  = ele[doubleEle[0].Ele0Ind].EleIDIsoSFEleEle;
+	doubleEle[0].Ele1IdIsoSF  = ele[doubleEle[0].Ele1Ind].EleIDIsoSFEleEle;
+	doubleEle[0].DiEleTrgSF   = GetDoubleEleTrgSF();
+	doubleEle[0].PZetaVisible = GetPVisibleZetaEE();
+	doubleEle[0].PZeta        = GetPZetaEE();
+	doubleEle[0].PZetaImb     = GetPZetaImbEE();
+	doubleEle[0].DiLepPtRatio =  GetDiLepPtRatioEE();
+	doubleEle[0].PositveLepAngInZFrame     = GetPositiveChargedLeptonDecayAngleinZframeEE();
+	doubleEle[0].PositveLepAngwithZBeamPlane =GetPositiveChargedLepWithZBeamPlaneEE();
+	doubleEle[0].MinMetLepDPhi= GetMinMetLepDPhiEE();
+
 
 	if(fVerbose > 3){
 	  std::cout<<"EleIndex0: "<< doubleEle[0].Ele0Ind << endl <<"EleIndex1: "<< doubleEle[0].Ele1Ind << endl;

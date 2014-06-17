@@ -17,7 +17,20 @@ public:
     MT2Imbalanced      = -1;
     Isolated= -2;
     DPhi     =-9;
-  }
+
+    Ele0IdIsoSF    = -10;
+    Ele1IdIsoSF    = -10;
+    DiEleTrgSF     = -10;
+    PZetaVisible = -10;
+    PZeta        = -10;
+    PZetaImb     = -10;
+    DiLepPtRatio = -10;
+    PositveLepAngInZFrame= -10;
+    PositveLepAngwithZBeamPlane = -10;
+    MinMetLepDPhi= -10;
+
+  
+}
 
   TLorentzVector lv;
   Int_t    Ele0Ind;
@@ -28,6 +41,19 @@ public:
   Float_t  MT2;
   Float_t  MT2Imbalanced;
   Int_t  Isolated;
+
+  double    Ele0IdIsoSF;
+  double    Ele1IdIsoSF;
+  double    DiEleTrgSF;
+  double    PZetaVisible;
+  double    PZeta       ;
+  double    PZetaImb    ;
+  double    DiLepPtRatio;
+  double    PositveLepAngInZFrame;
+  double    PositveLepAngwithZBeamPlane;
+  double    MinMetLepDPhi;
+
+
   ClassDef(MT2DoubleEle, 1)
     };
 #endif

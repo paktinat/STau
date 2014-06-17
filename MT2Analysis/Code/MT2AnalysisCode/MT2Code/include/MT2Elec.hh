@@ -45,13 +45,16 @@ public:
   PassQCDNonIsoE1_EE =-1;
   PassQCDNonIsoE0_EE=-1;
 
+
   QCDSyst03E0_EE = -1;  
   QCDSyst07E0_EE = -1;  
   QCDSyst03E1_EE = -1;  
   QCDSyst07E1_EE = -1;  
 
-  PassQCDele0_EleMu =-1;
 
+  EleIDIsoSFEleEle = -999;
+
+  PassQCDele0_EleMu =-1;
   PassLooseEle0_EleMu=-1;
   PassQCDele0Iso_1_EleMu=-1; 
   PassQCDele0Iso_2_EleMu=-1 ;
@@ -460,7 +463,10 @@ Float_t GetEleTrgSFelemu(){
   Int_t PassLooseEle0_EleMu;
   Int_t PassQCDele0Iso_1_EleMu;
   Int_t PassQCDele0Iso_2_EleMu;
+
   Int_t PassQCDele0Iso_3_EleMu;
+
+  double EleIDIsoSFEleEle;
 
   Float_t  eleidisoSFeleMu;
   Float_t  eletrgSFeleMu  ;
