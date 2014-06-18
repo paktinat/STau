@@ -9,12 +9,22 @@ STauBaseDir = $(shell git rev-parse --show-toplevel)
 
 
 BOOSTINC = $(shell scram tool tag boost INCLUDE)
+BOOSTLIB = $(shell scram tool tag boost LIBDIR)
+BOOSTLIBName = $(patsubst boost_%, -lboost_% , $(shell scram tool tag boost LIB) )
+BOOSTLIBName += $(patsubst boost_%, -lboost_% , $(shell scram tool tag boost_filesystem LIB) )
+BOOSTLIBName += $(patsubst boost_%, -lboost_% , $(shell scram tool tag boost_python LIB) )
 ZLIBINC  = $(shell scram tool tag zlib INCLUDE)
 ZLIBLIB  = $(shell scram tool tag zlib LIBDIR)
 ROOFITINC = $(shell scram tool tag roofitcore INCLUDE)
 ROOFITLIB = $(shell scram tool tag roofitcore LIBDIR)
+CLHEPINC = $(shell scram tool tag clhep INCLUDE)
+CLHEPLIB = $(shell scram tool tag clhep LIBDIR)
+CLHEPLIBName = $(shell scram tool tag clhep LIB)
+PYTHONINC = $(shell scram tool tag python INCLUDE)
+PYTHONLIB = $(shell scram tool tag python LIBDIR)
+PYTHONLIBName = $(shell scram tool tag python LIB)
 
-INCLUDES       = -I./include -I../TESCO/include -I${CMSSW_RELEASE_BASE}/src/CondFormats/JetMETObjects/interface -I${CMSSW_RELEASE_BASE}/src/ -I${ZLIBINC} -I${BOOSTINC} -I${ROOFITINC}
+INCLUDES       = -I./include -I../TESCO/include -I${CMSSW_RELEASE_BASE}/src/CondFormats/JetMETObjects/interface -I${CMSSW_RELEASE_BASE}/src/ -I${ZLIBINC} -I${BOOSTINC} -I${ROOFITINC} -I${CLHEPINC} -I${PYTHONINC}
 
 CXX            = g++
 CXXFLAGS       = -fPIC -fno-var-tracking -Wno-deprecated -D_GNU_SOURCE -O2 -D'GETDATALOCALPATH(arg)=(std::string("$(STauBaseDir)/") + std::string(\#arg)).c_str()'  -std=c++0x $(INCLUDES) 
@@ -29,10 +39,11 @@ LIBS           = $(ROOTLIBS)
 
 CMSSW_BASE_VERSION = $(filter CMSSW%, $(subst _patch, , $(CMSSW_VERSION) ))
 
-NGLIBS         = $(ROOTGLIBS) -lMinuit -lMinuit2 -lTreePlayer
+NGLIBS         = $(ROOTGLIBS) -lMinuit -lMinuit2 -lTreePlayer -lMathMore -lGenVector
 GLIBS          = $(filter-out -lNew, $(NGLIBS)) 
-GLIBS         += -L$(CMSSW_RELEASE_BASE)/lib/$(SCRAM_ARCH) -L$(CMS_PATH)/slc5_amd64_gcc462/cms/cmssw/$(CMSSW_BASE_VERSION)/lib/$(SCRAM_ARCH) -L$(ROOFITLIB) -lFWCoreFWLite -lFWCoreUtilities -lDataFormatsCommon -lDataFormatsFWLite -lCondFormatsJetMETObjects -lRooFit -lRooFitCore -L$(ZLIBLIB) -lz
+GLIBS         += -L$(CMSSW_RELEASE_BASE)/lib/$(SCRAM_ARCH) -L$(CMS_PATH)/slc5_amd64_gcc462/cms/cmssw/$(CMSSW_BASE_VERSION)/lib/$(SCRAM_ARCH) -L$(ROOFITLIB) -lFWCoreFWLite -lFWCoreUtilities -lDataFormatsCommon -lDataFormatsFWLite -lCondFormatsJetMETObjects -lRooFit -lRooFitCore -L$(ZLIBLIB) -lz -L$(CLHEPLIB) -l$(CLHEPLIBName) -L$(PYTHONLIB) -l$(PYTHONLIBName) -L$(BOOSTLIB) $(BOOSTLIBName)
 
+BUILD_DIR = build
 SRCS           = ../TESCO/src/base/TreeClassBase.cc ../TESCO/src/base/TreeReader.cc ../TESCO/src/base/TreeAnalyzerBase.cc ../TESCO/src/base/UserAnalysisBase.cc \
                  src/MT2tree.cc src/MT2treeDoubleMu.cc src/MT2treeDoubleEle.cc src/MT2treeEleMu.cc \
 		 src/MT2treeTauMu.cc src/MT2treeTauEG.cc src/MT2treeDoubleTau.cc  \
@@ -41,10 +52,47 @@ SRCS           = ../TESCO/src/base/TreeClassBase.cc ../TESCO/src/base/TreeReader
                  ../TESCO/src/helper/Davismt2.cc   ../TESCO/src/helper/TopSearch.cc ../TESCO/src/helper/Hemisphere.cc  src/MT2Analyzer.cc \
                  src/MassPlotter.cc src/MassPlotterEleTau.cc ../TESCO/src/helper/PUWeight.C \
 		 src/QuickAnalysis.cc src/QuickAnalyzer.cc  src/MT2Shapes.cc \
-                 ../TESCO/src/helper/Lumi3DReWeighting_standalone.cc src/helper/EventFilterFromListStandAlone.cc\
-#                 src/ZInvEstFromW.cc \
-#                 src/ScanAnalysis.cc 
-#                 src/AnalysisAndHistos.cc \
+                 ../TESCO/src/helper/Lumi3DReWeighting_standalone.cc src/helper/EventFilterFromListStandAlone.cc
+
+CMSSWREALEASEBASE = $(CMSSW_RELEASE_BASE)
+VPATH =	$(CMSSWREALEASEBASE)/src/FWCore/Python/src/:\
+	$(CMSSWREALEASEBASE)/src/FWCore/ParameterSet/src/:\
+	$(CMSSWREALEASEBASE)/src/DataFormats/Provenance/src/:\
+	$(CMSSWREALEASEBASE)/src/FWCore/PythonParameterSet/src/:\
+	$(CMSSWREALEASEBASE)/src/FWCore/Utilities/src/:\
+	$(CMSSWREALEASEBASE)/src/FWCore/MessageLogger/src/
+
+SRCSVFitObjs	= src/svFitAuxFunctions.cc src/NSVfitStandaloneAlgorithm.cc src/LikelihoodFunctions.cc src/NSVfitStandaloneLikelihood.cc src/generalAuxFunctions.cc src/MarkovChainIntegrator.cc\
+	ParameterSet.o \
+	Entry.o \
+	FileInPath.o \
+	ParameterSetEntry.o \
+	VParameterSetEntry.o \
+	InputTag.o \
+	ESInputTag.o \
+	Exception.o \
+	EDMException.o \
+	types.o \
+	MessageSender.o \
+	MessageLogger.o \
+	MessageDrop.o \
+	ELseverityLevel.o \
+	MessageLoggerQ.o \
+	AbstractMLscribe.o \
+	ELstring.o \
+	ErrorObj.o \
+	Hash.o \
+	Digest.o \
+	Parse.o \
+	ELextendedID.o \
+	ProcessDesc.o \
+	PythonProcessDesc.o \
+	PythonParameterSet.o \
+	PythonManager.o \
+	PythonWrapper.o \
+	LuminosityBlockRange.o \
+	initializeModule.o \
+	EventRange.o
 
 # We want dictionaries only for classes that have _linkdef.h files                                                               
 DICTOBS =  $(patsubst %_linkdef.hh, %.o, \
@@ -62,10 +110,20 @@ SHARED=shlib/libDiLeptonAnalysis.so
 .PHONY : clean purge all depend PhysQC
 
 # Rules ====================================
-all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared RunEleTauAnalyzer
+all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared RunEleTauAnalyzer shlib/libStandAloneSVFit.so
 
- shared: $(SHARED)
- $(SHARED): $(OBJS)
+SVFitObjs = $(patsubst %.C, %.o,$(SRCSVFitObjs:%.cc=%.o))
+# ThreadSafeIndexedRegistry.o : $(CMSSWREALEASEBASE)/src/FWCore/Utilities/interface/ThreadSafeIndexedRegistry.icc
+# 	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^
+SVFitLib : shlib/libStandAloneSVFit.so
+shlib/libStandAloneSVFit.so : $(SVFitObjs)
+	$(LD) $(LDFLAGS) $(GLIBS) $(SOFLAGS) $(SVFitObjs) -o shlib/libStandAloneSVFit.so
+
+RunStandAloneSVFit : src/exe/nsvfitStandalone.cc shlib/libStandAloneSVFit.so
+	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -o $@ $^	
+
+shared: $(SHARED)
+$(SHARED): $(OBJS)
 	@echo "Creating library $(SHARED)"
 	$(LD) $(LDFLAGS) $(GLIBS) $(SOFLAGS) $(OBJS) -o $(SHARED)
 	@echo "$(SHARED) successfully compiled!"
@@ -104,6 +162,9 @@ clean:
 	$(RM) RunQuickAnalyzer
 	$(RM) MakeMassPlots
 	$(RM) RunEleTauAnalyzer
+	$(RM) $(SVFitObjs)
+	$(RM) shlib/libStandAloneSVFit.so
+	$(RM) shlib/libDiLeptonAnalysis.so
 purge:
 	$(RM) $(OBJS)
 

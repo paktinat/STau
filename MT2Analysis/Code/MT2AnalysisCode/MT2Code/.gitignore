@@ -3,4 +3,6 @@ RunQuickAnalyzer
 MakeMassPlots
 RunEleTauAnalyzer
 RunMT2Analyzer
+RunStandAloneSVFit
 obj/dict_MT2tree.h
+*.o
