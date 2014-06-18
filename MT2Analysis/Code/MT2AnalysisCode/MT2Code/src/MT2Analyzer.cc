@@ -74,7 +74,24 @@ void MT2Analyzer::Loop(){
 			  fMT2Analysis->fH2_mSugraEvents->Fill(fTR->M0, fTR->M12);
 // 			  fMT2Analysis->fH2_SMSEvents->Fill(fTR->MassGlu, fTR->MassLSP);
 //Saeid To recover the conflict in the naming of TChipChimSTauSnu_50_100_280
-			  fMT2Analysis->fH2_SMSEvents->Fill(fTR->MassLSP, fTR->MassGlu);
+			  lhef::HEPEUP a = fTR->hLHEEvent->hepeup();
+
+			  int id1000024 = -1;
+			  int id1000022 = -1;
+			  for( uint ip = 0 ; ip < a.IDUP.size() ; ip++)
+			    if( a.IDUP[ ip ] == 1000024)
+			      id1000024 = ip;
+			    else if( a.IDUP[ ip ] == 1000022)
+			      id1000022 = ip;
+
+			  // cout << id1000024 << " and " << id1000022 << endl;
+			  std::vector< lhef::HEPEUP::FiveVector > mom = a.PUP;
+			  double M1000024 = mom[id1000024][4] ;
+			  double M1000022 = mom[id1000022][4] ;
+			  //			  cout << M1000024 << " and " << M1000022 << endl;
+			
+			  // fMT2Analysis->fH2_SMSEvents->Fill(fMT2Analysis->GetMT2tree()->Susy.MassGlu, fMT2Analysis->GetMT2tree()->Susy.MassLSP);
+			  fMT2Analysis->fH2_SMSEvents->Fill(M1000024, M1000022);
 //Saeid
 			  if(fTR->process>0) fMT2Analysis->fH_mSugraSubProcEvents[fTR->process]->Fill(fTR->M0, fTR->M12);
 			}

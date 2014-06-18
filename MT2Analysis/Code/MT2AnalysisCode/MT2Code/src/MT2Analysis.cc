@@ -660,14 +660,35 @@ bool MT2Analysis::FillMT2TreeBasics(){
 	  fMT2tree->GenWeight = fTR->GenWeight;
 	}
 	if(isScan){
+
+   lhef::HEPEUP a = fTR->hLHEEvent->hepeup();
+
+   int id1000024 = -1;
+   int id1000022 = -1;
+   for( uint ip = 0 ; ip < a.IDUP.size() ; ip++)
+     if( a.IDUP[ ip ] == 1000024)
+       id1000024 = ip;
+     else if( a.IDUP[ ip ] == 1000022)
+       id1000022 = ip;
+
+   //    cout << id1000024 << " and " << id1000022 << endl;
+   std::vector< lhef::HEPEUP::FiveVector > mom = a.PUP;
+   double M1000024 = mom[id1000024][4] ;
+   double M1000022 = mom[id1000022][4] ;
+   //  cout << M1000024 << " and " << M1000022 << endl;
+   fMT2tree->Susy.MassGlu = M1000024;
+   fMT2tree->Susy.MassLSP = M1000022;
+
 // 	  fMT2tree->Susy.MassGlu = fTR->MassGlu;
 // 	  fMT2tree->Susy.MassChi= fTR->MassChi;
 // 	  fMT2tree->Susy.MassLSP= fTR->MassLSP;
 //Saeid To recover the conflict in the naming of TChipChimSTauSnu_50_100_280
-	  fMT2tree->Susy.MassGlu = fTR->MassLSP; //SMother of the particles
-	  fMT2tree->Susy.MassChi= fTR->MassGlu + fTR->MassChi * (fTR->MassLSP - fTR->MassGlu)/100.0;//Stau or Sneutrino Tau Mass
-	  fMT2tree->Susy.MassLSP= fTR->MassGlu;  //LSP
+// 	  fMT2tree->Susy.MassGlu = fTR->MassLSP; //SMother of the particles
+// 	  fMT2tree->Susy.MassChi= fTR->MassGlu + fTR->MassChi * (fTR->MassLSP - fTR->MassGlu)/100.0;//Stau or Sneutrino Tau Mass
+// 	  fMT2tree->Susy.MassLSP= fTR->MassGlu;  //LSP
 //Saeid
+
+
 
 	  fMT2tree->Susy.M0= fTR->M0;
 	  fMT2tree->Susy.M12= fTR->M12;

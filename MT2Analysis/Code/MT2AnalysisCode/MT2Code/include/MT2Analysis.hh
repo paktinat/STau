@@ -61,7 +61,9 @@ public:
   void FillMT2Elecs();
   void FillMT2Muons();
   void FillMT2Taus();
+  MT2tree* GetMT2tree(){return fMT2tree;}
   //
+
 
 	// redo JEC
 	void SetJEC(string JEC){fJEC=JEC;};

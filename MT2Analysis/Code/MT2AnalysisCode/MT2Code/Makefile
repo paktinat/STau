@@ -699,6 +699,9 @@ deps: $(SRCS)
 ../TESCO/src/base/TreeClassBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/LuminosityBlockAuxiliary.h
 ../TESCO/src/base/TreeClassBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/LuminosityBlockID.h
 ../TESCO/src/base/TreeClassBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/EventProcessHistoryID.h
+../TESCO/src/base/TreeClassBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h
+../TESCO/src/base/TreeClassBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LesHouches.h
+../TESCO/src/base/TreeClassBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/PdfInfo.h
 ../TESCO/src/base/TreeReader.o: ../TESCO/include/base/TreeReader.hh
 ../TESCO/src/base/TreeReader.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/FWLite/interface/Handle.h
 ../TESCO/src/base/TreeReader.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/FWLite/interface/EventBase.h
@@ -1298,6 +1301,9 @@ deps: $(SRCS)
 ../TESCO/src/base/TreeReader.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/LuminosityBlockID.h
 ../TESCO/src/base/TreeReader.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/EventProcessHistoryID.h
 ../TESCO/src/base/TreeReader.o: ../TESCO/include/base/TreeClassBase.hh
+../TESCO/src/base/TreeReader.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h
+../TESCO/src/base/TreeReader.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LesHouches.h
+../TESCO/src/base/TreeReader.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/PdfInfo.h
 ../TESCO/src/base/TreeAnalyzerBase.o: /usr/include/stdlib.h
 ../TESCO/src/base/TreeAnalyzerBase.o: /usr/include/features.h
 ../TESCO/src/base/TreeAnalyzerBase.o: /usr/include/sys/cdefs.h
@@ -1901,6 +1907,9 @@ deps: $(SRCS)
 ../TESCO/src/base/TreeAnalyzerBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/LuminosityBlockID.h
 ../TESCO/src/base/TreeAnalyzerBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/EventProcessHistoryID.h
 ../TESCO/src/base/TreeAnalyzerBase.o: ../TESCO/include/base/TreeClassBase.hh
+../TESCO/src/base/TreeAnalyzerBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h
+../TESCO/src/base/TreeAnalyzerBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LesHouches.h
+../TESCO/src/base/TreeAnalyzerBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/PdfInfo.h
 ../TESCO/src/base/TreeAnalyzerBase.o: ../TESCO/include/helper/Utilities.hh
 ../TESCO/src/base/TreeAnalyzerBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooCBShape.h
 ../TESCO/src/base/TreeAnalyzerBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooAbsPdf.h
@@ -2556,6 +2565,9 @@ deps: $(SRCS)
 ../TESCO/src/base/UserAnalysisBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/LuminosityBlockID.h
 ../TESCO/src/base/UserAnalysisBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/EventProcessHistoryID.h
 ../TESCO/src/base/UserAnalysisBase.o: ../TESCO/include/base/TreeClassBase.hh
+../TESCO/src/base/UserAnalysisBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h
+../TESCO/src/base/UserAnalysisBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LesHouches.h
+../TESCO/src/base/UserAnalysisBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/PdfInfo.h
 ../TESCO/src/base/UserAnalysisBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/CondFormats/JetMETObjects/interface/JetCorrectorParameters.h
 ../TESCO/src/base/UserAnalysisBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h
 ../TESCO/src/base/UserAnalysisBase.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h
@@ -3722,6 +3734,9 @@ src/MT2Analysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3
 src/MT2Analysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/LuminosityBlockID.h
 src/MT2Analysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/EventProcessHistoryID.h
 src/MT2Analysis.o: ../TESCO/include/base/TreeClassBase.hh
+src/MT2Analysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h
+src/MT2Analysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LesHouches.h
+src/MT2Analysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/PdfInfo.h
 src/MT2Analysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h
 src/MT2Analysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h
 src/MT2Analysis.o: ../TESCO/include/helper/OnTheFlyCorrections.hh
@@ -4393,6 +4408,9 @@ src/MT2AnalysisElec.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW
 src/MT2AnalysisElec.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/LuminosityBlockID.h
 src/MT2AnalysisElec.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/EventProcessHistoryID.h
 src/MT2AnalysisElec.o: ../TESCO/include/base/TreeClassBase.hh
+src/MT2AnalysisElec.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h
+src/MT2AnalysisElec.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LesHouches.h
+src/MT2AnalysisElec.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/PdfInfo.h
 src/MT2AnalysisElec.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h
 src/MT2AnalysisElec.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h
 src/MT2AnalysisElec.o: ../TESCO/include/helper/OnTheFlyCorrections.hh
@@ -5064,6 +5082,9 @@ src/MT2AnalysisMuon.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW
 src/MT2AnalysisMuon.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/LuminosityBlockID.h
 src/MT2AnalysisMuon.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/EventProcessHistoryID.h
 src/MT2AnalysisMuon.o: ../TESCO/include/base/TreeClassBase.hh
+src/MT2AnalysisMuon.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h
+src/MT2AnalysisMuon.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LesHouches.h
+src/MT2AnalysisMuon.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/PdfInfo.h
 src/MT2AnalysisMuon.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h
 src/MT2AnalysisMuon.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h
 src/MT2AnalysisMuon.o: ../TESCO/include/helper/OnTheFlyCorrections.hh
@@ -5735,6 +5756,9 @@ src/MT2AnalysisTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_
 src/MT2AnalysisTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/LuminosityBlockID.h
 src/MT2AnalysisTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/EventProcessHistoryID.h
 src/MT2AnalysisTau.o: ../TESCO/include/base/TreeClassBase.hh
+src/MT2AnalysisTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h
+src/MT2AnalysisTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LesHouches.h
+src/MT2AnalysisTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/PdfInfo.h
 src/MT2AnalysisTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h
 src/MT2AnalysisTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h
 src/MT2AnalysisTau.o: ../TESCO/include/helper/OnTheFlyCorrections.hh
@@ -6562,6 +6586,9 @@ src/MT2Analyzer.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3
 src/MT2Analyzer.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/LuminosityBlockID.h
 src/MT2Analyzer.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/EventProcessHistoryID.h
 src/MT2Analyzer.o: ../TESCO/include/base/TreeClassBase.hh
+src/MT2Analyzer.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h
+src/MT2Analyzer.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LesHouches.h
+src/MT2Analyzer.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/PdfInfo.h
 src/MT2Analyzer.o: ../TESCO/include/helper/Utilities.hh
 src/MT2Analyzer.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooCBShape.h
 src/MT2Analyzer.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooAbsPdf.h
@@ -7419,6 +7446,9 @@ src/QuickAnalysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5
 src/QuickAnalysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/LuminosityBlockID.h
 src/QuickAnalysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/EventProcessHistoryID.h
 src/QuickAnalysis.o: ../TESCO/include/base/TreeClassBase.hh
+src/QuickAnalysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h
+src/QuickAnalysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LesHouches.h
+src/QuickAnalysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/PdfInfo.h
 src/QuickAnalysis.o: ../TESCO/include/base/UserAnalysisBase.hh
 src/QuickAnalysis.o: ../TESCO/include/helper/pdgparticle.hh
 src/QuickAnalysis.o: ../TESCO/include/helper/LumiReweightingStandAlone.h
@@ -8021,6 +8051,9 @@ src/QuickAnalyzer.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5
 src/QuickAnalyzer.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/LuminosityBlockID.h
 src/QuickAnalyzer.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/DataFormats/Provenance/interface/EventProcessHistoryID.h
 src/QuickAnalyzer.o: ../TESCO/include/base/TreeClassBase.hh
+src/QuickAnalyzer.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h
+src/QuickAnalyzer.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/LesHouches.h
+src/QuickAnalyzer.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/SimDataFormats/GeneratorProducts/interface/PdfInfo.h
 src/QuickAnalyzer.o: ../TESCO/include/helper/Utilities.hh
 src/QuickAnalyzer.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooCBShape.h
 src/QuickAnalyzer.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooAbsPdf.h
