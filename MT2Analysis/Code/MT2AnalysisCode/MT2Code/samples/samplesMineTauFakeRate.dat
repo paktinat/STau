@@ -1,6 +1,6 @@
 #########################################################################################
 GENERAL
-Path         ///dataLOCAL/MT2Tau/RootFiles/TauFakeRate/
+Path         ///dataLOCAL/MT2Tau/RootFiles/TauFakeRate_2/
 ________________________________________________________________________________________
 # list of samples
 #
@@ -64,7 +64,7 @@ Color		417
 
 
 ## --------- Data ---------------------------
-SAMPLE
+#SAMPLE
 Name		Run2012A_Jet
 SName		Jet-Data
 ShapeName	Data
@@ -76,7 +76,7 @@ Type            data
 Color		1
 
  
-SAMPLE
+#SAMPLE
 Name		Run2012B_JetHT
 SName		JetHT-Data
 ShapeName	Data
@@ -88,7 +88,7 @@ Type            data
 Color		1
 
 
-SAMPLE
+#SAMPLE
 Name		Run2012C_JetHT
 SName		JetHT-Data
 ShapeName	Data

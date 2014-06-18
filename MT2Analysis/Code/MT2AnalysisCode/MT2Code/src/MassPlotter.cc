@@ -8094,6 +8094,21 @@ double MassPlotter::DeltaPhi(double phi1, double phi2){
 // hltObjectLV = fMT2tree->hltObject[l].lv;
 // }
 
+
+
+
+//SingleMuon
+//        if    (!(fMT2tree->muo[0].IsTightMuon && fMT2tree->muo[0].lv.Pt() >25 && fabs(fMT2tree->muo[0].lv.Eta())<2.1
+//                && fMT2tree-> muo[0].Iso04<0.06  &&  fMT2tree->muo[0].MT <50))
+//          continue;
+    
+//        float deltaR = Util::GetDeltaR(fMT2tree->jet[i].lv.Eta(),fMT2tree->muo[0].lv.Eta(),fMT2tree->jet[i].lv.Phi() ,fMT2tree->muo[0].lv.Phi());
+
+//           if (deltaR < mindR )
+//             continue;
+
+
+
          float mindR=0.7;
          int jetcounter=0;
          for(int i=0; i<fMT2tree->NJets; ++i){
@@ -8102,18 +8117,10 @@ double MassPlotter::DeltaPhi(double phi1, double phi2){
          continue;
         jetcounter++;
         if (jetcounter==1) 
-       
-         continue;
+	  continue;
 
-        if    (!(fMT2tree->muo[0].IsTightMuon && fMT2tree->muo[0].lv.Pt() >25 && fabs(fMT2tree->muo[0].lv.Eta())<2.1
-               && fMT2tree-> muo[0].Iso04<0.06  &&  fMT2tree->muo[0].MT <50))
-         continue;
-         
-         float deltaR = Util::GetDeltaR(fMT2tree->jet[i].lv.Eta(),fMT2tree->muo[0].lv.Eta(),fMT2tree->jet[i].lv.Phi() ,fMT2tree->muo[0].lv.Phi());
-
-          if (deltaR < mindR )
-            continue;
-
+        
+      
 
          hAllTauPt->Fill(fMT2tree->jet[i].lv.Pt(), weight); 
          hAllTauPhi->Fill(fMT2tree->jet[i].lv.Phi(), weight);
@@ -8125,8 +8132,8 @@ double MassPlotter::DeltaPhi(double phi1, double phi2){
 	 int matchedTauInd = fMT2tree->jet[i].isTauMatch;
 
 	
-	 if(!( (fabs(fMT2tree->tau[matchedTauInd].lv.Eta())<2.3) &&  (fMT2tree->tau[matchedTauInd].lv.Pt()>20) )) 
-	  continue;	      
+// 	 if(!( (fabs(fMT2tree->tau[matchedTauInd].lv.Eta())<2.3) &&  (fMT2tree->tau[matchedTauInd].lv.Pt()>20) )) 
+// 	  continue;	      
      
         if( fMT2tree->tau[matchedTauInd].CombinedIsolation3Hits >= 2)
          hPassTauPtLoose3hit->Fill(fMT2tree->jet[i].lv.Pt(), weight);
