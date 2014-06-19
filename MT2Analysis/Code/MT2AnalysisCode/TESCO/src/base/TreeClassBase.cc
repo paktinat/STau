@@ -34,7 +34,9 @@ const bool TreeClassBase::GetAllByLabel(void) {
     if ( fCurRun != event->id().run() ) {
       fCurRun = event->id().run();
       const edm::RunBase& run = fEvent->getRun();
+ 
 
+ 
       // Get all run handles and assign to members
       result &= run.getByLabel( tExtXSecLO, hExtXSecLO );
       if ( hExtXSecLO.isValid() ) ExtXSecLO = *hExtXSecLO;
@@ -2055,7 +2057,6 @@ const bool TreeClassBase::GetAllByLabel(void) {
 // Called at init: define "tags"
 void TreeClassBase::Init(void)
 {
-
     tExtXSecLO                 = edm::InputTag("analyze","ExtXSecLO");
     tExtXSecNLO                = edm::InputTag("analyze","ExtXSecNLO");
     tHLTLabels                 = edm::InputTag("analyze","HLTLabels");

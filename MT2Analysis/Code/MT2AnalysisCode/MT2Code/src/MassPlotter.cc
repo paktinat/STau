@@ -7728,28 +7728,78 @@ void MassPlotter::QCD(){
 
 
 
-void MassPlotter::vs(){ 
- 
-         TH2F *METvsVSPT = new TH2F("METvsVSPT", "METvsVSPT", 100, 0,1000, 100,0,1000);
+void MassPlotter::vs(Long64_t  nevents, TString cuts, TString trigger){ 
+   
+  cout<<" trigger "<<trigger<<endl;
+  cout<<" cuts "<<cuts<<endl;
 
-         for(int i = 0; i <(int) fSamples.size(); i++){
-         sample Sample = fSamples[i];
+  TH2F *AvsBSignal = new TH2F("AvsBSignal"  , "AvsBSignal" , 100, -150,1000, 100,-150,1000);
+  TH2F *AvsBBkg    = new TH2F("AvsBBkg"     , "AvsBBkg"    , 100, -150,1000, 100,-150,1000);
+  TH2F *AvsB2Signal = new TH2F("AvsB2Signal", "AvsB2Signal", 100, -150,1000, 100,-150,1000);
+  TH2F *AvsB2Bkg    = new TH2F("AvsB2Bkg"   , "AvsB2Bkg"   , 100, -150,1000, 100,-150,1000);
 
+  for(int i = 0; i <(int) fSamples.size(); i++){
+    sample Sample = fSamples[i];
+   
+    TString myCuts = cuts;
+    if( Sample.type=="data") myCuts += " && " + trigger;//just for completeness
+
+    if((Sample.sname != "Wtolnu") && (Sample.type != "susy"))
+      continue;
+	   
     fMT2tree = new MT2tree();
  
     Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
-    Long64_t n =  Sample.tree->GetEntries();
-    for (Long64_t j=0; j<10000;j++) {
+
+   std::cout << setfill('=') << std::setw(70) << "" << std::endl;
+    cout << "looping over :     " <<endl;	
+    cout << "   Name:           " << Sample.name << endl;
+    cout << "   File:           " << (Sample.file)->GetName() << endl;
+    cout << "   Events:         " << Sample.nevents  << endl;
+    cout << "   Events in tree: " << Sample.tree->GetEntries() << endl; 
+    cout << "   Xsection:       " << Sample.xsection << endl;
+    cout << "   kfactor:        " << Sample.kfact << endl;
+    cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
+    cout << "   Weight:         " << Weight <<endl;
+    std::cout << setfill('-') << std::setw(70) << "" << std::endl;
+
+    Sample.tree->Draw(">>selList", myCuts);
+    TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
+    Sample.tree->SetEventList(myEvtList);
+    Long64_t nentries =  myEvtList->GetN();
+    
+    for (Long64_t jentry = 0; jentry < min(nentries, nevents); jentry++) {
      
-      Sample.tree->GetEntry(j); 
-               METvsVSPT->Fill(fMT2tree->misc.MET, fMT2tree->misc.Vectorsumpt);
+      Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
+
+      if ( fVerbose>2 && jentry % 100000 == 0 ){ 
+	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+	fflush(stdout);
+      }
+      
+
+      if(Sample.sname == "Wtolnu"){
+	AvsBBkg->Fill(fMT2tree->PVisibleZetaMuTau(), fMT2tree->PZetaMuTau());
+	AvsB2Bkg->Fill(fMT2tree->PVisibleZetaMuTau(), fMT2tree->PZetaImbalancedMuTau());
+      }
+      if(Sample.type == "susy"){
+	AvsBSignal->Fill(fMT2tree->PVisibleZetaMuTau(), fMT2tree->PZetaMuTau());
+	AvsB2Signal->Fill(fMT2tree->PVisibleZetaMuTau(), fMT2tree->PZetaImbalancedMuTau());
+      }
     }
-}
+  }
 
-    TCanvas *MyC = new TCanvas("MyC", "MyC");
+  TCanvas *MyC = new TCanvas("MyC", "MyC");
+  MyC->Divide(2,2);
+  MyC->cd(1);
+  AvsBBkg->Draw();
+  MyC->cd(2);
+  AvsBSignal->Draw();
+  MyC->cd(3);
+  AvsB2Bkg->Draw();
+  MyC->cd(4);
+  AvsB2Signal->Draw();
 
-    MyC->cd(1);
-   METvsVSPT->Draw();
 }
 
 void MassPlotter::SpecialMakePlot(int nevents, TString cuts, TString trigger){

@@ -10,12 +10,13 @@
 
 #include "DataFormats/FWLite/interface/Handle.h"
 #include "DataFormats/FWLite/interface/ChainEvent.h"
-    
+
 class TreeClassBase {
 public:
     TreeClassBase(const std::vector<std::string>& fileList);
     virtual ~TreeClassBase();
     virtual const bool GetAllByLabel(void);
+
 
     // Declaration of run leaf types
     float                                ExtXSecLO;

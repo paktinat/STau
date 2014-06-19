@@ -3154,7 +3154,130 @@ Float_t MT2tree::MHTMETDPhi(){
 	return MHT[0].DeltaPhi(pfmet[0]);
 }
 
+Float_t MT2tree::PZeta(TLorentzVector Lep1, TLorentzVector Lep2, TLorentzVector met){
 
+  float Pvisible_dot_Zeta = PVisibleZeta(Lep1, Lep2);
+
+  float Lep1Mag = sqrt(Lep1.Px()*Lep1.Px()+ Lep1.Py()*Lep1.Py()+ Lep1.Pz()*Lep1.Pz());
+  float Lep2Mag = sqrt(Lep2.Px()*Lep2.Px()+ Lep2.Py()*Lep2.Py()+ Lep2.Pz()*Lep2.Pz());
+
+  float ZetaX= (1/sqrt(2.)) * (Lep1.Px()/Lep1Mag + Lep2.Px()/Lep2Mag);
+  float ZetaY= (1/sqrt(2.)) * (Lep1.Py()/Lep1Mag + Lep2.Py()/Lep2Mag);
+  float ZetaZ= (1/sqrt(2.)) * (Lep1.Pz()/Lep1Mag + Lep2.Pz()/Lep2Mag);
+
+
+  float P_met_dot_Zeta =  Pvisible_dot_Zeta + (met.Px()*ZetaX + met.Py()*ZetaY) ;
+  return P_met_dot_Zeta;
+}
+Float_t MT2tree::PZetaMuTau(){//temporary solution for makePlot. No need to be moved to the next versions.
+  return PZeta(muo[muTau[0].GetMuIndex0()].lv, tau[muTau[0].GetTauIndex0()].lv, pfmet[0]);
+}
+Float_t MT2tree::PZetaImbalancedMuTau(){//temporary solution for makePlot. No need to be moved to the next versions.
+  return PZeta(muo[muTau[0].GetMuIndex0()].lv, tau[muTau[0].GetTauIndex0()].lv, (-muTau[0].GetLV()));
+}
+
+Float_t MT2tree::PVisibleZetaMuTau(){//temporary solution for makePlot. No need to be moved to the next versions.
+  return PVisibleZeta(muo[muTau[0].GetMuIndex0()].lv, tau[muTau[0].GetTauIndex0()].lv);
+}
+
+Float_t MT2tree::PVisibleZeta(TLorentzVector Lep1, TLorentzVector Lep2){
+
+  float PvisibleX    = Lep1.Px() + Lep2.Px();
+  float PvisibleY    = Lep1.Py() + Lep2.Py();
+  float PvisibleZ    = Lep1.Pz() + Lep2.Pz();
+
+  float Lep1Mag = sqrt(Lep1.Px()*Lep1.Px()+ Lep1.Py()*Lep1.Py()+ Lep1.Pz()*Lep1.Pz());
+  float Lep2Mag = sqrt(Lep2.Px()*Lep2.Px()+ Lep2.Py()*Lep2.Py()+ Lep2.Pz()*Lep2.Pz());
+
+  float ZetaX= (1/sqrt(2.)) * (Lep1.Px()/Lep1Mag + Lep2.Px()/Lep2Mag);
+  float ZetaY= (1/sqrt(2.)) * (Lep1.Py()/Lep1Mag + Lep2.Py()/Lep2Mag);
+  float ZetaZ= (1/sqrt(2.)) * (Lep1.Pz()/Lep1Mag + Lep2.Pz()/Lep2Mag);
+  
+  float Pvisible_dot_Zeta = PvisibleX * ZetaX + PvisibleY * ZetaY + PvisibleZ * ZetaZ;
+  
+  return Pvisible_dot_Zeta;
+}
+   
+float MT2tree::DiLepPtRatioMuTau(){//temporary solution for makePlot. No need to be moved to the next versions.
+  return DiLepPtRatio(muo[muTau[0].GetMuIndex0()].lv, tau[muTau[0].GetTauIndex0()].lv);
+}
+
+float MT2tree::DiLepPtRatio(TLorentzVector Lep1lv, TLorentzVector Lep2lv){
+
+ TLorentzVector diLeplv = Lep1lv+Lep2lv;
+
+return (diLeplv.Pt() / (Lep1lv.Pt() + Lep2lv.Pt())) ;
+}
+
+float MT2tree::PositiveChargedLeptonDecayAngleinZframeMuTau(){
+  TLorentzVector LepPluslv;
+  TLorentzVector LepNeglv;
+
+  if(muo[muTau[0].GetMuIndex0()].Charge >= tau[muTau[0].GetTauIndex0()].Charge){
+    LepPluslv = muo[muTau[0].GetMuIndex0()].lv;
+    LepNeglv  = tau[muTau[0].GetTauIndex0()].lv;
+  }else{
+    LepPluslv = tau[muTau[0].GetTauIndex0()].lv;
+    LepNeglv  = muo[muTau[0].GetMuIndex0()].lv;
+  }
+
+  return PositiveChargedLeptonDecayAngleinZframe(LepPluslv, LepNeglv);
+}
+
+
+
+float MT2tree::PositiveChargedLeptonDecayAngleinZframe(TLorentzVector LepPluslv, TLorentzVector LepNeglv){
+  TLorentzVector diLeplv =  LepPluslv + LepNeglv;
+  LepPluslv.Boost(-diLeplv.BoostVector());
+  TVector3 a0 =  LepPluslv.Vect();
+  TVector3 q0 =  diLeplv.Vect();
+  return(fabs(a0.Angle(q0)));
+}
+
+
+float MT2tree::MinMetLepDPhiMuTau(){//temporary solution for makePlot. No need to be moved to the next versions.
+  return MinMetLepDPhi(muo[muTau[0].GetMuIndex0()].lv, tau[muTau[0].GetTauIndex0()].lv);
+}
+
+float MT2tree::MinMetLepDPhi(TLorentzVector Lep1lv, TLorentzVector Lep2lv) {
+
+  TLorentzVector MET = (0.0,0.0,0.0,0.0);
+   MET = pfmet[0];
+
+   float metele1 = fabs(Lep1lv.DeltaPhi(MET));
+   float metele2 = fabs(Lep2lv.DeltaPhi(MET));
+
+ return (min(metele1,metele2));
+}
+
+float MT2tree::PositiveChargedLepWithZBeamPlaneMuTau(){
+  TLorentzVector LepPluslv;
+  TLorentzVector LepNeglv;
+  if(muo[muTau[0].GetMuIndex0()].Charge >= tau[muTau[0].GetTauIndex0()].Charge){
+    LepPluslv = muo[muTau[0].GetMuIndex0()].lv;
+    LepNeglv  = tau[muTau[0].GetTauIndex0()].lv;
+  }else{
+    LepPluslv = tau[muTau[0].GetTauIndex0()].lv;
+    LepNeglv  = muo[muTau[0].GetMuIndex0()].lv;
+  }
+
+  return PositiveChargedLepWithZBeamPlane(LepPluslv, LepNeglv);
+}
+
+float MT2tree::PositiveChargedLepWithZBeamPlane(TLorentzVector LepPluslv, TLorentzVector LepNeglv){
+
+  TLorentzVector diLeplv =  LepPluslv + LepNeglv;
+  TVector3 z = (0,0,1);
+  TVector3 a = diLeplv.Vect();
+  TVector3 pl = z.Cross(a);
+  const double pi = 3.14159265358979323846 ;
+  LepPluslv.Boost(-diLeplv.BoostVector());
+    TVector3 a0 =  LepPluslv.Vect();
+    double ang0 = pi/2 - pl.Angle(a0);
+    return(fabs(ang0));
+}
+
+  
 
 // ----------------------------------------------------------------------------------------------------------
 ClassImp(MT2Susy)

@@ -20,7 +20,7 @@ SAMPLE
 Name            TStau
 SName           SUSY
 ShapeName       Signal
-File            TauTau_V2_2/SMS-TChipChimStauSnu-mChi-120to500-mLSP-80to480-x-005-TuneZ2star-8TeV-pythia6-tauolapp.root
+File            TauTau_V2_2/SMS-TChipChimStauSnu-mChi-120to500-mLSP-1to480-x-050-TuneZ2star-8TeV-pythia6-tauolapp.root
 Xsection        0.152 pb
 Kfact           1.
 Lumi            19600.0
