@@ -3,7 +3,7 @@
 #include "TLorentzVector.h"
 #include "MT2tree.hh"
 #include <sstream>
-
+#include "RecoilCorrector.hh"
 
 using namespace std;
 
@@ -1032,6 +1032,31 @@ bool MT2Analysis::FillMT2TreeBasics(){
 	}
         //End Nadjieh
 
+
+	std::string iNameZDat ="RecoilCorrector_v7/recoilfits/recoilfit_datamm53X_2012_njet.root";
+	RecoilCorrector corrector(iNameZDat);
+	corrector.addMCFile("RecoilCorrector_v7/recoilfits/recoilfit_zmm53X_2012_njet.root");
+	corrector.addDataFile("RecoilCorrector_v7/recoilfits/recoilfit_datamm53X_2012_njet.root");
+	
+	double GenPt  = 150.0;
+	double GenPhi = 1.0;
+        double LepPt  = 100.0;
+	double LepPhi = 1.5;
+	double U1, U2;
+	double iFluc;
+	double Err = 0;
+	double NJet = 0;
+	double MET = fMT2tree->pfmet[0].Pt();
+	double METPhi = fMT2tree->misc.METPhi;
+
+	cout<<" fMT2tree->pfmet[0].Pt() "<<fMT2tree->pfmet[0].Pt()<<" fMT2tree->misc.METPhi "<<fMT2tree->misc.METPhi<<" U1 "<<U1<<" U2 "<<U2<<endl;
+
+	corrector.CorrectType1(MET,METPhi,GenPt,GenPhi,LepPt,LepPhi, U1, U2, iFluc, Err,NJet);
+	
+	fMT2tree->misc.METPhi = METPhi;
+	fMT2tree->pfmet[0].SetPtEtaPhiE(MET, fMT2tree->pfmet[0].Eta(), METPhi, MET);
+ 
+	cout<<" fMT2tree->pfmet[0].Pt() "<<fMT2tree->pfmet[0].Pt()<<" fMT2tree->misc.METPhi "<<fMT2tree->misc.METPhi<<" U1 "<<U1<<" U2 "<<U2<<endl;
 
 	//Saeid moved FillLeptons after MET modulation is done!
 	// Fill leptons 4-momenta
