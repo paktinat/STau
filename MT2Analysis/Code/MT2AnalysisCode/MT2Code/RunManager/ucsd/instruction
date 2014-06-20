@@ -1,7 +1,19 @@
-copy the configurations file and add the datasets you want to convert to MT2tree
-the syntax should be ass follows :
-JOBNAME DSNAME USERNAME_WHO_MOVED_THE_FILES_TO_UCSD nFilesPerJob $(Process) OUTDIR PROCESSID TYPE CUTSET
+Edit configurations file. For each dataset you want to convert one line is needed :
 
-Then run 
-./submitall.sh configurationsfilename submit
-if you drop submit, just jobs are created without submitting
+JOBNAME DSNAME FirstProducer(USERNAME) NFilesPerJob $(Process) PROCESSID TYPE CUTSET THE_GIT_COMMIT_ID
+
+JOBNAME : You set it whatever you want
+FirstProducer(USERNAME) : The username of the first producer ( could be paktinat, hbakhshi, fronga .... )
+$(Process) : don't change it
+THE_GIT_COMMIT_ID : In the worker node, it clones the git-repository and then switches to the tag that we want by 'git checkout THE_GIT_COMMIT_ID'. Then compiles the code and run it. you can copy it from github (like  ed601e0) or it could be the tag name we use for the production.
+
+
+
+Then run ./submitall.sh configurations submit
+You can omit the submit at the end and submit the jobs manually by :
+condor_submit condor_JOBNAME
+
+
+You can monitor the jobs by running condor_q
+
+If the job successfully finishes, the output will be written in your hadoop directory in a directory similar to what the dataset is stored just ended with the THE_GIT_COMMIT_ID

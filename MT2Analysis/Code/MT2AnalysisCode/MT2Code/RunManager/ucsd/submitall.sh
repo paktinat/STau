@@ -56,7 +56,7 @@ while read p; do
 
        usernametoreplace=${splitted[2]}
        commitid=${splitted[8]}
-       outdir=$(python createoutdir.py -d $datasetname -u $usernametoreplace -a $commitid)
+       outdir=$(python createoutdir.py -d $datasetname -a $commitid)
 
      
        arguments="$arguments $outdir"
