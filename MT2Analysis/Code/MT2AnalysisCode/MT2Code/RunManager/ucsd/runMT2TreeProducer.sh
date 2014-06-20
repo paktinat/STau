@@ -55,7 +55,7 @@ cd MT2Analysis/Code/MT2AnalysisCode/MT2Code
 make
 
 cd RunManager/ucsd/
-ListOfFilesToRunOn=`python getlistoffiles.py -u $usernametoreplace  -d $dataset  -n $nfiles -i $iteration -x $X509_USER_PROXY -c`
+ListOfFilesToRunOn=`python getlistoffiles.py -n $nfiles -i $iteration -p $WORKINGDIR/Files`
 
 cd ../..
 if [ "$debugmode" == "1" ]; then
@@ -69,7 +69,3 @@ else
     cp ./MT2tree_$iteration.root $outputdir
     rm -rf ./MT2tree_$iteration.root
 fi
-
-
-
-##python getlistoffiles.py -d "/DoubleMu/hbakhshi-V03-09-01_RunA-EleTau-9bc3a6bb0ab58621fcde9a392f5df1a3/USER" -u hbakhshi -n 8 -i 1 -c

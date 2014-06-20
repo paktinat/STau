@@ -1,2 +1,2 @@
-DoubleMuRunAEleTau1 /DoubleMu/hbakhshi-V03-09-01_RunA-EleTau-9bc3a6bb0ab58621fcde9a392f5df1a3/USER hbakhshi 5 $(Process) 0 data TauFR 99ea0d3
-DY10to50 /DYJetsToLL_M-10To50filter_8TeV-madgraph/fronga-V03-09-01_DYJetsToLL_M-10To50filter_8TeV-madgraph-Summer12_DR53X-PU_S10_START53_V7A-v1-978319f90b5f667853283033a592f3a9/USER hbakhshi 10 $(Process) 2 mc TauFR 99ea0d3
+DoubleMuRunAEleTau1 /DoubleMu/hbakhshi-V03-09-01_RunA-EleTau-9bc3a6bb0ab58621fcde9a392f5df1a3/USER hbakhshi 5 $(Process) 0 data TauFR 1d5f47d
+DY10to50 /DYJetsToLL_M-10To50filter_8TeV-madgraph/fronga-V03-09-01_DYJetsToLL_M-10To50filter_8TeV-madgraph-Summer12_DR53X-PU_S10_START53_V7A-v1-978319f90b5f667853283033a592f3a9/USER hbakhshi 10 $(Process) 2 mc TauFR 1d5f47d

@@ -10,6 +10,7 @@ error          = JOBNAME.err$(Process)
 log            = JOBNAME.log
 initialdir     = JOBNAME
 Arguments      = ARGS
+input          = Files
 
 transfer_executable=True
 should_transfer_files = IF_NEEDED

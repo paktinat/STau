@@ -79,6 +79,9 @@ while read p; do
 	   echo -e "\t the current $jobname directory will be used"
        fi
 
+       echo -e "\t Producing the list of files"
+       python getlistoffiles.py -u $usernametoreplace -d $datasetname -c -j $jobname
+
        if [[ $2 = "submit" ]]; then
 	   condor_submit condor_$jobname
 	   echo -e "\t Submitted"
