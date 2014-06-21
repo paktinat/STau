@@ -1,0 +1,110 @@
+[Warning] : run 162811 :ls 339 has 0 dead counts or 0 zerobias bit counts, but inst!=0
+[Warning] : run 162828 :ls 83 has 0 dead counts or 0 zerobias bit counts, but inst!=0
+[Warning] : run 162909 :ls 283 has 0 dead counts or 0 zerobias bit counts, but inst!=0
+[Warning] : run 163270 :ls 916 has 0 dead counts or 0 zerobias bit counts, but inst!=0
+|    Run | Delivered LS | Delivered (/μb) |          Selected LS | Recorded (/μb) |
+-------------------------------------------------------------------------------------
+| 160431 |          244 |         7935.566 |             [19-218] |        6657.703 |
+| 160577 |          338 |        10145.915 | [256-306], [254-255] |        1469.335 |
+| 160578 |          457 |        12294.591 |    [6-53], [274-400] |        4450.996 |
+| 160871 |          236 |       145447.226 |             [68-208] |       98452.906 |
+| 160872 |           76 |        52239.607 |      [1-9], [25-35], |       22146.977 |
+|        |              |                  |              [38-55] |                 |
+| 160873 |          200 |       130244.462 |              [1-147] |       94969.430 |
+| 160874 |          131 |        80114.004 |     [1-51], [97-113] |       39127.338 |
+| 160939 |          147 |       169384.901 |              [1-123] |      139146.585 |
+| 160940 |           89 |        98632.043 |               [1-79] |       84809.661 |
+| 160942 |           25 |        27132.977 |               [1-12] |       11359.296 |
+| 160943 |           84 |        73042.860 |               [1-54] |       55134.190 |
+| 160955 |          227 |       739562.308 |  [1-130], [133-138], |      487213.749 |
+|        |              |                  |           [140-151], |                 |
+|        |              |                  |           [153-154], |                 |
+|        |              |                  |           [156-172], |                 |
+|        |              |                  | [175-201], [204-206] |                 |
+| 160956 |           72 |       219466.204 |               [2-65] |      191650.384 |
+| 160957 |          981 |      2464568.736 |              [1-953] |     2387651.192 |
+| 160998 |          287 |       734429.168 |              [2-252] |      640508.634 |
+| 161008 |          284 |       658402.280 |               [1-78] |      184102.972 |
+| 161016 |          326 |       684269.660 |              [2-300] |      624974.408 |
+| 161217 |          787 |      3696303.405 |             [37-753] |     3319328.832 |
+| 161222 |          135 |       527287.577 |               [1-97] |      376419.301 |
+| 161223 |          408 |      1462392.994 |              [1-375] |     1336765.825 |
+| 161233 |           80 |       244634.665 |              [33-49] |       90905.155 |
+| 161310 |          126 |       577450.411 |             [39-116] |      419883.775 |
+| 161311 |          703 |      3194185.631 |   [1-554], [559-650] |     2944787.680 |
+| 161312 |         1129 |      3669779.739 |  [1-826], [835-1027] |     3391418.140 |
+| 162803 |          147 |       499912.536 |           [128-131], |      401329.327 |
+|        |              |                  |  [133-139], [60-127] |                 |
+| 162808 |           62 |       317129.166 |               [1-51] |      252448.758 |
+| 162811 |          347 |      1599066.151 |              [1-339] |     1573775.838 |
+| 162822 |          313 |      1314373.630 |             [73-307] |     1155128.804 |
+| 162825 |          201 |       918487.141 |              [1-184] |      826095.370 |
+| 162826 |           42 |       185023.934 |               [1-24] |       98659.080 |
+| 162828 |          150 |       338070.648 |               [1-85] |      334380.297 |
+| 162909 |          338 |      1844169.760 |             [54-289] |     1715015.807 |
+| 163046 |          313 |      1541693.593 |   [1-133], [135-237] |     1512610.291 |
+| 163069 |          647 |      4073537.169 |  [73-455], [466-633] |     3740681.513 |
+| 163071 |          193 |      1183740.583 |              [1-161] |      976966.915 |
+| 163078 |           49 |       215767.080 |               [1-23] |      128191.498 |
+| 163232 |          173 |       552098.188 | [128-149], [110-127] |      251609.078 |
+| 163233 |          301 |      1829584.207 |              [1-283] |     1699873.762 |
+| 163234 |           73 |       417438.484 |               [1-66] |      367245.523 |
+| 163235 |          473 |      2511357.371 |              [1-461] |     2423738.356 |
+| 163237 |          219 |      1055942.364 |              [1-213] |     1014539.219 |
+| 163238 |           29 |        57427.093 |        [1-2], [8-15] |       31036.878 |
+| 163252 |          156 |      1063783.214 |  [128-137], [60-127] |      642361.150 |
+| 163261 |          192 |       847660.312 |      [1-6], [10-126] |      737257.977 |
+| 163270 |          990 |      7824007.855 |     [1-76], [79-96], |     7615010.760 |
+|        |              |                  | [99-475], [479-527], |                 |
+|        |              |                  |           [529-641], |                 |
+|        |              |                  |           [643-688], |                 |
+|        |              |                  | [690-691], [693-928] |                 |
+| 163286 |          411 |      2206284.984 |            [112-401] |     1778909.659 |
+| 163300 |          622 |      4674153.198 |              [1-616] |     4585415.256 |
+| 163302 |          252 |      1658417.495 |              [1-190] |     1242753.951 |
+| 163333 |          112 |       999191.612 |              [1-106] |      928534.856 |
+| 163339 |          187 |      1288752.324 |              [1-172] |     1171637.358 |
+| 163358 |          118 |       332440.842 |              [39-63] |      201338.543 |
+| 163369 |          104 |      1061463.907 |               [1-94] |      944240.355 |
+
+ ==  =  Total : 
+| Delivered LS | Delivered (/μb) | Selected LS | Recorded (/μb) |
+-------------------------------------------------------------------
+|        14786 |     62090321.771 |       11769 |    55304120.641 |
+
+[WARNING] : run 163333 : total non-GOOD LS: UNKNOWN 106, BAD 0, SUSPECT 0
+[WARNING] : run 163078 : total non-GOOD LS: UNKNOWN 23, BAD 0, SUSPECT 0
+[WARNING] : run 162825 : total non-GOOD LS: UNKNOWN 184, BAD 0, SUSPECT 0
+[WARNING] : run 162826 : total non-GOOD LS: UNKNOWN 24, BAD 0, SUSPECT 0
+[WARNING] : run 163339 : total non-GOOD LS: UNKNOWN 172, BAD 0, SUSPECT 0
+[WARNING] : run 162828 : total non-GOOD LS: UNKNOWN 85, BAD 0, SUSPECT 0
+[WARNING] : run 162822 : total non-GOOD LS: UNKNOWN 235, BAD 0, SUSPECT 0
+[WARNING] : run 161310 : total non-GOOD LS: UNKNOWN 79, BAD 0, SUSPECT 0
+[WARNING] : run 161311 : total non-GOOD LS: UNKNOWN 646, BAD 0, SUSPECT 0
+[WARNING] : run 163232 : total non-GOOD LS: UNKNOWN 40, BAD 0, SUSPECT 0
+[WARNING] : run 163233 : total non-GOOD LS: UNKNOWN 283, BAD 0, SUSPECT 0
+[WARNING] : run 163234 : total non-GOOD LS: UNKNOWN 66, BAD 0, SUSPECT 0
+[WARNING] : run 163235 : total non-GOOD LS: UNKNOWN 461, BAD 0, SUSPECT 0
+[WARNING] : run 163237 : total non-GOOD LS: UNKNOWN 213, BAD 0, SUSPECT 0
+[WARNING] : run 163238 : total non-GOOD LS: UNKNOWN 10, BAD 0, SUSPECT 0
+[WARNING] : run 163270 : total non-GOOD LS: UNKNOWN 917, BAD 0, SUSPECT 0
+[WARNING] : run 163369 : total non-GOOD LS: UNKNOWN 95, BAD 0, SUSPECT 0
+[WARNING] : run 160943 : total non-GOOD LS: UNKNOWN 54, BAD 0, SUSPECT 0
+[WARNING] : run 163252 : total non-GOOD LS: UNKNOWN 78, BAD 0, SUSPECT 0
+[WARNING] : run 163358 : total non-GOOD LS: UNKNOWN 25, BAD 0, SUSPECT 0
+[WARNING] : run 160955 : total non-GOOD LS: UNKNOWN 0, BAD 0, SUSPECT 38
+[WARNING] : run 160957 : total non-GOOD LS: UNKNOWN 0, BAD 0, SUSPECT 8
+[WARNING] : run 161233 : total non-GOOD LS: UNKNOWN 17, BAD 0, SUSPECT 0
+[WARNING] : run 163286 : total non-GOOD LS: UNKNOWN 290, BAD 0, SUSPECT 0
+[WARNING] : run 162909 : total non-GOOD LS: UNKNOWN 237, BAD 0, SUSPECT 0
+[WARNING] : run 163046 : total non-GOOD LS: UNKNOWN 237, BAD 0, SUSPECT 0
+[WARNING] : run 163300 : total non-GOOD LS: UNKNOWN 616, BAD 0, SUSPECT 0
+[WARNING] : run 163302 : total non-GOOD LS: UNKNOWN 190, BAD 0, SUSPECT 0
+[WARNING] : run 163261 : total non-GOOD LS: UNKNOWN 123, BAD 0, SUSPECT 0
+[WARNING] : run 161008 : total non-GOOD LS: UNKNOWN 0, BAD 0, SUSPECT 1
+[WARNING] : run 162803 : total non-GOOD LS: UNKNOWN 79, BAD 0, SUSPECT 0
+[WARNING] : run 161312 : total non-GOOD LS: UNKNOWN 1019, BAD 0, SUSPECT 0
+[WARNING] : run 162808 : total non-GOOD LS: UNKNOWN 51, BAD 0, SUSPECT 0
+[WARNING] : run 162811 : total non-GOOD LS: UNKNOWN 340, BAD 0, SUSPECT 0
+[WARNING] : run 163069 : total non-GOOD LS: UNKNOWN 551, BAD 0, SUSPECT 0
+[WARNING] : run 163071 : total non-GOOD LS: UNKNOWN 161, BAD 0, SUSPECT 0

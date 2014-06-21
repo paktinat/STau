@@ -20,6 +20,11 @@
 #include "MT2EleTau.hh"
 #include "MT2EleMu.hh"
 
+
+#ifdef DATALOCAPATH
+#define GETDATALOCALPATH(arg) (std::string( DATALOCAPATH  ) + std::string(#arg)).c_str()
+#endif
+
 enum {m_jetSize = 25, m_genjetSize = 20,  m_tauSize = 8, m_eleSize = 8, m_muoSize = 8, m_phoSize = 8, m_genleptSize=20, m_genparticleSize=30, m_hemiSize=8};
 
 
@@ -515,7 +520,8 @@ public:
 	double smearedJetEn = lv.E();
 
 	//http://cmssw.cvs.cern.ch/cgi-bin/cmssw.cgi/CMSSW/CondFormats/JetMETObjects/data/Spring10_PtResolution_AK5PF.txt
-	PFJetResolutionParam myPar = PFJetResolutionParam("/dataLOCAL/MT2Top/JetResolutions/Spring10_PtResolution_AK5PF.txt");
+	//PFJetResolutionParam myPar = PFJetResolutionParam("/dataLOCAL/MT2Top/JetResolutions/Spring10_PtResolution_AK5PF.txt");
+	PFJetResolutionParam myPar = PFJetResolutionParam(GETDATALOCALPATH(JetResolutions/Spring10_PtResolution_AK5PF.txt));
 	//PFJetResolutionParam myPar = PFJetResolutionParam("/shome/paktinat/Top/CMSSW_5_3_7_patch5/src/MT2Analysis_V02-03-02/Code/MT2AnalysisCode/MT2Code/Spring10_PtResolution_AK5PF.txt");
 
         double sigmaEn = myPar.EvalPFJetSigma(lv)*TMath::Sqrt(smearFactor*smearFactor - 1.);

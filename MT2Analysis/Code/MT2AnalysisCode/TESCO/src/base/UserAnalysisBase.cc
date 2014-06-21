@@ -26,9 +26,11 @@ UserAnalysisBase::UserAnalysisBase(TreeReader *tr, bool isData){
 
 //     string JESPathPrefix="/shome/buchmann/material/JEStxtfiles/data/GR_P_V40_AN1_";
 //     if(!isData) JESPathPrefix="/shome/buchmann/material/JEStxtfiles/mc/START53_V7A_";
+    string JESPathPrefix=GETDATALOCALPATH(/JEStxtfiles/data/GR_P_V40_AN1_);
+    if(!isData) JESPathPrefix=GETDATALOCALPATH(/JEStxtfiles/mc/START53_V7A_);
 
-    string JESPathPrefix="/dataLOCAL/MT2Top/JEStxtfiles/data/GR_P_V40_AN1_";
-    if(!isData) JESPathPrefix="/dataLOCAL/MT2Top/JEStxtfiles/mc/START53_V7A_";
+ //    string JESPathPrefix="/dataLOCAL/MT2Top/JEStxtfiles/data/GR_P_V40_AN1_";
+//     if(!isData) JESPathPrefix="/dataLOCAL/MT2Top/JEStxtfiles/mc/START53_V7A_";
 
     // Put all JES-related stuff between pre-compiler flags
     //----------- Correction Object ------------------------------

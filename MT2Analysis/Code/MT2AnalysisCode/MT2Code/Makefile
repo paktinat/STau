@@ -2,14 +2,26 @@ ROOTCFLAGS     = $(shell root-config --cflags)
 ROOTLIBS       = $(shell root-config --libs)
 ROOTGLIBS      = $(shell root-config --glibs)
 
-INCLUDES       = -I./include -I../TESCO/include -I${CMSSW_RELEASE_BASE}/src/CondFormats/JetMETObjects/interface -I${CMSSW_RELEASE_BASE}/src/ -I${CMS_PATH}/${SCRAM_ARCH}/external/zlib/1.2.3/include -I${CMS_PATH}/${SCRAM_ARCH}/external/boost/1.47.0/include/ -I${CMS_PATH}/${SCRAM_ARCH}/lcg/roofit/5.32.03-cms16/include/
+ifndef CMS_PATH
+	CMS_PATH = ${VO_CMS_SW_DIR}
+endif
+STauBaseDir = $(shell git rev-parse --show-toplevel)
+
+
+BOOSTINC = $(shell scram tool tag boost INCLUDE)
+ZLIBINC  = $(shell scram tool tag zlib INCLUDE)
+ZLIBLIB  = $(shell scram tool tag zlib LIBDIR)
+ROOFITINC = $(shell scram tool tag roofitcore INCLUDE)
+ROOFITLIB = $(shell scram tool tag roofitcore LIBDIR)
+
+INCLUDES       = -I./include -I../TESCO/include -I${CMSSW_RELEASE_BASE}/src/CondFormats/JetMETObjects/interface -I${CMSSW_RELEASE_BASE}/src/ -I${ZLIBINC} -I${BOOSTINC} -I${ROOFITINC}
 
 CXX            = g++
-CXXFLAGS       = -fPIC -fno-var-tracking -Wno-deprecated -D_GNU_SOURCE -O2 -std=c++0x $(INCLUDES) 
+CXXFLAGS       = -fPIC -fno-var-tracking -Wno-deprecated -D_GNU_SOURCE -O2 -D'GETDATALOCALPATH(arg)=(std::string("$(STauBaseDir)/") + std::string(\#arg)).c_str()'  -std=c++0x $(INCLUDES) 
 LD             = g++
 LDFLAGS        = 
 #SOFLAGS        = -O --no_exceptions  -dynamiclib -flat_namespace -undefined suppress
-SOFLAGS        = -O  -shared  -fPIC -flat_namespace 
+SOFLAGS        = -O  -shared  -fPIC #-flat_namespace 
 
 
 CXXFLAGS      += $(ROOTCFLAGS)
@@ -19,7 +31,7 @@ CMSSW_BASE_VERSION = $(filter CMSSW%, $(subst _patch, , $(CMSSW_VERSION) ))
 
 NGLIBS         = $(ROOTGLIBS) -lMinuit -lMinuit2 -lTreePlayer
 GLIBS          = $(filter-out -lNew, $(NGLIBS)) 
-GLIBS         += -L$(CMSSW_RELEASE_BASE)/lib/$(SCRAM_ARCH) -L$(VO_CMS_SW_DIR)/slc5_amd64_gcc462/cms/cmssw/$(CMSSW_BASE_VERSION)/lib/$(SCRAM_ARCH) -L${CMS_PATH}/${SCRAM_ARCH}/lcg/roofit/5.32.03-cms16/lib -lFWCoreFWLite -lFWCoreUtilities -lDataFormatsCommon -lDataFormatsFWLite -lCondFormatsJetMETObjects -lRooFit -lRooFitCore -L${CMS_PATH}/${SCRAM_ARCH}/external/zlib/1.2.3/lib -lz
+GLIBS         += -L$(CMSSW_RELEASE_BASE)/lib/$(SCRAM_ARCH) -L$(CMS_PATH)/slc5_amd64_gcc462/cms/cmssw/$(CMSSW_BASE_VERSION)/lib/$(SCRAM_ARCH) -L$(ROOFITLIB) -lFWCoreFWLite -lFWCoreUtilities -lDataFormatsCommon -lDataFormatsFWLite -lCondFormatsJetMETObjects -lRooFit -lRooFitCore -L$(ZLIBLIB) -lz
 
 SRCS           = ../TESCO/src/base/TreeClassBase.cc ../TESCO/src/base/TreeReader.cc ../TESCO/src/base/TreeAnalyzerBase.cc ../TESCO/src/base/UserAnalysisBase.cc \
                  src/MT2tree.cc src/MT2treeDoubleMu.cc src/MT2treeDoubleEle.cc src/MT2treeEleMu.cc \
@@ -27,7 +39,7 @@ SRCS           = ../TESCO/src/base/TreeClassBase.cc ../TESCO/src/base/TreeReader
 		 src/MT2Analysis.cc src/MT2AnalysisElec.cc src/MT2AnalysisMuon.cc src/MT2AnalysisTau.cc \
                  ../TESCO/src/helper/TMctLib.cc ../TESCO/src/helper/mctlib.cc ../TESCO/src/helper/OnTheFlyCorrections.cc \
                  ../TESCO/src/helper/Davismt2.cc   ../TESCO/src/helper/TopSearch.cc ../TESCO/src/helper/Hemisphere.cc  src/MT2Analyzer.cc \
-                 src/MassPlotter.cc src/MassPlotterEleTau.cc ../TESCO/src/helper/PUWeight.C \
+                 src/MassPlotter.cc ../TESCO/src/helper/PUWeight.C \
 		 src/QuickAnalysis.cc src/QuickAnalyzer.cc  src/MT2Shapes.cc \
                  ../TESCO/src/helper/Lumi3DReWeighting_standalone.cc src/helper/EventFilterFromListStandAlone.cc\
 #                 src/ZInvEstFromW.cc \
@@ -50,7 +62,7 @@ SHARED=shlib/libDiLeptonAnalysis.so
 .PHONY : clean purge all depend PhysQC
 
 # Rules ====================================
-all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared RunEleTauAnalyzer
+all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared 
 
  shared: $(SHARED)
  $(SHARED): $(OBJS)
@@ -61,8 +73,6 @@ all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared RunEleTauAnalyzer
 #	mv shlib/libDiLeptonAnalysis.so /scratch/$$USERNAME/RunMT2Analyzer
 #	mv /scratch/$$USERNAME/RunMT2Analyzer shlib/libDiLeptonAnalysis.so
 
-RunEleTauAnalyzer: src/exe/MakeEleTauPlots.C $(SHARED)
-	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -o $@ $^	
 
 RunMT2Analyzer: src/exe/RunMT2Analyzer.C $(SHARED)
 	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -o $@ $^	
@@ -91,7 +101,6 @@ clean:
 	$(RM) RunMT2Analyzer
 	$(RM) RunQuickAnalyzer
 	$(RM) MakeMassPlots
-	$(RM) RunEleTauAnalyzer
 purge:
 	$(RM) $(OBJS)
 
@@ -3764,6 +3773,7 @@ src/MT2Analysis.o: ./include/MT2EleMu.hh
 src/MT2Analysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h
 src/MT2Analysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/CondFormats/JetMETObjects/interface/JetCorrectorParameters.h
 src/MT2Analysis.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h
+src/MT2Analysis.o: ./include/RecoilCorrector.hh
 src/MT2AnalysisElec.o: ./include/MT2Analysis.hh
 src/MT2AnalysisElec.o: ../TESCO/include/base/UserAnalysisBase.hh
 src/MT2AnalysisElec.o: ../TESCO/include/helper/pdgparticle.hh
@@ -6732,79 +6742,6 @@ src/MassPlotter.o: ./include/MT2DoubleTau.hh ./include/MT2MuTau.hh
 src/MassPlotter.o: ./include/MT2EleTau.hh ./include/MT2EleMu.hh
 src/MassPlotter.o: ../TESCO/include/helper/Hemisphere.hh
 src/MassPlotter.o: ../TESCO/include/helper/Monitor.hh
-src/MassPlotterEleTau.o: ./include/MassPlotter.hh ./include/MT2tree.hh
-src/MassPlotterEleTau.o: ../TESCO/include/helper/TopSearch.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/cms/cmssw-patch/CMSSW_5_3_7_patch5/src/CondFormats/JetMETObjects/interface/JetResolution.h
-src/MassPlotterEleTau.o: ./include/MT2Elec.hh
-src/MassPlotterEleTau.o: ../TESCO/include/helper/Utilities.hh
-src/MassPlotterEleTau.o: /usr/include/stdio.h /usr/include/stdlib.h
-src/MassPlotterEleTau.o: /usr/include/features.h /usr/include/sys/cdefs.h
-src/MassPlotterEleTau.o: /usr/include/bits/wordsize.h
-src/MassPlotterEleTau.o: /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h
-src/MassPlotterEleTau.o: /usr/include/sys/types.h /usr/include/bits/types.h
-src/MassPlotterEleTau.o: /usr/include/bits/typesizes.h /usr/include/time.h
-src/MassPlotterEleTau.o: /usr/include/endian.h /usr/include/bits/endian.h
-src/MassPlotterEleTau.o: /usr/include/sys/select.h /usr/include/bits/select.h
-src/MassPlotterEleTau.o: /usr/include/bits/sigset.h /usr/include/bits/time.h
-src/MassPlotterEleTau.o: /usr/include/sys/sysmacros.h
-src/MassPlotterEleTau.o: /usr/include/bits/pthreadtypes.h
-src/MassPlotterEleTau.o: /usr/include/alloca.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooCBShape.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooAbsPdf.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooAbsReal.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooAbsArg.h
-src/MassPlotterEleTau.o: /usr/include/assert.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooPrintable.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooRefCountList.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooLinkedList.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooLinkedListElem.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooHashTable.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooAbsCache.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooLinkedListIter.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooNameReg.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooCmdArg.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooCurve.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooPlotable.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooArgSet.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooAbsCollection.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooErrorHandler.h
-src/MassPlotterEleTau.o: /usr/include/signal.h /usr/include/bits/signum.h
-src/MassPlotterEleTau.o: /usr/include/bits/siginfo.h
-src/MassPlotterEleTau.o: /usr/include/bits/sigaction.h
-src/MassPlotterEleTau.o: /usr/include/bits/sigcontext.h
-src/MassPlotterEleTau.o: /usr/include/bits/sigstack.h
-src/MassPlotterEleTau.o: /usr/include/bits/sigthread.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooArgList.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooGlobalFunc.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooNameSet.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooObjCacheManager.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooNormSetCache.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooSetPair.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooAbsCacheElement.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooCacheManager.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooMsgService.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooRealProxy.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooArgProxy.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooAbsProxy.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooAbsRealLValue.h
-src/MassPlotterEleTau.o: /usr/include/math.h /usr/include/bits/huge_val.h
-src/MassPlotterEleTau.o: /usr/include/bits/mathdef.h
-src/MassPlotterEleTau.o: /usr/include/bits/mathcalls.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooNumber.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooAbsLValue.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooAbsBinning.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooRealVar.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooUniformBinning.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooSharedPropertiesList.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooSharedProperties.h
-src/MassPlotterEleTau.o: /public/V_CMSSW64/slc5_amd64_gcc462/lcg/roofit/5.32.03-cms16/include/RooRealVarSharedProperties.h
-src/MassPlotterEleTau.o: ./include/MT2Muon.hh ./include/MT2Tau.hh
-src/MassPlotterEleTau.o: ./include/MT2DoubleEle.hh ./include/MT2DoubleMuon.hh
-src/MassPlotterEleTau.o: ./include/MT2DoubleTau.hh ./include/MT2MuTau.hh
-src/MassPlotterEleTau.o: ./include/MT2EleTau.hh ./include/MT2EleMu.hh
-src/MassPlotterEleTau.o: ../TESCO/include/helper/Hemisphere.hh
-src/MassPlotterEleTau.o: ../TESCO/include/helper/Monitor.hh
-src/MassPlotterEleTau.o: ./include/Corrector.h ./include/MassPlotterEleTau.hh
 ../TESCO/src/helper/PUWeight.o: ../TESCO/include/helper/PUWeight.h
 src/QuickAnalysis.o: ../TESCO/include/helper/Utilities.hh
 src/QuickAnalysis.o: /usr/include/stdio.h /usr/include/stdlib.h
