@@ -104,7 +104,7 @@ SAMPLE
 Name		Run2012D_JetHT
 SName		JetHT-Data
 ShapeName	Data
-File            JetHT-Run2012D-22Jan2013-v1-AOD.root
+File            JetHT-Run2012D-22Jan2013-v1-AOD3.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.
