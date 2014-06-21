@@ -1,0 +1,24 @@
+#get this directory by running 
+svn checkout https://github.com/paktinat/STau/trunk/MT2Analysis/Code/MT2AnalysisCode/MT2Code/RunManager/ucsd/mover
+cd mover
+
+#prepare the crab environment and
+#get a proxy by running voms-proxy-init -voms cms
+
+#get the list of files for the datasets you want to move by running
+python FileList.py -q 'DAS_QUERY' -d 2
+
+#give the valid query string between ''
+#if dataset is listed in phys02 instance use -d 2
+
+#for each dataset in the query it creates a file which includes the name of the files of teh dataset
+
+#to start moving the files of each dataset run
+chmod a+x move.sh
+./move.sh DSFILENAME OLDUSERNAME
+
+#you have to replace DSFILENAME with the name of the created file for the desired dataset in the previous step
+#the OLDUSERNAME parameter is the user name that has created the dataset for the first time. Giving it, it will be replaced by your username in the ucsd Storage element
+
+
+#wait for the download to complete

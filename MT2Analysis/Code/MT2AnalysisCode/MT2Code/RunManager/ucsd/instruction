@@ -1,0 +1,7 @@
+copy the configurations file and add the datasets you want to convert to MT2tree
+the syntax should be ass follows :
+JOBNAME DSNAME USERNAME_WHO_MOVED_THE_FILES_TO_UCSD nFilesPerJob $(Process) OUTDIR PROCESSID TYPE CUTSET
+
+Then run 
+./submitall.sh configurationsfilename submit
+if you drop submit, just jobs are created without submitting
