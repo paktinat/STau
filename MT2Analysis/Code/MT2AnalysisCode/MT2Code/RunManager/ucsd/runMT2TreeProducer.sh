@@ -10,7 +10,21 @@ nfiles=$3
 iteration=$4
 
 processid=$5
+
 sampletype=$6
+
+if ["$sampletype" = "data"]; then
+therarguments = " -j Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt "
+fi
+
+if ["$sampletype" = "scan"]; then
+therarguments =  " -s MC2012 -p Cert_8TeV_13Jul_06Aug_24Aug_11Dec_ReReco_and_Rest_PromptReco_Collisions12_PU_60bins_true.root -P MC2012PU_S10_60bins.root -b BEfficiencies_ge2jets_CSVM_HT750andMET30_or_HT450andMET200_MinDPhi4_newTTbar.root -u TauEfficiencies_LooseIsoLooseEleTightMuo_fromTauPOGplots.root -f "
+fi
+
+if ["$sampletype" = "mc"]; then
+therarguments =  " -s MC2012 -p Cert_8TeV_13Jul_06Aug_24Aug_11Dec_ReReco_and_Rest_PromptReco_Collisions12_PU_60bins_true.root -P MC2012PU_S10_60bins.root -b BEfficiencies_ge2jets_CSVM_HT750andMET30_or_HT450andMET200_MinDPhi4_newTTbar.root -u TauEfficiencies_LooseIsoLooseEleTightMuo_fromTauPOGplots.root "
+fi
+
 cutset=$7
 
 commitid=$8
@@ -59,12 +73,12 @@ ListOfFilesToRunOn=`python getlistoffiles.py -n $nfiles -i $iteration -p $WORKIN
 
 cd ../..
 if [ "$debugmode" == "1" ]; then
-    echo "./RunMT2Analyzer -d . -i $processid -t $sampletype -m $cutset  -e -E -c -o MT2tree_$iteration.root $ListOfFilesToRunOn"
+    echo "./RunMT2Analyzer -d . -i $processid -t $sampletype -m $cutset $otherarguments -e -E -c -o MT2tree_$iteration.root $ListOfFilesToRunOn"
     echo "mkdir $outputdir"
     echo "cp ./MT2tree_$iteration.root $outputdir"
     echo "rm -rf ./MT2tree_$iteration.root"
 else
-    ./RunMT2Analyzer -d . -i $processid -t $sampletype -m $cutset  -e -E -c -o MT2tree_$iteration.root $ListOfFilesToRunOn
+    ./RunMT2Analyzer  -n 10 -d . -i $processid -t $sampletype -m $cutset $otherarguments  -e -E -c -o MT2tree_$iteration.root $ListOfFilesToRunOn
     mkdir $outputdir
     lcg-cp ./MT2tree_$iteration.root "srm://bsrm-1.t2.ucsd.edu:8443/srm/v2/server?SFN=$outputdir/MT2tree_$iteration.root"
     rm -rf ./MT2tree_$iteration.root
