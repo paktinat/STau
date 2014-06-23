@@ -4,6 +4,9 @@
   
 void  MT2tree::FillDoubleEle(){
 
+  TVector2 pmiss_vector2;
+  TLorentzVector downstream(0.,0.,0.,0.); // no particles are downstream, i.e. not selected jets are upstream. 
+
   doubleEle[0].Reset();
 
   for (int i=0 ; i < NEles ; i++){
@@ -43,6 +46,11 @@ void  MT2tree::FillDoubleEle(){
     doubleEle[0].PositveLepAngInZFrame     = GetPositiveChargedLeptonDecayAngleinZframeEE();
     doubleEle[0].PositveLepAngwithZBeamPlane =GetPositiveChargedLepWithZBeamPlaneEE();
     doubleEle[0].MinMetLepDPhi= GetMinMetLepDPhiEE();
+
+    pmiss_vector2.Set(pfmet[0].Px(), pfmet[0].Py());
+    doubleEle[0].MCTcorr = GetMCTcorr(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, downstream, pmiss_vector2);
+    pmiss_vector2.Set(-doubleEle[0].lv.Px(), -doubleEle[0].lv.Py());
+    doubleEle[0].MCTImbalanced= GetMCTcorr(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, downstream, pmiss_vector2);
 
 
     if(fVerbose > 3){
@@ -97,6 +105,11 @@ void  MT2tree::FillDoubleEle(){
       doubleEle[0].PositveLepAngInZFrame     = GetPositiveChargedLeptonDecayAngleinZframeEE();
       doubleEle[0].PositveLepAngwithZBeamPlane =GetPositiveChargedLepWithZBeamPlaneEE();
       doubleEle[0].MinMetLepDPhi= GetMinMetLepDPhiEE();
+
+      pmiss_vector2.Set(pfmet[0].Px(), pfmet[0].Py());
+      doubleEle[0].MCTcorr = GetMCTcorr(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, downstream, pmiss_vector2);
+      pmiss_vector2.Set(-doubleEle[0].lv.Px(), -doubleEle[0].lv.Py());
+      doubleEle[0].MCTImbalanced= GetMCTcorr(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, downstream, pmiss_vector2);
 
 
       if(fVerbose > 3){
@@ -154,6 +167,11 @@ void  MT2tree::FillDoubleEle(){
 	doubleEle[0].PositveLepAngwithZBeamPlane =GetPositiveChargedLepWithZBeamPlaneEE();
 	doubleEle[0].MinMetLepDPhi= GetMinMetLepDPhiEE();
 
+        pmiss_vector2.Set(pfmet[0].Px(), pfmet[0].Py());
+        doubleEle[0].MCTcorr = GetMCTcorr(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, downstream, pmiss_vector2);
+        pmiss_vector2.Set(-doubleEle[0].lv.Px(), -doubleEle[0].lv.Py());
+        doubleEle[0].MCTImbalanced= GetMCTcorr(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, downstream, pmiss_vector2);
+
 
 	if(fVerbose > 3){
 	  std::cout<<"EleIndex0: "<< doubleEle[0].Ele0Ind << endl <<"EleIndex1: "<< doubleEle[0].Ele1Ind << endl;
@@ -167,7 +185,26 @@ void  MT2tree::FillDoubleEle(){
 }
 
 
+// void  MT2tree::FillLooseTightEleFakeRateforEE(){
+//   doubleEle[0].Reset();
+
+//   for (int i=0 ; i < NEles ; i++){
+
+//     if  (ele[i].PassE0_EE)
+//       {
+//         doubleEle[0].Ele0Ind = i ;
+//         break;
+//       }
+//   }
+
+// 	  }
+
+
 void  MT2tree::FillQCDSyst03forEE(){
+
+  TVector2 pmiss_vector2;
+  TLorentzVector downstream(0.,0.,0.,0.); // no particles are downstream, i.e. not selected jets are upstream. 
+
       doubleEle[0].Ele0Ind =-1;
       doubleEle[0].Ele1Ind =-1;         
       for (int i=0 ; i < NEles ; i++){
@@ -212,6 +249,12 @@ void  MT2tree::FillQCDSyst03forEE(){
 	doubleEle[0].PositveLepAngwithZBeamPlane =GetPositiveChargedLepWithZBeamPlaneEE();
 	doubleEle[0].MinMetLepDPhi= GetMinMetLepDPhiEE();
 
+        pmiss_vector2.Set(pfmet[0].Px(), pfmet[0].Py());
+        doubleEle[0].MCTcorr = GetMCTcorr(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, downstream, pmiss_vector2);
+        pmiss_vector2.Set(-doubleEle[0].lv.Px(), -doubleEle[0].lv.Py());
+        doubleEle[0].MCTImbalanced= GetMCTcorr(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, downstream, pmiss_vector2);
+
+
 
 	if(fVerbose > 3){
 	  std::cout<<"EleIndex0: "<< doubleEle[0].Ele0Ind << endl <<"EleIndex1: "<< doubleEle[0].Ele1Ind << endl;
@@ -224,6 +267,10 @@ void  MT2tree::FillQCDSyst03forEE(){
 }
 
 void  MT2tree::FillQCDSyst07forEE(){
+
+  TVector2 pmiss_vector2;
+  TLorentzVector downstream(0.,0.,0.,0.); // no particles are downstream, i.e. not selected jets are upstream. 
+
       doubleEle[0].Ele0Ind =-1;
       doubleEle[0].Ele1Ind =-1;         
       for (int i=0 ; i < NEles ; i++){
@@ -267,6 +314,11 @@ void  MT2tree::FillQCDSyst07forEE(){
 	doubleEle[0].PositveLepAngInZFrame     = GetPositiveChargedLeptonDecayAngleinZframeEE();
 	doubleEle[0].PositveLepAngwithZBeamPlane =GetPositiveChargedLepWithZBeamPlaneEE();
 	doubleEle[0].MinMetLepDPhi= GetMinMetLepDPhiEE();
+
+        pmiss_vector2.Set(pfmet[0].Px(), pfmet[0].Py());
+        doubleEle[0].MCTcorr = GetMCTcorr(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, downstream, pmiss_vector2);
+        pmiss_vector2.Set(-doubleEle[0].lv.Px(), -doubleEle[0].lv.Py());
+        doubleEle[0].MCTImbalanced= GetMCTcorr(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, downstream, pmiss_vector2);
 
 
 	if(fVerbose > 3){

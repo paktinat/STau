@@ -29,6 +29,9 @@ public:
     PositveLepAngwithZBeamPlane = -10;
     MinMetLepDPhi= -10;
 
+    MCTcorr = -10;
+    MCTImbalanced = 10;
+
   
 }
 
@@ -52,6 +55,9 @@ public:
   double    PositveLepAngInZFrame;
   double    PositveLepAngwithZBeamPlane;
   double    MinMetLepDPhi;
+
+  double    MCTcorr ;
+  double    MCTImbalanced ;
 
 
   ClassDef(MT2DoubleEle, 1)
