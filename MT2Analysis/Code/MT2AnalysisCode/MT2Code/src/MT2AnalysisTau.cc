@@ -20,6 +20,44 @@ void MT2Analysis::FillMT2Taus(){
   for(int i=0; i<fTaus.size(); ++i) {
     fMT2tree->tau[i].lv.SetPtEtaPhiE(fTR->TauPt [fTaus[i]], fTR->TauEta[fTaus[i]], 
 				     fTR->TauPhi[fTaus[i]], fTR->TauE[fTaus[i]]); 
+    
+
+    //dictionary for fTR->TauDecayMode[fTaus[i]]
+    // 0 ==> 1 prong0Pizer
+    // 1 ==> 1 prong1Pizero
+    // 2 ==> 1 prong2Pizeros
+    // 10 ==> 3prong0Pizero
+    //from the HtoTauTau2013 twiki
+    //
+    // TauES and decay mode scale factors
+
+    //     Apply only to ZTauTau and Higgs signals
+    //     Apply this to MuTau, ETau, TauTau 
+
+    // Decay mode 	Tau Momentum scaling vs Tau pT 	Normalization factor
+    // 1-prong no-pi0 	no correction 	0.88
+    // 1-prong 1-pi0 	p4' = p4 * (1.025 + 0.001 * TMath::Min(TMath::Max(pT-45.,0.),10.) 	1
+    // 3-prong   	p4' = p4 * (1.012 + 0.001 * TMath::Min(TMath::Max(pT-32.,0.),18.) 	1 
+    
+    fMT2tree->tau[i].energyScale = 1.0; //To be applied tp tau 4vector
+    fMT2tree->tau[i].energySF    = 1.0; //To be applied as the weight of the event.
+
+
+    if(fMT2tree->misc.ProcessID == 10 || fMT2tree->misc.ProcessID == 2){
+      float pT = fMT2tree->tau[i].lv.Pt();
+      
+      if(fTR->TauDecayMode[fTaus[i]] == 10)
+	fMT2tree->tau[i].energyScale = (1.012 + 0.001 * TMath::Min(TMath::Max(pT-32.,0.),18.));
+
+      if(fTR->TauDecayMode[fTaus[i]] == 1 || fTR->TauDecayMode[fTaus[i]] == 2)
+	fMT2tree->tau[i].energyScale = (1.025 + 0.001 * TMath::Min(TMath::Max(pT-45.,0.),10.));
+           
+      if(fTR->TauDecayMode[fTaus[i]] == 0)
+	fMT2tree->tau[i].energySF = 0.88;
+    }
+    
+    fMT2tree->tau[i].lv *= fMT2tree->tau[i].energyScale;
+ 
     fMT2tree->tau[i].MT       = fMT2tree->GetMT(fMT2tree->tau[i].lv, 0., fMT2tree->pfmet[0], 0.); 
     fMT2tree->tau[i].Charge   = fTR->TauCharge[fTaus[i]];
     fMT2tree->tau[i].JetPt    = fTR->TauJetPt[fTaus[i]];
@@ -31,38 +69,37 @@ void MT2Analysis::FillMT2Taus(){
     fMT2tree->tau[i].WjetsSFTauPlusX = fMT2tree->tau[i].GetWjetsSFTauPlusX();
 
     fMT2tree->tau[i].decayMode = fTR->TauDecayMode[fTaus[i]];
-    //    fMT2tree->tau[i].energySF; To be implemented, it is a function of the decayMode
 
     fMT2tree->tau[i].PassTau0_TauTau= 0;
-    if((fTR->TauPt[fTaus[i]]>45) && (fabs(fTR->TauEta[fTaus[i]])<2.1) && (fTR->TauMediumCombinedIsoDBSumPtCorr3Hits[fTaus[i]]>0.5)) fMT2tree->tau[i].PassTau0_TauTau=1;
+    if((fMT2tree->tau[i].lv.Pt()>45) && (fabs(fTR->TauEta[fTaus[i]])<2.1) && (fTR->TauMediumCombinedIsoDBSumPtCorr3Hits[fTaus[i]]>0.5)) fMT2tree->tau[i].PassTau0_TauTau=1;
 
     fMT2tree->tau[i].PassTau1_TauTau= 0;
-    if((fTR->TauPt[fTaus[i]]>45) && (fabs(fTR->TauEta[fTaus[i]])<2.1) && (fTR->TauMediumCombinedIsoDBSumPtCorr3Hits[fTaus[i]]>0.5) && (fTR->TauLooseElectronMVA3Rejection[fTaus[i]]>0.5)) fMT2tree->tau[i].PassTau1_TauTau=1;
+    if((fMT2tree->tau[i].lv.Pt()>45) && (fabs(fTR->TauEta[fTaus[i]])<2.1) && (fTR->TauMediumCombinedIsoDBSumPtCorr3Hits[fTaus[i]]>0.5) && (fTR->TauLooseElectronMVA3Rejection[fTaus[i]]>0.5)) fMT2tree->tau[i].PassTau1_TauTau=1;
 
     fMT2tree->tau[i].PassTau_ElTau= 0;
-    if((fTR->TauPt[fTaus[i]]>20) && (fabs(fTR->TauEta[fTaus[i]])<2.3) && (fTR->TauLooseCombinedIsoDBSumPtCorr3Hits[fTaus[i]]>0.5) && (fTR->TauMediumElectronMVA3Rejection[fTaus[i]]>0.5) && (fTR->TauLooseMuon2Rejection[fTaus[i]]>0.5)) fMT2tree->tau[i].PassTau_ElTau=1;
+    if((fMT2tree->tau[i].lv.Pt()>20) && (fabs(fTR->TauEta[fTaus[i]])<2.3) && (fTR->TauLooseCombinedIsoDBSumPtCorr3Hits[fTaus[i]]>0.5) && (fTR->TauMediumElectronMVA3Rejection[fTaus[i]]>0.5) && (fTR->TauLooseMuon2Rejection[fTaus[i]]>0.5)) fMT2tree->tau[i].PassTau_ElTau=1;
 
     fMT2tree->tau[i].PassQCDTau_ElTau= 0;
-    if((fTR->TauPt[fTaus[i]]>20) && (fabs(fTR->TauEta[fTaus[i]])<2.3) && (fTR->TauMediumElectronMVA3Rejection[fTaus[i]]>0.5) && (fTR->TauLooseMuon2Rejection[fTaus[i]]>0.5)) fMT2tree->tau[i].PassQCDTau_ElTau=1;
+    if((fMT2tree->tau[i].lv.Pt()>20) && (fabs(fTR->TauEta[fTaus[i]])<2.3) && (fTR->TauMediumElectronMVA3Rejection[fTaus[i]]>0.5) && (fTR->TauLooseMuon2Rejection[fTaus[i]]>0.5)) fMT2tree->tau[i].PassQCDTau_ElTau=1;
 
     fMT2tree->tau[i].PassQCDLooseTau_ElTau= 0;
-    if((fTR->TauPt[fTaus[i]]>20) && (fabs(fTR->TauEta[fTaus[i]])<2.3)) fMT2tree->tau[i].PassQCDLooseTau_ElTau=1;
+    if((fMT2tree->tau[i].lv.Pt()>20) && (fabs(fTR->TauEta[fTaus[i]])<2.3)) fMT2tree->tau[i].PassQCDLooseTau_ElTau=1;
 
 
     fMT2tree->tau[i].PassTau_MuTau= 0;
-    if((fTR->TauPt[fTaus[i]]>20) && (fabs(fTR->TauEta[fTaus[i]])<2.3) && (fTR->TauLooseCombinedIsoDBSumPtCorr3Hits[fTaus[i]]>0.5) && (fTR->TauLooseElectronRejection[fTaus[i]]>0.5) && (fTR->TauTightMuon2Rejection[fTaus[i]]>0.5)) fMT2tree->tau[i].PassTau_MuTau=1;
+    if((fMT2tree->tau[i].lv.Pt()>20) && (fabs(fTR->TauEta[fTaus[i]])<2.3) && (fTR->TauLooseCombinedIsoDBSumPtCorr3Hits[fTaus[i]]>0.5) && (fTR->TauLooseElectronRejection[fTaus[i]]>0.5) && (fTR->TauTightMuon2Rejection[fTaus[i]]>0.5)) fMT2tree->tau[i].PassTau_MuTau=1;
 
     fMT2tree->tau[i].PassQCDTau_MuTau= 0;
-    if((fTR->TauPt[fTaus[i]]>20) && (fabs(fTR->TauEta[fTaus[i]])<2.3) && (fTR->TauLooseElectronRejection[fTaus[i]]>0.5) && (fTR->TauTightMuon2Rejection[fTaus[i]]>0.5)) fMT2tree->tau[i].PassQCDTau_MuTau=1;
+    if((fMT2tree->tau[i].lv.Pt()>20) && (fabs(fTR->TauEta[fTaus[i]])<2.3) && (fTR->TauLooseElectronRejection[fTaus[i]]>0.5) && (fTR->TauTightMuon2Rejection[fTaus[i]]>0.5)) fMT2tree->tau[i].PassQCDTau_MuTau=1;
 
     fMT2tree->tau[i].PassQCDLooseTau_MuTau= 0;
-    if((fTR->TauPt[fTaus[i]]>20) && (fabs(fTR->TauEta[fTaus[i]])<2.3)) fMT2tree->tau[i].PassQCDLooseTau_MuTau=1;
+    if((fMT2tree->tau[i].lv.Pt()>20) && (fabs(fTR->TauEta[fTaus[i]])<2.3)) fMT2tree->tau[i].PassQCDLooseTau_MuTau=1;
 
     fMT2tree->tau[i].PassQCDTau0_TauTau= 0;
-    if((fTR->TauPt[fTaus[i]]>45) && (fabs(fTR->TauEta[fTaus[i]])<2.1) && (fTR->TauLooseCombinedIsoDBSumPtCorr3Hits[fTaus[i]]>0.5)) 
+    if((fMT2tree->tau[i].lv.Pt()>45) && (fabs(fTR->TauEta[fTaus[i]])<2.1) && (fTR->TauLooseCombinedIsoDBSumPtCorr3Hits[fTaus[i]]>0.5)) 
 	fMT2tree->tau[i].PassQCDTau0_TauTau=1;
     fMT2tree->tau[i].PassQCDTau1_TauTau= 0;
-    if((fTR->TauPt[fTaus[i]]>45) && (fabs(fTR->TauEta[fTaus[i]])<2.1) && (fTR->TauLooseCombinedIsoDBSumPtCorr3Hits[fTaus[i]]>0.5) && (fTR->TauLooseElectronMVA3Rejection[fTaus[i]]>0.5)) 
+    if((fMT2tree->tau[i].lv.Pt()>45) && (fabs(fTR->TauEta[fTaus[i]])<2.1) && (fTR->TauLooseCombinedIsoDBSumPtCorr3Hits[fTaus[i]]>0.5) && (fTR->TauLooseElectronMVA3Rejection[fTaus[i]]>0.5)) 
       fMT2tree->tau[i].PassQCDTau1_TauTau = 1;
     
 

@@ -91,6 +91,7 @@ MassPlotter::MassPlotter(){
 	fMuTrgSF=true;
 	fTauTrgSF=true;
 	fTauWjetsSF=true;
+	fTauEnergySF=true;
 
 // Default constructor, no samples are set
   cout.precision(2);
@@ -114,6 +115,7 @@ MassPlotter::MassPlotter(TString outputdir){
 	fMuTrgSF=true;
 	fTauTrgSF=true;
 	fTauWjetsSF=true;
+	fTauEnergySF=true;
 
 // Default constructor, no samples are set
   cout.precision(2);
@@ -138,6 +140,7 @@ MassPlotter::MassPlotter(TString outputdir, TString outputfile){
 	fMuTrgSF=true;
 	fTauTrgSF=true;
 	fTauWjetsSF=true;
+	fTauEnergySF=true;
 
 // Default constructor, no samples are set
   cout.precision(2);
@@ -1347,6 +1350,8 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 		      ChannelSpecificSF += "*muTau[0].tauTrgSF";
 		    if(fTauWjetsSF && (Samples[i].sname == "Wtolnu"))
 		      ChannelSpecificSF += "*muTau[0].tauWjetsSF";	  
+		    if(fTauEnergySF )
+		      ChannelSpecificSF += "*muTau[0].tauEnergySF";	  
 		  }else 
 		    ChannelSpecificSF = "pileUp.Weight";
 		  

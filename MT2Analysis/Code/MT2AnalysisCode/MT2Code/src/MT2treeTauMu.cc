@@ -117,6 +117,7 @@ void MT2tree::FillMuTau(){
     muTau[0].SetMuIdSF(muo[indecies.second].idSFmuTau);
     muTau[0].SetMuIsoSF(muo[indecies.second].isoSFmuTau);
     muTau[0].SetTauWjetsSF(tau[indecies.first].WjetsSFTauPlusX);
+    muTau[0].SetTauEnergySF(tau[indecies.first].energySF);
     muTau[0].SetDiLepPtRatio(DiLepPtRatio(tau[indecies.first].lv, muo[indecies.second].lv));
     if(muo[indecies.second].Charge >= tau[indecies.first].Charge){
       muTau[0].SetPlusLepZAngle(PositiveChargedLeptonDecayAngleinZframe(muo[indecies.second].lv, tau[indecies.first].lv));
@@ -155,6 +156,7 @@ void MT2tree::FillMuTau(){
       muTau[0].SetMuIdSF(muo[indecies.second].idSFmuTau);
       muTau[0].SetMuIsoSF(muo[indecies.second].isoSFmuTau);
       muTau[0].SetTauWjetsSF(tau[indecies.first].WjetsSFTauPlusX);
+      muTau[0].SetTauEnergySF(tau[indecies.first].energySF);
       muTau[0].SetDiLepPtRatio(DiLepPtRatio(tau[indecies.first].lv, muo[indecies.second].lv));
       if(muo[indecies.second].Charge >= tau[indecies.first].Charge){
 	muTau[0].SetPlusLepZAngle(PositiveChargedLeptonDecayAngleinZframe(muo[indecies.second].lv, tau[indecies.first].lv));
@@ -193,6 +195,7 @@ void MT2tree::FillMuTau(){
  	muTau[0].SetMuIdSF(muo[indecies.second].idSFmuTau);
  	muTau[0].SetMuIsoSF(muo[indecies.second].isoSFmuTau);
 	muTau[0].SetTauWjetsSF(tau[indecies.first].WjetsSFTauPlusX);
+	muTau[0].SetTauEnergySF(tau[indecies.first].energySF);
 	muTau[0].SetDiLepPtRatio(DiLepPtRatio(tau[indecies.first].lv, muo[indecies.second].lv));
 	if(muo[indecies.second].Charge >= tau[indecies.first].Charge){
 	  muTau[0].SetPlusLepZAngle(PositiveChargedLeptonDecayAngleinZframe(muo[indecies.second].lv, tau[indecies.first].lv));

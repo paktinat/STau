@@ -41,6 +41,7 @@ public:
     trgSFeleTau     = -0.99;
     WjetsSFTauPlusX = -0.99;
     energySF        = -0.99;
+    energyScale     = -0.99;
     decayMode       = -0.99;
   }
 
@@ -210,6 +211,7 @@ public:
   Float_t WjetsSFTauPlusX;
 
   Float_t energySF;
+  Float_t energyScale;
   Int_t   decayMode;
 
 

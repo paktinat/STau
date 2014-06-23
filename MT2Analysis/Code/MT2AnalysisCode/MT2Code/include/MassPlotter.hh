@@ -275,17 +275,19 @@ public:
   void MyMakePlot(Long64_t nevents);
   void MySmallMakePlot(Long64_t nevents);
   
-  void SetMuTauChannel(bool muIdSF = true, bool muIsoSF = true, bool muTrgSF = true, bool tauTrgSF = true, bool tauWjetsSF = true){
+  void SetMuTauChannel(bool muIdSF = true, bool muIsoSF = true, bool muTrgSF = true, bool tauTrgSF = true, bool tauWjetsSF = true, bool tauEnergySF = true){
     if(myChannel != "TBD" && myChannel != "muTau")
       cout<<"The channel is already defined as "<<myChannel<<endl;
 
     myChannel = "muTau";
 
-    fMuIdSF     = muIdSF;
-    fMuIsoSF    = muIsoSF;
-    fMuTrgSF    = muTrgSF;
-    fTauTrgSF   = tauTrgSF;
-    fTauWjetsSF = tauWjetsSF;
+    fMuIdSF      = muIdSF;
+    fMuIsoSF     = muIsoSF;
+    fMuTrgSF     = muTrgSF;
+    fTauTrgSF    = tauTrgSF;
+    fTauWjetsSF  = tauWjetsSF;
+    fTauEnergySF = tauEnergySF;
+    
   }
 
 
@@ -310,11 +312,9 @@ private:
         bool fMuTrgSF;
         bool fTauTrgSF;
         bool fTauWjetsSF;
+        bool fTauEnergySF;
   
-
-
-
-	MT2tree* fMT2tree;
+        MT2tree* fMT2tree;
 	TTree*   fTree;
 
         TH2F *h_SMSEvents, *h_mSugraEvents;

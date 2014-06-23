@@ -28,6 +28,7 @@ public:
     muIdSF    = -.99;
     muIsoSF   = -.99;
     tauWjetsSF= -.99;
+    tauEnergySF= -.99;
     Isolated  = -2.0;//IsoMU and IsoTau 1, IsoMu and NonIsoTau, 0 and NonIsoMu and NonIsoTau -1
     diLepPtRatio= -2.0;
     plusLepZAngle= -4.0;
@@ -51,7 +52,7 @@ public:
   void SetPVisibleZeta(float input){pVisibleZeta = input;};
   void SetPZeta(float input){pZeta = input;};
   void SetPZetaImbalanced(float input){pZetaImbalanced = input;};
-
+  void SetTauEnergySF(float input){tauEnergySF = input;};
   void SetTauTrgSF(float input){tauTrgSF = input;};
   void SetMuTrgSF(float input){muTrgSF = input;};
   void SetMuIdSF(float input){muIdSF = input;};
@@ -70,6 +71,7 @@ public:
   float GetPlusLepZBeamAngle(){return plusLepZBeamAngle;};
   float GetMinMetLepDPhi(){return minMetLepDPhi;};
   int GetIsolated(){return Isolated;};
+  float GetTauEnergySF(){return tauEnergySF;};
   float GetTauTrgSF(){return tauTrgSF;};
   float GetMuTrgSF(){return muTrgSF;};
   float GetMuIdSF(){return  muIdSF;};
@@ -139,6 +141,7 @@ private:
   float muIdSF;
   float muIsoSF;
   float tauWjetsSF;
+  float tauEnergySF;
   int Isolated;
 
   float diLepPtRatio;
