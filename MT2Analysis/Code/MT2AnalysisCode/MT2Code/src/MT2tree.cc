@@ -2079,7 +2079,7 @@ Float_t MT2tree::GetMT(TLorentzVector lv1, TLorentzVector lv2){
 Float_t MT2tree::GetMCTcorr(TLorentzVector p1, TLorentzVector p2, TLorentzVector DTM, TVector2 pmiss){
 	// Tovey MCT corrected
 	TMctLib* MCT = new TMctLib;
-	float MCTcorr = MCT -> mctcorr(p1, p2, DTM, pmiss, 7000., 0.);
+	float MCTcorr = MCT -> mctcorr(p1, p2, DTM, pmiss, 8000., 0.);
 	delete MCT;
 	return MCTcorr;
 }

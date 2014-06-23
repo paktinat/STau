@@ -90,7 +90,8 @@ public:
 	void SetEventsPerGeV(bool eventspergev){fEventsPerGeV=eventspergev;};
 	void SetPileUpReweight(bool PU){fPUReweight=PU; std::cout << "PU Reweighting =" << fPUReweight << std::endl;};
 	void SetbSFWeights(bool bSF){fbSFReWeight=bSF;};
-  void vs();
+        void vs(Long64_t  nevents, TString cuts, TString trigger);
+
 	
 	struct sample{
 		TString name;

@@ -93,6 +93,12 @@ bool MT2tree::HasNoVetoMuForMuTau(int signalIndex){
 
 void MT2tree::FillMuTau(){
   muTau[0].Reset();	
+
+  TVector2 pmiss_vector2;
+  TLorentzVector downstream(0.,0.,0.,0.); // no particles are downstream, i.e. not selected jets are upstream. 
+  
+
+
   std::pair<int,int> indecies = this->GetTauMu();
   if(this->fVerbose > 3 )
     std::cout<<"muTau[0]: tau index: "<<indecies.first<<", mu index: "<<indecies.second<<endl;
@@ -104,6 +110,10 @@ void MT2tree::FillMuTau(){
     muTau[0].SetMT2(this->CalcMT2(0, false, tau[indecies.first].lv, muo[indecies.second].lv, pfmet[0]));
     muTau[0].SetLV(tau[indecies.first].lv + muo[indecies.second].lv);
     muTau[0].SetMT2Imbalanced(this->CalcMT2(0, false, tau[indecies.first].lv, muo[indecies.second].lv, (-muTau[0].GetLV())));
+    pmiss_vector2.Set(pfmet[0].Px(), pfmet[0].Py());
+    muTau[0].SetMCT(this->GetMCTcorr(muo[muTau[0].GetMuIndex0()].lv, tau[muTau[0].GetTauIndex0()].lv, downstream, pmiss_vector2));
+    pmiss_vector2.Set(-muTau[0].GetLV().Px(), -muTau[0].GetLV().Py());
+    muTau[0].SetMCTImbalanced(this->GetMCTcorr(muo[muTau[0].GetMuIndex0()].lv, tau[muTau[0].GetTauIndex0()].lv, downstream, pmiss_vector2));
     muTau[0].SetDPhi(fabs(Util::DeltaPhi(tau[indecies.first].lv.Phi(), muo[indecies.second].lv.Phi())));
     muTau[0].SetElecVeto(this->HasNoVetoElecForMuTau());
     muTau[0].SetMuVeto(this->HasNoVetoMuForMuTau(indecies.second));
@@ -143,6 +153,10 @@ void MT2tree::FillMuTau(){
       muTau[0].SetMT2(this->CalcMT2(0, false, tau[indecies.first].lv, muo[indecies.second].lv, pfmet[0]));
       muTau[0].SetLV(tau[indecies.first].lv + muo[indecies.second].lv);
       muTau[0].SetMT2Imbalanced(this->CalcMT2(0, false, tau[indecies.first].lv, muo[indecies.second].lv, (-muTau[0].GetLV())));
+      pmiss_vector2.Set(pfmet[0].Px(), pfmet[0].Py());
+      muTau[0].SetMCT(this->GetMCTcorr(muo[muTau[0].GetMuIndex0()].lv, tau[muTau[0].GetTauIndex0()].lv, downstream, pmiss_vector2));
+      pmiss_vector2.Set(-muTau[0].GetLV().Px(), -muTau[0].GetLV().Py());
+      muTau[0].SetMCTImbalanced(this->GetMCTcorr(muo[muTau[0].GetMuIndex0()].lv, tau[muTau[0].GetTauIndex0()].lv, downstream, pmiss_vector2));
       muTau[0].SetDPhi(fabs(Util::DeltaPhi(tau[indecies.first].lv.Phi(), muo[indecies.second].lv.Phi())));
       muTau[0].SetElecVeto(this->HasNoVetoElecForMuTau());
       muTau[0].SetMuVeto(this->HasNoVetoMuForMuTau(indecies.second));
@@ -182,6 +196,10 @@ void MT2tree::FillMuTau(){
 	muTau[0].SetMT2(this->CalcMT2(0, false, tau[indecies.first].lv, muo[indecies.second].lv, pfmet[0]));
 	muTau[0].SetLV(tau[indecies.first].lv + muo[indecies.second].lv);
 	muTau[0].SetMT2Imbalanced(this->CalcMT2(0, false, tau[indecies.first].lv, muo[indecies.second].lv, (-muTau[0].GetLV())));
+	pmiss_vector2.Set(pfmet[0].Px(), pfmet[0].Py());
+	muTau[0].SetMCT(this->GetMCTcorr(muo[muTau[0].GetMuIndex0()].lv, tau[muTau[0].GetTauIndex0()].lv, downstream, pmiss_vector2));
+	pmiss_vector2.Set(-muTau[0].GetLV().Px(), -muTau[0].GetLV().Py());
+	muTau[0].SetMCTImbalanced(this->GetMCTcorr(muo[muTau[0].GetMuIndex0()].lv, tau[muTau[0].GetTauIndex0()].lv, downstream, pmiss_vector2));
 	muTau[0].SetDPhi(fabs(Util::DeltaPhi(tau[indecies.first].lv.Phi(), muo[indecies.second].lv.Phi())));
 	muTau[0].SetElecVeto(this->HasNoVetoElecForMuTau());
 	muTau[0].SetMuVeto(this->HasNoVetoMuForMuTau(indecies.second));

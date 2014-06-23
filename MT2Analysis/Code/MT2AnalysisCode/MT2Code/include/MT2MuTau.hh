@@ -15,6 +15,8 @@ public:
     chargeSum = -1;
     MT2 = -1.;
     MT2Imbalanced = -1.;
+    MCT = -1.;
+    MCTImbalanced = -1.;
     hasNoVetoElec = false;
     hasNoVetoMu = false;
     signalMuTau = false;
@@ -43,6 +45,8 @@ public:
   void SetSumCharge(int input){ chargeSum = input; };
   void SetMT2(float input){ MT2 = input; };
   void SetMT2Imbalanced(float input){ MT2Imbalanced = input; };
+  void SetMCT(float input){ MCT = input; };
+  void SetMCTImbalanced(float input){ MCTImbalanced = input; };
   void SetLV(TLorentzVector input){ lv = input; };
   void SetElecVeto(bool input){ hasNoVetoElec = input; };
   void SetMuVeto(bool input){ hasNoVetoMu = input; };
@@ -85,6 +89,8 @@ public:
   int GetSumCharge(){ return chargeSum; };
   float GetMT2(){ return MT2; };
   float GetMT2Imbalanced(){ return MT2Imbalanced; };
+  float GetMCT(){ return MCT; };
+  float GetMCTImbalanced(){ return MCTImbalanced; };
   TLorentzVector GetLV(){ return lv; };
   bool HasNoVetoElec(){ return hasNoVetoElec; };
   bool HasNoVetoMu(){ return hasNoVetoMu; };
@@ -128,6 +134,8 @@ private:
   int chargeSum;
   float MT2;
   float MT2Imbalanced;
+  float MCT;
+  float MCTImbalanced;
   bool hasNoVetoElec;
   bool hasNoVetoMu;
   bool signalMuTau;
