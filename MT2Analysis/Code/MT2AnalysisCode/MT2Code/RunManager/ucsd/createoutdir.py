@@ -47,4 +47,5 @@ if __name__ == "__main__":
     if not os.path.isdir( ntupledir ):
         os.mkdir( ntupledir )
 
+    ntupledir = "srm://bsrm-1.t2.ucsd.edu:8443/srm/v2/server?SFN=" + ntupledir
     print ntupledir

@@ -14,7 +14,7 @@ if __name__ == "__main__":
     parser.add_option("-u", "--username", dest="username", help="the username in ucsd se")
     parser.add_option("-c", "--check", dest="check", help="check if the file exists in /hadoop/" , action="store_true" ,  default=False)
     parser.add_option("-j", "--jobname", dest="jobname")
-    
+    parser.add_option("-x", "--xrootd" , dest="xrootd" , action="store_true" ,  default=False)
 
     parser.add_option("-p", "--infile", dest="infile", help="the name of the input file" )
     parser.add_option("-n", "--nfiles", dest="nfiles", help="number of files to return" , type="int")
@@ -24,6 +24,8 @@ if __name__ == "__main__":
 
     if options.ds :
         hadoopbasename = "/hadoop/cms"
+        xrootdbasename = "root://xrootd.t2.ucsd.edu/"
+        
 
         url = "https://cmsweb.cern.ch/dbs/prod/phys03/DBSWriter"
         api = DbsApi(url) 
@@ -69,6 +71,8 @@ if __name__ == "__main__":
 
         outfile = open( outfilename , 'w')
         for file in files:
+            if options.xrootd :
+                file = file.replace( hadoopbasename , xrootdbasename )
             print >> outfile, file
     else:
         lines = None

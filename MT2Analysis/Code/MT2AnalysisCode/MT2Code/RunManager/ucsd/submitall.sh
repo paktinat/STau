@@ -80,7 +80,7 @@ while read p; do
        fi
 
        echo -e "\t Producing the list of files"
-       python getlistoffiles.py -u $usernametoreplace -d $datasetname -c -j $jobname
+       python getlistoffiles.py -u $usernametoreplace -d $datasetname -c -x -j $jobname
 
        if [[ $2 = "submit" ]]; then
 	   condor_submit condor_$jobname

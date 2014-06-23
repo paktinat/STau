@@ -18,5 +18,6 @@ should_transfer_files = IF_NEEDED
 +DESIRED_Sites="UCSD"
 +Owner = undefined 
 x509userproxy=PROXYFILENAME
+use_x509userproxy = True
                                 
 queue NJOBS

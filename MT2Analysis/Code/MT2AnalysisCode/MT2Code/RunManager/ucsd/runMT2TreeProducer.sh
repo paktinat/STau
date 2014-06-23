@@ -58,14 +58,51 @@ cd RunManager/ucsd/
 ListOfFilesToRunOn=`python getlistoffiles.py -n $nfiles -i $iteration -p $WORKINGDIR/Files`
 
 cd ../..
+
+
+otherarguments=""
+
+if [ "$sampletype" = "data" ]; then
+    otherarguments=" -j Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt "
+elif [ "$sampletype" = "scan" ]; then
+    otherarguments=" -s MC2012 -p Cert_8TeV_13Jul_06Aug_24Aug_11Dec_ReReco_and_Rest_PromptReco_Collisions12_PU_60bins_true.root -P MC2012PU_S10_60bins.root -b BEfficiencies_ge2jets_CSVM_HT750andMET30_or_HT450andMET200_MinDPhi4_newTTbar.root -u TauEfficiencies_LooseIsoLooseEleTightMuo_fromTauPOGplots.root -f "
+elif [ "$sampletype" = "mc" ]; then
+    otherarguments=" -s MC2012 -p Cert_8TeV_13Jul_06Aug_24Aug_11Dec_ReReco_and_Rest_PromptReco_Collisions12_PU_60bins_true.root -P MC2012PU_S10_60bins.root -b BEfficiencies_ge2jets_CSVM_HT750andMET30_or_HT450andMET200_MinDPhi4_newTTbar.root -u TauEfficiencies_LooseIsoLooseEleTightMuo_fromTauPOGplots.root "
+fi
+
+echo $otherarguments
+
+
+set -vx
+
 if [ "$debugmode" == "1" ]; then
-    echo "./RunMT2Analyzer -d . -i $processid -t $sampletype -m $cutset  -e -E -c -o MT2tree_$iteration.root $ListOfFilesToRunOn"
-    echo "mkdir $outputdir"
-    echo "cp ./MT2tree_$iteration.root $outputdir"
-    echo "rm -rf ./MT2tree_$iteration.root"
+
+    COUNTER=0
+    for file in $ListOfFilesToRunOn
+      do
+      echo ./RunMT2Analyzer -d . -i $processid -t $sampletype -m $cutset $otherarguments  -e -E -c -o MT2tree_$COUNTER.root "$file"
+      let COUNTER=COUNTER+1
+    done
+    
+    echo hadd ./MT2tree_$iteration.root MT2tree_*.root
+  
+    echo lcg-cp -v -D srmv2 file://`pwd`/MT2tree_$iteration.root $outputdir/MT2tree_$iteration.root
+    echo rm -rf ./MT2tree_$iteration.root
 else
-    ./RunMT2Analyzer -d . -i $processid -t $sampletype -m $cutset  -e -E -c -o MT2tree_$iteration.root $ListOfFilesToRunOn
-    mkdir $outputdir
-    cp ./MT2tree_$iteration.root $outputdir
-    rm -rf ./MT2tree_$iteration.root
+    COUNTER=0
+    for file in $ListOfFilesToRunOn
+      do
+      while [ ! -f ./IN.root ]
+	do
+	xrdcp "$file" ./IN.root
+      done
+      ./RunMT2Analyzer -d . -i $processid -t $sampletype -m $cutset $otherarguments  -e -E -c -o MT2treeS_$COUNTER.root ./IN.root
+      rm -rf ./IN.root
+      let COUNTER=COUNTER+1
+    done
+    
+    hadd ./MT2tree_$iteration.root MT2treeS_*.root
+    
+    lcg-cp -v -D srmv2 file://`pwd`/MT2tree_$iteration.root $outputdir/MT2tree_$iteration.root
+    rm -rf ./MT2tree*.root
 fi
