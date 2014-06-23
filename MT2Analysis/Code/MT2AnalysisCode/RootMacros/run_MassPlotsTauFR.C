@@ -1,7 +1,7 @@
 {
    TString outputdir = "../MassPlots/";
    TString samples   = "./samples/samplesMineTauFakeRate.dat";
-    //    TString samples   = "./samples/samplesMineTest.dat"; 
+   TString samples   = "./samples/samplesMineTest.dat"; 
   int verbose =3;
 
   gSystem->CompileMacro("../MT2Code/src/MassPlotter.cc", "kf");//"k", "f"
@@ -73,7 +73,7 @@
   //tA->makeSmallCopy(200000000,100);
   //tA->QCD();
   //tA->SpecialMakePlot(10000000000);
-  tA->TauFakeRate(1000, cuts,trigger);
+  tA->TauFakeRate(10000000, cuts,trigger);
 
 
 }

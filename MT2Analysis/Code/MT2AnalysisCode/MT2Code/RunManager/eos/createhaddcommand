@@ -1,5 +1,7 @@
 rm -rf haddcommand
 #echo "hadd -f /tmp/TuaFR_RunD.root" > haddcommand
 echo > haddcommand
-eos ls /eos/cms/store/user/hbakhshi/JetHT/CostemizedV1_02_JetHT-Run2012D-22Jan2013-v1-AOD/67f7f9e65cf53f9b12fada994b056063_MT2Trees2 | awk '{print "lcg-cp -v -D srmv2 \"srm://srm-eoscms.cern.ch:8443/srm/v2/server?SFN=/eos/cms/store/user/hbakhshi/JetHT/CostemizedV1_02_JetHT-Run2012D-22Jan2013-v1-AOD/67f7f9e65cf53f9b12fada994b056063_MT2Trees2/" $1 "\" \"srm://se1.particles.ipm.ac.ir:8446/srm/managerv2?SFN=/dpm/particles.ipm.ac.ir/home/cms/store/user/hbakhshi/JetHT/CostemizedV1_02_JetHT-Run2012D-22Jan2013-v1-AOD/67f7f9e65cf53f9b12fada994b056063_MT2Trees2/" $1 "\"" }'  >> haddcommand
+eos ls /eos/cms/store/user/hbakhshi/JetHT/CostemizedV1_02_JetHT-Run2012D-22Jan2013-v1-AOD/67f7f9e65cf53f9b12fada994b056063_MT2Trees3 | awk '{print "lcg-cp -v -D srmv2 \"srm://srm-eoscms.cern.ch:8443/srm/v2/server?SFN=/eos/cms/store/user/hbakhshi/JetHT/CostemizedV1_02_JetHT-Run2012D-22Jan2013-v1-AOD/67f7f9e65cf53f9b12fada994b056063_MT2Trees3/" $1 "\" \"srm://se1.particles.ipm.ac.ir:8446/srm/managerv2?SFN=/dpm/particles.ipm.ac.ir/home/cms/store/user/hbakhshi/JetHT/CostemizedV1_02_JetHT-Run2012D-22Jan2013-v1-AOD/67f7f9e65cf53f9b12fada994b056063_MT2Trees4/" $1 "\"" }'  >> haddcommand
+
+#eos ls /eos/cms/store/user/hbakhshi/JetHT/CostemizedV1_02_JetHT-Run2012D-22Jan2013-v1-AOD/67f7f9e65cf53f9b12fada994b056063_MT2Trees3 | awk '{print "root://eoscms//eos/cms/store/user/hbakhshi/JetHT/CostemizedV1_02_JetHT-Run2012D-22Jan2013-v1-AOD/67f7f9e65cf53f9b12fada994b056063_MT2Trees3/" $1 }' | tr '\n' ' ' >> haddcommand
 echo >> haddcommand

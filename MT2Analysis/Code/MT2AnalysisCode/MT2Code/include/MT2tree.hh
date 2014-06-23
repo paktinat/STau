@@ -24,7 +24,7 @@
 #define GETDATALOCALPATH(arg) (std::string( DATALOCAPATH  ) + std::string(#arg)).c_str()
 #endif
 
-enum {m_jetSize = 25, m_genjetSize = 20,  m_tauSize = 8, m_eleSize = 8, m_muoSize = 8, m_phoSize = 8, m_genleptSize=20, m_genparticleSize=30, m_hemiSize=8};
+enum {m_jetSize = 25, m_genjetSize = 20,  m_tauSize = 30, m_eleSize = 8, m_muoSize = 8, m_phoSize = 8, m_genleptSize=20, m_genparticleSize=30, m_hemiSize=8};
 
 
 struct PtSumSort{

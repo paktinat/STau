@@ -1,40 +1,19 @@
 ############################################################################################
 GENERAL
-Path           ///dataLOCAL/paktinat/Projects/MT2/MT2_TauFR_V02-03-02/MT2Analysis/Code/MT2AnalysisCode/MT2Code/
-________________________________________________________________________________________
+Path           root://eoscms//eos/cms/store/user/hbakhshi/JetHT/CostemizedV1_02_JetHT-Run2012D-22Jan2013-v1-AOD/67f7f9e65cf53f9b12fada994b056063_MT2Trees3/
+_______________________________________________________________________________________
 # list of samples
 #
 ## -------- SMS --------
+##
      
 SAMPLE
 Name	TStau
 SName	SUSY
 ShapeName	Signal
-File	MassTree.root
+File	MT2tree_109.root
 Xsection	500 pb
 Kfact	1.
 Lumi	1.0
-Type	susy
+Type	data
 Color	410
-
-SAMPLE
-Name		QCD_HT_1000ToInf
-SName		QCD
-ShapeName	QCD
-File	MassTree.root
-Xsection  	1000 pb
-Kfact           1.
-Lumi            1.0
-Type		mc
-Color		401
-
-SAMPLE
-Name		Run2012D_DoubleMuParked
-SName		DoubleMu-Data
-ShapeName	Data
-File	MassTree.root
-Xsection  	1.
-Kfact           1.	
-Lumi            1.
-Type            data
-Color		1

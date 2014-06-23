@@ -10,7 +10,7 @@ input=$@
 
 cd ~/work/TauFR/CMSSW_5_3_14_patch1/src/
 eval `scramv1 runtime -sh`
-cd ~/work/TauFR/STau/MT2Analysis/Code/MT2AnalysisCode/MT2Code/
+cd STau/MT2Analysis/Code/MT2AnalysisCode/MT2Code/
 
 eos1="/afs/cern.ch/project/eos/installation/0.3.15/bin/eos.select"
 
