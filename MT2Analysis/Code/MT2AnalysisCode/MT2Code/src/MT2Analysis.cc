@@ -2027,6 +2027,8 @@ void MT2Analysis::ReadCuts(const char* SetofCuts="MT2_cuts/default.dat"){
 		cout << "  JPt_hardest_min             " << fCut_JPt_hardest_min            <<endl;
 		cout << "  JPt_second_min              " << fCut_JPt_second_min             <<endl;
 		cout << "  PtHat_max                   " << fCut_PtHat_max                  <<endl;
+		cout << "  NLeptons_min                " << fCut_NLeptons_min               <<endl;
+		cout << "  NJets40_min                 " << fCut_NJets40_min                <<endl;
 		cout << "  Run_min                     " << fCut_Run_min                    <<endl;
 		cout << "  Run_max                     " << fCut_Run_max                    <<endl;
 		cout << "  JESUpDown                   " << fJESUpDown                      <<endl;
