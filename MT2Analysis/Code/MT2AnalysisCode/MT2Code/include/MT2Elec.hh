@@ -440,6 +440,7 @@ Float_t GetEleTrgSFelemu(){
   Int_t IDVetoEMU;
   Int_t IDSelEMU;
 
+  Int_t IDQCDETau;
   Int_t IDVetoETau;
   Int_t IDSelETau;
  

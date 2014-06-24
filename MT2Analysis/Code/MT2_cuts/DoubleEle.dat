@@ -1,0 +1,25 @@
+##################################################
+## Set of cuts for MultiplicityAnalysis:        ##
+#                                                #
+# ------------ Set Name -------------------------#
+SetName                                         MC
+# ------------- Cuts ----------------------------#
+PFMET_min                                        0
+HT_min                                           0
+JPt_hardest_min                                  0
+JPt_second_min                                   0
+PtHat_max                                 9999999.  
+NJets40_min                                      0
+NLeptons_min                                     2
+JESUpDown                                        0
+# ------------ Trigger --------------------------#
+HLT_required HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v15
+HLT_required HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v16
+HLT_required HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v17
+HLT_required HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v18
+HLT_required HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v19
+# ----------- Run -------------------------------#
+Run_min                                          0
+Run_max                                    9999999
+##################################################
+
