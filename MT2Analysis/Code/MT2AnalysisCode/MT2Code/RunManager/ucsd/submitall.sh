@@ -56,7 +56,7 @@ while read p; do
 
        usernametoreplace=${splitted[2]}
        commitid=${splitted[8]}
-       outdir=$(python createoutdir.py -d $datasetname -u $usernametoreplace -a $commitid)
+       outdir=$(python createoutdir.py -d $datasetname -a $commitid)
 
      
        arguments="$arguments $outdir"
@@ -80,7 +80,7 @@ while read p; do
        fi
 
        echo -e "\t Producing the list of files"
-       python getlistoffiles.py -u $usernametoreplace -d $datasetname -c -j $jobname
+       python getlistoffiles.py -u $usernametoreplace -d $datasetname -c -x -j $jobname
 
        if [[ $2 = "submit" ]]; then
 	   condor_submit condor_$jobname

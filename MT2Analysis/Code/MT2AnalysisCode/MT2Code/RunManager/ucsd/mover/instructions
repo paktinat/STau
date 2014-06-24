@@ -22,3 +22,14 @@ chmod a+x move.sh
 
 
 #wait for the download to complete
+
+#To move the MT2tree's produced at UCSD to IPM, you need to make the list of the MT2trees. For example:
+ls /hadoop/cms/store/user/paktinat/SMS-TChipChimStauSnu_mChi-120to500_mLSP-1to480_x-050_TuneZ2star_8TeV-pythia6-tauolapp/V03-09-01_SMS-TChipChimStauSnu_mChi-120to500_mLSP-1to480_x-050_8TeV-tauolapp/793ad2798b4297df0a6d87efecfc8bd6/MT2tree_* > SMS
+
+#Then you can run the following
+./moveToIPM.sh SMS
+
+#wait for the download to complete ;)
+
+
+
