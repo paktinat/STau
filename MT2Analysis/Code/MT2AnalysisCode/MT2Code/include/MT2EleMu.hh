@@ -16,12 +16,14 @@ public:
     ele0Ind           = -1;
     charge            = -10;
     MT2               = -1.;
+    MCT               =-1.;
     DPhi              =-9.;
     Pvisible_dot_Zeta =-9.99;
     P_met_dot_Zeta   =-9.99;
     PZetaImbalanced  =-9.99;
 
-    MT2Imbalanced     = -1.; 
+    MT2Imbalanced     = -1.;
+    MCTImbalanced     = -1.;
     HasNoVetomuoForEleMu=true;
     HasNoVetoElecForEleMu=true;
     isSignalEleMu = false;
@@ -40,16 +42,18 @@ public:
   Int_t    mu0Ind;
   Int_t    ele0Ind;
   Int_t    charge;
+  Int_t  Isolated;
   Float_t  MT2;
+  Float_t  MCT;
   Float_t  DPhi;
   Float_t  Pvisible_dot_Zeta;
   Float_t  P_met_dot_Zeta ;
   Float_t  PZetaImbalanced ;
   Float_t  MT2Imbalanced ;
+  Float_t  MCTImbalanced;
   bool     HasNoVetomuoForEleMu;
   bool     HasNoVetoElecForEleMu;
   bool	   isSignalEleMu;
-  Int_t  Isolated; 
   Float_t DiLepPtRatio;
   Float_t PlusLepZAngle;
   Float_t PlusLepZBeamAngle;
