@@ -243,7 +243,7 @@ private:
 	bool IsGoodMT2ElectronSelIDforEleMu(const int index);
 
 	bool IsGoodMT2ElectronVetoIDforEleTau(const int index);
-	bool IsGoodMT2ElectronSelIDforEleTau(const int index);
+  bool IsGoodMT2ElectronSelIDforEleTau(const int index , bool reverseiso = false);
 
         bool IsGoodMT2ElectronVetoIDforMuTau(const int index);
         bool IsGoodMT2ElectronVetoIDforTauTau(const int index);

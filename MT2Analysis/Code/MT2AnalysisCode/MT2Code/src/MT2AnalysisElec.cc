@@ -40,6 +40,7 @@ void MT2Analysis::FillMT2Elecs(){
 
 		fMT2tree->ele[i].IDVetoETau   = IsGoodMT2ElectronVetoIDforEleTau(fElecs[i]);
 		fMT2tree->ele[i].IDSelETau    = IsGoodMT2ElectronSelIDforEleTau(fElecs[i]);
+		fMT2tree->ele[i].IDQCDETau    = IsGoodMT2ElectronSelIDforEleTau(fElecs[i] , true);
 
 		fMT2tree->ele[i].IDVetoMuTau   = IsGoodMT2ElectronVetoIDforMuTau(fElecs[i]);
 		fMT2tree->ele[i].IDVetoTauTau   = IsGoodMT2ElectronVetoIDforTauTau(fElecs[i]);
@@ -337,7 +338,7 @@ bool MT2Analysis::IsGoodMT2ElectronVetoIDforEleTau(const int index){
 
 
 // Electron Selector for Electron-Tau Channel
-bool MT2Analysis::IsGoodMT2ElectronSelIDforEleTau(const int index){
+bool MT2Analysis::IsGoodMT2ElectronSelIDforEleTau(const int index , bool reverseiso){
   	if(!(fabs(fTR->ElEta[index]) < 2.1) )  
 	  return false;
 
@@ -358,9 +359,14 @@ bool MT2Analysis::IsGoodMT2ElectronSelIDforEleTau(const int index){
 
 	// Iso 
 	float pfIso = ElePFIso04(index);
-	if ( !(pfIso  < 0.10 )) 
-	  return false;   
 
+	if( !reverseiso ){
+	  if ( !(pfIso  < 0.10 )) 
+	    return false; 
+	}else{
+	  if ( !(pfIso  > 0.10 )) 
+	    return false; 
+	}
         //delta R matched with a cone size 0.5 to the correspoding trigger objects.
 
 	return true;

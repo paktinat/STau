@@ -20,6 +20,26 @@ public:
     signalEleTau = false;
     qcdEleTau = false;
     DPhi = -9.;
+
+    MCT = -1.;
+    MCTImbalanced = -1.;
+
+    pVisibleZeta = -9.99;
+    pZeta        = -9.99;
+    pZetaImbalanced = -9.99;
+    tauTrgSF  = -.99;
+    eleTrgSF   = -.99;
+    eleIdIsoSF    = -.99;
+    tauWjetsSF= -.99;
+    tauEnergySF= -.99;
+    Isolated  = -2.0;//IsoEle and IsoTau 1, IsoEle and NonIsoTau, 0 and NonIsoEle and NonIsoTau -1
+    diLepPtRatio= -2.0;
+    plusLepZAngle= -4.0;
+    plusLepZBeamAngle= -4.0;
+    minMetLepDPhi= -4.0;
+
+    e2tauhad_fr_corr = 1.0;
+
   };
 
   //Setters
@@ -88,8 +108,31 @@ private:
   bool signalEleTau;
   bool qcdEleTau;
   float DPhi;
+
+public:
+
+  float MCT;
+  float MCTImbalanced;
+
+  float pZeta;
+  float pZetaImbalanced;
+  float pVisibleZeta; 
+  float tauTrgSF;
+  float eleTrgSF;
+  float eleIdIsoSF;
+  float tauWjetsSF;
+  float tauEnergySF;
+  float e2tauhad_fr_corr;
+  
+  int Isolated;
+
+  float diLepPtRatio;
+  float plusLepZAngle;
+  float plusLepZBeamAngle;
+  float minMetLepDPhi;
+
   ClassDef(MT2EleTau, 1)
 
-    };
+};
 #endif /*MT2EleTau_hh*/
                          

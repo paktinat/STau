@@ -822,6 +822,8 @@ public:
   std::pair<int,int> GetTauMuFakeRate();
   std::pair<int,int> GetTauMuQCD();
   std::pair<int,int> GetTauEG();
+  std::pair<int,int> GetTauEGFakeRate();
+  std::pair<int,int> GetTauEGQCD();
   //double corrMETPhi;
   double correctMETPhi(){
 	double ret = -1000.;
