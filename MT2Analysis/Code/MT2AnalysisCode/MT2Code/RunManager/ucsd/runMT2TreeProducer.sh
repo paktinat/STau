@@ -92,12 +92,29 @@ else
     COUNTER=0
     for file in $ListOfFilesToRunOn
       do
+      
+      COUNTER2=0
       while [ ! -f ./IN.root ]
 	do
-	xrdcp "$file" ./IN.root
+	if [ $COUNTER2 -gt 20 ]; then
+	    break
+	fi
+
+	if [[ ${file:0:1} == "/" ]]; then
+	    cp "$file" ./IN.root
+	else
+	    xrdcp "$file" ./IN.root
+	fi
+	let COUNTER2=COUNTER2+1
+	sleep 3
       done
-      ./RunMT2Analyzer -d . -i $processid -t $sampletype -m $cutset $otherarguments  -e -E -c -o MT2treeS_$COUNTER.root ./IN.root
-      rm -rf ./IN.root
+
+      if [ ! -f ./IN.root ]; then
+	  echo "The $file can't be copied after 20 tries and skipped"
+      else
+	  echo ./RunMT2Analyzer -d . -i $processid -t $sampletype -m $cutset $otherarguments  -e -E -c -o MT2treeS_$COUNTER.root ./IN.root
+	  rm -rf ./IN.root
+      fi
       let COUNTER=COUNTER+1
     done
     
