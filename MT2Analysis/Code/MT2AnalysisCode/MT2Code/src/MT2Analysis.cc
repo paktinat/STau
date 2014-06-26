@@ -7,7 +7,8 @@
 
 using namespace std;
 
-MT2Analysis::MT2Analysis(TreeReader *tr) : UserAnalysisBase(tr){
+MT2Analysis::MT2Analysis(TreeReader *tr) : UserAnalysisBase(tr),
+					   METCovMatrixCalculator(tr){
 	Util::SetStyle();	
 	fCut_PFMET_min                      = 0;
 	fCut_HT_min                         = 0;
@@ -402,6 +403,15 @@ bool MT2Analysis::FillMT2TreeBasics(){
 	if(fElecs.size()  > 8 ) {cout << "ERROR: fElecs.size()  > 8: run " << fTR->Run << " LS " << fTR->LumiSection << " Event " << fTR->Event << " skip event" << endl; return false;}
 	if(fMuons.size()  > 8 ) {cout << "ERROR: fMuons.size()  > 8: run " << fTR->Run << " LS " << fTR->LumiSection << " Event " << fTR->Event << " skip event" << endl; return false;}
 	if(fPhotons.size()> 8 ) {cout << "ERROR: fPhotons.size()> 8: run " << fTR->Run << " LS " << fTR->LumiSection << " Event " << fTR->Event << " skip event" << endl; return false;}
+
+	  double a, b , c, d;
+	  METCovMatrixCalculator.getSignifMatrix(fElecs, fMuons, fPhotons , fJets);
+	  METCovMatrixCalculator.compareSignificances(a , b , c, d);
+	  cout << 
+	    "MET Cov :" << a << "->" << b  << 
+	    "----MET :" << fTR->PFMET << "->" << c <<  
+	    "--METPHI:" << fTR->PFMETphi << "->" << d  << endl;
+	  
 
 
 	// ---------------------------------------------------------------
@@ -1677,6 +1687,7 @@ void MT2Analysis::InitializeEvent(){
 void MT2Analysis::GetLeptonJetIndices(){
 	fIsNANObj = false; 
 
+	fJets.clear();  
 	fElecs.clear();
 	fMuons.clear();
 	fTaus.clear();
@@ -1733,6 +1744,7 @@ void MT2Analysis::GetLeptonJetIndices(){
 		}
 		if (! jGood) continue; 
 
+		fJets.push_back(ij);
 		Jets.push_back(*jet); delete jet;
 	}
 	

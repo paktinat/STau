@@ -27,7 +27,7 @@ PYTHONLIBName = $(shell scram tool tag python LIB)
 INCLUDES       = -I./include -I../TESCO/include -I${CMSSW_RELEASE_BASE}/src/CondFormats/JetMETObjects/interface -I${CMSSW_RELEASE_BASE}/src/ -I${ZLIBINC} -I${BOOSTINC} -I${ROOFITINC} -I${CLHEPINC} -I${PYTHONINC}
 
 CXX            = g++
-CXXFLAGS       = -fPIC -fno-var-tracking -Wno-deprecated -D_GNU_SOURCE -O2 -D'GETDATALOCALPATH(arg)=(std::string("$(STauBaseDir)/") + std::string(\#arg)).c_str()'  -std=c++0x $(INCLUDES) 
+CXXFLAGS       = -fPIC -fno-var-tracking -Wno-deprecated -D_GNU_SOURCE -O2 -D'GETDATALOCALPATH(arg)=(std::string("$(STauBaseDir)/") + std::string(\#arg)).c_str()'  -std=c++0x $(INCLUDES) -g
 LD             = g++
 LDFLAGS        = 
 #SOFLAGS        = -O --no_exceptions  -dynamiclib -flat_namespace -undefined suppress
@@ -41,58 +41,19 @@ CMSSW_BASE_VERSION = $(filter CMSSW%, $(subst _patch, , $(CMSSW_VERSION) ))
 
 NGLIBS         = $(ROOTGLIBS) -lMinuit -lMinuit2 -lTreePlayer -lMathMore -lGenVector
 GLIBS          = $(filter-out -lNew, $(NGLIBS)) 
-GLIBS         += -L$(CMSSW_RELEASE_BASE)/lib/$(SCRAM_ARCH) -L$(CMS_PATH)/slc5_amd64_gcc462/cms/cmssw/$(CMSSW_BASE_VERSION)/lib/$(SCRAM_ARCH) -L$(ROOFITLIB) -lFWCoreFWLite -lFWCoreUtilities -lDataFormatsCommon -lDataFormatsFWLite -lCondFormatsJetMETObjects -lRooFit -lRooFitCore -L$(ZLIBLIB) -lz -L$(CLHEPLIB) -l$(CLHEPLIBName) -L$(PYTHONLIB) -l$(PYTHONLIBName) -L$(BOOSTLIB) $(BOOSTLIBName)
+GLIBS         += -L$(CMSSW_RELEASE_BASE)/lib/$(SCRAM_ARCH) -L$(CMS_PATH)/slc5_amd64_gcc462/cms/cmssw/$(CMSSW_BASE_VERSION)/lib/$(SCRAM_ARCH) -L$(ROOFITLIB) -lFWCoreParameterSet -lDataFormatsProvenance -lFWCorePythonParameterSet -lFWCoreUtilities -lFWCoreMessageLogger -lRecoMETMETAlgorithms -lFWCoreFWLite -lFWCoreUtilities -lDataFormatsCommon -lDataFormatsFWLite -lCondFormatsJetMETObjects -lRooFit -lRooFitCore -L$(ZLIBLIB) -lz -L$(CLHEPLIB) -l$(CLHEPLIBName) -L$(PYTHONLIB) -l$(PYTHONLIBName) -L$(BOOSTLIB) $(BOOSTLIBName)
 
 BUILD_DIR = build
 SRCS           = ../TESCO/src/base/TreeClassBase.cc ../TESCO/src/base/TreeReader.cc ../TESCO/src/base/TreeAnalyzerBase.cc ../TESCO/src/base/UserAnalysisBase.cc \
                  src/MT2tree.cc src/MT2treeDoubleMu.cc src/MT2treeDoubleEle.cc src/MT2treeEleMu.cc \
 		 src/MT2treeTauMu.cc src/MT2treeTauEG.cc src/MT2treeDoubleTau.cc  \
-		 src/MT2Analysis.cc src/MT2AnalysisElec.cc src/MT2AnalysisMuon.cc src/MT2AnalysisTau.cc \
+		 src/MT2Analysis.cc src/MT2AnalysisElec.cc src/MT2AnalysisMuon.cc src/MT2AnalysisTau.cc  src/METCovMatrix.cc \
                  ../TESCO/src/helper/TMctLib.cc ../TESCO/src/helper/mctlib.cc ../TESCO/src/helper/OnTheFlyCorrections.cc \
                  ../TESCO/src/helper/Davismt2.cc   ../TESCO/src/helper/TopSearch.cc ../TESCO/src/helper/Hemisphere.cc  src/MT2Analyzer.cc \
                  src/MassPlotter.cc src/MassPlotterEleTau.cc ../TESCO/src/helper/PUWeight.C \
 		 src/QuickAnalysis.cc src/QuickAnalyzer.cc  src/MT2Shapes.cc \
-                 ../TESCO/src/helper/Lumi3DReWeighting_standalone.cc src/helper/EventFilterFromListStandAlone.cc
-
-CMSSWREALEASEBASE = $(CMSSW_RELEASE_BASE)
-VPATH =	$(CMSSWREALEASEBASE)/src/FWCore/Python/src/:\
-	$(CMSSWREALEASEBASE)/src/FWCore/ParameterSet/src/:\
-	$(CMSSWREALEASEBASE)/src/DataFormats/Provenance/src/:\
-	$(CMSSWREALEASEBASE)/src/FWCore/PythonParameterSet/src/:\
-	$(CMSSWREALEASEBASE)/src/FWCore/Utilities/src/:\
-	$(CMSSWREALEASEBASE)/src/FWCore/MessageLogger/src/
-
-SRCSVFitObjs	= src/svFitAuxFunctions.cc src/NSVfitStandaloneAlgorithm.cc src/LikelihoodFunctions.cc src/NSVfitStandaloneLikelihood.cc src/generalAuxFunctions.cc src/MarkovChainIntegrator.cc\
-	ParameterSet.o \
-	Entry.o \
-	FileInPath.o \
-	ParameterSetEntry.o \
-	VParameterSetEntry.o \
-	InputTag.o \
-	ESInputTag.o \
-	Exception.o \
-	EDMException.o \
-	types.o \
-	MessageSender.o \
-	MessageLogger.o \
-	MessageDrop.o \
-	ELseverityLevel.o \
-	MessageLoggerQ.o \
-	AbstractMLscribe.o \
-	ELstring.o \
-	ErrorObj.o \
-	Hash.o \
-	Digest.o \
-	Parse.o \
-	ELextendedID.o \
-	ProcessDesc.o \
-	PythonProcessDesc.o \
-	PythonParameterSet.o \
-	PythonManager.o \
-	PythonWrapper.o \
-	LuminosityBlockRange.o \
-	initializeModule.o \
-	EventRange.o
+                 ../TESCO/src/helper/Lumi3DReWeighting_standalone.cc src/helper/EventFilterFromListStandAlone.cc \
+	src/svFitAuxFunctions.cc src/NSVfitStandaloneAlgorithm.cc src/LikelihoodFunctions.cc src/NSVfitStandaloneLikelihood.cc src/generalAuxFunctions.cc src/MarkovChainIntegrator.cc  
 
 # We want dictionaries only for classes that have _linkdef.h files                                                               
 DICTOBS =  $(patsubst %_linkdef.hh, %.o, \
@@ -110,16 +71,9 @@ SHARED=shlib/libDiLeptonAnalysis.so
 .PHONY : clean purge all depend PhysQC
 
 # Rules ====================================
-all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared RunEleTauAnalyzer shlib/libStandAloneSVFit.so
+all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared RunEleTauAnalyzer 
 
-SVFitObjs = $(patsubst %.C, %.o,$(SRCSVFitObjs:%.cc=%.o))
-# ThreadSafeIndexedRegistry.o : $(CMSSWREALEASEBASE)/src/FWCore/Utilities/interface/ThreadSafeIndexedRegistry.icc
-# 	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^
-SVFitLib : shlib/libStandAloneSVFit.so
-shlib/libStandAloneSVFit.so : $(SVFitObjs)
-	$(LD) $(LDFLAGS) $(GLIBS) $(SOFLAGS) $(SVFitObjs) -o shlib/libStandAloneSVFit.so
-
-RunStandAloneSVFit : src/exe/nsvfitStandalone.cc shlib/libStandAloneSVFit.so
+RunStandAloneSVFit : src/exe/nsvfitStandalone.cc shlib/libDiLeptonAnalysis.so
 	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -o $@ $^	
 
 shared: $(SHARED)
@@ -163,7 +117,6 @@ clean:
 	$(RM) MakeMassPlots
 	$(RM) RunEleTauAnalyzer
 	$(RM) $(SVFitObjs)
-	$(RM) shlib/libStandAloneSVFit.so
 	$(RM) shlib/libDiLeptonAnalysis.so
 purge:
 	$(RM) $(OBJS)

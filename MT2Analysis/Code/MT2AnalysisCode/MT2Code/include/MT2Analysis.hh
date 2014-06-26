@@ -25,6 +25,8 @@
 #include "TH2F.h"
 #include "TTree.h"
 
+#include "METCovMatrix.h"
+
 // #include </shome/leo/Installations/LHAPDF/lhapdf-5.8.4/include/LHAPDF/LHAPDF.h>
 
 
@@ -61,6 +63,8 @@ public:
   void FillMT2Elecs();
   void FillMT2Muons();
   void FillMT2Taus();
+
+  METCovMatrix METCovMatrixCalculator;
   //
 
 	// redo JEC
@@ -144,8 +148,9 @@ private:
 
 	// vectors for jets and lepton indices
 	vector<int> fElecs;
+  vector<int> fJets;
 	vector<int> fPhotons;
-	vector<int> fTaus;
+	vector<int> fTaus;  
 	vector<int> fMuons;
 	vector<bool>fPhotonJetOverlapRemoved;
 	// Jets
