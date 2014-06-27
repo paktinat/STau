@@ -126,6 +126,7 @@ void MT2Analysis::Begin(const char* filename){
 	}
 	// book tree
 	fMT2tree = new MT2tree();
+	METCovMatrixCalculatorTree = new METCovMatrix(fMT2tree);
 	BookTree();
 	
 	// define which triggers to fill
@@ -404,20 +405,29 @@ bool MT2Analysis::FillMT2TreeBasics(){
 	if(fMuons.size()  > 8 ) {cout << "ERROR: fMuons.size()  > 8: run " << fTR->Run << " LS " << fTR->LumiSection << " Event " << fTR->Event << " skip event" << endl; return false;}
 	if(fPhotons.size()> 8 ) {cout << "ERROR: fPhotons.size()> 8: run " << fTR->Run << " LS " << fTR->LumiSection << " Event " << fTR->Event << " skip event" << endl; return false;}
 
-	  double a, b , c, d;
-	  METCovMatrixCalculator.getSignifMatrix(fElecs, fMuons, fPhotons , fJets);
-	  METCovMatrixCalculator.compareSignificances(a , b , c, d);
+ 
+	double a, b , c, d;
+	METCovMatrixCalculator.getSignifMatrix(fElecs, fMuons, fPhotons , fJets , fTaus);
+	METCovMatrixCalculator.compareSignificances(a , b , c, d);
+
+	TVector2 origin1( fTR->PFMET*cos(fTR->PFMETphi) , fTR->PFMET*sin(fTR->PFMETphi) );
+	TVector2 calculated1( c*cos(d) , c*sin(d) );
+
+	TVector2 diff1 = origin1 - calculated1;
+
+	if( diff1.Mod()/origin1.Mod() < 0.2){
 	  cout << 
 	    "MET Cov :" << a << "->" << b  << 
 	    "----MET :" << fTR->PFMET << "->" << c <<  
-	    "--METPHI:" << fTR->PFMETphi << "->" << d  << endl;
-	  
+	    "--METPHI:" << fTR->PFMETphi << "->" << d  << 
+	    "--diff : " << diff1.Mod() << "---" << diff1.Mod()/origin1.Mod() << endl;
+	}
 
 
 	// ---------------------------------------------------------------
 	// Fill jets 4-momenta & ID's 
 	for(int i=0; i<Jets.size(); ++i) {
-		fMT2tree->jet[i] = (MT2Jet) Jets[i];
+	  fMT2tree->jet[i] = (MT2Jet) Jets[i];
 	}
 	// ---------------------------------------------------------------
 	// Set NJets, NElecs, NMuons
@@ -1084,6 +1094,51 @@ bool MT2Analysis::FillMT2TreeBasics(){
 
 	// ----------------------------------------------------------------
 	// that was it
+
+	vector<int> fElecs1;
+	for(int i=0; i<fMT2tree->NEles ; i++)
+	  if( fMT2tree->ele[i].IDSelETau )
+	    fElecs1.push_back( i );
+
+	vector<int> fMuons1;
+	for(int i=0 ; i<fMT2tree->NMuons ; i++)
+	  if( fMT2tree->muo[i].PassMu0_TauMu )
+	    fMuons1.push_back( i );
+
+	vector<int> fPhotons1;
+	for(int i=0; i<fMT2tree->NPhotons ; i++)
+	  if( fMT2tree->photon[i].isTightID )
+	    fPhotons1.push_back( i);
+
+	vector<int> fJets1;
+	for( int i=0; i< fMT2tree->NJets ; i++)
+	  if( fMT2tree->jet[i].isPFIDTight )
+	    fJets1.push_back( i );
+	
+	vector<int> fTaus1;
+	for(int i=0 ; i< fMT2tree->NTaus ; i++)
+	  if( fMT2tree->tau[i].PassTau_ElTau )
+	    fTaus1.push_back(i);
+
+	METCovMatrixCalculatorTree->getSignifMatrix(fElecs1, fMuons1, fPhotons1 , fJets1 , fTaus1);
+
+	double a1, b1, c1 , d1;
+	METCovMatrixCalculatorTree->compareSignificances(a1 , b1 , c1, d1);
+
+	TVector2 origin( fTR->PFMET*cos(fTR->PFMETphi) , fTR->PFMET*sin(fTR->PFMETphi) );
+	TVector2 calculated( c1*cos(d1) , c1*sin(d1) );
+
+	TVector2 diff = origin - calculated;
+
+	  if( diff.Mod()/origin.Mod() < 0.2){
+	    cout << 
+	      "MET Cov 2 :" << fTR->PFMETSignificance << "->" << b1  << 
+	      "----MET :" << fTR->PFMET << "->" << c1 <<  
+	      "--METPHI:" << fTR->PFMETphi << "->" << d1  << 
+	      "--diff : " << diff.Mod() << "---" << diff.Mod()/origin.Mod() << endl;
+	  }
+
+	
 	return true;
 }
 

@@ -65,6 +65,7 @@ public:
   void FillMT2Taus();
 
   METCovMatrix METCovMatrixCalculator;
+  METCovMatrix* METCovMatrixCalculatorTree;
   //
 
 	// redo JEC
