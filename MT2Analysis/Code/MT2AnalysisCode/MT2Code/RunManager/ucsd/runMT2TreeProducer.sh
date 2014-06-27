@@ -42,6 +42,9 @@ scramv1 project CMSSW CMSSW_5_3_14
 cd CMSSW_5_3_14/src/
 eval `scramv1 runtime -sh`
 
+export LD_LIBRARY_PATH=$(scram tool tag expat LIBDIR):$LD_LIBRARY_PATH
+export PATH=$(scram tool tag expat BINDIR):PATH
+
 vomsfile=`voms-proxy-info | grep path | awk -F ":" '{print $2}' |  tr -d ' '`
 #this variable is needed by dbsApi for authentication
 export X509_USER_PROXY=${vomsfile}
