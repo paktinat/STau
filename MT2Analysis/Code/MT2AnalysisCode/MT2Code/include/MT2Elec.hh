@@ -35,6 +35,7 @@ public:
 
   IDVetoMuTau = -1;
   IDVetoTauTau = -1;
+  PassLooseIdforQCD = -1;
   PassE0_EE=-1;
   PassE1_EE=-1;
   RejE2_EE =-1;
@@ -459,6 +460,7 @@ Float_t GetEleTrgSFelemu(){
   Int_t PassE1_EE;
 
   Int_t RejE2_EE;
+  Int_t PassLooseIdforQCD;
   Int_t PassQCDele0_EleMu;
 
   Int_t PassLooseEle0_EleMu;

@@ -1048,7 +1048,7 @@ public:
   void   FillDoubleEle();
   void  FillQCDSyst03forEE();
   void  FillQCDSyst07forEE();
-
+  void  FillLooseTightEleFakeRateforEE();
   double GetDoubleEleTrgSF();
 
   double GetDiLepPtRatioEE();

@@ -185,19 +185,70 @@ void  MT2tree::FillDoubleEle(){
 }
 
 
-// void  MT2tree::FillLooseTightEleFakeRateforEE(){
-//   doubleEle[0].Reset();
+ void  MT2tree::FillLooseTightEleFakeRateforEE(){
 
-//   for (int i=0 ; i < NEles ; i++){
+  TVector2 pmiss_vector2;
+  TLorentzVector downstream(0.,0.,0.,0.); // no particles are downstream, i.e. not selected jets are upstream. 
 
-//     if  (ele[i].PassE0_EE)
-//       {
-//         doubleEle[0].Ele0Ind = i ;
-//         break;
-//       }
-//   }
+  doubleEle[0].Reset();
 
-// 	  }
+  for (int i=0 ; i < NEles ; i++){
+
+    if  (ele[i].PassE0_EE)
+      {
+        doubleEle[0].Ele0Ind = i ;
+        break;
+      }
+  }
+      
+      for (int j = 0 ; j < NEles ; j++){
+
+	if  (ele[j].PassLooseIdforQCD) 
+	  {
+	    doubleEle[0].Ele1Ind = j ;
+	    break;
+	  }
+       
+
+      }
+
+      if( doubleEle[0].Ele0Ind != -1 && doubleEle[0].Ele1Ind != -1 ){
+	doubleEle[0].Isolated=-2;
+    
+	doubleEle[0].MT2 = CalcMT2(0, 0,ele[doubleEle[0].Ele0Ind].lv,ele[doubleEle[0].Ele1Ind].lv, pfmet[0]);
+	doubleEle[0].DPhi =(fabs(Util::DeltaPhi(ele[doubleEle[0].Ele0Ind].lv.Phi(),ele[doubleEle[0].Ele1Ind].lv.Phi())));
+	doubleEle[0].lv = ele[doubleEle[0].Ele0Ind].lv + ele[doubleEle[0].Ele1Ind].lv;
+
+	doubleEle[0].MT2Imbalanced = CalcMT2(0, 0,ele[doubleEle[0].Ele0Ind].lv,ele[doubleEle[0].Ele1Ind].lv, -(doubleEle[0].lv));
+
+	doubleEle[0].PairCharge = ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge;
+
+	doubleEle[0].Ele0IdIsoSF  = ele[doubleEle[0].Ele0Ind].EleIDIsoSFEleEle;
+	doubleEle[0].Ele1IdIsoSF  = ele[doubleEle[0].Ele1Ind].EleIDIsoSFEleEle;
+	doubleEle[0].DiEleTrgSF   = GetDoubleEleTrgSF();
+	doubleEle[0].PZetaVisible = GetPVisibleZetaEE();
+	doubleEle[0].PZeta        = GetPZetaEE();
+	doubleEle[0].PZetaImb     = GetPZetaImbEE();
+	doubleEle[0].DiLepPtRatio =  GetDiLepPtRatioEE();
+	doubleEle[0].PositveLepAngInZFrame     = GetPositiveChargedLeptonDecayAngleinZframeEE();
+	doubleEle[0].PositveLepAngwithZBeamPlane =GetPositiveChargedLepWithZBeamPlaneEE();
+	doubleEle[0].MinMetLepDPhi= GetMinMetLepDPhiEE();
+
+        pmiss_vector2.Set(pfmet[0].Px(), pfmet[0].Py());
+        doubleEle[0].MCTcorr = GetMCTcorr(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, downstream, pmiss_vector2);
+        pmiss_vector2.Set(-doubleEle[0].lv.Px(), -doubleEle[0].lv.Py());
+        doubleEle[0].MCTImbalanced= GetMCTcorr(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, downstream, pmiss_vector2);
+
+
+	if(fVerbose > 3){
+	  std::cout<<"EleIndex0: "<< doubleEle[0].Ele0Ind << endl <<"EleIndex1: "<< doubleEle[0].Ele1Ind << endl;
+	  std::cout<<"Pair Charge3: "<< doubleEle[0].PairCharge <<endl;
+	  std::cout<<" ChargeEle0: "<< ele[doubleEle[0].Ele0Ind].Charge <<" ChargeEle1: "<<ele[doubleEle[0].Ele1Ind].Charge<<endl;
+	  std::cout<<"MT2: "<< doubleEle[0].MT2 <<endl;
+	  std::cout<<"MT2 Imbalanced: "<< doubleEle[0].MT2Imbalanced <<endl;
+
+	}}
+	  }
 
 
 void  MT2tree::FillQCDSyst03forEE(){

@@ -252,6 +252,8 @@ private:
         bool IsGoodMT2ElectronMVANoTrigTight(const int index);
         bool IsGoodMT2LooseElectronforEleMu(const int index);
 
+        bool IsGoodElectronSelLooseIDforQCDFakeRate(const int index);
+
 
 	const float EffArea(float abseta);
 	const float EffArea04(float abseta);
