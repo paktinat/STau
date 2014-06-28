@@ -31,72 +31,103 @@ MT2Analyzer::~MT2Analyzer(){
 void MT2Analyzer::Loop(){
 	Long64_t nentries = fTR->GetEntries();
 	cout << " total events in ntuples = " << fTR->GetEntries() << endl;
-	
-	if(fMaxEvents==-1)nentries=fTR->GetEntries();
-	if(fMaxEvents > 0){
-		nentries=min((Long64_t)fMaxEvents, fTR->GetEntries());
-		cout << " only running on first " << nentries << " events" << endl;
+
+	int fLastEvent = nentries;
+	if(fFirstEvent == -1){
+	  if(fMaxEvents==-1)nentries=fTR->GetEntries();
+	  if(fMaxEvents > 0){
+	    nentries=min((Long64_t)fMaxEvents, fTR->GetEntries());
+	    cout << " only running on first " << nentries << " events" << endl;
+	  }
+	  fLastEvent = nentries;
+	}else{
+	  if(fMaxEvents==-1)nentries=(fTR->GetEntries() - fFirstEvent);
+	  if(fMaxEvents > 0){
+	    nentries=min((Long64_t)fMaxEvents, (fTR->GetEntries() - fFirstEvent));
+	    cout << " only running on first " << nentries << " events starting from "<<fFirstEvent<< endl;
+	  }
+	  fLastEvent = nentries + fFirstEvent;
 	}
-	if(nentries ==0) return; // fix in order to prevent assertion error if nentries==0
+	  
+	if(nentries <= 0) return; // fix in order to prevent assertion error if nentries==0
 
 	// loop over all ntuple entries
     	Long64_t jentry=0;
-    	for ( fTR->ToBegin(); !(fTR->AtEnd()) && (jentry<nentries || nentries<0); ++(*fTR) ) {
-		PrintProgress(jentry++);
-               if ( fCurRun != fTR->Run ) {
-        		fCurRun = fTR->Run;
-			fMT2Analysis        ->BeginRun(fCurRun);
-                  	skipRun = false; // re-initialize
-                  	if ( !CheckRun() ) skipRun = true;
-			//if(skipRun) cout << "skip run " << fCurRun << endl;
-                }
-               // Check if new lumi is in JSON file
-                if ( !skipRun && fCurLumi != fTR->LumiSection ) {
-                  	fCurLumi = fTR->LumiSection;
-                  	skipLumi = false; // Re-initialise
-                  	if ( !CheckRunLumi() ) skipLumi = true;
-			//if(skipLumi) cout << "skip lumi " << fCurLumi << " in run " << fTR->Run << endl;
-                }
-		if ( !(skipRun || skipLumi) ) {
-			fMT2Analysis        ->Analyze();
-			double PUWeight = 0;
-			//PU mean weight
-			if (fPu=="MC2012" && !isScan){
-			  	PUWeight  = fMT2Analysis->GetPUWeight(fTR->PUnumTrueInteractions);
-			} else {
-			  	PUWeight  = 1;
-			}
+
+	if(fFirstEvent != -1)jentry = fFirstEvent;
+
+// 	fTR->ToBegin();
+// 	for(int i = 0; i < fFirstEvent; i++)
+// 	  (*fTR)++;
+
+//     	for ( fTR->ToBegin(); !(fTR->AtEnd()) && (jentry<(nentries + fFirstEvent) || nentries<0); ++(*fTR) ) {
+//     	for ( fTR->ToBegin(); !(fTR->AtEnd()) && (jentry<fLastEvent); ++(*fTR) ) {
+	  
+// 	  if(jentry < fFirstEvent){
+// 	    jentry++;
+// 	    continue;
+// 	  }
+
+	fTR->GetEntry(jentry);
+
+	while(!(fTR->AtEnd()) && (jentry<fLastEvent)){
+	  ++(*fTR);
+
+	  PrintProgress(jentry++);
+	  if ( fCurRun != fTR->Run ) {
+	    fCurRun = fTR->Run;
+	    fMT2Analysis        ->BeginRun(fCurRun);
+	    skipRun = false; // re-initialize
+	    if ( !CheckRun() ) skipRun = true;
+	    //if(skipRun) cout << "skip run " << fCurRun << endl;
+	  }
+	  // Check if new lumi is in JSON file
+	  if ( !skipRun && fCurLumi != fTR->LumiSection ) {
+	    fCurLumi = fTR->LumiSection;
+	    skipLumi = false; // Re-initialise
+	    if ( !CheckRunLumi() ) skipLumi = true;
+	    //if(skipLumi) cout << "skip lumi " << fCurLumi << " in run " << fTR->Run << endl;
+	  }
+	  if ( !(skipRun || skipLumi) ) {
+	    fMT2Analysis        ->Analyze();
+	    double PUWeight = 0;
+	    //PU mean weight
+	    if (fPu=="MC2012" && !isScan){
+	      PUWeight  = fMT2Analysis->GetPUWeight(fTR->PUnumTrueInteractions);
+	    } else {
+	      PUWeight  = 1;
+	    }
 			
-			fMT2Analysis->fH_PUWeights->Fill( PUWeight );
-			fMT2Analysis->fH_Events->Fill( 1. );
+	    fMT2Analysis->fH_PUWeights->Fill( PUWeight );
+	    fMT2Analysis->fH_Events->Fill( 1. );
 
-			if(isScan){
-			  fMT2Analysis->fH2_mSugraEvents->Fill(fTR->M0, fTR->M12);
-// 			  fMT2Analysis->fH2_SMSEvents->Fill(fTR->MassGlu, fTR->MassLSP);
-//Saeid To recover the conflict in the naming of TChipChimSTauSnu_50_100_280
-			  lhef::HEPEUP a = fTR->hLHEEvent->hepeup();
+	    if(isScan){
+	      fMT2Analysis->fH2_mSugraEvents->Fill(fTR->M0, fTR->M12);
+	      // 			  fMT2Analysis->fH2_SMSEvents->Fill(fTR->MassGlu, fTR->MassLSP);
+	      //Saeid To recover the conflict in the naming of TChipChimSTauSnu_50_100_280
+	      lhef::HEPEUP a = fTR->hLHEEvent->hepeup();
 
-			  int id1000024 = -1;
-			  int id1000022 = -1;
-			  for( uint ip = 0 ; ip < a.IDUP.size() ; ip++)
-			    if( a.IDUP[ ip ] == 1000024)
-			      id1000024 = ip;
-			    else if( a.IDUP[ ip ] == 1000022)
-			      id1000022 = ip;
+	      int id1000024 = -1;
+	      int id1000022 = -1;
+	      for( uint ip = 0 ; ip < a.IDUP.size() ; ip++)
+		if( a.IDUP[ ip ] == 1000024)
+		  id1000024 = ip;
+		else if( a.IDUP[ ip ] == 1000022)
+		  id1000022 = ip;
 
-			  // cout << id1000024 << " and " << id1000022 << endl;
-			  std::vector< lhef::HEPEUP::FiveVector > mom = a.PUP;
-			  double M1000024 = mom[id1000024][4] ;
-			  double M1000022 = mom[id1000022][4] ;
-			  //			  cout << M1000024 << " and " << M1000022 << endl;
+	      // cout << id1000024 << " and " << id1000022 << endl;
+	      std::vector< lhef::HEPEUP::FiveVector > mom = a.PUP;
+	      double M1000024 = mom[id1000024][4] ;
+	      double M1000022 = mom[id1000022][4] ;
+	      //			  cout << M1000024 << " and " << M1000022 << endl;
 			
-			  // fMT2Analysis->fH2_SMSEvents->Fill(fMT2Analysis->GetMT2tree()->Susy.MassGlu, fMT2Analysis->GetMT2tree()->Susy.MassLSP);
-			  fMT2Analysis->fH2_SMSEvents->Fill(M1000024, M1000022);
-//Saeid
-			  if(fTR->process>0) fMT2Analysis->fH_mSugraSubProcEvents[fTR->process]->Fill(fTR->M0, fTR->M12);
-			}
+	      // fMT2Analysis->fH2_SMSEvents->Fill(fMT2Analysis->GetMT2tree()->Susy.MassGlu, fMT2Analysis->GetMT2tree()->Susy.MassLSP);
+	      fMT2Analysis->fH2_SMSEvents->Fill(M1000024, M1000022);
+	      //Saeid
+	      if(fTR->process>0) fMT2Analysis->fH_mSugraSubProcEvents[fTR->process]->Fill(fTR->M0, fTR->M12);
+	    }
 
-		}
+	  }
 	}//end loop
 }
 

@@ -18,6 +18,7 @@ public:
 	void EndJob();
 	void Loop();
 	void SetMaxEvents(int a){fMaxEvents=a;};
+	void SetFirstEvent(int a){fFirstEvent=a;};
 	void SetProcessID(int ID){fID=ID;};
 	void SetBTagEfficiency(string btagFileName){ fbtagFileName = btagFileName;};
 	void SetHadTauEfficiency(string hadtauFileName){ fhadtauFileName = hadtauFileName;};
@@ -38,6 +39,7 @@ public:
 private:
 	MT2Analysis             *fMT2Analysis;
   	int fMaxEvents;   
+  	int fFirstEvent;   
 	int fID;
 	string fbtagFileName;
 	string fhadtauFileName;

@@ -19,7 +19,7 @@ using namespace std;
 // Print out usage
 void usage( int status = 0 ) {
 	cout << "Usage: RunMT2Analyzer [-d dir] [-o filename] [-v verbose] [-j json]                  " << endl;
-	cout << "                      [-m set_of_cuts] [-n maxEvents] [-t type]                      " << endl;
+	cout << "                      [-m set_of_cuts] [-n maxEvents] [-a firstEvent] [-t type]      " << endl;
 	cout << "                      [-p data_PileUp] [-P mc_PileUP]                                " << endl; 
         cout << "                      [-s noPU,MC2012] [-C JEC]                                       " << endl;
 	cout << "                      [-w pdf] [-b btag]                                             " << endl;
@@ -86,6 +86,7 @@ int main(int argc, char* argv[]) {
 	bool isScan = false;
 	int verbose  = 0;
 	int maxEvents=-1;
+	int firstEvent=-1;
 	int ID       =-1;
    	bool removePhoton = false;
    	bool removeZll    = false;
@@ -94,7 +95,7 @@ int main(int argc, char* argv[]) {
 
 // Parse options
 	char ch;
-	while ((ch = getopt(argc, argv, "s:d:o:v:j:m:n:p:P:t:r:b:u:i:C:w:ecEflh?")) != -1 ) {
+	while ((ch = getopt(argc, argv, "a:s:d:o:v:j:m:n:p:P:t:r:b:u:i:C:w:ecEflh?")) != -1 ) {
 	  switch (ch) {
 	  case 'd': outputdir       = TString(optarg);break;
 	  case 'o': filename        = TString(optarg);break;
@@ -102,6 +103,7 @@ int main(int argc, char* argv[]) {
 	  case 'j': jsonFileName    = string(optarg); break;
 	  case 'm': setofcuts       = TString(optarg);break;
 	  case 'n': maxEvents       = atoi(optarg);   break;
+	  case 'a': firstEvent      = atoi(optarg);   break;
 	  case 'p': data_PileUp     = string(optarg); break;
 	  case 'P': mc_PileUp       = string(optarg); break;
 	  case 't': type            = string(optarg); break;
@@ -248,6 +250,7 @@ int main(int argc, char* argv[]) {
 	tA->SetOutputDir(outputdir);
 	tA->SetVerbose(verbose);
 	tA->SetMaxEvents(maxEvents);
+	tA->SetFirstEvent(firstEvent);
 	tA->SetProcessID(ID);
 	tA->SetBTagEfficiency(btagFileName);
 	tA->SetHadTauEfficiency(htauFileName);
