@@ -42,8 +42,11 @@ scramv1 project CMSSW CMSSW_5_3_14
 cd CMSSW_5_3_14/src/
 eval `scramv1 runtime -sh`
 
-export LD_LIBRARY_PATH=$(scram tool tag expat LIBDIR):$LD_LIBRARY_PATH
-export PATH=$(scram tool tag expat BINDIR):PATH
+cp /cvmfs/cms.cern.ch/$SCRAM_ARCH/external/expat/2.0.1*/lib/libexpat.so ./libexpat.so.0
+
+export LD_LIBRARY_PATH=${PWD}:$(scram tool tag expat LIBDIR):$LD_LIBRARY_PATH
+
+export PATH=$(scram tool tag expat BINDIR):$PATH
 
 vomsfile=`voms-proxy-info | grep path | awk -F ":" '{print $2}' |  tr -d ' '`
 #this variable is needed by dbsApi for authentication
@@ -61,6 +64,10 @@ cd RunManager/ucsd/
 ListOfFilesToRunOn=`python getlistoffiles.py -n $nfiles -i $iteration -p $WORKINGDIR/Files`
 
 cd ../..
+
+cp /cvmfs/cms.cern.ch/$SCRAM_ARCH/external/expat/2.0.1*/lib/libexpat.so ./libexpat.so.0
+
+export LD_LIBRARY_PATH=${PWD}:$(scram tool tag expat LIBDIR):$LD_LIBRARY_PATH
 
 
 otherarguments=""
@@ -118,8 +125,8 @@ else
 	  FIRSTEVENT=0
 	  for n in {1..50}
 	    do
-	    ./RunMT2Analyzer -n 500 -a FIRSTEVENT -d . -i $processid -t $sampletype -m $cutset $otherarguments  -e -E -c -o MT2treeS_$COUNTER_$n.root ./IN.root
-	    FIRSTEVENT=FIRSTEVENT+500
+	    ./RunMT2Analyzer -n 500 -a $FIRSTEVENT -d . -i $processid -t $sampletype -m $cutset $otherarguments  -e -E -c -o MT2treeS_${COUNTER}_$n.root ./IN.root
+	    let FIRSTEVENT=FIRSTEVENT+500
 	    done
 	  rm -rf ./IN.root
       fi
