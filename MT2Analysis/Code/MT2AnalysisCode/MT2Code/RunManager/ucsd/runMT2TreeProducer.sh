@@ -123,7 +123,7 @@ else
 	  echo "The $file can't be copied after 20 tries and skipped"
       else
 	  FIRSTEVENT=0
-	  for n in {1..50}
+	  for n in {1..60}
 	    do
 	    ./RunMT2Analyzer -n 500 -a $FIRSTEVENT -d . -i $processid -t $sampletype -m $cutset $otherarguments  -e -E -c -o MT2treeS_${COUNTER}_$n.root ./IN.root
 	    let FIRSTEVENT=FIRSTEVENT+500
@@ -135,6 +135,20 @@ else
     
     hadd ./MT2tree_$iteration.root MT2treeS_*.root
     
-    lcg-cp -v -D srmv2 file://`pwd`/MT2tree_$iteration.root $outputdir/MT2tree_$iteration.root
+    HADOOPPATH=`echo "$outputdir" | cut -d '=' -f 2`
+     COUNTER2=0
+     while [ ! -f  $HADOOPPATH/MT2tree_$iteration.root ]
+         do
+         if [ $COUNTER2 -gt 20 ]; then
+	     break
+	 fi
+	 lcg-cp -v -D srmv2 file://`pwd`/MT2tree_$iteration.root $outputdir/MT2tree_$iteration.root
+	 let COUNTER2=COUNTER2+1
+	 echo ${COUNTER2}th Try
+	 sleep 10
+     done
+
+
+#    lcg-cp -v -D srmv2 file://`pwd`/MT2tree_$iteration.root $outputdir/MT2tree_$iteration.root
     rm -rf ./MT2tree*.root
 fi
