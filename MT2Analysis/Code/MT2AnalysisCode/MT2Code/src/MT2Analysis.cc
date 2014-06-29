@@ -407,21 +407,21 @@ bool MT2Analysis::FillMT2TreeBasics(){
 
  
 	double a, b , c, d;
-	METCovMatrixCalculator.getSignifMatrix(fElecs, fMuons, fPhotons , fJets , fTaus);
-	METCovMatrixCalculator.compareSignificances(a , b , c, d);
+	// METCovMatrixCalculator.getSignifMatrix(fElecs, fMuons, fPhotons , fJets , fTaus);
+	// METCovMatrixCalculator.compareSignificances(a , b , c, d);
 
-	TVector2 origin1( fTR->PFMET*cos(fTR->PFMETphi) , fTR->PFMET*sin(fTR->PFMETphi) );
-	TVector2 calculated1( c*cos(d) , c*sin(d) );
+	// TVector2 origin1( fTR->PFMET*cos(fTR->PFMETphi) , fTR->PFMET*sin(fTR->PFMETphi) );
+	// TVector2 calculated1( c*cos(d) , c*sin(d) );
 
-	TVector2 diff1 = origin1 - calculated1;
+	// TVector2 diff1 = origin1 - calculated1;
 
-	if( diff1.Mod()/origin1.Mod() < 0.2){
-	  cout << 
-	    "MET Cov :" << a << "->" << b  << 
-	    "----MET :" << fTR->PFMET << "->" << c <<  
-	    "--METPHI:" << fTR->PFMETphi << "->" << d  << 
-	    "--diff : " << diff1.Mod() << "---" << diff1.Mod()/origin1.Mod() << endl;
-	}
+	// if( diff1.Mod()/origin1.Mod() < 0.2){
+	//   cout << 
+	//     "MET Cov :" << a << "->" << b  << 
+	//     "----MET :" << fTR->PFMET << "->" << c <<  
+	//     "--METPHI:" << fTR->PFMETphi << "->" << d  << 
+	//     "--diff : " << diff1.Mod() << "---" << diff1.Mod()/origin1.Mod() << endl;
+	// }
 
 
 	// ---------------------------------------------------------------
@@ -1130,7 +1130,9 @@ bool MT2Analysis::FillMT2TreeBasics(){
 
 	TVector2 diff = origin - calculated;
 
-	  if( diff.Mod()/origin.Mod() < 0.2){
+	double diff22 = fabs( fTR->PFMETSignificance- b1 ) /fTR->PFMETSignificance ;
+
+	  if( diff.Mod()/origin.Mod() < 0.5 && diff22 < 0.5){
 	    cout << 
 	      "MET Cov 2 :" << fTR->PFMETSignificance << "->" << b1  << 
 	      "----MET :" << fTR->PFMET << "->" << c1 <<  

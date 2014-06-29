@@ -229,11 +229,23 @@ std::vector<SigInputObj> METCovMatrix::GetTauEtPhiErr(vector<int> objs)  const{
     else if(fMT2tree)
       jpt = fMT2tree->tau[ Index ].JetPt ;
 
+    double taupt  = 0;
+    if(fTR)
+      taupt = fTR->TauPt[ Index ];
+    else if(fMT2tree)
+      taupt = fMT2tree->tau[ Index ].lv.Pt() ;
+
     double jphi =0;
     if(fTR)
       jphi = fTR->TauJetPhi[ Index ];
     else if(fMT2tree)
       jphi = fMT2tree->tau[ Index ].JetPhi;
+
+    double tauphi =0;
+    if(fTR)
+      tauphi = fTR->TauPhi[ Index ];
+    else if(fMT2tree)
+      tauphi = fMT2tree->tau[ Index ].lv.Phi();
 
     double jeta = 0;
     if( fTR)
@@ -264,7 +276,7 @@ std::vector<SigInputObj> METCovMatrix::GetTauEtPhiErr(vector<int> objs)  const{
     }
  
     std::string type = "jet";
-    SigInputObj a(type,jpt,jphi,jdeltapt,jdeltapphi);
+    SigInputObj a(type,taupt,tauphi,jdeltapt,jdeltapphi);
     ret.push_back(a);
   }
 
