@@ -65,10 +65,8 @@ ListOfFilesToRunOn=`python getlistoffiles.py -n $nfiles -i $iteration -p $WORKIN
 
 cd ../..
 
-cp /cvmfs/cms.cern.ch/$SCRAM_ARCH/external/expat/2.0.1*/lib/libexpat.so ./libexpat.so.0
-
+cp $(scram tool tag expat LIBDIR)/libexpat.so ./libexpat.so.0
 export LD_LIBRARY_PATH=${PWD}:$(scram tool tag expat LIBDIR):$LD_LIBRARY_PATH
-
 
 otherarguments=""
 
@@ -83,72 +81,78 @@ fi
 echo $otherarguments
 
 
-set -vx
-
 if [ "$debugmode" == "1" ]; then
 
     COUNTER=0
     for file in $ListOfFilesToRunOn
-      do
-      echo ./RunMT2Analyzer -d . -i $processid -t $sampletype -m $cutset $otherarguments  -e -E -c -o MT2tree_$COUNTER.root "$file"
-      let COUNTER=COUNTER+1
+    do
+	echo ./RunMT2Analyzer -d . -i $processid -t $sampletype -m $cutset $otherarguments  -e -E -c -o MT2tree_$COUNTER.root "$file"
+	let COUNTER=COUNTER+1
     done
     
     echo hadd ./MT2tree_$iteration.root MT2tree_*.root
-  
+    
     echo lcg-cp -v -D srmv2 file://`pwd`/MT2tree_$iteration.root $outputdir/MT2tree_$iteration.root
     echo rm -rf ./MT2tree_$iteration.root
 else
+    set -vx
     COUNTER=0
     for file in $ListOfFilesToRunOn
-      do
-      
-      COUNTER2=0
-      while [ ! -f ./IN.root ]
+    do
+	
+	COUNTER2=0
+	while [ ! -f ./IN.root ]
 	do
-	if [ $COUNTER2 -gt 20 ]; then
-	    break
-	fi
+	    if [ $COUNTER2 -gt 20 ]; then
+		break
+	    fi
 
-	if [[ ${file:0:1} == "/" ]]; then
-	    cp "$file" ./IN.root
+	    if [[ ${file:0:1} == "/" ]]; then
+		cp "$file" ./IN.root
+	    else
+		xrdcp "$file" ./IN.root
+	    fi
+	    let COUNTER2=COUNTER2+1
+	    sleep 3
+	done
+
+	if [ ! -f ./IN.root ]; then
+	    echo "The $file can't be copied after 20 tries and skipped"
 	else
-	    xrdcp "$file" ./IN.root
-	fi
-	let COUNTER2=COUNTER2+1
-	sleep 3
-      done
-
-      if [ ! -f ./IN.root ]; then
-	  echo "The $file can't be copied after 20 tries and skipped"
-      else
-	  FIRSTEVENT=0
-	  for n in {1..60}
+	    NEventsIn=`python RunManager/ucsd/getnevents.py`
+	    NEventsInRun=500
+	    NJobs=`expr $NEventsIn / $NEventsInRun`
+	    let NJobs=NJobs+1
+	    FIRSTEVENT=0
+	    for n in $(seq 1 $NJobs)
 	    do
-	    ./RunMT2Analyzer -n 500 -a $FIRSTEVENT -d . -i $processid -t $sampletype -m $cutset $otherarguments  -e -E -c -o MT2treeS_${COUNTER}_$n.root ./IN.root
-	    let FIRSTEVENT=FIRSTEVENT+500
+		./RunMT2Analyzer -n $NEventsInRun -a $FIRSTEVENT -d . -i $processid -t $sampletype -m $cutset $otherarguments  -e -E -c -o MT2treeS_${COUNTER}_$n.root ./IN.root
+		let FIRSTEVENT=FIRSTEVENT+$NEventsInRun
 	    done
-	  rm -rf ./IN.root
-      fi
-      let COUNTER=COUNTER+1
+	    rm -rf ./IN.root
+	fi
+	let COUNTER=COUNTER+1
     done
     
     hadd ./MT2tree_$iteration.root MT2treeS_*.root
     
     HADOOPPATH=`echo "$outputdir" | cut -d '=' -f 2`
-     COUNTER2=0
-     while [ ! -f  $HADOOPPATH/MT2tree_$iteration.root ]
-         do
-         if [ $COUNTER2 -gt 20 ]; then
-	     break
-	 fi
-	 lcg-cp -v -D srmv2 file://`pwd`/MT2tree_$iteration.root $outputdir/MT2tree_$iteration.root
-	 let COUNTER2=COUNTER2+1
-	 echo ${COUNTER2}th Try
-	 sleep 10
-     done
-
-
-#    lcg-cp -v -D srmv2 file://`pwd`/MT2tree_$iteration.root $outputdir/MT2tree_$iteration.root
+    COUNTER2=0
+    while [ ! -f  $HADOOPPATH/MT2tree_$iteration.root ]
+    do
+        if [ $COUNTER2 -gt 20 ]; then
+	    break
+	fi
+	lcg-cp -v -D srmv2 file://`pwd`/MT2tree_$iteration.root $outputdir/MT2tree_$iteration.root
+	let COUNTER2=COUNTER2+1
+	echo ${COUNTER2}th Try
+	sleep 10
+    done
+    
     rm -rf ./MT2tree*.root
+
+    if [ ! -f  $HADOOPPATH/MT2tree_$iteration.root ]; then
+	echo "The file was not copied to /hadoop after 20 tries"
+	exit 1
+    fi
 fi
