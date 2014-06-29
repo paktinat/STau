@@ -43,9 +43,11 @@ if __name__ == "__main__":
     while os.path.isdir( ntupledir ) and len( os.listdir( ntupledir ) ) > 0 :
         ntupledir += "_"
         
-
     if not os.path.isdir( ntupledir ):
-        os.mkdir( ntupledir )
+#       os.mkdir( ntupledir )
+        os.makedirs( ntupledir )
 
     ntupledir = "srm://bsrm-1.t2.ucsd.edu:8443/srm/v2/server?SFN=" + ntupledir
     print ntupledir
+
+
