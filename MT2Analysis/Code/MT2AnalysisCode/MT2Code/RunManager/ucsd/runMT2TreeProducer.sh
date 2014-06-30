@@ -126,7 +126,8 @@ else
 	    FIRSTEVENT=0
 	    for n in $(seq 1 $NJobs)
 	    do
-		./RunMT2Analyzer -n $NEventsInRun -a $FIRSTEVENT -d . -i $processid -t $sampletype -m $cutset $otherarguments  -e -E -c -o MT2treeS_${COUNTER}_$n.root ./IN.root
+	        echo Running on $file
+		./RunMT2Analyzer -n $NEventsInRun -a $FIRSTEVENT -d . -i $processid -t $sampletype -m $cutset $otherarguments  -e -E -c -o MT2treeS_${iteration}_${COUNTER}_$n.root ./IN.root
 		let FIRSTEVENT=FIRSTEVENT+$NEventsInRun
 	    done
 	    rm -rf ./IN.root
@@ -134,7 +135,7 @@ else
 	let COUNTER=COUNTER+1
     done
     
-    hadd ./MT2tree_$iteration.root MT2treeS_*.root
+    hadd ./MT2tree_$iteration.root MT2treeS_${iteration}_*.root
     
     HADOOPPATH=`echo "$outputdir" | cut -d '=' -f 2`
     COUNTER2=0
