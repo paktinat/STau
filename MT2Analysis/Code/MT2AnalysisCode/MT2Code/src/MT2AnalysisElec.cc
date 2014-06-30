@@ -13,9 +13,7 @@ void MT2Analysis::GetElectronIndices(){
 
 
 void MT2Analysis::FillMT2Elecs(){
-
-
-	for(int i=0; i<fElecs.size(); ++i) {
+ 	for(int i=0; i<fElecs.size(); ++i) {
 	  	fMT2tree->ele[i].lv.SetPtEtaPhiE(fTR->ElPt [fElecs[i]], fTR->ElEta[fElecs[i]], fTR->ElPhi[fElecs[i]], fTR->ElE[fElecs[i]]); 
 		fMT2tree->ele[i].MT       = fMT2tree->GetMT(fMT2tree->ele[i].lv, 0., fMT2tree->pfmet[0], 0.); 
 		fMT2tree->ele[i].Charge   = fTR->ElCharge[fElecs[i]];
