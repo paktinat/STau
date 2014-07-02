@@ -68,12 +68,13 @@ void MT2Analyzer::Loop(){
 // 	    continue;
 // 	  }
 
-	fTR->GetEntry(jentry);
-	cout<<" fTR->NPhotons "<<fTR->NPhotons<<endl;
+	int jj = fTR->GetEntry(jentry);
+	cout<<jj<<" fTR->NPhotons "<<fTR->NPhotons<<endl;
 	while(!(fTR->AtEnd()) && (jentry<fLastEvent)){
 	  ++(*fTR);
 
 	  PrintProgress(jentry++);
+
 	  if ( fCurRun != fTR->Run ) {
 	    fCurRun = fTR->Run;
 	    fMT2Analysis        ->BeginRun(fCurRun);

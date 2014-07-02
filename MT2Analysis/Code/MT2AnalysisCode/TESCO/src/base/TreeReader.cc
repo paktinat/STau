@@ -28,9 +28,11 @@ const Int_t TreeReader::GetEntry(const Long64_t entry)
     if (!fEvent) return 0;
     
     Int_t result = fEvent->to(entry);
-    LoadAll(); // Retrieve all the branches
-    
-    return result;
+    bool loadAllSuccess = LoadAll(); // Retrieve all the branches
+    if(loadAllSuccess)
+      return result;
+    else
+      return 0;
 }
 
 //____________________________________________________________________
