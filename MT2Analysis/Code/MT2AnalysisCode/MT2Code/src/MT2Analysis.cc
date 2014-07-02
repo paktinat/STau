@@ -92,7 +92,8 @@ void MT2Analysis::Begin(const char* filename){
 	TDirectory *dir = gDirectory;
 
 	if (fisData )
-	  myFilter = new EventFilterFromListStandAlone("/dataLOCAL/MT2Tau/data/HCALLaser2012AllDatasets.txt.gz");
+	  //	  myFilter = new EventFilterFromListStandAlone("/dataLOCAL/MT2Tau/data/HCALLaser2012AllDatasets.txt.gz");
+	  myFilter = new EventFilterFromListStandAlone(GETDATALOCALPATH(MT2Analysis/Code/MT2AnalysisCode/MT2Code/data/HCALLaser2012AllDatasets.txt.gz));
 
 	//define btagging files
 	bool existing=true;

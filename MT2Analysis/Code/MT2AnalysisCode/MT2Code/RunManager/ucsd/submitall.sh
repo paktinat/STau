@@ -17,10 +17,10 @@ vomslefthours=$(voms-proxy-info | grep timeleft | awk -F ":" '{print $2}')
 
 if [[ ! -f $vomsfile ]]; then
     echo "You first neet to get a proxy"
-    voms-proxy-init -voms cms
+    voms-proxy-init -voms cms  -valid 999:00
 elif (( `expr $vomslefthours \< 3` )); then 
     echo "You need to first get a proxy"
-    voms-proxy-init -voms cms
+    voms-proxy-init -voms cms  -valid 999:00
 else
     echo "the current proxy is valid and will be used"
 fi
