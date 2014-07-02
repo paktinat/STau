@@ -1,0 +1,26 @@
+##################################################
+## Set of cuts for MultiplicityAnalysis:        ##
+#                                                #
+# ------------ Set Name -------------------------#
+SetName                                         MC
+# ------------- Cuts ----------------------------#
+PFMET_min                                        0
+HT_min                                           0
+JPt_hardest_min                                  0
+JPt_second_min                                   0
+PtHat_max                                 9999999.  
+NJets40_min                                      0
+NLeptons_min                                     0
+JESUpDown                                        0
+# ------------ Trigger --------------------------#
+HLT_required                       HLT_PFJet320_v3
+HLT_required                       HLT_PFJet320_v4
+HLT_required                       HLT_PFJet320_v5
+HLT_required                       HLT_PFJet320_v6
+HLT_required                       HLT_PFJet320_v8
+HLT_required                       HLT_PFJet320_v9
+# ----------- Run -------------------------------#
+Run_min                                          0
+Run_max                                    9999999
+##################################################
+
