@@ -112,6 +112,137 @@ Lumi            19600.0
 Type		mc
 Color		401
 
+#SAMPLE
+Name		QCD_Pt_15to20
+SName		QCD
+ShapeName	QCD
+File            TauTau_V2_2/QCD-Pt-15to20-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v2.root
+Xsection  	2.73858E06
+Kfact           1.59
+Lumi            19600 
+Type		mc
+Color		401
+#
+#SAMPLE
+Name		QCD_Pt_20to30
+SName		QCD
+ShapeName	QCD
+File            TauTau_V2_2/QCD-Pt-20to30-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+Xsection  	1.8655E06 
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+#
+#SAMPLE
+Name		QCD_Pt_30to50
+SName		QCD
+ShapeName	QCD
+File            TauTau_V2_2/QCD-Pt-30to50-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+Xsection  	 806298.0 
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+#
+#SAMPLE
+Name		QCD_Pt_50to80
+SName		QCD
+ShapeName	QCD
+File            TauTau_V2_2/QCD-Pt-50to80-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+Xsection  	176187.6 
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+#
+#SAMPLE
+Name		QCD_Pt_80to120
+SName		QCD
+ShapeName	QCD
+File            TauTau_V2_2/QCD-Pt-80to120-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+Xsection  	40448 
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+#
+#SAMPLE
+Name		QCD_Pt_120to170
+SName		QCD
+ShapeName	QCD
+File            TauTau_V2_2/QCD-Pt-120to170-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+Xsection  	7463.94 
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+#
+#SAMPLE
+Name		QCD_Pt_170to300
+SName		QCD
+ShapeName	QCD
+File            TauTau_V2_2/QCD-Pt-170to300-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+Xsection  	2299.752 
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+#
+#SAMPLE
+Name		QCD_Pt_300to470
+SName		QCD
+ShapeName	QCD   
+File            TauTau_V2_2/QCD-Pt-300to470-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+Xsection  	151.8048 pb 
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+#
+#SAMPLE
+Name		QCD_Pt_470to600
+SName		QCD
+ShapeName	QCD
+File            TauTau_V2_2/QCD-Pt-470to600-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+Xsection  	11.79648 
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+#
+#SAMPLE
+Name		QCD_Pt_600to800
+SName		QCD
+ShapeName	QCD
+File            TauTau_V2_2/QCD-Pt-600to800-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+Xsection  	2.690196 
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+#
+#SAMPLE
+Name		QCD_Pt_800to1000
+SName		QCD
+ShapeName	QCD
+File            TauTau_V2_2/QCD-Pt-800to1000-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v.root
+Xsection  	0.368781 
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+#
+#SAMPLE
+Name		QCD_Pt_1000ToInf
+SName		QCD
+ShapeName	QCD
+File            TauTau_V2_2/QCD-Pt-1000-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+Xsection  	0.0849078 pb  
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
 # -------- electroweak --------
 #SAMPLE
 Name		WWJetsTo2L2Nu
