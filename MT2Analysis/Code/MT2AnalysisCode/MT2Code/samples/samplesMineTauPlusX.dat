@@ -30,6 +30,77 @@ Color           1
 
 ## -------- QCD ----------------
 
+SAMPLE
+Name		QCD-Pt-20-30-BCtoE
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD-Pt-20-30-BCtoE-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+Xsection  	167400.0 pb #CMS AN-12-468
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+#
+
+SAMPLE
+Name		QCD-Pt-30-80-BCtoE
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD-Pt-30-80-BCtoE-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+Xsection  	167000.0 pb #CMS AN-12-468
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+#
+
+#SAMPLE
+Name		QCD-Pt-80-170-BCtoE
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD-Pt-80-170-BCtoE-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+Xsection  	12980.0 pb #CMS AN-12-468
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+#
+
+#SAMPLE
+Name		QCD-Pt-170-250-BCtoE
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD-Pt-170-250-BCtoE-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+Xsection  	632.0 pb #CMS AN-12-468
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+#
+
+#SAMPLE
+Name		QCD-Pt-250-350-BCtoE
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD-Pt-250-350-BCtoE-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+Xsection  	103.3 pb #CMS AN-12-468
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+#
+
+#SAMPLE
+Name		QCD-Pt-350-BCtoE
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD-Pt-350-BCtoE-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v2.root
+Xsection  	23.92 pb #CMS AN-12-468
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+
 #SAMPLE
 Name		QCD_HT_100To250
 SName		QCD
