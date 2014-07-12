@@ -1,8 +1,8 @@
 {
   TString outputdir = "../MassPlots/";
-  //  TString samples = "./samples/samplesMineTauPlusX.dat"; 
+  TString samples = "./samples/samplesMineTauPlusX.dat"; 
   //TString samples = "./samples/samplesMineQCD.dat";
-  TString samples = "./samples/samplesMineTest.dat";  
+  //TString samples = "./samples/samplesMineTest.dat";  
   int verbose =3;
 
   gSystem->CompileMacro("../MT2Code/src/MassPlotter.cc", "kf");//"k", "f"
