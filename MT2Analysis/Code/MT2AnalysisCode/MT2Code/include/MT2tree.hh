@@ -927,7 +927,18 @@ public:
   Float_t PositiveChargedLepWithZBeamPlane(TLorentzVector LepPluslv, TLorentzVector LepNeglv);
   Float_t PositiveChargedLepWithZBeamPlaneMuTau();
 
-
+  Float_t MCTEleTau();
+  Float_t PZetaEleTau();
+  Float_t PZetaImbalancedEleTau();
+  Float_t PVisibleZetaEleTau();
+  Float_t DiLepPtRatioEleTau();
+  Float_t PositiveChargedLepWithZBeamPlaneEleTau();
+  Float_t MinMetLepDPhiEleTau();
+  Float_t PositiveChargedLeptonDecayAngleinZframeEleTau();
+  Float_t EleTauDeltaPt();
+  Float_t EleTauDeltaEta();
+  Float_t EleTauAbsEta();
+  Float_t DeltaMETEleTau(int);
   // MT2 & friends
   Float_t GetMT2            (Float_t testmass=0, bool massive=false,       Int_t PFJID=1, Float_t minJPt=20, Float_t maxJEta=2.4, 
 		              Int_t hemi_seed=2,   Int_t hemi_association=3, Int_t met=1 );

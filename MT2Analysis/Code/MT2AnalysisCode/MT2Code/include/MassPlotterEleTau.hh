@@ -15,13 +15,18 @@
 #include "TTree.h"
 #include "TH2.h"
 #include "TTreeFormula.h"
+#include "TGraph.h"
 
+#include <vector>
+#include <utility>
+
+using namespace std;
 
 class ExtendedObjectProperty : public TObject {
 public:
-  ExtendedObjectProperty( TString name, TString formula , int nbins, double min, double max ,  std::vector<TString>* labels = NULL );
+  ExtendedObjectProperty(TString cutname , TString name, TString formula , int nbins, double min, double max , TString SUSYCatCommand , std::vector<TString> SUSYNames  ,  std::vector<TString>* labels = NULL);
 
-  void SetTree( TTree* tree , TString sampletype , TString samplesname);
+  void SetTree( TTree* tree , TString sampletype , TString samplesname , TString Cutname = "");
 
   void Fill(double w = 1.0);
 
@@ -33,8 +38,10 @@ public:
 
   TCanvas* plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, TH1* h3, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle,int njets,int nbjets, int nleps, float overlayScale, TString saveMacro , int lumi_);
 
-
   void Write( TDirectory* dir , int lumi);
+
+  std::vector< TGraph* > AllSignificances;
+  void CalcSig(int LowerCut=0 , int type = 0 , int susycat=-1);
 
   TH1* theH;
   TH1* theMCH;
@@ -45,10 +52,14 @@ public:
 
   double dVal;
 
+  TString CutName;
   TString Name;
   TString Formula;
 
   TTreeFormula* tFormula;
+  TTreeFormula* tSUSYCatFormula;
+  TString SUSYCatCommand;
+  vector<TString> SUSYNames;
 
   int nBins;
 
@@ -67,6 +78,7 @@ public :
   TString CutStr;
   TTreeFormula* fCut;
 
+  bool OnSusy;
   bool OnData ;
   bool OnMC ;
   TString DataWeight ;
@@ -78,24 +90,34 @@ public :
   bool SUSYWeight;
   
   TTreeFormula* CurrentWeight;
+  double CurrentWeightVal;
 
   bool isData;
   bool isSUSY;
+  bool isMC;
 
   TList Props;
   TList Events;
 
   TString CurrentSampleSName;
   TString CurrentSampleType;
+
+  std::string CurrentSampleSNameS;
+  std::string CurrentSampleTypeS;
+
   TEventList* CurrentList;
 
   int Verbose;
 
-  ExtendedCut( TString name, TString cutstr , bool applyondata , bool applyonmc , TString dataweight , TString mcweight , bool susyweight , int verbose = 0 );
+  ExtendedCut( TString name, TString cutstr , bool applyondata , bool applyonmc , TString dataweight , TString mcweight , bool susyweight , bool applyonsusy , int verbose = 0);
   void SetTree( TTree* tree , TString samplename , TString samplesname , TString sampletype );
   bool Pass(long currententryindex , double& weight );
-  void Write(TDirectory* dirparent , int lumi);
+  void Write(TDirectory* dirparent , int lumi , vector< pair<int,int> > a , int nSUSYSig );
   virtual void Print(Option_t* option = "") const;
+
+  bool StoreTree;
+  TTree* theTreeToSave;
+  void SaveTree();
 };
 
 struct sample{
@@ -129,7 +151,8 @@ public:
   void loadSamples(const char* filename = "samples.dat");
   std::vector<sample>  fSamples;  
 
-  void eleTauAnalysis(TList* allcuts, Long64_t nevents, TString myfilename, TDirectory* elists=0 , TString cut="" );
+  void eleTauAnalysis(TList* allcuts, Long64_t nevents, vector< pair<int,int> > Significances , TString myfilename, TString SUSYCatCommand , vector<TString> SUSYCatNames , TDirectory* elists=0 , TString cut="" );
+  void plotSig(ExtendedObjectProperty* var,ExtendedObjectProperty* w , TString cut , TDirectory* elists , bool cleaned, int type,int LowerCut); // 0: s/sqrt(b), 1: s/sqrt(s+b), 3:s/b
 };
 
 #endif

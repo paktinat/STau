@@ -3235,6 +3235,93 @@ float MT2tree::PositiveChargedLeptonDecayAngleinZframe(TLorentzVector LepPluslv,
 }
 
 
+//added by hamed for optimization
+
+Float_t MT2tree::MCTEleTau(){
+  TLorentzVector DTM( 0 , 0 , 0 , 0);
+  return GetMCTcorr( ele[eleTau[0].GetEleIndex0()].lv, tau[eleTau[0].GetTauIndex0()].lv, DTM , pfmet[0].Vect().XYvector() );
+}
+
+Float_t MT2tree::PZetaEleTau(){
+  return PZeta(ele[eleTau[0].GetEleIndex0()].lv, tau[eleTau[0].GetTauIndex0()].lv, pfmet[0]);
+}
+Float_t MT2tree::PZetaImbalancedEleTau(){
+  return PZeta(ele[eleTau[0].GetEleIndex0()].lv, tau[eleTau[0].GetTauIndex0()].lv, (-eleTau[0].GetLV()));
+}
+Float_t MT2tree::PVisibleZetaEleTau(){
+  return PVisibleZeta(ele[eleTau[0].GetEleIndex0()].lv, tau[eleTau[0].GetTauIndex0()].lv);
+}
+Float_t MT2tree::DiLepPtRatioEleTau(){
+  return DiLepPtRatio( ele[eleTau[0].GetEleIndex0()].lv, tau[eleTau[0].GetTauIndex0()].lv);
+}
+Float_t MT2tree::PositiveChargedLepWithZBeamPlaneEleTau(){
+  TLorentzVector LepPluslv;
+  TLorentzVector LepNeglv;
+  if(ele[eleTau[0].GetEleIndex0()].Charge >= tau[eleTau[0].GetTauIndex0()].Charge){
+    LepPluslv = ele[eleTau[0].GetEleIndex0()].lv;
+    LepNeglv  = tau[eleTau[0].GetTauIndex0()].lv;
+  }else{
+    LepPluslv = tau[eleTau[0].GetTauIndex0()].lv;
+    LepNeglv  = ele[eleTau[0].GetEleIndex0()].lv;
+  }
+
+  return PositiveChargedLepWithZBeamPlane(LepPluslv, LepNeglv);
+}
+Float_t MT2tree::MinMetLepDPhiEleTau(){
+  return MinMetLepDPhi(ele[eleTau[0].GetEleIndex0()].lv, tau[eleTau[0].GetTauIndex0()].lv);
+}
+Float_t MT2tree::PositiveChargedLeptonDecayAngleinZframeEleTau(){
+  TLorentzVector LepPluslv;
+  TLorentzVector LepNeglv;
+  if(ele[eleTau[0].GetEleIndex0()].Charge >= tau[eleTau[0].GetTauIndex0()].Charge){
+    LepPluslv = ele[eleTau[0].GetEleIndex0()].lv;
+    LepNeglv  = tau[eleTau[0].GetTauIndex0()].lv;
+  }else{
+    LepPluslv = tau[eleTau[0].GetTauIndex0()].lv;
+    LepNeglv  = ele[eleTau[0].GetEleIndex0()].lv;
+  }
+
+  return PositiveChargedLeptonDecayAngleinZframe(LepPluslv, LepNeglv);
+}
+
+Float_t MT2tree::EleTauDeltaPt(){
+  return fabs( tau[ eleTau[0].GetTauIndex0() ].lv.Pt()-ele[eleTau[0].GetEleIndex0() ].lv.Pt() );
+}
+
+Float_t MT2tree::EleTauDeltaEta(){
+  return fabs( tau[ eleTau[0].GetTauIndex0() ].lv.Eta()-ele[eleTau[0].GetEleIndex0() ].lv.Eta() );
+}
+
+Float_t MT2tree::EleTauAbsEta(){
+  return fabs( eleTau[0].GetLV().Eta() );
+}
+
+Float_t MT2tree::DeltaMETEleTau(int mode){
+  TVector2 MET = pfmet[0].Vect().XYvector() ;
+  TVector2 METIMB =  TVector2 ( - eleTau[0].GetLV().X() , - eleTau[0].GetLV().Y() );
+
+  if(mode == 0){
+    TVector2 METDif = TVector2( MET.X() - METIMB.X() , MET.Y() - METIMB.Y() ) ;
+    return METDif.Mod() ;
+  }
+  else if(mode == 1)
+    return ( MET.Mod() - METIMB.Mod() ) ;
+  else if(mode == 2)
+    return MET.Mod() + METIMB.Mod() ;
+  else if(mode == 3){
+    TVector2 METDif2 = TVector2( MET.X() + METIMB.X() , MET.Y() + METIMB.Y() ) ;
+    return METDif2.Mod() ;
+  }else if(mode == 4){
+    TVector2 METDif3 = TVector2( MET.X() - METIMB.X() , MET.Y() - METIMB.Y() ) ;
+    return METDif3.Mod()-METIMB.Mod() ;
+  }
+  else if(mode == 5){
+    TVector2 METDif4 = TVector2( MET.X() - METIMB.X() , MET.Y() - METIMB.Y() ) ;
+    return METDif4.DeltaPhi( eleTau[0].GetLV().Vect().XYvector() ) ;
+  }
+}
+//end of the eletau optimization
+
 float MT2tree::MinMetLepDPhiMuTau(){//temporary solution for makePlot. No need to be moved to the next versions.
   return MinMetLepDPhi(muo[muTau[0].GetMuIndex0()].lv, tau[muTau[0].GetTauIndex0()].lv);
 }

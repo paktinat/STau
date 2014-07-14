@@ -4,6 +4,63 @@
 #include "MassPlotterEleTau.hh"
 #include <vector>
 
+void ExtendedObjectProperty::CalcSig(int LowerCut , int type , int SUSCat) {
+  Float_t  x[nBins], y[nBins];
+  theMCH = allHistos["MC"];
+
+  TString SignalHistoName = "SUSY";
+  if( SUSCat > -1 && SUSCat < SUSYNames.size() )
+    SignalHistoName += "_" + SUSYNames[SUSCat] ;
+
+  for (int i = 1; i <=nBins+1; i++){
+    x[i-1] = theMCH->GetBinLowEdge(i);
+    cout<<i<<" x[i-1] "<<x[i-1]<<endl;
+    float s;
+    if(LowerCut == 1) 
+      s = allHistos[SignalHistoName]->Integral(i,nBins+1);
+    else	
+      s = allHistos[SignalHistoName]->Integral(0, i - 1);
+    cout<<" s "<<s<<endl;
+    float b;
+    if(LowerCut == 1) 
+      b = theMCH->Integral(i,nBins+1);
+    else
+      b = theMCH->Integral(0, i - 1);
+    cout<<" b "<<b<<endl;
+    if(b == 0)
+      y[i-1] = 5.0;
+    else{
+      if (type==0) {
+	y[i-1] = s/sqrt(b);
+      }
+      if (type==1) {
+	y[i-1] = s/sqrt(s+b);
+      }
+      if (type==2) {
+	y[i-1] = s/b;
+      }
+      cout<<" y[i-1] "<<y[i-1]<<endl;
+    }
+  }
+  TGraph *sig = new TGraph(nBins+1,x,y);
+  TString nnn = Name + "_" + std::to_string(LowerCut) + "_" + std::to_string(type) + "_" + SignalHistoName + "_" + CutName ;
+  sig->SetName( nnn );
+  sig->SetTitle(SignalHistoName);
+  sig->GetXaxis()->SetTitle(Name + "(" + (LowerCut?"LowerLimit":"UpperLimit") + ")" );
+  sig->SetMarkerStyle(20);
+  if (type==0){
+    sig->GetYaxis()->SetTitle("S/#sqrt{B}");
+  }
+  if (type==1){
+    sig->GetYaxis()->SetTitle("S/#sqrt{S+B}");
+  }
+  if (type==2){
+    sig->GetYaxis()->SetTitle("S/B");
+	  
+  }
+  AllSignificances.push_back( sig );
+}
+
 void ExtendedObjectProperty::Print(Option_t* option ) const{
   if(option == ""){
     cout << "\t" 
@@ -36,27 +93,38 @@ void ExtendedObjectProperty::Print(Option_t* option ) const{
   }
 }
 
-ExtendedObjectProperty::ExtendedObjectProperty( TString name, TString formula , int nbins, double min, double max ,  std::vector<TString>* labels ) :
+ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, TString formula , int nbins, double min, double max ,TString SUSYCatCommand_ , std::vector<TString> SUSYNames_,  std::vector<TString>* labels ) :
   Name(name),
   Formula(formula),
   nBins(nbins),
   Min(min),
   Max(max),
   tFormula(0),
-  NumberOfHistos(7)
-{
+  tSUSYCatFormula(0),
+  SUSYNames( SUSYNames_ ),
+  SUSYCatCommand( SUSYCatCommand_ ),
+  CutName( cutname ){
+
+  gROOT->cd();
+  NumberOfHistos = (7+SUSYNames_.size()) ;
 
   TH1::SetDefaultSumw2();
    
 
-  TString  cnames[] = {"QCD", "Wtolnu", "DY", "Top", "MC", "SUSY","data"};
-  int      ccolor[] = {  401,     417,     419,   600,  500,      1,   632};
+  vector<TString>  cnames = {"QCD", "Wtolnu", "DY", "Top", "MC", "SUSY" , "data" };
+  vector<int>      ccolor = {  401,     417,     419,   600,  500, 1 , 632 };
+
+  for( int i=0 ; i< SUSYNames.size() ; i++){
+    cnames.push_back( "SUSY_" + SUSYNames[i] );
+    ccolor.push_back( 1 );
+  }
+
   TString varname = Name;
   for (int i=0; i<NumberOfHistos ; i++){
 
     histoNames.push_back( cnames[i] );
 
-    TH1* theH = allHistos[ cnames[i] ] = new TH1D(varname+"_"+cnames[i], "", nBins, Min, Max);
+    TH1* theH = allHistos[ cnames[i] ] = new TH1D( CutName + "_" + varname+"_"+cnames[i], "", nBins, Min, Max);
     theH -> SetFillColor  (ccolor[i]);
     theH -> SetLineColor  (ccolor[i]);
     theH -> SetLineWidth  (2);
@@ -79,13 +147,19 @@ ExtendedObjectProperty::ExtendedObjectProperty( TString name, TString formula , 
       theH -> SetFillColor(kBlack);
     }
   }
-
 }
 
-void ExtendedObjectProperty::SetTree( TTree* tree , TString sampletype, TString samplesname ){
+void ExtendedObjectProperty::SetTree( TTree* tree , TString sampletype, TString samplesname , TString cutname ){
+
+  CutName = cutname;
 
   if(tFormula != 0)
     delete tFormula;
+
+  if(tSUSYCatFormula != 0){
+    delete tSUSYCatFormula;
+    tSUSYCatFormula = 0;
+  }
 
   tFormula = new TTreeFormula( Name.Data() , Formula.Data() , tree );
 
@@ -95,8 +169,10 @@ void ExtendedObjectProperty::SetTree( TTree* tree , TString sampletype, TString 
   CurrentSampleSName = samplesname;
   if(CurrentIsData)
     theH = allHistos["data"];
-  else if(CurrentSampleType == "susy")
-    theH = allHistos["SUSY"];
+  else if(CurrentSampleType == "susy"){
+    theH = NULL;
+    tSUSYCatFormula = new TTreeFormula( ( Name + "_SUSY" ).Data() , SUSYCatCommand.Data() , tree );
+  }
   else
     theH = allHistos[ CurrentSampleSName ];
 
@@ -109,14 +185,35 @@ void ExtendedObjectProperty::SetTree( TTree* tree , TString sampletype, TString 
 void ExtendedObjectProperty::Fill(double w){
   dVal = tFormula->EvalInstance(0);
 
-  theH->Fill( dVal , w);
+  if( theH )
+    theH->Fill( dVal , w);
+  else if(tSUSYCatFormula){
+    allHistos["SUSY"]->Fill( dVal , w );
+    double suscatd = tSUSYCatFormula->EvalInstance(0) ;
+    int suscat = int(suscatd);
+    if( suscat < SUSYNames.size() ){
+      TString suscatname = SUSYNames[suscat];
+      TString sushistname = "SUSY_" + suscatname ;
+      allHistos[ sushistname ]->Fill( dVal , w );
+    }
+  }
 
   if( theMCH )
     theMCH->Fill(dVal , w);
 }
 
 void ExtendedObjectProperty::Fill(double dVal , double w ){
-  theH->Fill( dVal , w);
+  if( theH )
+    theH->Fill( dVal , w);
+  else if(tSUSYCatFormula){
+    allHistos["SUSY"]->Fill( dVal , w );
+    int suscat =int(tSUSYCatFormula->EvalInstance(0)) ;
+    if( suscat < SUSYNames.size() ){
+      TString suscatname = SUSYNames[suscat];
+      TString sushistname = "SUSY_" + suscatname ;
+      allHistos[ sushistname ]->Fill( dVal , w );
+    }
+  }
 
   if( theMCH )
     theMCH->Fill(dVal , w);
@@ -158,14 +255,14 @@ TCanvas* ExtendedObjectProperty::plotRatioStack(THStack* hstack, TH1* h1_orig, T
 
 	
   //TCanvas* c1 = new TCanvas(name,"", 20,100,1000,700);
-  TCanvas* c1 = new TCanvas(name+"c_ratio","",0,0,600,600 /*37, 60,636,670*/);
+  TCanvas* c1 = new TCanvas(name+"c_ratio"+ "_" + Name + "_" + CutName,"",0,0,600,600 /*37, 60,636,670*/);
   c1->SetFrameLineWidth(1);
   c1 -> cd();
 	
   float border = 0.2;
   float scale = (1-border)/border;
  
-  TPad *p_plot  = new TPad(name+"_plotpad",  "Pad containing the overlay plot", 0,0.211838,1,1 /*0.00, border, 1.00, 1.00, 0, 0*/);
+  TPad *p_plot  = new TPad(name+"_plotpad"+ "_" + Name + "_" + CutName,  "Pad containing the overlay plot", 0,0.211838,1,1 /*0.00, border, 1.00, 1.00, 0, 0*/);
   //p_plot->SetBottomMargin(0.05);
   //p_plot->SetTopMargin(0.09);
   //p_plot->SetLeftMargin(0.1669107);
@@ -175,7 +272,7 @@ TCanvas* ExtendedObjectProperty::plotRatioStack(THStack* hstack, TH1* h1_orig, T
   p_plot->SetTopMargin(0.06895515);
   p_plot->SetBottomMargin(0.07206074);
   p_plot->Draw();
-  TPad *p_ratio = new TPad(name+"_ratiopad", "Pad containing the ratio",   0,0.01863354,0.9967105,0.2189441/*     0.00, 0.05, 1.00, border, 0, 0*/);
+  TPad *p_ratio = new TPad(name+"_ratiopad"+ "_" + Name + "_" + CutName, "Pad containing the ratio",   0,0.01863354,0.9967105,0.2189441/*     0.00, 0.05, 1.00, border, 0, 0*/);
   //p_ratio->SetTopMargin(0.03);
   //p_ratio->SetBottomMargin(0.05/*5*/);
   //p_ratio->SetRightMargin(0.02);
@@ -330,23 +427,22 @@ TCanvas* ExtendedObjectProperty::plotRatioStack(THStack* hstack, TH1* h1_orig, T
   return c1;
 }
 
-
 void ExtendedObjectProperty::Write( TDirectory* dir , int lumi){
   dir->mkdir(  Name  )->cd();
 
-  THStack* h_stack     = new THStack(Name, "");
+  THStack* h_stack     = new THStack( CutName + "_" + Name, "");
   TLegend* Legend1 = new TLegend(.71,.54,.91,.92);
 
-  for(int j = 0; j < (NumberOfHistos); j++){
+  for(int j = 0; j < (NumberOfHistos-SUSYNames.size()); j++){
     theH = allHistos[ histoNames[j] ];
     AddOverAndUnderFlow(theH, true, true);
 
-    if(j < (NumberOfHistos - 3)){
+    if(j < (NumberOfHistos -SUSYNames.size()- 3)){
       h_stack  -> Add(theH);
       Legend1->AddEntry(theH, histoNames[j] , "f");
-    }else if( j == NumberOfHistos-1 ){
+    }else if( j == NumberOfHistos-SUSYNames.size()-1 ){
       Legend1->AddEntry(theH, "data", "l");
-    }else if( j == NumberOfHistos-2 ){
+    }else if( j == NumberOfHistos-SUSYNames.size()-2 ){
       Legend1->AddEntry(theH, "SMS", "l");
     }
 
@@ -356,7 +452,31 @@ void ExtendedObjectProperty::Write( TDirectory* dir , int lumi){
   Legend1->Write();
 
   plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY"] , true, false, Name + "_ratio", Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
+  for(int i =0 ; i<SUSYNames.size() ; i++)
+    plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY_"+SUSYNames[i] ] , true, false, Name + "_ratio"+ "_"+SUSYNames[i], Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
 
+  for( std::vector< TGraph* >::const_iterator itr = AllSignificances.begin() ; itr != AllSignificances.end() ; itr++)
+    (*itr)->Write();
+}
+
+void ExtendedCut::SaveTree(){
+  StoreTree = true;
+
+  theTreeToSave = new TTree( Name , Name);
+
+  TIter nextprop( &Props );
+  TObject* objtemp;
+  while( objtemp = nextprop() ){
+    ExtendedObjectProperty* castedobj = (ExtendedObjectProperty*)objtemp ;
+    theTreeToSave->Branch( castedobj->Name , &(castedobj->dVal) , castedobj->Name + "/D" ) ;
+  }  
+  theTreeToSave->Branch( "W" , &(this->CurrentWeightVal) , "W/D" );
+  theTreeToSave->Branch( "isData" , &(this->isData) , "isData/O" );
+  theTreeToSave->Branch( "isSUSY" , &(this->isSUSY) , "isSUSY/O" );
+  theTreeToSave->Branch( "isMC" , &(this->isMC) , "isMC/O" );
+
+  theTreeToSave->Branch( "SName" , &(this->CurrentSampleSNameS) , "SName/C" );
+  theTreeToSave->Branch( "SType" , &(this->CurrentSampleTypeS)  , "SType/C" );
 }
 
 void ExtendedCut::Print(Option_t* option) const{
@@ -381,7 +501,7 @@ void ExtendedCut::Print(Option_t* option) const{
 }
 
 
-ExtendedCut::ExtendedCut( TString name, TString cutstr , bool applyondata , bool applyonmc , TString dataweight , TString mcweight , bool susyw , int verbose ) :
+ExtendedCut::ExtendedCut(TString name, TString cutstr , bool applyondata , bool applyonmc , TString dataweight , TString mcweight , bool susyw, bool applyonsusy , int verbose) :
     Name(name),
     CutStr(cutstr),
     fCut(0),
@@ -392,7 +512,9 @@ ExtendedCut::ExtendedCut( TString name, TString cutstr , bool applyondata , bool
     MCWeight(mcweight),
     fMCW(0),
     SUSYWeight(susyw),
-    Verbose(verbose){
+    Verbose(verbose),
+    OnSusy(applyonsusy),
+    StoreTree(false){
 
   if(Verbose>1)
     this->Print();
@@ -400,6 +522,9 @@ ExtendedCut::ExtendedCut( TString name, TString cutstr , bool applyondata , bool
 
 void ExtendedCut::SetTree( TTree* tree , TString samplename , TString samplesname , TString sampletype ){
   isData = (sampletype=="data");
+  isMC = (sampletype == "mc" );
+  isSUSY = (sampletype == "susy") ;
+
     if(fCut != 0){
       delete fCut;
       fCut = 0;
@@ -422,10 +547,10 @@ void ExtendedCut::SetTree( TTree* tree , TString samplename , TString samplesnam
       CurrentWeight = fDW;
     }
     if( !isData ){
-      if( sampletype == "mc" && MCWeight != "" ){
+      if( isMC && MCWeight != "" ){
 	fMCW = new TTreeFormula("fMCW" + Name , MCWeight , tree);
 	CurrentWeight = fMCW;
-      }else if(sampletype == "susy" && MCWeight != "" && SUSYWeight ){
+      }else if(isSUSY && MCWeight != "" && SUSYWeight ){
 	fMCW = new TTreeFormula("fSUSYW" +Name , MCWeight , tree);
 	CurrentWeight = fMCW;
       }
@@ -435,13 +560,13 @@ void ExtendedCut::SetTree( TTree* tree , TString samplename , TString samplesnam
     TObject* objtemp;
     cout << Props.GetSize() << endl; 
     while( objtemp = nextprop() ){
-      ((ExtendedObjectProperty*)objtemp)->SetTree( tree , sampletype , samplesname );
+      ((ExtendedObjectProperty*)objtemp)->SetTree( tree , sampletype , samplesname , Name );
       ((ExtendedObjectProperty*)objtemp)->Print() ;
     }
 
     CurrentList = 0;
 
-    if( (isData && OnData) || (!isData && OnMC) ){
+    if( (isData && OnData) || (isMC && OnMC) || (isSUSY && OnSusy) ){
       TString ListName = Name + "_" + samplename ;
       TIter nexteventlist( &Events );
       while( objtemp = nexteventlist() ){
@@ -460,10 +585,13 @@ void ExtendedCut::SetTree( TTree* tree , TString samplename , TString samplesnam
     CurrentSampleType = sampletype;
     CurrentSampleSName = samplesname;
 
+    CurrentSampleTypeS = sampletype;
+    CurrentSampleSNameS = samplesname;
+
+    cout << "HHHHHHHHHHHHHHHHHHHHHHHH:" << CurrentSampleSNameS << endl;
+
     if(isData)
       CurrentSampleSName = "data";
-
-    isSUSY = (sampletype == "susy") ;
 
     if(Verbose > 1){
       this->Print();
@@ -478,13 +606,17 @@ bool ExtendedCut::Pass(long currententryindex , double& weight ){
     bool pass = false;
     if( isData && !OnData )
       pass = true;
-    else if( !isData && !OnMC)
+    else if( isMC && !OnMC)
+      pass = true;
+    else if ( isSUSY && !OnSusy)
       pass = true;
     else
       pass = ( fCut->EvalInstance(0) != 0.0 );
     if(pass){
       if(CurrentWeight)
 	weight *= CurrentWeight->EvalInstance(0);
+
+      CurrentWeightVal = weight;
 
       if(CurrentList)
 	CurrentList->Enter( currententryindex );
@@ -495,18 +627,26 @@ bool ExtendedCut::Pass(long currententryindex , double& weight ){
 	((ExtendedObjectProperty*)objtemp)->Fill( weight );
       }
     }
-    
+
+    if( StoreTree )
+      theTreeToSave->Fill();
+
     return pass;
 }
 
 
-void ExtendedCut::Write(TDirectory* dirparent , int lumi){
+void ExtendedCut::Write(TDirectory* dirparent , int lumi , vector< pair<int,int>  > sig_types , int nSUSYSig){
   TDirectory * dir = dirparent->mkdir( Name );
   dir->cd();
 
   TIter nextprop( &Props );
   TObject* objtemp;
   while( objtemp = nextprop() ){
+
+    for( vector< pair<int,int> >::const_iterator itr = sig_types.begin() ; itr != sig_types.end() ; itr++ ){
+      for( int susy_sig = -1 ; susy_sig < nSUSYSig ; susy_sig++ )
+	((ExtendedObjectProperty*)objtemp)->CalcSig( itr->first , itr->second , susy_sig );
+    }
     ((ExtendedObjectProperty*)objtemp)->Write( dir , lumi );
   }
 
@@ -550,7 +690,8 @@ void MassPlotterEleTau::init(TString filename){
   loadSamples(filename);
 }
 
-void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents, TString myfileName , TDirectory* elists  , TString cut ){
+void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vector< pair<int,int> > Significances, TString myfileName , TString SUSYCatCommand , vector<TString> SUSYCatNames , TDirectory* elists  , TString cut){
+
   TTreeFormula* elePt = 0;
   TTreeFormula* eleEta = 0;
   TLorentzVector eleLV;
@@ -568,7 +709,7 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents, TString
     ExtendedCut* thecut = (ExtendedCut*)objcut ;
     alllabels.push_back( thecut->Name );
   }  
-  ExtendedObjectProperty cutflowtable("cutflowtable" , "1" , allCuts->GetEntries() , 0 , allCuts->GetEntries() , &alllabels );  
+  ExtendedObjectProperty cutflowtable("" , "cutflowtable" , "1" , allCuts->GetEntries() , 0 , allCuts->GetEntries() , SUSYCatCommand, SUSYCatNames, &alllabels );  
   nextcut.Reset();
 
   for(int ii = 0; ii < fSamples.size(); ii++){
@@ -576,7 +717,7 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents, TString
     sample Sample = fSamples[ii];
 
     TEventList* list = 0;
-    if(elists != 0){
+    if(elists != 0) { // && Sample.type != "susy" ){
       TString ListName = cut + "_" + Sample.name ;
       elists->GetObject( ListName , list );
     }
@@ -640,6 +781,8 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents, TString
 
       double cutindex = 0.5;
       while( objcut = nextcut() ){
+	
+
 	if(cutindex == 0.5 && data != 1){
 	  eleLV.SetPtEtaPhiM(elePt->EvalInstance(0)  , eleEta->EvalInstance(0) , 0 , 0);
 	  tauLV.SetPtEtaPhiM(tauPt->EvalInstance(0)  , tauEta->EvalInstance(0) , 0 , 0);
@@ -668,6 +811,7 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents, TString
   if(!fileName.EndsWith("/")) fileName += "/";
   Util::MakeOutputDir(fileName);
   fileName = fileName  + myfileName +"_Histos.root";
+
   TFile *savefile = new TFile(fileName.Data(), "RECREATE");
   savefile ->cd();
 
@@ -675,7 +819,7 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents, TString
   nextcut.Reset();
   while( objcut = nextcut() ){
     ExtendedCut* thecut = (ExtendedCut*)objcut ;
-    thecut->Write( savefile, lumi);
+    thecut->Write( savefile, lumi , Significances , SUSYCatNames.size() );
   }
 
   cutflowtable.Print("cutflowtable");
@@ -828,6 +972,83 @@ void MassPlotterEleTau::loadSamples(const char* filename){
     }
   }
   if(fVerbose > 0) cout << "------------------------------------" << endl;
+}
+
+
+void MassPlotterEleTau::plotSig(ExtendedObjectProperty* var, ExtendedObjectProperty* w, TString cut, TDirectory* elists , bool cleaned=false, int type=0 ,int LowerCut=0){
+  TTreeFormula* elePt = 0;
+  TTreeFormula* eleEta = 0;
+  TLorentzVector eleLV;
+  TTreeFormula* tauPt = 0;
+  TTreeFormula* tauEta = 0;
+  TLorentzVector tauLV;
+  
+  int lumi = 0;
+
+  for(int ii = 0; ii < fSamples.size(); ii++){
+    int data = 0;
+    sample Sample = fSamples[ii];
+
+    TEventList* list = 0;
+    TString ListName = cut + "_" + Sample.name ;
+    elists->GetObject( ListName , list );
+
+    if(Sample.type == "data"){
+      data = 1;
+    }else
+      lumi = Sample.lumi; 
+
+
+    if(elePt != 0){
+      delete elePt;
+      delete eleEta;
+      delete tauPt;
+      delete tauEta;
+    }
+    elePt = new TTreeFormula("elePT___" ,  "ele[eleTau[0].ele0Ind].lv.Pt()" , Sample.tree ); 
+    eleEta = new TTreeFormula("eleEta___" ,  "ele[eleTau[0].ele0Ind].lv.Eta()" , Sample.tree ); 
+
+    tauPt = new TTreeFormula("tauPT___" ,  "tau[eleTau[0].tau0Ind].lv.Pt()" , Sample.tree ); 
+    tauEta = new TTreeFormula("tauEta___" ,  "tau[eleTau[0].tau0Ind].lv.Eta()" , Sample.tree ); 
+
+    double Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents*Sample.PU_avg_weight);
+
+    Sample.Print(Weight);
+
+    var->SetTree( Sample.tree , Sample.type , Sample.sname);
+    w->SetTree( Sample.tree , Sample.type , Sample.sname);
+
+    int nentries = list->GetN();
+
+    Long64_t maxloop = nentries;
+
+    int counter = 0;
+    for (Long64_t jentry=0; jentry<maxloop;jentry++, counter++) {
+
+      Sample.tree->GetEntry( list->GetEntry(jentry) );
+      if ( counter == 10000 ){  
+	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+	fflush(stdout);
+	counter = 0;
+      }
+
+      double weight = Weight;
+      weight *= w->tFormula->EvalInstance(0) ;
+
+      eleLV.SetPtEtaPhiM(elePt->EvalInstance(0)  , eleEta->EvalInstance(0) , 0 , 0);
+      tauLV.SetPtEtaPhiM(tauPt->EvalInstance(0)  , tauEta->EvalInstance(0) , 0 , 0);
+      weight *= getCorrFactor("eltau" , "mc12" , eleLV , tauLV , tauLV);
+
+      if(Sample.sname == "Wtolnu"){
+	double pt = tauLV.Pt();
+	weight *= 1.157 - 7.361E-3 * pt + 4.370E-5 * pt * pt - 1.188E-7*pt * pt * pt;
+      }
+      
+      var->Fill( weight );
+      
+    }
+
+  }
 }
 
 
