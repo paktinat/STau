@@ -187,7 +187,7 @@ void MassPlotter::makeSmallCopy(int nevents, int sample, TString cuts, TString t
  //      TFile *newfile = new TFile(fOutputDir+"/"+fSamples[ii].name+"_small.root","recreate");
     TString fileName = fSamples[ii].file->GetName();
 
-    fileName =  fileName.ReplaceAll("_parkedsmallb.root", "_parkedverysmall.root");
+    fileName =  fileName.ReplaceAll(".root", "_NBJetsCSVM0_MET30.root");
 
     TFile *newfile = new TFile(fOutputDir+"/"+fileName,"recreate");
     TTree *newtree = fSamples[ii].tree->CloneTree(0);
