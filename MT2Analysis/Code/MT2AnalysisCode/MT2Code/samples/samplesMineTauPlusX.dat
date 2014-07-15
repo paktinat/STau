@@ -3,8 +3,9 @@ GENERAL
 Path         ///dataLOCAL/MT2Tau/RootFiles/
 ________________________________________________________________________________________
 # list of samples
-#
+
 ## -------- SMS --------
+
 #SAMPLE
 Name            TStau
 SName           SUSY
@@ -28,221 +29,277 @@ Type            susy
 Color           1
 
 
-## -------- QCD ----------------
+##------------ QCD-Pt-BCtoE ----------------
 
 #SAMPLE
 Name		QCD-Pt-20-30-BCtoE
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD-Pt-20-30-BCtoE-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/QCD_Pt_20_30_BCtoE_TuneZ2star_8TeV_pythia6.root
 Xsection  	167400.0 pb #CMS AN-12-468
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
-#
 
 #SAMPLE
 Name		QCD-Pt-30-80-BCtoE
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD-Pt-30-80-BCtoE-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/QCD_Pt_30_80_BCtoE_TuneZ2star_8TeV_pythia6.root
 Xsection  	167000.0 pb #CMS AN-12-468
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
-#
 
 #SAMPLE
 Name		QCD-Pt-80-170-BCtoE
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD-Pt-80-170-BCtoE-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/
 Xsection  	12980.0 pb #CMS AN-12-468
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
-#
 
 #SAMPLE
 Name		QCD-Pt-170-250-BCtoE
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD-Pt-170-250-BCtoE-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/
 Xsection  	632.0 pb #CMS AN-12-468
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
-#
 
 #SAMPLE
 Name		QCD-Pt-250-350-BCtoE
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD-Pt-250-350-BCtoE-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/
 Xsection  	103.3 pb #CMS AN-12-468
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
-#
 
 #SAMPLE
 Name		QCD-Pt-350-BCtoE
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD-Pt-350-BCtoE-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v2_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/
 Xsection  	23.92 pb #CMS AN-12-468
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
 
+##-------------- QCD-Pt-EMEnriched --------------------
+
 #SAMPLE
-Name		QCD_HT_100To250
+Name		QCD-Pt-20-30-EM
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD-HT-100To250-TuneZ2star-8TeV-madgraph-pythia-Summer12-DR53X-PU-S10-START53-V7A-v1_NBJetsCSVM0_MET30.root
-Xsection  	1.036E7 pb 
+File            TauTau_V3_1/QCD_Pt_20_30_EMEnriched_TuneZ2star_8TeV_pythia6.root
+Xsection  	2915000.0 pb #CMS AN-12-468
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
 
 #SAMPLE
-Name		QCD_Pt_15to20
+Name		QCD-Pt-30-80-EM
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD-Pt-15to20-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v2_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/QCD_Pt_30_80_EMEnriched_TuneZ2star_8TeV_pythia6.root
+Xsection  	4616000.0 pb #CMS AN-12-468
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+
+#SAMPLE
+Name		QCD-Pt-80-170-EM
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/
+Xsection  	183300.0 pb #CMS AN-12-468
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+
+#SAMPLE
+Name		QCD-Pt-170-250-EM
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/
+Xsection  	4587.0 pb #CMS AN-12-468
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+
+#SAMPLE
+Name		QCD-Pt-250-350-EM
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/
+Xsection  	556.8 pb #CMS AN-12-468
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+
+#SAMPLE
+Name		QCD-Pt-350-EM
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/
+Xsection  	89.1 pb #CMS AN-12-468
+Kfact           1.59
+Lumi            19600.0
+Type		mc
+Color		401
+
+
+##------------ QCD-Pt-MuEnriched ----------------
+
+#SAMPLE
+Name		QCD-Pt-15-20-Mu
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt-15to20_MuEnrichedPt5_TuneZ2star_8TeV_pythia6.root
 Xsection  	2.73858E06
 Kfact           1.59
 Lumi            19600 
 Type		mc
 Color		401
-#
+
 #SAMPLE
-Name		QCD_Pt_20to30
+Name		QCD-Pt-20-30-Mu
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD-Pt-20to30-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/QCD_Pt-20to30_MuEnrichedPt5_TuneZ2star_8TeV_pythia6.root
 Xsection  	1.8655E06 
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
-#
+
 #SAMPLE
-Name		QCD_Pt_30to50
+Name		QCD-Pt-30-50-Mu
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD-Pt-30to50-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1_NBJetsCSVM0_MET30.root
-Xsection  	 806298.0 
+File            TauTau_V3_1/QCD_Pt-30to50_MuEnrichedPt5_TuneZ2star_8TeV_pythia6.root
+Xsection  	806298.0 
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
-#
+
 #SAMPLE
-Name		QCD_Pt_50to80
+Name		QCD-Pt-50-80-Mu
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD-Pt-50to80-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/QCD_Pt-50to80_MuEnrichedPt5_TuneZ2star_8TeV_pythia6.root
 Xsection  	176187.6 
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
-#
+
 #SAMPLE
-Name		QCD_Pt_80to120
+Name		QCD-Pt-80-120-Mu
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD-Pt-80to120-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/QCD_Pt-80to120_MuEnrichedPt5_TuneZ2star_8TeV_pythia6.root
 Xsection  	40448 
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
-#
+
 #SAMPLE
-Name		QCD_Pt_120to170
+Name		QCD-Pt-120-170-Mu
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD-Pt-120to170-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/
 Xsection  	7463.94 
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
-#
+
 #SAMPLE
-Name		QCD_Pt_170to300
+Name		QCD-Pt-170-300-Mu
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD-Pt-170to300-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/
 Xsection  	2299.752 
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
-#
+
 #SAMPLE
-Name		QCD_Pt_300to470
+Name		QCD-Pt-300-470-Mu
 SName		QCD
 ShapeName	QCD   
-File            TauTau_V3_1/QCD-Pt-300to470-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1_NBJetsCSVM0_MET30.root
-Xsection  	151.8048 pb 
+File            TauTau_V3_1/
+Xsection  	151.8048  
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
-#
+
 #SAMPLE
-Name		QCD_Pt_470to600
+Name		QCD-Pt-470-600-Mu
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD-Pt-470to600-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/
 Xsection  	11.79648 
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
-#
+
 #SAMPLE
-Name		QCD_Pt_600to800
+Name		QCD-Pt-600-800-Mu
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD-Pt-600to800-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/
 Xsection  	2.690196 
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
-#
+
 #SAMPLE
-Name		QCD_Pt_800to1000
+Name		QCD-Pt-800-1000-Mu
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD-Pt-800to1000-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/
 Xsection  	0.368781 
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
-#
+
 #SAMPLE
-Name		QCD_Pt_1000ToInf
+Name		QCD-Pt-1000-Mu
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD-Pt-1000-MuEnrichedPt5-TuneZ2star-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/
 Xsection  	0.0849078 pb  
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
+
 # -------- electroweak --------
 #SAMPLE
 Name		WWJetsTo2L2Nu
