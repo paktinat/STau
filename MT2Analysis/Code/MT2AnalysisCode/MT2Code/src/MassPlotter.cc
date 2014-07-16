@@ -8129,35 +8129,35 @@ double MassPlotter::DeltaPhi(double phi1, double phi2){
          
 
 
-//            if(fMT2tree->jet[i].isTauMatch < 0)
-// 	 continue;
-// 	 int matchedTauInd = fMT2tree->jet[i].isTauMatch;
+	 if(fMT2tree->jet[i].isTauMatch < 0)
+	   continue;
+ 	 int matchedTauInd = fMT2tree->jet[i].isTauMatch;
 
 	
 // //  	 if(!( (fabs(fMT2tree->tau[matchedTauInd].lv.Eta())<2.3) &&  (fMT2tree->tau[matchedTauInd].lv.Pt()>20) )) 
 // //  	  continue;	      
 
-	 mindR=10.7;
-	 int matchedTauInd = -1;
+// 	 mindR=10.7;
+// 	 int matchedTauInd = -1;
 
-	 for(int j=0; j<fMT2tree->NTaus; ++j){
-	   if(!( (fabs(fMT2tree->tau[j].lv.Eta())<2.3) &&  (fMT2tree->tau[j].lv.Pt()>20) )) 
-	     continue;
-	   if( fMT2tree->tau[j].decayModeFinding < 0.5)
-	   continue;
-
-	   float deltaR = Util::GetDeltaR(fMT2tree->jet[i].lv.Eta(),fMT2tree->tau[j].lv.Eta(),fMT2tree->jet[i].lv.Phi() ,fMT2tree->tau[j].lv.Phi());
-	 
-	   if(deltaR < mindR){
-	     mindR = deltaR;
-	     matchedTauInd = j;
-	   }
-	 }
-
-	 if(mindR > 0.5)
-	   continue;
-// 	 if( fMT2tree->tau[matchedTauInd].decayModeFinding < 0.5)
+// 	 for(int j=0; j<fMT2tree->NTaus; ++j){
+// 	   if(!( (fabs(fMT2tree->tau[j].lv.Eta())<2.3) &&  (fMT2tree->tau[j].lv.Pt()>20) )) 
+// 	     continue;
+// 	   if( fMT2tree->tau[j].decayModeFinding < 0.5)
 // 	   continue;
+
+// 	   float deltaR = Util::GetDeltaR(fMT2tree->jet[i].lv.Eta(),fMT2tree->tau[j].lv.Eta(),fMT2tree->jet[i].lv.Phi() ,fMT2tree->tau[j].lv.Phi());
+	 
+// 	   if(deltaR < mindR){
+// 	     mindR = deltaR;
+// 	     matchedTauInd = j;
+// 	   }
+// 	 }
+
+// 	 if(mindR > 0.5)
+// 	   continue;
+ 	 if( fMT2tree->tau[matchedTauInd].decayModeFinding < 0.5)
+	   continue;
 
  	 TLorentzVector myLV = fMT2tree->jet[i].lv;
 //	 TLorentzVector myLV = fMT2tree->tau[matchedTauInd].lv;
