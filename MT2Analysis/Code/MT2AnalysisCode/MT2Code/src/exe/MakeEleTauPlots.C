@@ -14,11 +14,156 @@
 
 #include <climits>
 
-#include "MassPlotterEleTau.hh"
+#include "Corrector.h"
+#include "BaseMassPlotter.hh"
 
 #include "helper/Utilities.hh"
 
 using namespace std;
+
+class MassPlotterEleTau : public BaseMassPlotter{
+public:
+  MassPlotterEleTau(TString outputdir) : BaseMassPlotter( outputdir ) {};
+  void eleTauAnalysis(TList* allcuts, Long64_t nevents, vector< pair<int,int> > Significances , TString myfilename, TString SUSYCatCommand , vector<TString> SUSYCatNames , TDirectory* elists=0 , TString cut="" );
+};
+
+void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vector< pair<int,int> > Significances, TString myfileName , TString SUSYCatCommand , vector<TString> SUSYCatNames , TDirectory* elists  , TString cut){
+
+  TTreeFormula* elePt = 0;
+  TTreeFormula* eleEta = 0;
+  TLorentzVector eleLV;
+  TTreeFormula* tauPt = 0;
+  TTreeFormula* tauEta = 0;
+  TLorentzVector tauLV;
+
+  int lumi = 0;
+
+  TIter nextcut(allCuts); 
+  TObject *objcut; 
+
+  std::vector<TString> alllabels;
+  while( objcut = nextcut() ){
+    ExtendedCut* thecut = (ExtendedCut*)objcut ;
+    alllabels.push_back( thecut->Name );
+  }  
+  ExtendedObjectProperty cutflowtable("" , "cutflowtable" , "1" , allCuts->GetEntries() , 0 , allCuts->GetEntries() , SUSYCatCommand, SUSYCatNames, &alllabels );  
+  nextcut.Reset();
+
+  for(int ii = 0; ii < fSamples.size(); ii++){
+    int data = 0;
+    sample Sample = fSamples[ii];
+
+    TEventList* list = 0;
+    if(elists != 0) { // && Sample.type != "susy" ){
+      TString ListName = cut + "_" + Sample.name ;
+      elists->GetObject( ListName , list );
+    }
+   
+    if(Sample.type == "data"){
+      data = 1;
+    }else
+      lumi = Sample.lumi; 
+
+
+    if(elePt != 0){
+      delete elePt;
+      delete eleEta;
+      delete tauPt;
+      delete tauEta;
+    }
+    elePt = new TTreeFormula("elePT___" ,  "ele[eleTau[0].ele0Ind].lv.Pt()" , Sample.tree ); 
+    eleEta = new TTreeFormula("eleEta___" ,  "ele[eleTau[0].ele0Ind].lv.Eta()" , Sample.tree ); 
+
+    tauPt = new TTreeFormula("tauPT___" ,  "tau[eleTau[0].tau0Ind].lv.Pt()" , Sample.tree ); 
+    tauEta = new TTreeFormula("tauEta___" ,  "tau[eleTau[0].tau0Ind].lv.Eta()" , Sample.tree ); 
+
+    double Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents*Sample.PU_avg_weight);
+
+
+    Sample.Print(Weight);
+
+    cutflowtable.SetTree( Sample.tree , Sample.type, Sample.sname );
+    
+    nextcut.Reset();
+    while( objcut = nextcut() ){
+      ExtendedCut* thecut = (ExtendedCut*)objcut ;
+      cout << thecut->Name << ":" << endl;
+      thecut->SetTree( Sample.tree ,  Sample.name , Sample.sname , Sample.type);
+    }
+    
+    Long64_t nentries =  Sample.tree->GetEntries();
+    if( list )
+      nentries = list->GetN();
+
+    Long64_t maxloop = min(nentries, nevents);
+
+    int counter = 0;
+    for (Long64_t jentry=0; jentry<maxloop;jentry++, counter++) {
+
+      if( list )
+	Sample.tree->GetEntry( list->GetEntry(jentry) );
+      else
+	Sample.tree->GetEntry(jentry);
+
+      if ( counter == 10000 ){  
+	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+	fflush(stdout);
+	counter = 0;
+      }
+ 
+      nextcut.Reset();
+      double weight = Weight;
+      if(data == 1)
+ 	weight = 1.0;
+
+      double cutindex = 0.5;
+      while( objcut = nextcut() ){
+	
+
+	if(cutindex == 0.5 && data != 1){
+	  eleLV.SetPtEtaPhiM(elePt->EvalInstance(0)  , eleEta->EvalInstance(0) , 0 , 0);
+	  tauLV.SetPtEtaPhiM(tauPt->EvalInstance(0)  , tauEta->EvalInstance(0) , 0 , 0);
+	  weight *= getCorrFactor("eltau" , "mc12" , eleLV , tauLV , tauLV);
+
+	  if(Sample.sname == "Wtolnu"){
+	    double pt = tauLV.Pt();
+	    weight *= 1.157 - 7.361E-3 * pt + 4.370E-5 * pt * pt - 1.188E-7*pt * pt * pt;
+	  }
+	}
+
+	ExtendedCut* thecut = (ExtendedCut*)objcut ;
+	if(! thecut->Pass(jentry , weight) ){
+	  break;
+	}else{
+	    cutflowtable.Fill( cutindex , weight );
+	}
+	cutindex+=1.0;
+      }
+   
+    }
+  
+  }
+
+  TString fileName = fOutputDir;
+  if(!fileName.EndsWith("/")) fileName += "/";
+  Util::MakeOutputDir(fileName);
+  fileName = fileName  + myfileName +"_Histos.root";
+
+  TFile *savefile = new TFile(fileName.Data(), "RECREATE");
+  savefile ->cd();
+
+  cutflowtable.Write( savefile , lumi);
+  nextcut.Reset();
+  while( objcut = nextcut() ){
+    ExtendedCut* thecut = (ExtendedCut*)objcut ;
+    thecut->Write( savefile, lumi , Significances , SUSYCatNames.size() );
+  }
+
+  cutflowtable.Print("cutflowtable");
+
+  savefile->Close();
+  std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
+}
 
 //_____________________________________________________________________________________
 // Print out usage

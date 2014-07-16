@@ -1,5 +1,5 @@
-#ifndef MassPlotterEleTau_HH
-#define MassPlotterEleTau_HH
+#ifndef Extendeds_HH
+#define Extendeds_HH
 
 #include "TLatex.h"
 #include "TLegend.h"
@@ -16,11 +16,18 @@
 #include "TH2.h"
 #include "TTreeFormula.h"
 #include "TGraph.h"
+#include "TPad.h"
+#include "TCanvas.h"
+#include "TFile.h"
 
 #include <vector>
 #include <utility>
+#include <iostream>
+#include <iomanip>
+#include <sstream>
 
 using namespace std;
+
 
 class ExtendedObjectProperty : public TObject {
 public:
@@ -138,21 +145,5 @@ struct sample{
 };
 
 
-
-class MassPlotterEleTau {
-public:
-  MassPlotterEleTau(TString outputdir);
-  
-  TString fPath;
-  TString fOutputDir;
-  int fVerbose;
-  void setVerbose(int v){ fVerbose = v;};
-  void init(TString filename = "samples.dat");
-  void loadSamples(const char* filename = "samples.dat");
-  std::vector<sample>  fSamples;  
-
-  void eleTauAnalysis(TList* allcuts, Long64_t nevents, vector< pair<int,int> > Significances , TString myfilename, TString SUSYCatCommand , vector<TString> SUSYCatNames , TDirectory* elists=0 , TString cut="" );
-  void plotSig(ExtendedObjectProperty* var,ExtendedObjectProperty* w , TString cut , TDirectory* elists , bool cleaned, int type,int LowerCut); // 0: s/sqrt(b), 1: s/sqrt(s+b), 3:s/b
-};
 
 #endif

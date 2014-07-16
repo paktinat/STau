@@ -50,7 +50,7 @@ SRCS           = ../TESCO/src/base/TreeClassBase.cc ../TESCO/src/base/TreeReader
 		 src/MT2Analysis.cc src/MT2AnalysisElec.cc src/MT2AnalysisMuon.cc src/MT2AnalysisTau.cc  src/METCovMatrix.cc \
                  ../TESCO/src/helper/TMctLib.cc ../TESCO/src/helper/mctlib.cc ../TESCO/src/helper/OnTheFlyCorrections.cc \
                  ../TESCO/src/helper/Davismt2.cc   ../TESCO/src/helper/TopSearch.cc ../TESCO/src/helper/Hemisphere.cc  src/MT2Analyzer.cc \
-                 src/MassPlotter.cc src/MassPlotterEleTau.cc ../TESCO/src/helper/PUWeight.C \
+                 src/MassPlotter.cc src/BaseMassPlotter.cc src/Extendeds.cc ../TESCO/src/helper/PUWeight.C \
 		 src/QuickAnalysis.cc src/QuickAnalyzer.cc  src/MT2Shapes.cc \
                  ../TESCO/src/helper/Lumi3DReWeighting_standalone.cc src/helper/EventFilterFromListStandAlone.cc \
 	src/svFitAuxFunctions.cc src/NSVfitStandaloneAlgorithm.cc src/LikelihoodFunctions.cc src/NSVfitStandaloneLikelihood.cc src/generalAuxFunctions.cc src/MarkovChainIntegrator.cc  
@@ -71,7 +71,7 @@ SHARED=shlib/libDiLeptonAnalysis.so
 .PHONY : clean purge all depend PhysQC
 
 # Rules ====================================
-all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared RunEleTauAnalyzer 
+all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared RunEleTauAnalyzer  RunPlotProducerExample
 
 RunStandAloneSVFit : src/exe/nsvfitStandalone.cc shlib/libDiLeptonAnalysis.so
 	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -o $@ $^	
@@ -84,6 +84,9 @@ $(SHARED): $(OBJS)
 
 #	mv shlib/libDiLeptonAnalysis.so /scratch/$$USERNAME/RunMT2Analyzer
 #	mv /scratch/$$USERNAME/RunMT2Analyzer shlib/libDiLeptonAnalysis.so
+
+RunPlotProducerExample: src/exe/PlotProducerExample.C $(SHARED)
+	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -o $@ $^	
 
 RunEleTauAnalyzer: src/exe/MakeEleTauPlots.C $(SHARED)
 	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -o $@ $^	
