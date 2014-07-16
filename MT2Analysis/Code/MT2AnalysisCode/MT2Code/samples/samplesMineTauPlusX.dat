@@ -98,31 +98,30 @@ Type		mc
 Color		401
 
 ##-------------- QCD-Pt-EMEnriched --------------------
-
-#SAMPLE
-Name		QCD-Pt-20-30-EM
+SAMPLE
+Name		QCD-Pt-20-30-EMEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_20_30_EMEnriched_TuneZ2star_8TeV_pythia6.root
-Xsection  	2915000.0 pb #CMS AN-12-468
+Xsection  	2915000.0 pb     #CMS AN-12-468
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
-Name		QCD-Pt-30-80-EM
+SAMPLE
+Name		QCD-Pt-30-80-EMEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_30_80_EMEnriched_TuneZ2star_8TeV_pythia6.root
-Xsection  	4616000.0 pb #CMS AN-12-468
+Xsection  	4616000.0 pb     #CMS AN-12-468
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
 
 #SAMPLE
-Name		QCD-Pt-80-170-EM
+Name		QCD-Pt-80-170-EMEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/
@@ -133,7 +132,7 @@ Type		mc
 Color		401
 
 #SAMPLE
-Name		QCD-Pt-170-250-EM
+Name		QCD-Pt-170-250-EMEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/
@@ -144,7 +143,7 @@ Type		mc
 Color		401
 
 #SAMPLE
-Name		QCD-Pt-250-350-EM
+Name		QCD-Pt-250-350-EMEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/
@@ -155,7 +154,7 @@ Type		mc
 Color		401
 
 #SAMPLE
-Name		QCD-Pt-350-EM
+Name		QCD-Pt-350-EMEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/
@@ -167,9 +166,8 @@ Color		401
 
 
 ##------------ QCD-Pt-MuEnriched ----------------
-
-#SAMPLE
-Name		QCD-Pt-15-20-Mu
+SAMPLE
+Name		QCD-Pt-15-20-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt-15to20_MuEnrichedPt5_TuneZ2star_8TeV_pythia6.root
@@ -179,8 +177,8 @@ Lumi            19600
 Type		mc
 Color		401
 
-#SAMPLE
-Name		QCD-Pt-20-30-Mu
+SAMPLE
+Name		QCD-Pt-20-30-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt-20to30_MuEnrichedPt5_TuneZ2star_8TeV_pythia6.root
@@ -190,8 +188,8 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
-Name		QCD-Pt-30-50-Mu
+SAMPLE
+Name		QCD-Pt-30-50-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt-30to50_MuEnrichedPt5_TuneZ2star_8TeV_pythia6.root
@@ -201,8 +199,8 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
-Name		QCD-Pt-50-80-Mu
+SAMPLE
+Name		QCD-Pt-50-80-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt-50to80_MuEnrichedPt5_TuneZ2star_8TeV_pythia6.root
@@ -212,8 +210,8 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
-Name		QCD-Pt-80-120-Mu
+SAMPLE
+Name		QCD-Pt-80-120-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt-80to120_MuEnrichedPt5_TuneZ2star_8TeV_pythia6.root
@@ -224,7 +222,7 @@ Type		mc
 Color		401
 
 #SAMPLE
-Name		QCD-Pt-120-170-Mu
+Name		QCD-Pt-120-170-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/
@@ -235,7 +233,7 @@ Type		mc
 Color		401
 
 #SAMPLE
-Name		QCD-Pt-170-300-Mu
+Name		QCD-Pt-170-300-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/
@@ -246,7 +244,7 @@ Type		mc
 Color		401
 
 #SAMPLE
-Name		QCD-Pt-300-470-Mu
+Name		QCD-Pt-300-470-MuEnriched
 SName		QCD
 ShapeName	QCD   
 File            TauTau_V3_1/
@@ -257,7 +255,7 @@ Type		mc
 Color		401
 
 #SAMPLE
-Name		QCD-Pt-470-600-Mu
+Name		QCD-Pt-470-600-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/
@@ -268,7 +266,7 @@ Type		mc
 Color		401
 
 #SAMPLE
-Name		QCD-Pt-600-800-Mu
+Name		QCD-Pt-600-800-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/
@@ -279,7 +277,7 @@ Type		mc
 Color		401
 
 #SAMPLE
-Name		QCD-Pt-800-1000-Mu
+Name		QCD-Pt-800-1000-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/
@@ -290,7 +288,7 @@ Type		mc
 Color		401
 
 #SAMPLE
-Name		QCD-Pt-1000-Mu
+Name		QCD-Pt-1000-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/
@@ -299,9 +297,107 @@ Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
+#
+SAMPLE
+Name		GJets_HT-40To100
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/GJets_HT-40To100_8TeV-madgraph.root
+Xsection  	20930.00 pb
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		401
 
+SAMPLE
+Name		GJets_HT-100To200
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/GJets_HT-100To200_8TeV-madgraph.root
+Xsection  	5290.00 pb
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		401
+
+SAMPLE
+Name		GJets_HT-200To400
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/GJets_HT-200To400_8TeV-madgraph_v2Part1.root
+Xsection  	960.5 pb
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		401
+
+SAMPLE
+Name		GJets_HT-200To400
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/GJets_HT-200To400_8TeV-madgraph_v2Part2.root
+Xsection  	960.5 pb
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		401
+
+SAMPLE
+Name		GJets_HT-200To400
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/GJets_HT-200To400_8TeV-madgraph_v2Part3.root
+Xsection  	960.5 pb
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		401
+
+SAMPLE
+Name		GJets_HT-400ToInf
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3Part1.root
+Xsection  	107.5 pb
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		401
+
+SAMPLE
+Name		GJets_HT-400ToInf
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3Part2.root
+Xsection  	107.5 pb
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		401
+
+SAMPLE
+Name		GJets_HT-400ToInf
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3Part3.root
+Xsection  	107.5 pb
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		401
+
+SAMPLE
+Name		GJets_HT-400ToInf
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3Part4.root
+Xsection  	107.5 pb
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		401
 # -------- electroweak --------
-#SAMPLE
+SAMPLE
 Name		WWJetsTo2L2Nu
 SName		Wtolnu
 ShapeName	WJets  
@@ -358,22 +454,22 @@ Type            mc
 Color		419 
                   
 
-#SAMPLE
+SAMPLE
 Name		ZZJetsTo2L2Nu
 SName		DY
 ShapeName	ZZJetsTo2L2Nu
-File            TauTau_V3_1/ZZJetsTo2L2Nu-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v3.root
+File            TauTau_V3_1/ZZJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola.root
 Xsection  	0.7   #0.28 pb 
 Kfact           1.
 Lumi            19600.0
 Type            mc
 Color		419
  
-#SAMPLE
+SAMPLE
 Name		ZZJetsTo2L2Q
 SName		DY
 ShapeName	ZZJetsTo2L2Q
-File            TauTau_V3_1/ZZJetsTo2L2Q-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+File            TauTau_V3_1/ZZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola.root
 Xsection  	2.5     #0.91 pb
 Kfact           1.
 Lumi            19600.0
@@ -406,113 +502,13 @@ Color		419
 Name		WZJetsTo2L2Q
 SName		DY
 ShapeName	WZJetsTo2L2Q
-File            TauTau_V3_1/WZJetsTo2L2Q-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+File            TauTau_V3_1/
 Xsection  	2.2     #1.755 pb
 Kfact           1.
 Lumi            19600.0
 Type            mc
 Color		419  
 
-##-------------GammaJets----------------
-
-#SAMPLE
-Name		GJets_HT-40To100
-SName		GJets
-ShapeName	GJets
-File            TauTau_V3_1/GJets_HT-40To100_8TeV-madgraph.root
-Xsection  	 pb
-Kfact           1.	
-Lumi            19600.0
-Type            mc
-Color		600
-
-#SAMPLE
-Name		GJets_HT-100To200
-SName		GJets
-ShapeName	GJets
-File            TauTau_V3_1/GJets_HT-100To200_8TeV-madgraph.root
-Xsection  	 pb
-Kfact           1.	
-Lumi            19600.0
-Type            mc
-Color		600
-
-#SAMPLE
-Name		GJets_HT-200To400
-SName		GJets
-ShapeName	GJets
-File            TauTau_V3_1/GJets_HT-200To400_8TeV-madgraph_v2Part1.root
-Xsection  	960.5 pb
-Kfact           1.	
-Lumi            19600.0
-Type            mc
-Color		600
-
-#SAMPLE
-Name		GJets_HT-200To400
-SName		GJets
-ShapeName	GJets
-File            TauTau_V3_1/GJets_HT-200To400_8TeV-madgraph_v2Part2.root
-Xsection  	960.5 pb
-Kfact           1.	
-Lumi            19600.0
-Type            mc
-Color		600
-
-#SAMPLE
-Name		GJets_HT-200To400
-SName		GJets
-ShapeName	GJets
-File            TauTau_V3_1/GJets_HT-200To400_8TeV-madgraph_v2Part3.root
-Xsection  	960.5 pb
-Kfact           1.	
-Lumi            19600.0
-Type            mc
-Color		600
-
-#SAMPLE
-Name		GJets_HT-400ToInf
-SName		GJets
-ShapeName	GJets
-File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3Part1.root
-Xsection  	107.5 pb
-Kfact           1.	
-Lumi            19600.0
-Type            mc
-Color		600
-
-#SAMPLE
-Name		GJets_HT-400ToInf
-SName		GJets
-ShapeName	GJets
-File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3Part2.root
-Xsection  	107.5 pb
-Kfact           1.	
-Lumi            19600.0
-Type            mc
-Color		600
-
-#SAMPLE
-Name		GJets_HT-400ToInf
-SName		GJets
-ShapeName	GJets
-File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3Part3.root
-Xsection  	107.5 pb
-Kfact           1.	
-Lumi            19600.0
-Type            mc
-Color		600
-
-#SAMPLE
-Name		GJets_HT-400ToInf
-SName		GJets
-ShapeName	GJets
-File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3Part4.root
-Xsection  	107.5 pb
-Kfact           1.	
-Lumi            19600.0
-Type            mc
-Color		600
 
 ## --------------- Top ----------
 SAMPLE
