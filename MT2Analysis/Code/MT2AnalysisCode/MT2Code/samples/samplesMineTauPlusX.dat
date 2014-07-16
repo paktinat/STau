@@ -305,7 +305,7 @@ Color		401
 Name		WWJetsTo2L2Nu
 SName		Wtolnu
 ShapeName	WJets  
-File            TauTau_V3_1/WWJetsTo2L2Nu-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
+File            TauTau_V3_1/WWJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola.root
 Xsection  	5.8   #4.7 pb 
 Kfact           1.	
 Lumi            19600.0
@@ -420,7 +420,7 @@ Name		GJets_HT-40To100
 SName		GJets
 ShapeName	GJets
 File            TauTau_V3_1/GJets_HT-40To100_8TeV-madgraph.root
-Xsection  	2.166
+Xsection  	 pb
 Kfact           1.	
 Lumi            19600.0
 Type            mc
@@ -431,7 +431,7 @@ Name		GJets_HT-100To200
 SName		GJets
 ShapeName	GJets
 File            TauTau_V3_1/GJets_HT-100To200_8TeV-madgraph.root
-Xsection  	2.166
+Xsection  	 pb
 Kfact           1.	
 Lumi            19600.0
 Type            mc
@@ -442,7 +442,7 @@ Name		GJets_HT-200To400
 SName		GJets
 ShapeName	GJets
 File            TauTau_V3_1/GJets_HT-200To400_8TeV-madgraph_v2Part1.root
-Xsection  	2.166
+Xsection  	960.5 pb
 Kfact           1.	
 Lumi            19600.0
 Type            mc
@@ -453,7 +453,7 @@ Name		GJets_HT-200To400
 SName		GJets
 ShapeName	GJets
 File            TauTau_V3_1/GJets_HT-200To400_8TeV-madgraph_v2Part2.root
-Xsection  	2.166
+Xsection  	960.5 pb
 Kfact           1.	
 Lumi            19600.0
 Type            mc
@@ -464,7 +464,7 @@ Name		GJets_HT-200To400
 SName		GJets
 ShapeName	GJets
 File            TauTau_V3_1/GJets_HT-200To400_8TeV-madgraph_v2Part3.root
-Xsection  	2.166
+Xsection  	960.5 pb
 Kfact           1.	
 Lumi            19600.0
 Type            mc
@@ -475,7 +475,7 @@ Name		GJets_HT-400ToInf
 SName		GJets
 ShapeName	GJets
 File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3Part1.root
-Xsection  	2.166
+Xsection  	107.5 pb
 Kfact           1.	
 Lumi            19600.0
 Type            mc
@@ -486,7 +486,7 @@ Name		GJets_HT-400ToInf
 SName		GJets
 ShapeName	GJets
 File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3Part2.root
-Xsection  	2.166
+Xsection  	107.5 pb
 Kfact           1.	
 Lumi            19600.0
 Type            mc
@@ -497,7 +497,7 @@ Name		GJets_HT-400ToInf
 SName		GJets
 ShapeName	GJets
 File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3Part3.root
-Xsection  	2.166
+Xsection  	107.5 pb
 Kfact           1.	
 Lumi            19600.0
 Type            mc
@@ -508,7 +508,7 @@ Name		GJets_HT-400ToInf
 SName		GJets
 ShapeName	GJets
 File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3Part4.root
-Xsection  	2.166
+Xsection  	107.5 pb
 Kfact           1.	
 Lumi            19600.0
 Type            mc

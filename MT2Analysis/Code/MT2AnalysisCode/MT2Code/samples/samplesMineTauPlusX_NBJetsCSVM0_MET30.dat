@@ -402,6 +402,107 @@ Lumi            19600.0
 Type            mc
 Color		419  
 
+##-------------GammaJets----------------
+
+#SAMPLE
+Name		GJets_HT-40To100
+SName		GJets
+ShapeName	GJets
+File            TauTau_V3_1/GJets_HT-40To100_8TeV-madgraph_NBJetsCSVM0_MET30.root
+Xsection  	 pb
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		600
+
+#SAMPLE
+Name		GJets_HT-100To200
+SName		GJets
+ShapeName	GJets
+File            TauTau_V3_1/GJets_HT-100To200_8TeV-madgraph_NBJetsCSVM0_MET30.root
+Xsection  	 pb
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		600
+
+#SAMPLE
+Name		GJets_HT-200To400
+SName		GJets
+ShapeName	GJets
+File            TauTau_V3_1/GJets_HT-200To400_8TeV-madgraph_v2Part1_NBJetsCSVM0_MET30.root
+Xsection  	960.5 pb
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		600
+
+#SAMPLE
+Name		GJets_HT-200To400
+SName		GJets
+ShapeName	GJets
+File            TauTau_V3_1/GJets_HT-200To400_8TeV-madgraph_v2Part2_NBJetsCSVM0_MET30.root
+Xsection  	960.5 pb
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		600
+
+#SAMPLE
+Name		GJets_HT-200To400
+SName		GJets
+ShapeName	GJets
+File            TauTau_V3_1/GJets_HT-200To400_8TeV-madgraph_v2Part3_NBJetsCSVM0_MET30.root
+Xsection  	960.5 pb
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		600
+
+#SAMPLE
+Name		GJets_HT-400ToInf
+SName		GJets
+ShapeName	GJets
+File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3Part1_NBJetsCSVM0_MET30.root
+Xsection  	107.5 pb
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		600
+
+#SAMPLE
+Name		GJets_HT-400ToInf
+SName		GJets
+ShapeName	GJets
+File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3Part2_NBJetsCSVM0_MET30.root
+Xsection  	107.5 pb
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		600
+
+#SAMPLE
+Name		GJets_HT-400ToInf
+SName		GJets
+ShapeName	GJets
+File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3Part3_NBJetsCSVM0_MET30.root
+Xsection  	107.5 pb
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		600
+
+#SAMPLE
+Name		GJets_HT-400ToInf
+SName		GJets
+ShapeName	GJets
+File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3Part4_NBJetsCSVM0_MET30.root
+Xsection  	107.5 pb
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		600
+
 
 ## --------------- Top ----------
 SAMPLE
