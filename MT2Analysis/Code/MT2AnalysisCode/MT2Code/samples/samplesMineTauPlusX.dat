@@ -316,7 +316,18 @@ SAMPLE
 Name		WJetsToLNu
 SName		Wtolnu
 ShapeName	WJets
-File            TauTau_V3_1/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball.root
+File            TauTau_V3_1/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball_Part1.root
+Xsection  	36257.2
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		417
+
+#SAMPLE
+Name		WJetsToLNu
+SName		Wtolnu
+ShapeName	WJets
+File            TauTau_V3_1/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball_Part2.root
 Xsection  	36257.2
 Kfact           1.
 Lumi            19600.0
@@ -402,6 +413,106 @@ Lumi            19600.0
 Type            mc
 Color		419  
 
+##-------------GammaJets----------------
+
+#SAMPLE
+Name		GJets_HT-40To100
+SName		GJets
+ShapeName	GJets
+File            TauTau_V3_1/GJets_HT-40To100_8TeV-madgraph.root
+Xsection  	2.166
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		600
+
+#SAMPLE
+Name		GJets_HT-100To200
+SName		GJets
+ShapeName	GJets
+File            TauTau_V3_1/GJets_HT-100To200_8TeV-madgraph.root
+Xsection  	2.166
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		600
+
+#SAMPLE
+Name		GJets_HT-200To400
+SName		GJets
+ShapeName	GJets
+File            TauTau_V3_1/GJets_HT-200To400_8TeV-madgraph_v2Part1.root
+Xsection  	2.166
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		600
+
+#SAMPLE
+Name		GJets_HT-200To400
+SName		GJets
+ShapeName	GJets
+File            TauTau_V3_1/GJets_HT-200To400_8TeV-madgraph_v2Part2.root
+Xsection  	2.166
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		600
+
+#SAMPLE
+Name		GJets_HT-200To400
+SName		GJets
+ShapeName	GJets
+File            TauTau_V3_1/GJets_HT-200To400_8TeV-madgraph_v2Part3.root
+Xsection  	2.166
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		600
+
+#SAMPLE
+Name		GJets_HT-400ToInf
+SName		GJets
+ShapeName	GJets
+File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3Part1.root
+Xsection  	2.166
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		600
+
+#SAMPLE
+Name		GJets_HT-400ToInf
+SName		GJets
+ShapeName	GJets
+File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3Part2.root
+Xsection  	2.166
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		600
+
+#SAMPLE
+Name		GJets_HT-400ToInf
+SName		GJets
+ShapeName	GJets
+File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3Part3.root
+Xsection  	2.166
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		600
+
+#SAMPLE
+Name		GJets_HT-400ToInf
+SName		GJets
+ShapeName	GJets
+File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3Part4.root
+Xsection  	2.166
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		600
 
 ## --------------- Top ----------
 SAMPLE
@@ -567,7 +678,18 @@ SAMPLE
 Name		Run2012C_TauPlusX
 SName		TauPlusX-Data
 ShapeName	Data
-File            TauTau_V3_1/TauPlusX-Run2012C-22Jan2013-v1.root
+File            TauTau_V3_1/TauPlusX-Run2012C-22Jan2013-v1_Part1.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
+
+SAMPLE
+Name		Run2012C_TauPlusX
+SName		TauPlusX-Data
+ShapeName	Data
+File            TauTau_V3_1/TauPlusX-Run2012C-22Jan2013-v1_Part2.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.
@@ -579,11 +701,32 @@ SAMPLE
 Name		Run2012D_TauPlusX
 SName		TauPlusX-Data
 ShapeName	Data
-File            TauTau_V3_1/TauPlusX-Run2012D-22Jan2013-v1.root
+File            TauTau_V3_1/TauPlusX-Run2012D-22Jan2013-v1_Part1.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.
 Type            data
 Color	        1
 
+SAMPLE
+Name		Run2012D_TauPlusX
+SName		TauPlusX-Data
+ShapeName	Data
+File            TauTau_V3_1/TauPlusX-Run2012D-22Jan2013-v1_Part2.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color	        1
+
+SAMPLE
+Name		Run2012D_TauPlusX
+SName		TauPlusX-Data
+ShapeName	Data
+File            TauTau_V3_1/TauPlusX-Run2012D-22Jan2013-v1_Part3.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color	        1
 
