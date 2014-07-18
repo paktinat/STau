@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Standard python import
+import os
 import sys    # exit
 import time   # time accounting
 from optparse import OptionParser
@@ -14,6 +15,9 @@ from ROOT import gSystem, gROOT, gApplication, TFile, TTree, TCut, gDirectory , 
 
 # Import TMVA classes from ROOT
 from ROOT import TMVA
+
+os.environ['DISPLAY'] = '0'
+os.environ['TMVASYS'] = os.environ['ROOTSYS']
 
 # Default settings for command line arguments
 DEFAULT_INFNAME  = "AfterBVetoMET_Trees.root"
@@ -178,8 +182,8 @@ if __name__ == "__main__":
     verbose     = False
 
     parser = OptionParser()
+    parser.add_option("-n", "--ncombs", dest="ncombs" , type='int' , default=-1)    
     parser.add_option("-s", "--signal", dest="signal" , type='int')
-    parser.add_option("-n", "--ncomb", dest="ncomb" , type='int' )
     parser.add_option("-d", "--dir", dest="dir" , default='.' )
     (options, args) = parser.parse_args() 
 
@@ -200,83 +204,112 @@ if __name__ == "__main__":
             print "skipped"
             continue
 
-        COMB_L = options.ncomb
-        outtxtfile = open( 'csvfiles/%s_%d.csv' % (SUSCatName, COMB_L) , 'w' )
+        for COMB_L in range(2,5):
+            if options.ncombs > -1:
+                if not COMB_L == options.ncombs:
+                    continue
+                
+            outtxtfile = open( 'csvfiles/%s_%d.csv' % (SUSCatName, COMB_L) , 'w' )
 
-        ALLComs = itertools.combinations( VARIABLES , COMB_L )
-        print str(COMB_L) + ":"
+            ALLComs = itertools.combinations( VARIABLES , COMB_L )
+            print str(COMB_L) + ":"
 
-        ccc = 0
-        for comb in ALLComs:
-            ccc +=1
-            Name = "TMVA_" + SUSCatName
-            for cut in comb:
-                Name += "_" + cut
+            ccc = 0
+            for comb in ALLComs:
+                ccc +=1
+                Name = "TMVA_" + SUSCatName
+                for cut in comb:
+                    Name += "_" + cut
 
-            print "Combination #%d : %s " % (ccc , Name)
+                print "Combination #%d : %s " % (ccc , Name)
 
-            nCategory1 = 0
-            nCategory2 = 0
-            for cut in comb:
-                if cut in Category1:
-                    nCategory1 += 1
-                if cut in Category2:
-                    nCategory2 += 1
-            if (nCategory1 > 1) or (nCategory2 > 2):
-                print "two members from the same category, skipped"
-                continue
-            
-
-            outfname = options.dir + "/" + Name + ".root"
-            outputFile = TFile( outfname, 'RECREATE' )
-
-            factory = TMVA.Factory( Name, outputFile, 
-                                    "!V:Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification" )
-            
-            # Set verbosity
-            factory.SetVerbose( verbose )
-
-            for var in VARIABLES:
-                if var in comb:
-                    factory.AddVariable( var, VARIABLES[ var ][0] )
-                else:
-                    factory.AddSpectator( var )
+                nCategory1 = 0
+                nCategory2 = 0
+                for cut in comb:
+                    if cut in Category1:
+                        nCategory1 += 1
+                    if cut in Category2:
+                        nCategory2 += 1
+                if (nCategory1 > 1) or (nCategory2 > 2):
+                    print "two members from the same category, skipped"
+                    continue
 
 
+                outfname = options.dir + "/" + Name + ".root"
+                outputFile = TFile( outfname, 'RECREATE' )
 
-            SUSYSignalCut = TCut( SUSCatCut )
-            BKGCut = TCut( "SUSYCategory < 0 && SUSYCategory > -10" )
+                factory = TMVA.Factory( Name, outputFile, 
+                                        "!V:Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification" )
 
-            factory.SetInputTrees( TheTree , SUSYSignalCut  , BKGCut  )
-            factory.SetSignalWeightExpression("W")
-            factory.SetBackgroundWeightExpression("W")
+                # Set verbosity
+                factory.SetVerbose( verbose )
 
-            mycutSig = TCut( "" ) 
-            mycutBkg = TCut( "" ) 
-            factory.PrepareTrainingAndTestTree( mycutSig, mycutBkg,
-                                               "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V" )
-    
-    
-            factory.BookMethod( TMVA.Types.kCuts, "Cuts",
-                               "!H:!V:FitMethod=MC:EffSel:SampleSize=200000:VarProp=FSmart" )
+                #it crashes when these variables are being studied
+                forbidden_vars = [ 'METModPPZMod' , 'JPTModMZPTMod' , 'MET' , 'METModMPZMod' ]
+                forbidden_vars2 = [ 'EleTauPt' , 'MET' , 'METModMPZMod' ]
+                n_forbidden_vars = 0
+                n_forbidden_vars2 = 0
 
-            # Train MVAs
-            factory.TrainAllMethods()
-    
-            # Test MVAs
-            factory.TestAllMethods()
-    
-            # Evaluate MVAs
-            factory.EvaluateAllMethods()    
-    
-            # Save the output.
-            outputFile.Close()
+                selection_cut = ''
+                for var in VARIABLES:
+                    if var in comb:
+                        if not selection_cut == '':
+                            selection_cut += " && "
+                        factory.AddVariable( var, VARIABLES[ var ][0] )
+                        selection_cut += var + " > -1000000"
+                        if var in forbidden_vars:
+                            n_forbidden_vars += 1
+                        if var in forbidden_vars2:
+                            n_forbidden_vars2 += 1
+                    else:
+                        factory.AddSpectator( var )
 
-            fin = TFile( outfname , 'read') 
-            fin.cd('Method_Cuts/Cuts/')
-            mInfo = MethodInfo( gDirectory , "Cuts" , "Cuts" )
-            mInfo.ReadCuts('weights/' + Name + '_Cuts.weights.xml')
-            print >> outtxtfile, mInfo.Print()
-            fin.Close()
-        outtxtfile.close()
+
+                if n_forbidden_vars > 2 or n_forbidden_vars2 == 3:
+                    continue
+
+                SUSYSignalCut = TCut( SUSCatCut )
+                BKGCut = TCut( "SUSYCategory < 0 && SUSYCategory > -10" )
+
+                factory.SetInputTrees( TheTree , SUSYSignalCut  , BKGCut  )
+                factory.SetSignalWeightExpression("W")
+                factory.SetBackgroundWeightExpression("W")
+
+                mycutSig = TCut( selection_cut ) 
+                mycutBkg = TCut( selection_cut )
+                try:
+                    err = ['err']*4
+                    err += selection_cut.split("&&")
+                    print ','.join( err )
+                    factory.PrepareTrainingAndTestTree( mycutSig, mycutBkg,
+                                                        "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V" )
+                except:
+                    err = ['err']*4
+                    err += selection_cut.split("&&")
+                    print >> outtxtfile, ','.join( err )
+                    continue
+
+
+                factory.BookMethod( TMVA.Types.kCuts, "Cuts",
+                                   "!H:!V:FitMethod=MC:EffSel:SampleSize=200000:VarProp=FSmart" )
+
+                # Train MVAs
+                factory.TrainAllMethods()
+
+                # Test MVAs
+                factory.TestAllMethods()
+
+                # Evaluate MVAs
+                factory.EvaluateAllMethods()    
+
+                # Save the output.
+                outputFile.Close()
+
+                fin = TFile( outfname , 'read') 
+                fin.cd('Method_Cuts/Cuts/')
+                mInfo = MethodInfo( gDirectory , "Cuts" , "Cuts" )
+                mInfo.ReadCuts('weights/' + Name + '_Cuts.weights.xml')
+                print >> outtxtfile, mInfo.Print()
+                fin.Close()
+            outtxtfile.close()
     input.Close()
