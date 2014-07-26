@@ -48,7 +48,7 @@ public:
   void Write( TDirectory* dir , int lumi);
 
   std::vector< TGraph* > AllSignificances;
-  void CalcSig(int LowerCut=0 , int type = 0 , int susycat=-1);
+  void CalcSig(int LowerCut=0 , int type = 0 , int susycat=-1 , bool verbose = false);
 
   TH1* theH;
   TH1* theMCH;

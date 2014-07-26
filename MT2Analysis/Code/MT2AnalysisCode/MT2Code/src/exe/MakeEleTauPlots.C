@@ -11,6 +11,7 @@
 #include <TChain.h>
 #include "TFile.h"
 
+#include "TH2D.h"
 
 #include <climits>
 
@@ -25,6 +26,24 @@ class MassPlotterEleTau : public BaseMassPlotter{
 public:
   MassPlotterEleTau(TString outputdir) : BaseMassPlotter( outputdir ) {};
   void eleTauAnalysis(TList* allcuts, Long64_t nevents, vector< pair<int,int> > Significances , TString myfilename, TString SUSYCatCommand , vector<TString> SUSYCatNames , TDirectory* elists=0 , TString cut="" );
+
+  void DrawNSignals(){
+    for(int ii = 0; ii < fSamples.size(); ii++){
+      sample Sample = fSamples[ii];
+      if(Sample.type == "susy"){
+	TTreeFormula charginomass("charginomass" ,  "Susy.MassGlu" , Sample.tree ); 
+	TTreeFormula lspmass("lspmass" ,  "Susy.MassLSP" , Sample.tree ); 
+	TFile f ("nEvents.root" , "recreate" ); 
+	TH2D* hlspvschargino = new TH2D("hlspvschargino" , "Number of events" , 25 , 0 , 500 , 20 , 0 , 500 );
+	for (uint i = 0 ; i< Sample.tree->GetEntries() ; i++){
+	  Sample.tree->GetEntry( i );
+	  hlspvschargino->Fill( charginomass.EvalInstance(0) , lspmass.EvalInstance(0) );
+	}
+	hlspvschargino->Write();
+	f.Close();
+      }
+    }
+  }
 };
 
 void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vector< pair<int,int> > Significances, TString myfileName , TString SUSYCatCommand , vector<TString> SUSYCatNames , TDirectory* elists  , TString cut){
@@ -90,7 +109,9 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vect
       cout << thecut->Name << ":" << endl;
       thecut->SetTree( Sample.tree ,  Sample.name , Sample.sname , Sample.type);
     }
+
     
+  
     Long64_t nentries =  Sample.tree->GetEntries();
     if( list )
       nentries = list->GetN();
@@ -228,6 +249,9 @@ int main(int argc, char* argv[]) {
   tA->setVerbose(verbose);
   tA->init(samples);
 
+  tA->DrawNSignals();
+  cout << "signal histo is created" << endl;
+
   TList allCuts;
   TList CutsForControlPlots;
 
@@ -293,7 +317,7 @@ int main(int argc, char* argv[]) {
   CutsForControlPlots.Add(bVetoSole);  
 
   ExtendedCut* metcutSole =new ExtendedCut("MET" , "misc.MET > 50" , true , true , "" , "" , false , true);
-  lastCuts.Add(metcutSole);
+  //lastCuts.Add(metcutSole);
   CutsForControlPlots.Add(metcutSole);
 
 
@@ -306,6 +330,14 @@ int main(int argc, char* argv[]) {
   while( cuto = cut() ){
 
   TList allProps;
+
+
+  ExtendedObjectProperty* MassGlu = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "MassGlu" , "Susy.MassGlu" , 20 , 100 , 500 ,SUSYCatCommand , SUSYCatNames );
+  allProps.Add( MassGlu );
+
+  ExtendedObjectProperty* MassLSP = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "MassLSP" , "Susy.MassLSP" , 20 , 0 , 500 ,SUSYCatCommand , SUSYCatNames );
+  allProps.Add( MassLSP );
+
 
   ExtendedObjectProperty* eleTauElePt = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "ElePt" , "ele[eleTau[0].ele0Ind].lv.Pt()" , 80 , 20 , 420 ,SUSYCatCommand , SUSYCatNames );
   allProps.Add( eleTauElePt );
@@ -421,24 +453,26 @@ int main(int argc, char* argv[]) {
   TString fileName = outputdir;
   if(!fileName.EndsWith("/")) fileName += "/";
   Util::MakeOutputDir(fileName);
-  fileName = fileName  + outputfile +"_Trees.root";
+  fileName = fileName  + outputfile +"_TreeODs.root";
   TFile* filetrees = TFile::Open( fileName , "recreate");
   filetrees->cd();
-  bVetoSole->SaveTree();
-  bVetoSole->theTreeToSave->Write();
+  bVeto->SaveTree();
+  bVeto->theTreeToSave->Write();
   
-  TFile* finput = TFile::Open( "/dataLOCAL/hbakhshi/EleTau_Signal_METBJetsCuts_Histos.root") ;
-  finput->cd();
-  gDirectory->cd("ZPeakVeto" );
-  gDirectory->cd("EventLists");
+//   TFile* finput = TFile::Open( "/dataLOCAL/hbakhshi/EleTau_Signal_METBJetsCuts_Histos.root") ;
+//   finput->cd();
+//   gDirectory->cd("ZPeakVeto" );
+//   gDirectory->cd("EventLists");
 
-  tA->eleTauAnalysis(&lastCuts, neventperfile, Significances ,  outputfile, SUSYCatCommand , SUSYCatNames , gDirectory , "ZPeakVeto");
-  finput->Close();
+  //tA->eleTauAnalysis(&lastCuts, &allCuts, neventperfile, Significances ,  outputfile, SUSYCatCommand , SUSYCatNames , gDirectory , "ZPeakVeto");
+  // finput->Close();
+
+  tA->eleTauAnalysis(&allCuts, neventperfile, Significances ,  outputfile , SUSYCatCommand , SUSYCatNames );
+
+
   filetrees->cd();
-  bVetoSole->theTreeToSave->Write();
+  bVeto->theTreeToSave->Write();
   filetrees->Close();
-
-  //tA->eleTauAnalysis(&allCuts, neventperfile, Significances ,  outputfile , SUSYCatCommand , SUSYCatNames );
 
   delete tA;
   return 0;

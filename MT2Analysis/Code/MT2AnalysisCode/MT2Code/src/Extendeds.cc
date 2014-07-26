@@ -2,7 +2,7 @@
 #include "Extendeds.hh"
 #include <vector>
 
-void ExtendedObjectProperty::CalcSig(int LowerCut , int type , int SUSCat) {
+void ExtendedObjectProperty::CalcSig(int LowerCut , int type , int SUSCat , bool verbose) {
   Float_t  x[nBins], y[nBins];
   theMCH = allHistos["MC"];
 
@@ -12,19 +12,19 @@ void ExtendedObjectProperty::CalcSig(int LowerCut , int type , int SUSCat) {
 
   for (int i = 1; i <=nBins+1; i++){
     x[i-1] = theMCH->GetBinLowEdge(i);
-    cout<<i<<" x[i-1] "<<x[i-1]<<endl;
+    if(verbose) cout <<i<<" x[i-1] "<<x[i-1]<<endl;
     float s;
     if(LowerCut == 1) 
       s = allHistos[SignalHistoName]->Integral(i,nBins+1);
     else	
       s = allHistos[SignalHistoName]->Integral(0, i - 1);
-    cout<<" s "<<s<<endl;
+    if(verbose) cout <<" s "<<s<<endl;
     float b;
     if(LowerCut == 1) 
       b = theMCH->Integral(i,nBins+1);
     else
       b = theMCH->Integral(0, i - 1);
-    cout<<" b "<<b<<endl;
+    if(verbose) cout <<" b "<<b<<endl;
     if(b == 0)
       y[i-1] = 5.0;
     else{
@@ -37,7 +37,7 @@ void ExtendedObjectProperty::CalcSig(int LowerCut , int type , int SUSCat) {
       if (type==2) {
 	y[i-1] = s/b;
       }
-      cout<<" y[i-1] "<<y[i-1]<<endl;
+      if(verbose) cout <<" y[i-1] "<<y[i-1]<<endl;
     }
   }
   TGraph *sig = new TGraph(nBins+1,x,y);
