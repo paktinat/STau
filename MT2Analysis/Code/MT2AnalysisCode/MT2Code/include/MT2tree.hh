@@ -911,7 +911,26 @@ public:
   Float_t MinMetLepDPhi(TLorentzVector Lep1lv, TLorentzVector Lep2lv);
   Float_t PositiveChargedLepWithZBeamPlane(TLorentzVector LepPluslv, TLorentzVector LepNeglv);
 
+  // Float_t PZeta(TLorentzVector Lep1, TLorentzVector Lep2, TLorentzVector met);
+  Float_t PZetaMuTau();
+  Float_t PZetaImbalancedMuTau();
+  Float_t PVisibleZetaMuTau();
+  // Float_t PVisibleZeta(TLorentzVector Lep1, TLorentzVector Lep2);
+  Float_t DiLepPtRatioMuTau();
+  // Float_t DiLepPtRatio(TLorentzVector Lep1lv, TLorentzVector Lep2lv);
+  // Float_t PositiveChargedLeptonDecayAngleinZframe(TLorentzVector LepPluslv, TLorentzVector LepNeglv);
+  Float_t PositiveChargedLeptonDecayAngleinZframeMuTau();
+  //Float_t MinMetLepDPhi(TLorentzVector Lep1lv, TLorentzVector Lep2lv);
+  Float_t MinMetLepDPhiMuTau();
+  //Float_t PositiveChargedLepWithZBeamPlane(TLorentzVector LepPluslv, TLorentzVector LepNeglv);
+  Float_t PositiveChargedLepWithZBeamPlaneMuTau();
 
+
+  Float_t JZB(int a){
+    
+    return ((pfmet[0] + a * muTau[0].GetLV()).Pt());
+    
+  }
   // MT2 & friends
   Float_t GetMT2            (Float_t testmass=0, bool massive=false,       Int_t PFJID=1, Float_t minJPt=20, Float_t maxJEta=2.4, 
 		              Int_t hemi_seed=2,   Int_t hemi_association=3, Int_t met=1 );
@@ -1062,6 +1081,7 @@ public:
   double VetoExtraEleforEE();
   double VetoMuforEE();
 
+
   //chenarani   
   MT2DoubleMuon doubleMu[1];
   MT2EleMu      eleMu[1];
@@ -1077,6 +1097,9 @@ public:
   void  FillEleMu();
 
   int fVerbose;
+
+
+
 
 
   //chenarani

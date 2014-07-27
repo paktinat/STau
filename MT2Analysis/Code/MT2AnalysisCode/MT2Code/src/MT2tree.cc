@@ -3170,6 +3170,21 @@ Float_t MT2tree::PZeta(TLorentzVector Lep1, TLorentzVector Lep2, TLorentzVector 
   return P_met_dot_Zeta;
 }
 
+
+
+
+Float_t MT2tree::PZetaMuTau(){//temporary solution for makePlot. No need to be moved to the next versions.                                                                         
+  return PZeta(muo[muTau[0].GetMuIndex0()].lv, tau[muTau[0].GetTauIndex0()].lv, pfmet[0]);
+}
+Float_t MT2tree::PZetaImbalancedMuTau(){//temporary solution for makePlot. No need to be moved to the next versions.                                                               
+  return PZeta(muo[muTau[0].GetMuIndex0()].lv, tau[muTau[0].GetTauIndex0()].lv, (-muTau[0].GetLV()));
+}
+
+Float_t MT2tree::PVisibleZetaMuTau(){//temporary solution for makePlot. No need to be moved to the next versions.                                                                  
+  return PVisibleZeta(muo[muTau[0].GetMuIndex0()].lv, tau[muTau[0].GetTauIndex0()].lv);
+}
+
+
 Float_t MT2tree::PVisibleZeta(TLorentzVector Lep1, TLorentzVector Lep2){
 
   float PvisibleX    = Lep1.Px() + Lep2.Px();
@@ -3188,7 +3203,10 @@ Float_t MT2tree::PVisibleZeta(TLorentzVector Lep1, TLorentzVector Lep2){
   return Pvisible_dot_Zeta;
 }
    
-    
+float MT2tree::DiLepPtRatioMuTau(){//temporary solution for makePlot. No need to be moved to the next versions.                                                                    
+  return DiLepPtRatio(muo[muTau[0].GetMuIndex0()].lv, tau[muTau[0].GetTauIndex0()].lv);
+}
+
 
 float MT2tree::DiLepPtRatio(TLorentzVector Lep1lv, TLorentzVector Lep2lv){
 
@@ -3204,6 +3222,24 @@ float MT2tree::PositiveChargedLeptonDecayAngleinZframe(TLorentzVector LepPluslv,
   TVector3 a0 =  LepPluslv.Vect();
   TVector3 q0 =  diLeplv.Vect();
   return(fabs(a0.Angle(q0)));
+}
+
+float MT2tree::PositiveChargedLeptonDecayAngleinZframeMuTau(){
+  TLorentzVector LepPluslv;
+  TLorentzVector LepNeglv;
+
+  if(muo[muTau[0].GetMuIndex0()].Charge >= tau[muTau[0].GetTauIndex0()].Charge){
+    LepPluslv = muo[muTau[0].GetMuIndex0()].lv;
+    LepNeglv  = tau[muTau[0].GetTauIndex0()].lv;
+  }else{
+    LepPluslv = tau[muTau[0].GetTauIndex0()].lv;
+    LepNeglv  = muo[muTau[0].GetMuIndex0()].lv;
+  }
+
+  return PositiveChargedLeptonDecayAngleinZframe(LepPluslv, LepNeglv);
+}
+float MT2tree::MinMetLepDPhiMuTau(){//temporary solution for makePlot. No need to be moved to the next versions.                                                                   
+  return MinMetLepDPhi(muo[muTau[0].GetMuIndex0()].lv, tau[muTau[0].GetTauIndex0()].lv);
 }
 
 float MT2tree::MinMetLepDPhi(TLorentzVector Lep1lv, TLorentzVector Lep2lv) {
@@ -3232,7 +3268,19 @@ float MT2tree::PositiveChargedLepWithZBeamPlane(TLorentzVector LepPluslv, TLoren
 }
 
   
-    
+float MT2tree::PositiveChargedLepWithZBeamPlaneMuTau(){
+  TLorentzVector LepPluslv;
+  TLorentzVector LepNeglv;
+  if(muo[muTau[0].GetMuIndex0()].Charge >= tau[muTau[0].GetTauIndex0()].Charge){
+    LepPluslv = muo[muTau[0].GetMuIndex0()].lv;
+    LepNeglv  = tau[muTau[0].GetTauIndex0()].lv;
+  }else{
+    LepPluslv = tau[muTau[0].GetTauIndex0()].lv;
+    LepNeglv  = muo[muTau[0].GetMuIndex0()].lv;
+  }
+
+  return PositiveChargedLepWithZBeamPlane(LepPluslv, LepNeglv);
+}
 
 
 // ----------------------------------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 {
   TString outputdir = "../MassPlots/";
-  TString samples = "./samples/samplesMineTauPlusX.dat"; 
+  TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat"; 
   //TString samples = "./samples/samplesMineQCD.dat";
   //TString samples = "./samples/samplesMineTest.dat";  
   int verbose =3;
@@ -37,7 +37,7 @@
 		<<" misc.CSCTightHaloIDFlag==0 && misc.HBHENoiseFlag==0 " <<"&&"
 		<<" misc.hcalLaserEventFlag==0 && misc.trackingFailureFlag==0 " <<"&&"
 		<<" misc.eeBadScFlag==0 && misc.EcalDeadCellTriggerPrimitiveFlag==0 )" <<"&&("
-		<< "(trigger.HLT_MuTau) " << "&&" 
+ 		<< "(trigger.HLT_MuTau) " << "&&" 
 		<< "( 0 == 0 ) " << ")))"; //Channel specific trigger
     
 
@@ -59,8 +59,9 @@
   TString myChan = "muTau[0]";
  
   myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP) < 175.0 && (Susy.MassGlu - Susy.MassLSP) > 125.0))"); 
+  //myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP) < 175.0 && (Susy.MassGlu - Susy.MassLSP) > 125.0 && (Susy.MassGlu < 300)))"); 
   // You need to carefully define the cut variables based on MT2"Channel".hh
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".tau0Ind >=0")); // First lepton index, channel specific
+   myChannelCuts.push_back(std::string(std::string(myChan) + ".tau0Ind >=0")); // First lepton index, channel specific
   myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0Ind >=0")); // Second lepton index, channel specific
   myChannelCuts.push_back(std::string(std::string(myChan) + ".chargeSum == 0"));
   myChannelCuts.push_back(std::string(std::string(myChan) + ".signalMuTau"));
@@ -69,19 +70,43 @@
  
   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoElec"));
   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoMu"));
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated == 1 "));
-  //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0QCDInd != -1")); // First lepton index, channel specific
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated == 1 ")); //1 iso mu and iso tau, 0 iso mu and non iso tau, -1 non iso mu and non iso tau
+    //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0QCDInd != -1")); // First lepton index, channel specific
   //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu1QCDInd != -1"));
   myChannelCuts.push_back("(muTau[0].lv.M() < 45 || muTau[0].lv.M() > 75)");
     myChannelCuts.push_back("muTau[0].lv.M() > 15");
   myChannelCuts.push_back("misc.MET > 30"); //Place holder for MET requirements
   //    myChannelCuts.push_back(std::string(std::string(myChan) + ".DPhi < 2.5"));
   myChannelCuts.push_back("NBJetsCSVM == 0");
-  //myChannelCuts.push_back("misc.Jet0Pass");
-  //myChannelCuts.push_back("misc.LeadingJPt > 350");
 
-  //myChannelCuts.push_back("muo[muTau[0].mu0Ind].MT > 125.0");
+  
+  //DeltaM = 150
+  myChannelCuts.push_back("JZB(-1) > 150 ");//DeltaM = 150
+  myChannelCuts.push_back("abs(JZB(1)-muTau.lv.Pt()) > 40"); //DeltaM = 150
+  
+
+  //DeltaM = 50
+//   myChannelCuts.push_back("muo[muTau[0].mu0Ind].MT < 50.0");//DeltaM = 50
+//   myChannelCuts.push_back("JZB(-1) > 75 ");//DeltaM = 50
+//   myChannelCuts.push_back("DiLepPtRatioMuTau() < 0.75");
+
+  // DeltaM = 350
+//myChannelCuts.push_back("abs(JZB(1)-muTau.lv.Pt()) > 65"); // DeltaM = 350
+//   //myChannelCuts.push_back("JZB(-1) > 240 ");// DeltaM = 350
+//   myChannelCuts.push_back("(misc.MET + tau[muTau[0].tau0Ind].lv.Pt()) > 185");// DeltaM = 350
+  
+
+  //myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 110.0 "));
+  //myChannelCuts.push_back(std::string(std::string(myChan) + ".lv.Pt() > 110.0 "));
+  //myChannelCuts.push_back("(misc.MET + tau[muTau[0].tau0Ind].lv.Pt()) > 100");
+
+//   myChannelCuts.push_back("misc.Jet0Pass");
+//   myChannelCuts.push_back("misc.LeadingJPt > 350");
+
+
   myChannelCuts.push_back("0 == 0");	//Place holder for Jet requirements
+
+
 
   // We need to make the cut stream
 
@@ -108,9 +133,9 @@
 * Plot the channel specific variables: add what you like to see ....
 */
 
-  vars.push_back(myChan + ".MT2"); props.Add(&PT);
+  //  vars.push_back(myChan + ".MT2"); props.Add(&PT);
 // vars.push_back(myChan + ".lv.M()"); props.Add(&PT);
- //  vars.push_back(myChan + ".DPhi"); props.Add(&PHI);
+//  vars.push_back(myChan + ".DPhi"); props.Add(&PHI);
 
 //   vars.push_back(myChan + ".lv.Pt()"); props.Add(&PT);
 //  vars.push_back(myChan + ".MT2Imbalanced"); props.Add(&PT);
@@ -139,7 +164,7 @@
   //vars.push_back(myMisc + ".Run"); props.Add(&PT);
 
 //   vars.push_back(myMisc + ".MET"); props.Add(&PT);
- // vars.push_back(myMisc + ".METPhi"); props.Add(&PHI);
+//  vars.push_back(myMisc + ".METPhi"); props.Add(&PHI);
   //vars.push_back(myMisc + ".MT2"); props.Add(&PT);
   //vars.push_back(myMisc + ".MT2jet40"); props.Add(&PT);
   //vars.push_back(myMisc + ".LeadingJPt"); props.Add(&PT);
@@ -206,19 +231,25 @@
 //   	       	 true, true, true, 1, true, true, "png");
 //   }
 
-  for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
-   tA->makePlot(vars[iVar], cuts, -10, 0 , -10, trigger, vars[iVar], 20, 0, 200, false, true, true, true, true, true, 1, true, true, "png");
-  }
+//  for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
+//    tA->makePlot(vars[iVar], cuts, -10, 0 , -10, trigger, vars[iVar], 20, 0, 200, false, true, true, true, true, true, 1, true, true, "png");
+//  }
 
-//   tA->makePlot("doubleMu[0].MT2()",     cuts,    -10,  -10 , -10 ,   trigger , "doubleMu[0].lv.M()"            ,20,0,400,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+  tA->makePlot("muTau[0].MT2",     cuts,    -10,  0 , -10 ,   trigger , "MT2"            , 200, -500, 500,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 
-//   tA->makePlot("misc.Run",     cuts,    -10,  -10 , -10 ,   trigger , "Run"            ,19000,190000, 209000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+  //tA->makePlot("misc.Run",     cuts,    -10,  -10 , -10 ,   trigger , "Run"            ,19000,190000, 209000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 
 
-//void MassPlotter::plotSig(TString var, TString cuts, TString xtitle, int nbins, double min, double max, bool flip_order, int type ){
-  //tA->plotSig("muo[muTau[0].mu0Ind].MT", cuts,  "muo[muTau[0].mu0Ind].MT", 60, 0, 300, 0, 0, 1);
+  //void MassPlotter::plotSig(TString var, TString cuts, TString xtitle, int nbins, double min, double max, bool flip_order, int type , int LowerCut){ LowerCut = 0(default) <, LowerCut = 1 >
+
+  //tA->plotSig("muTau[0].MT2", cuts,  "MET + muPt Lower Cut", 200, -500, 500, 0, 0, 0);
+  //tA->plotSig("muo[muTau[0].mu0Ind].MT", cuts,  "(MET - muTau).Pt Lower Cut", 100, 0, 500, 0, 0, 1);
+  //tA->plotSig("abs(JZB(1)-muTau.lv.Pt())", cuts,  "muTauPt Lower Cut", 80, -200, 200, 0, 0, 1);
   //tA->muTauAnalysis(cuts, trigger, 10000000000, "MT2_NBCVM_ZlowMass_MET_dataSF_WjetsWeight_NonIsoTauLooseNotTight");
-  //tA->TauFakeRate(cuts, trigger, 10000000000, "PtEta_TightMuonRej2_LooseEleRej_Over_TauEtaLooseIso3hit_Jet0Pass_LeadingJPt350");
+  //tA->TauFakeRate(cuts, trigger, 10000000000, "PtEta_MuTau_Over_QCDMuTau_Jet0Pass_LeadingJPt350");
+  //tA->vs(10000000000, cuts, trigger);
+
+
   int NumberOfBins = 17;
   //double * xbin;
   double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};      //MT2

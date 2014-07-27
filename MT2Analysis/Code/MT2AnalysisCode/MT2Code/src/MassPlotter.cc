@@ -7838,12 +7838,12 @@ void MassPlotter::vs(Long64_t  nevents, TString cuts, TString trigger){
       
 
       if(Sample.sname == "Wtolnu"){
-	AvsBBkg->Fill(fMT2tree->muTau[0].GetMT2(), fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT);
-	AvsB2Bkg->Fill(fMT2tree->muTau[0].GetMT2(), fMT2tree->muTau[0].GetMCT());
+	AvsBBkg->Fill(fMT2tree->JZB(-1), abs(fMT2tree->JZB(1)-fMT2tree->muTau[0].GetLV().Pt()));
+	AvsB2Bkg->Fill(fMT2tree->JZB(-1), fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT);
       }
       if(Sample.type == "susy"){
-	AvsBSignal->Fill(fMT2tree->muTau[0].GetMT2(), fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT);
-	AvsB2Signal->Fill(fMT2tree->muTau[0].GetMT2(), fMT2tree->muTau[0].GetMCT());
+	AvsBSignal->Fill(fMT2tree->JZB(-1), abs(fMT2tree->JZB(1)-fMT2tree->muTau[0].GetLV().Pt()));
+	AvsB2Signal->Fill(fMT2tree->JZB(-1), fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT);
       }
     }
   }
@@ -8199,31 +8199,18 @@ void MassPlotter::TauFakeRate(TString cuts, TString trigger, Long64_t nevents, T
 
       int jetCounter = 0;
       
-      for(int j=0; j<fMT2tree->NJets; ++j){ 
-	if(fMT2tree->jet[j].isPFIDLoose==false) continue;
-	if (!((fMT2tree->jet[j].lv.Pt() > 20)  &&  fabs(fMT2tree->jet[j].lv.Eta()<2.3)))  
-	  continue;
+      for(int t=0; t<fMT2tree->NTaus; t++){ 
 	
-	jetCounter++;
+	if(fMT2tree->tau[t].PassQCDTau_MuTau)
+	  hPtEtaAll->Fill(fMT2tree->tau[t].lv.Eta(), fMT2tree->tau[t].lv.Pt()); 
 
-	if (jetCounter==1)
-	  continue;
-
-	if(fMT2tree->jet[j].isTauMatch < 0)
-	  continue;
-      
-	int tauIndex =  fMT2tree->jet[j].isTauMatch;
-	
-	hPtEtaAll->Fill(fMT2tree->tau[tauIndex].lv.Eta(), fMT2tree->tau[tauIndex].lv.Pt()); 
-
-	if(fMT2tree->tau[tauIndex].ElectronRej > 0 && fMT2tree->tau[tauIndex].MuonRej2 == 3)
-	  hPtEtaPass->Fill(fMT2tree->tau[tauIndex].lv.Eta(), fMT2tree->tau[tauIndex].lv.Pt()); 
-
+	if(fMT2tree->tau[t].PassTau_MuTau)
+	  hPtEtaPass->Fill(fMT2tree->tau[t].lv.Eta(), fMT2tree->tau[t].lv.Pt()); 
       }
-
+      
     }}
  TString fileName = fOutputDir;
-  if(!fileName.EndsWith("/")) fileName += "/";
+ if(!fileName.EndsWith("/")) fileName += "/";
   Util::MakeOutputDir(fileName);
   fileName = fileName  + myfileName +"_FRHistos.root";
   TFile *savefile = new TFile(fileName.Data(), "RECREATE");
