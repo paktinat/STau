@@ -1093,6 +1093,8 @@ public:
   void  FillDoubleMu();
   void  FillDoubleTau();
   void  FillMuTau();
+
+  Float_t DeltaMETEleTau(int mode);
   void  FillEleTau();
   void  FillEleMu();
 

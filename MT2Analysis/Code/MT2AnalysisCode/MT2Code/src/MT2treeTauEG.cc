@@ -2,6 +2,31 @@
 #include "helper/Utilities.hh"
 #include "Corrector.h"
 
+Float_t MT2tree::DeltaMETEleTau(int mode){
+  TVector2 MET = pfmet[0].Vect().XYvector() ;
+  TVector2 METIMB = TVector2 ( - eleTau[0].GetLV().X() , - eleTau[0].GetLV().Y() );
+
+  if(mode == 0){
+    TVector2 METDif = TVector2( MET.X() - METIMB.X() , MET.Y() - METIMB.Y() ) ;
+    return METDif.Mod() ;
+  }
+  else if(mode == 1)
+    return ( MET.Mod() - METIMB.Mod() ) ;
+  else if(mode == 2)
+    return MET.Mod() + METIMB.Mod() ;
+  else if(mode == 3){
+    TVector2 METDif2 = TVector2( MET.X() + METIMB.X() , MET.Y() + METIMB.Y() ) ;
+    return METDif2.Mod() ;
+  }else if(mode == 4){
+    TVector2 METDif3 = TVector2( MET.X() - METIMB.X() , MET.Y() - METIMB.Y() ) ;
+    return METDif3.Mod()-METIMB.Mod() ;
+  }
+  else if(mode == 5){
+    TVector2 METDif4 = TVector2( MET.X() - METIMB.X() , MET.Y() - METIMB.Y() ) ;
+    return METDif4.DeltaPhi( eleTau[0].GetLV().Vect().XYvector() ) ;
+  }
+}
+
 std::pair<int,int> MT2tree::EleTauParing(std::vector<int> GoodTau0, std::vector<int> GoodEle0){
   std::pair<int,int> ret = make_pair(-1,-1);
   std::vector<std::pair <double, std::pair<int,int> > > allPairs;
