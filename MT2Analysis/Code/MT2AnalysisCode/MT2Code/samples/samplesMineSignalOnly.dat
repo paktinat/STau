@@ -1,0 +1,19 @@
+#########################################################################################
+GENERAL
+Path         ///dataLOCAL/MT2Tau/RootFiles/
+________________________________________________________________________________________
+# list of samples
+
+## -------- SMS --------
+
+SAMPLE
+Name            TStau
+SName           SUSY
+ShapeName       Signal
+File            TauTau_V2_2/SMS-TChipChimStauSnu-mChi-120to500-mLSP-1to480-x-050-TuneZ2star-8TeV-pythia6-tauolapp.root
+Xsection        0.152 pb
+Kfact           1.
+Lumi            19600.0
+Type            susy
+Color           1
+

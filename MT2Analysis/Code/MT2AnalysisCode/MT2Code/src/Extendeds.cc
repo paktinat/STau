@@ -449,10 +449,10 @@ void ExtendedObjectProperty::Write( TDirectory* dir , int lumi){
   h_stack->Write();
   Legend1->Write();
 
-  plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY"] , true, false, Name + "_ratio", Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
+  /*plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY"] , true, false, Name + "_ratio", Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
   for(int i =0 ; i<SUSYNames.size() ; i++)
     plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY_"+SUSYNames[i] ] , true, false, Name + "_ratio"+ "_"+SUSYNames[i], Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
-
+  */
   for( std::vector< TGraph* >::const_iterator itr = AllSignificances.begin() ; itr != AllSignificances.end() ; itr++)
     (*itr)->Write();
 }

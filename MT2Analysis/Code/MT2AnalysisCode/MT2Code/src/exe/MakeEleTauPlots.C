@@ -141,7 +141,7 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vect
       while( objcut = nextcut() ){
 	
 
-	if(cutindex == 0.5 && data != 1){
+	if(cutindex == 4.5 && data != 1){
 	  eleLV.SetPtEtaPhiM(elePt->EvalInstance(0)  , eleEta->EvalInstance(0) , 0 , 0);
 	  tauLV.SetPtEtaPhiM(tauPt->EvalInstance(0)  , tauEta->EvalInstance(0) , 0 , 0);
 	  weight *= getCorrFactor("eltau" , "mc12" , eleLV , tauLV , tauLV);
@@ -249,7 +249,7 @@ int main(int argc, char* argv[]) {
   tA->setVerbose(verbose);
   tA->init(samples);
 
-  tA->DrawNSignals();
+  //tA->DrawNSignals(); 
   cout << "signal histo is created" << endl;
 
   TList allCuts;
