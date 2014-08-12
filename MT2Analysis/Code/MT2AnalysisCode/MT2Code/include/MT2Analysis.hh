@@ -62,6 +62,8 @@ public:
   void FillMT2Muons();
   void FillMT2Taus();
   MT2tree* GetMT2tree(){return fMT2tree;}
+
+  std::pair<float, float> getLHESusyMasses();
   //
 
 

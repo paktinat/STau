@@ -395,6 +395,71 @@ void MT2Analysis::FillTree(){
 	fATree            ->Fill();
 }
 
+std::pair<float, float> MT2Analysis::getLHESusyMasses(){
+   int mlsp_comment = -1;
+   int mch_comment = -1;
+
+   if( fTR->hLHEEvent->comments_size() > 0){
+     string s = *(fTR->hLHEEvent->comments_begin()) ;
+     std::string delimiter = "_";
+
+     vector<string> sParts;
+
+     size_t pos = 0;
+     std::string token;
+     while ((pos = s.find(delimiter)) != std::string::npos) {
+       token = s.substr(0, pos);
+       sParts.push_back( token );
+       s.erase(0, pos + delimiter.length());
+     }
+     sParts.push_back( s );
+
+     if(sParts.size() == 4){
+       try{
+	 mlsp_comment = stoi( sParts[2] );
+       }catch(const invalid_argument& ia){
+	 std::cerr << "Invalid argument: " << ia.what() << '\n';
+       }
+       try{
+	 mch_comment = stoi(sParts[3] );
+       }catch(const invalid_argument& ia){
+	 std::cerr << "Invalid argument: " << ia.what() << '\n';
+       }
+     }
+   }
+   if( mch_comment != -1 && mlsp_comment != -1 )
+     return make_pair( float(mch_comment) , float(mlsp_comment) );
+   
+   lhef::HEPEUP a = fTR->hLHEEvent->hepeup();
+
+   int n24 = 0;
+   int n22 = 0;
+   int id1000024[] = {-1,-1};
+   int id1000022[] = {-1,-1};
+   for( uint ip = 0 ; ip < a.IDUP.size() ; ip++)
+     if( abs(a.IDUP[ ip ]) == 1000024){
+       id1000024[n24] = ip;
+       n24++;
+     }
+     else if( abs(a.IDUP[ ip ]) == 1000022){
+       id1000022[n22] = ip;
+       n22++;
+     }
+
+   std::vector< lhef::HEPEUP::FiveVector > mom = a.PUP;
+
+   float M1000024_1 = mom[ id1000024[0] ][4] ; float M1000024_1R = roundf( M1000024_1/20.0 )* 20.0 ;
+   float M1000024_2 = mom[ id1000024[1] ][4] ; float M1000024_2R = roundf( M1000024_2/20.0 )* 20.0 ;
+
+   float M1000024_Best = (fabs( M1000024_1R - M1000024_1 ) > fabs( M1000024_2R -M1000024_2) )? M1000024_2 : M1000024_1 ;  
+   
+   float M1000022_1 = mom[id1000022[0] ][4] ; float M1000022_1R = roundf( M1000022_1/20.0 )* 20.0 ;
+   float M1000022_2 = mom[id1000022[1] ][4] ; float M1000022_2R = roundf( M1000022_2/20.0 )* 20.0 ;
+
+   float M1000022_Best = (fabs( M1000022_1R  - M1000022_1 ) > fabs( M1000022_2R -M1000022_2) )? M1000022_2 : M1000022_1 ;  
+
+   return make_pair( M1000024_Best , M1000022_Best );
+}
 
 bool MT2Analysis::FillMT2TreeBasics(){
 	// check size of jets electrons muons and genleptons
@@ -662,23 +727,9 @@ bool MT2Analysis::FillMT2TreeBasics(){
 	}
 	if(isScan){
 
-   lhef::HEPEUP a = fTR->hLHEEvent->hepeup();
-
-   int id1000024 = -1;
-   int id1000022 = -1;
-   for( uint ip = 0 ; ip < a.IDUP.size() ; ip++)
-     if( a.IDUP[ ip ] == 1000024)
-       id1000024 = ip;
-     else if( a.IDUP[ ip ] == 1000022)
-       id1000022 = ip;
-
-   //    cout << id1000024 << " and " << id1000022 << endl;
-   std::vector< lhef::HEPEUP::FiveVector > mom = a.PUP;
-   double M1000024 = mom[id1000024][4] ;
-   double M1000022 = mom[id1000022][4] ;
-   //  cout << M1000024 << " and " << M1000022 << endl;
-   fMT2tree->Susy.MassGlu = M1000024;
-   fMT2tree->Susy.MassLSP = M1000022;
+	  pair<float, float> susymasses = getLHESusyMasses();
+	  fMT2tree->Susy.MassGlu = susymasses.first  ;
+	  fMT2tree->Susy.MassLSP = susymasses.second ;
 
 // 	  fMT2tree->Susy.MassGlu = fTR->MassGlu;
 // 	  fMT2tree->Susy.MassChi= fTR->MassChi;
