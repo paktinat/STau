@@ -435,7 +435,7 @@ Lumi            19600.0
 Type            mc
 Color		419 
 
-#SAMPLE
+SAMPLE
 Name		WZJetsTo2L2Q
 SName		DY
 ShapeName	WZJetsTo2L2Q
@@ -584,7 +584,7 @@ Type            mc
 Color		600
 
 ## --------- Data ---------------------------
-#SAMPLE
+SAMPLE
 Name		Run2012A_TauPlusX
 SName		TauPlusX-Data
 ShapeName	Data
@@ -595,7 +595,7 @@ Lumi            1.
 Type            data
 Color		1
 
-#SAMPLE
+SAMPLE
 Name		Run2012B_TauPlusX
 SName		TauPlusX-Data
 ShapeName	Data

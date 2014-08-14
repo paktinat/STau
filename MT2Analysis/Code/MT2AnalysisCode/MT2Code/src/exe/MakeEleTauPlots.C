@@ -55,6 +55,8 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vect
   TIter nextcut(allCuts); 
   TObject *objcut; 
 
+  TH2* hAllSMSEvents = NULL;
+
   std::vector<TString> alllabels;
   while( objcut = nextcut() ){
     ExtendedCut* thecut = (ExtendedCut*)objcut ;
@@ -84,21 +86,15 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vect
     wToLNuW = new TTreeFormula("wToLNuW" , "eleTau[0].tauWjetsSF" , Sample.tree );
 
     double Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents*Sample.PU_avg_weight);
-
+    if(data == 1)
+      Weight = 1.0;
+    if( Sample.type == "susy" )
+      Weight = 1.0;
 
     Sample.Print(Weight);
 
-    cutflowtable.SetTree( Sample.tree , Sample.type, Sample.sname );
-    
-    nextcut.Reset();
-    while( objcut = nextcut() ){
-      ExtendedCut* thecut = (ExtendedCut*)objcut ;
-      cout << thecut->Name << ":" << endl;
-      thecut->SetTree( Sample.tree ,  Sample.name , Sample.sname , Sample.type);
-    }
+    string lastFileName = "";
 
-
-  
     Long64_t nentries =  Sample.tree->GetEntries();
     if( list )
       nentries = list->GetN();
@@ -113,6 +109,27 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vect
       else
 	Sample.tree->GetEntry(jentry);
 
+      if( lastFileName.compare( ((TChain*)Sample.tree)->GetFile()->GetName() ) != 0 ) {
+	cutflowtable.SetTree( Sample.tree , Sample.type, Sample.sname );
+    
+	nextcut.Reset();
+	while( objcut = nextcut() ){
+	  ExtendedCut* thecut = (ExtendedCut*)objcut ;
+	  cout << thecut->Name << ":" << endl;
+	  thecut->SetTree( Sample.tree ,  Sample.name , Sample.sname , Sample.type);
+	}
+
+	if( Sample.type == "susy" ){
+	  TH1* hhtmp1 =(TH1*) ((TChain*)Sample.tree)->GetFile()->Get("h_SMSEvents"); 
+	  if(hAllSMSEvents)
+	    hAllSMSEvents->Add( hhtmp1 );
+	  else
+	    hAllSMSEvents =(TH2*) hhtmp1->Clone();
+	}
+	lastFileName = ((TChain*)Sample.tree)->GetFile()->GetName() ;
+	cout << "new file : " << lastFileName << endl;
+      }
+
       if ( counter == 10000 ){  
 	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
 	fflush(stdout);
@@ -121,8 +138,6 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vect
  
       nextcut.Reset();
       double weight = Weight;
-      if(data == 1)
- 	weight = 1.0;
 
       double cutindex = 0.5;
       while( objcut = nextcut() ){
@@ -159,6 +174,7 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vect
     ExtendedCut* thecut = (ExtendedCut*)objcut ;
     thecut->Write( savefile, lumi , Significances , SUSYCatNames.size() );
   }
+  hAllSMSEvents->Write();
 
   cutflowtable.Print("cutflowtable");
 
@@ -293,8 +309,8 @@ int main(int argc, char* argv[]) {
 
 
 
-  TString SUSYCatCommand = "((Susy.MassGlu - Susy.MassLSP)/50.0)+(misc.ProcessID-10)";
-  std::vector<TString> SUSYCatNames = {"00_50" , "50_100" , "100_150" , "150_200" , "200_250" , "250_300" , "300_350" , "350_400" , "400_450" , "450_500" };
+  TString SUSYCatCommand = "((Susy.MassGlu - Susy.MassLSP)/500.0)+(misc.ProcessID-10)";
+  std::vector<TString> SUSYCatNames = {"00_50" };
 
   TIter cut(&  CutsForControlPlots );
   TObject* cuto ;
@@ -427,11 +443,11 @@ int main(int argc, char* argv[]) {
   TString fileName = outputdir;
   if(!fileName.EndsWith("/")) fileName += "/";
   Util::MakeOutputDir(fileName);
-  fileName = fileName  + outputfile +"_TreeLowMassVeto.root";
+  fileName = fileName  + outputfile +"_TreeZPeakVeto.root";
   TFile* filetrees = TFile::Open( fileName , "recreate");
   filetrees->cd();
-  lowmassveto->SaveTree();
-  lowmassveto->theTreeToSave->Write();
+  ZPeakVeto->SaveTree();
+  ZPeakVeto->theTreeToSave->Write();
   
   //TFile* finput = TFile::Open( "/dataLOCAL/hbakhshi/EleTau_Signal_METBJetsCuts_Histos.root") ;
   //finput->cd();
@@ -448,7 +464,7 @@ int main(int argc, char* argv[]) {
   }
 
   filetrees->cd();
-  lowmassveto->theTreeToSave->Write();
+  ZPeakVeto->theTreeToSave->Write();
   filetrees->Close();
 
   delete tA;

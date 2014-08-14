@@ -3,7 +3,7 @@
 #include "Corrector.h"
 #include "BaseMassPlotter.hh"
 #include <vector>
-
+#include "TChain.h"
 
 BaseMassPlotter::BaseMassPlotter(TString outputdir){
   fOutputDir = Util::MakeOutputDir(outputdir);
@@ -68,10 +68,14 @@ void BaseMassPlotter::loadSamples(const char* filename){
       TString file =fPath+StringValue;
       if(fVerbose > 3)
 	cout<<"my file: "<<file<<endl;
-      TFile *f = TFile::Open(file);
-      s.file = f;
+
 		
-      s.tree = (TTree*)f->Get("MassTree");
+      s.tree = new TChain("MassTree"); //(TTree*)f->Get("MassTree");
+      ((TChain*)(s.tree))->Add( file , 0 );
+      ((TChain*)(s.tree))->LoadTree(0);
+
+      cout << s.tree->GetEntries() << endl;
+      s.file = ((TChain*)(s.tree))->GetFile() ;
 
 			
       IN.getline(buffer, 200, '\n');
