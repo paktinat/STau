@@ -1,0 +1,11 @@
+ 
+
+you need to setup a cmssw environment and use this package with SWGuideHiggsAnalysisCombinedLimit package
+1. follow the instruction on https://twiki.cern.ch/twiki/bin/viewauth/CMS/SWGuideHiggsAnalysisCombinedLimit and compile the combine executable
+2. copy the contents of this folder into HiggsAnalysis/ 
+3. cd HiggsAnalysis/STauEleTau/bin
+4. scram b
+5. cd ../scripts/
+
+6. the python script there can simply be modified and run
+

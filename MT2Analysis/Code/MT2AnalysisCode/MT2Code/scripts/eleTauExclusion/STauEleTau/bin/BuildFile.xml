@@ -1,0 +1,7 @@
+<bin file="DrawHists.cpp" name="DrawHists" >
+  <Flags CXXFLAGS="-g" />
+  <use name="root"/>
+  <use name="rootgpad" />
+  <use name="rootcore" />
+  <use name="rootgraphics" />
+</bin>
