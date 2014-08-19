@@ -924,6 +924,22 @@ public:
   Float_t MinMetLepDPhiMuTau();
   //Float_t PositiveChargedLepWithZBeamPlane(TLorentzVector LepPluslv, TLorentzVector LepNeglv);
   Float_t PositiveChargedLepWithZBeamPlaneMuTau();
+  //-----------------Di-Electron--------------------
+  Float_t PZetaEleEle();
+  Float_t PZetaImbalancedEleEle();
+  Float_t PVisibleZetaEleEle();
+  Float_t DiLepPtRatioEleEle();
+  Float_t PositiveChargedLeptonDecayAngleinZframeEleEle();
+  Float_t MinMetLepDPhiEleEle();
+  Float_t PositiveChargedLepWithZBeamPlaneEleEle();
+  Float_t MCTEleEle();
+  Float_t MCTImbEleEle();
+  Float_t METMinusPtZEleEle();
+  Float_t METPlusPtZEleEle();
+  Float_t JZBInDirectEleEle();
+  Float_t absJZBInDirectEleEle();
+
+
 
 
   Float_t JZB(int a){

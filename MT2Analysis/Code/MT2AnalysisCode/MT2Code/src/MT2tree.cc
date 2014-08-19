@@ -3281,6 +3281,102 @@ float MT2tree::PositiveChargedLepWithZBeamPlaneMuTau(){
 
   return PositiveChargedLepWithZBeamPlane(LepPluslv, LepNeglv);
 }
+//--------------------EleEle-----------------------
+Float_t MT2tree::PZetaEleEle(){//temporary solution for makePlot. No need to be moved to the next versions.
+  return PZeta(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, pfmet[0]);
+}
+Float_t MT2tree::PZetaImbalancedEleEle(){//temporary solution for makePlot. No need to be moved to the next versions.
+  return PZeta(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, (-doubleEle[0].lv));
+}
+
+Float_t MT2tree::PVisibleZetaEleEle(){//temporary solution for makePlot. No need to be moved to the next versions.
+  return PVisibleZeta(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv);
+}
+
+
+float MT2tree::DiLepPtRatioEleEle(){//temporary solution for makePlot. No need to be moved to the next versions.
+  return DiLepPtRatio(ele[doubleEle[0].Ele0Ind].lv , ele[doubleEle[0].Ele1Ind].lv);
+}
+
+
+float MT2tree::PositiveChargedLeptonDecayAngleinZframeEleEle(){
+  TLorentzVector LepPluslv;
+  TLorentzVector LepNeglv;
+
+  if(ele[doubleEle[0].Ele0Ind].Charge >= ele[doubleEle[0].Ele1Ind].Charge){
+    LepPluslv = ele[doubleEle[0].Ele0Ind].lv;
+    LepNeglv  = ele[doubleEle[0].Ele1Ind].lv;
+  }else{
+    LepPluslv = ele[doubleEle[0].Ele1Ind].lv;
+    LepNeglv  = ele[doubleEle[0].Ele0Ind].lv;
+  }
+
+  return PositiveChargedLeptonDecayAngleinZframe(LepPluslv, LepNeglv);
+}
+
+
+float MT2tree::MinMetLepDPhiEleEle(){//temporary solution for makePlot. No need to be moved to the next versions.
+  return MinMetLepDPhi(doubleEle[0].lv = ele[doubleEle[0].Ele0Ind].lv , ele[doubleEle[0].Ele1Ind].lv);
+}
+
+
+float MT2tree::PositiveChargedLepWithZBeamPlaneEleEle(){
+  TLorentzVector LepPluslv;
+  TLorentzVector LepNeglv;
+
+  if(ele[doubleEle[0].Ele0Ind].Charge >= ele[doubleEle[0].Ele1Ind].Charge){
+    LepPluslv = ele[doubleEle[0].Ele0Ind].lv;
+    LepNeglv  = ele[doubleEle[0].Ele1Ind].lv;
+  }else{
+    LepPluslv = ele[doubleEle[0].Ele1Ind].lv;
+    LepNeglv  = ele[doubleEle[0].Ele0Ind].lv;
+  }
+
+  return PositiveChargedLepWithZBeamPlane(LepPluslv, LepNeglv);
+}
+  
+float MT2tree::MCTEleEle(){
+
+  TVector2 pmiss_vector2;
+  TLorentzVector downstream(0.,0.,0.,0.); // no particles are downstream, i.e. not selected jets are upstream. 
+  pmiss_vector2.Set(pfmet[0].Px(), pfmet[0].Py());
+  double MCT = GetMCTcorr(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, downstream, pmiss_vector2);
+  return MCT;
+}
+float MT2tree::MCTImbEleEle(){
+  TVector2 pmiss_vector2;
+  TLorentzVector downstream(0.,0.,0.,0.); // no particles are downstream, i.e. not selected jets are upstream.
+  pmiss_vector2.Set(-doubleEle[0].lv.Px(), -doubleEle[0].lv.Py());
+  double MCTImbalanced= GetMCTcorr(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, downstream, pmiss_vector2);
+  return MCTImbalanced;
+}
+
+float MT2tree::METMinusPtZEleEle(){
+  TLorentzVector A = pfmet[0]-doubleEle[0].lv;
+  double B = A.Pt();
+  return B;
+
+}
+float MT2tree::METPlusPtZEleEle(){
+  TLorentzVector A = pfmet[0]+doubleEle[0].lv;
+  double B = A.Pt();
+  return B;
+}
+
+
+float MT2tree::JZBInDirectEleEle(){
+  TLorentzVector A = -pfmet[0]-doubleEle[0].lv;
+  double B = A.Pt();
+  double C = B-doubleEle[0].lv.Pt();
+  return C;
+}
+float MT2tree::absJZBInDirectEleEle(){
+  TLorentzVector A = -pfmet[0]-doubleEle[0].lv;
+  double B = A.Pt();
+  double C = B-doubleEle[0].lv.Pt();
+  return fabs(C);
+}
+
 
 
 // ----------------------------------------------------------------------------------------------------------

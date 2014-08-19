@@ -439,7 +439,7 @@ SAMPLE
 Name		WZJetsTo2L2Q
 SName		DY
 ShapeName	WZJetsTo2L2Q
-File            TauTau_V3_1/WZJetsTo2L2Q-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/WZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30.root
 Xsection  	2.2     #1.755 pb
 Kfact           1.
 Lumi            19600.0
