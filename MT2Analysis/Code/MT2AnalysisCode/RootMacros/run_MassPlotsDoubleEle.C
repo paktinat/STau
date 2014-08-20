@@ -4,14 +4,14 @@
   //  TString samples = "./samples/samplesMineDoubleElectronQCDHtBin-SMS005.dat";
   //  TString samples = "./samples/samplesMineDoubleElectronQCDHtBin-SMS050.dat";
   //  TString samples = "./samples/samplesMineDoubleElectronQCDPtBin.dat";
-  //     TString samples = "./samples/samplesMineQCD.dat";
-  //    TString samples = "./samples/samplesMineDoubleElectronQCDBCtoE-SMS050.dat";
-  //    TString samples = "./samples/samplesMineDoubleElectronQCDBCtoE-SMS050_MET30_NBJet0.dat";
-    TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat";
+  //  TString samples = "./samples/samplesMineQCD.dat";
+    TString samples = "./samples/samplesMineDoubleElectronQCDBCtoE-SMS050.dat";
+  //  TString samples = "./samples/samplesMineDoubleElectronQCDBCtoE-SMS050_MET30_NBJet0.dat";
+  //  TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat";
 
   //  TString samples = "./samples/samplesMineQCD.dat";
-  //        TString samples = "./samples/samplesMineDoubleElectronQCDHtBin-SMS050.dat";                                                               
-  //      TString samples = "./samples/samplesMineDoubleElectronQCDPtBin-SMS050.dat";                                                                 
+  //  TString samples = "./samples/samplesMineDoubleElectronQCDHtBin-SMS050.dat";                                                               
+  //  TString samples = "./samples/samplesMineDoubleElectronQCDPtBin-SMS050.dat";                                                                 
   //  TString samples = "./samples/samplesMineDoubleElectronQCDHtBin-SMS005.dat";                                                                     
   //  TString samples = "./samples/samplesMineDoubleElectronQCDHtBin-SMS005.dat";  
 
@@ -59,9 +59,9 @@
      myChannelCuts.push_back(std::string(trigger));
 
      //     myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 25)  && (Susy.MassGlu - Susy.MassLSP) < 75))");
-     //     myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 125)  && (Susy.MassGlu - Susy.MassLSP) < 175))");
+         myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 125)  && (Susy.MassGlu - Susy.MassLSP) < 175))");
      //myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 175)  && (Susy.MassGlu - Susy.MassLSP) < 225))");
-               myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 325)  && (Susy.MassGlu - Susy.MassLSP) < 375))");
+	 //           myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 325)  && (Susy.MassGlu - Susy.MassLSP) < 375))");
      //myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP == 250)");
   
 // You need to specify the channel
@@ -82,16 +82,16 @@
 
 
 
-        myChannelCuts.push_back("(METMinusPtZEleEle())>90"); //cut 1
-             myChannelCuts.push_back("(misc.MET)-(doubleEle[0].lv.Pt())> -20" );  //cut 2
-             myChannelCuts.push_back("misc.MET > 50"); //cut 3
+       myChannelCuts.push_back("(METMinusPtZEleEle())>90"); //cut 1
+       myChannelCuts.push_back("(misc.MET)-(doubleEle[0].lv.Pt())> -20" );  //cut 2
+       myChannelCuts.push_back("misc.MET > 50"); //cut 3
 
 
        myChannelCuts.push_back("(doubleEle[0].MT2 > 100)");
 
 
 
-//       myChannelCuts.push_back("(ele[doubleEle[0].Ele0Ind].MT>80)");
+//   myChannelCuts.push_back("(ele[doubleEle[0].Ele0Ind].MT>80)");
 
 //   myChannelCuts.push_back("(JZBInDirectEleEle()>80)");
 //   myChannelCuts.push_back("(((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 2) || ((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == -2))");
@@ -157,7 +157,7 @@
 
 //tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2", 50, 0, 500, false, true, true, true, true, true, 1, true, false, "png");
 //tA->makePlot("misc.MET", cuts, -10, 0, -10, trigger, "MET", 50, 0, 500, false, true, true, true, true, true, 1, true, false, "png");
-tA->makePlot("MCTEleEle()", cuts, -10, 0, -10, trigger, "MCT", 50, 0, 500, false, true , true, true, true, true, 1, true, false, "png");
+//tA->makePlot("MCTEleEle()", cuts, -10, 0, -10, trigger, "MCT", 50, 0, 500, false, true , true, true, true, true, 1, true, false, "png");
 
 //tA->makePlot("ele[doubleEle[0].Ele0Ind].MT",     cuts,    -10,  0 , -10 ,   trigger , "First Electron MT"            ,30,0,300,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 // tA->makePlot("METMinusPtZEleEle()", cuts, -10,  0 , -10 , trigger , "|MET-Pt_Z| 175", 50, 0, 500, false, true , true,  true, true, true, 1, true, false, "png");
