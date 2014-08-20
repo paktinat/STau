@@ -103,7 +103,7 @@ Name		QCD-Pt-20-30-EMEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_20_30_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
-Xsection  	2915000.0 pb     #CMS AN-12-468
+Xsection  	2915000.0 pb     #CMS AN-12-468 Cross sections are LO
 Kfact           1.59
 Lumi            19600.0
 Type		mc
@@ -114,7 +114,7 @@ Name		QCD-Pt-30-80-EMEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_30_80_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
-Xsection  	4616000.0 pb     #CMS AN-12-468
+Xsection  	4616000.0 pb     #CMS AN-12-468 Cross sections are LO
 Kfact           1.59
 Lumi            19600.0
 Type		mc
@@ -125,18 +125,18 @@ Name		QCD-Pt-80-170-EMEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_80_170_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
-Xsection  	183300.0 pb #CMS AN-12-468
+Xsection  	183300.0 pb #CMS AN-12-468 Cross sections are LO
 Kfact           1.59
 Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-170-250-EMEnriched
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/
-Xsection  	4587.0 pb #CMS AN-12-468
+File            TauTau_V3_1/QCD_Pt_170_250_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	4587.0 pb #CMS AN-12-468  Cross sections are LO
 Kfact           1.59
 Lumi            19600.0
 Type		mc
@@ -153,12 +153,12 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-350-EMEnriched
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/
-Xsection  	89.1 pb #CMS AN-12-468
+File            TauTau_V3_1/QCD_Pt_350_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	89.1 pb   #CMS AN-12-468 Cross sections are LO
 Kfact           1.59
 Lumi            19600.0
 Type		mc
@@ -297,19 +297,19 @@ Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
-
-#SAMPLE
+##--------------------------------------------------------
+SAMPLE
 Name		GJets_HT-40To100
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/GJets_HT-40To100_8TeV-madgraph_NBJetsCSVM0_MET30.root
-Xsection  	20930.00 pb
+Xsection  	20930.00 pb #http://cms.cern.ch/iCMS/jsp/mcprod/admin/requestmanagement.jsp?
 Kfact           1.	
 Lumi            19600.0
 Type            mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		GJets_HT-100To200
 SName		QCD
 ShapeName	QCD
@@ -320,7 +320,7 @@ Lumi            19600.0
 Type            mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		GJets_HT-200To400
 SName		QCD
 ShapeName	QCD
@@ -331,7 +331,7 @@ Lumi            19600.0
 Type            mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		GJets_HT-400ToInf
 SName		QCD
 ShapeName	QCD
