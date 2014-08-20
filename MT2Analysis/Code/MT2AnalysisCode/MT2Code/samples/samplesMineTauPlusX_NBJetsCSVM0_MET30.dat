@@ -36,8 +36,8 @@ Name		QCD-Pt-20-30-BCtoE
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_20_30_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
-Xsection  	167400.0 pb #CMS AN-12-468
-Kfact           1.59
+Xsection  	167400.0 pb # at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
+Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
@@ -47,41 +47,41 @@ Name		QCD-Pt-30-80-BCtoE
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_30_80_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
-Xsection  	167000.0 pb #CMS AN-12-468
-Kfact           1.59
+Xsection  	167000.0 pb #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
+Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-80-170-BCtoE
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/
-Xsection  	12980.0 pb #CMS AN-12-468
-Kfact           1.59
+File            TauTau_V3_1/QCD_Pt_80_170_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	12980.0 pb #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
+Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-170-250-BCtoE
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/
-Xsection  	632.0 pb #CMS AN-12-468
-Kfact           1.59
+File            TauTau_V3_1/QCD_Pt_170_250_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	632.0 pb #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
+Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-250-350-BCtoE
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/
-Xsection  	103.3 pb #CMS AN-12-468
-Kfact           1.59
+File            TauTau_V3_1/QCD_Pt_250_350_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	103.3 pb #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
+Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
@@ -91,8 +91,8 @@ Name		QCD-Pt-350-BCtoE
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/
-Xsection  	23.92 pb #CMS AN-12-468
-Kfact           1.59
+Xsection  	23.92 pb #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
+Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
@@ -171,8 +171,8 @@ Name		QCD-Pt-15-20-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt-15to20_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
-Xsection  	2.73858E06
-Kfact           1.59
+Xsection  	2.73858E06 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
+Kfact           1.0
 Lumi            19600 
 Type		mc
 Color		401
@@ -182,8 +182,8 @@ Name		QCD-Pt-20-30-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt-20to30_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
-Xsection  	1.8655E06 
-Kfact           1.59
+Xsection  	1.8655E06 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
+Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
@@ -193,8 +193,8 @@ Name		QCD-Pt-30-50-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt-30to50_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
-Xsection  	806298.0 
-Kfact           1.59
+Xsection  	806298.0 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
+Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
@@ -204,8 +204,8 @@ Name		QCD-Pt-50-80-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt-50to80_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
-Xsection  	176187.6 
-Kfact           1.59
+Xsection  	176187.6 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
+Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
@@ -215,8 +215,8 @@ Name		QCD-Pt-80-120-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt-80to120_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
-Xsection  	40448 
-Kfact           1.59
+Xsection  	40448 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
+Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
@@ -226,8 +226,8 @@ Name		QCD-Pt-120-170-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt-120to170_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
-Xsection  	7463.94 
-Kfact           1.59
+Xsection  	7463.94 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
+Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
@@ -237,7 +237,7 @@ Name		QCD-Pt-170-300-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt-170to300_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
-Xsection  	2299.752 
+Xsection  	2299.752 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
 Kfact           1.59
 Lumi            19600.0
 Type		mc
@@ -248,8 +248,8 @@ Name		QCD-Pt-300-470-MuEnriched
 SName		QCD
 ShapeName	QCD   
 File            TauTau_V3_1/QCD_Pt-300to470_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
-Xsection  	151.8048  
-Kfact           1.59
+Xsection  	151.8048 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications  
+Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
@@ -259,8 +259,8 @@ Name		QCD-Pt-470-600-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt-470to600_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
-Xsection  	11.79648 
-Kfact           1.59
+Xsection  	11.79648 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
+Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
@@ -270,8 +270,8 @@ Name		QCD-Pt-600-800-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/
-Xsection  	2.690196 
-Kfact           1.59
+Xsection  	2.690196 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
+Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
@@ -281,8 +281,8 @@ Name		QCD-Pt-800-1000-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/
-Xsection  	0.368781 
-Kfact           1.59
+Xsection  	0.368781 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
+Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
@@ -292,12 +292,12 @@ Name		QCD-Pt-1000-MuEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/
-Xsection  	0.0849078 pb  
-Kfact           1.59
+Xsection  	0.0849078 pb #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications  
+Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
-#
+
 #SAMPLE
 Name		GJets_HT-40To100
 SName		QCD
