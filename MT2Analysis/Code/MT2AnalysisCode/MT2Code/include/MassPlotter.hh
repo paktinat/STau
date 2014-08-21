@@ -210,22 +210,22 @@ public:
 		      int njets=-2, int nbjets=-10, int nleps=0, TString HLT="", //njets: 2 -> njets==2, -2 -> njets>=2
 		      TString xtitle="MT2 [GeV]", const int nbins=50, const double min=0., const double max=1., 
 		      bool cleaned=false, bool logflag=true, bool composited=false, bool ratio=false, 
-		      bool stacked=true, bool overlaySUSY=false, float overlayScale = 0, bool add_underflow=false, bool saveHistos=false,  TString saveMacro = "");
+		      bool stacked=true, bool overlaySUSY=false, float overlayScale = 0, bool add_underflow=false, bool saveHistos=false,  TString saveMacro = "", int type = 1);
         void makePlot(TString var="misc.PseudoJetMT2", TString cuts="misc.HBHENoiseFlag == 1", 
 		      int njets=-2, int nbjets=-10, int nleps=0, TString HLT="", //njets: 2 -> njets==2, -2 -> njets>=2
 		      TString xtitle="MT2 [GeV]", const int nbins=50, const double min=0., const double max=1., 
 		      bool cleaned=false, bool logflag=true, bool composited=false, bool ratio=false, 
-		      bool stacked=true, bool overlaySUSY=false, float overlayScale = 0, bool add_underflow=false, bool saveHistos=false, TString saveMacro = "");
+		      bool stacked=true, bool overlaySUSY=false, float overlayScale = 0, bool add_underflow=false, bool saveHistos=false, TString saveMacro = "", int type = 1);
         void Makeplot(TString var="misc.PseudoJetMT2", TString maincuts="misc.MET>30", TString basecuts="misc.HBHENoiseFlag == 1", 
 		      int njets=-2, int nbjets=-10, int nleps=0, TString HLT="",//njets: 2 -> njets==2, -2 -> njets>=2
 		      TString xtitle="MT2 [GeV]", const int nbins=gNMT2bins, const double *bins=gMT2bins, 
 		      bool cleaned=false, bool logflag=true, bool composited=false, bool ratio=false, 
-		      bool stacked=true, bool overlaySUSY=false, float overlayScale = 0, bool add_underflow=false, bool saveHistos=false, TString saveMacro = "");
+		      bool stacked=true, bool overlaySUSY=false, float overlayScale = 0, bool add_underflow=false, bool saveHistos=false, TString saveMacro = "", int type = 1);
         void MakePlot(TString var="misc.PseudoJetMT2", TString cuts="misc.HBHENoiseFlag == 1", 
 		      int njets=-2, int nbjets=-10, int nleps=0, TString HLT="",//njets: 2 -> njets==2, -2 -> njets>=2
 		      TString xtitle="MT2 [GeV]", const int nbins=gNMT2bins, const double *bins=gMT2bins, 
 		      bool cleaned=false, bool logflag=true, bool composited=false, bool ratio=false, 
-		      bool stacked=true, bool overlaySUSY=false, float overlayScale = 0, bool add_underflow=false, bool saveHistos=false, TString saveMacro = "");
+		      bool stacked=true, bool overlaySUSY=false, float overlayScale = 0, bool add_underflow=false, bool saveHistos=false, TString saveMacro = "", int type = 1);
         void plotSig(TString var="misc.PseudoJetMT2", TString cuts="misc.HBHENoiseFlag == 1", TString xtitle="MT2 [GeV]", 
 		     int nbins=50, double min=0., double max=1., bool cleaned=false, int type=0 ,int LowerCut=0); // 0: s/sqrt(b), 1: s/sqrt(s+b), 3:s/b
   	void PrintCutFlow(int njets=-2, int nleps=0, TString trigger="", TString cuts="");
@@ -250,8 +250,10 @@ public:
   void NewTauContamination(int sample_index, Long64_t nevents, int flag);//sample_index != -1 reads only a special sample, nevents determines the number of events to read
 
   void SpecialMakePlot(int nevents, TString cuts, TString trigger);
-  void muTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfilename);
+  void muTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfilename, int type);
+  void muTauWJetsEstimation(TString cuts, TString trigger, TString myfileName);
   void TauFakeRate(TString cuts, TString trigger, Long64_t nevents, TString myfilename);
+  void TauEfficiency(TString cuts, Long64_t nevents, TString myfilename);
   void DrawMyPlots(TString myfileName, double *xbin, int NumberOfBins);
   void EleEleAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfileName);
   
@@ -326,22 +328,22 @@ private:
 		      int njets=-2, int nbjets=-10, int nleps=0, TString HLT="", //njets: 2 -> njets==2, -2 -> njets>=2
 		      TString xtitle="MT2 [GeV]", const int nbins=50, const double min=0, const double max=1, 
 		      bool cleaned=false, bool logflag=true, bool composited=false, bool ratio=false, 
-		      bool stacked=true, bool overlaySUSY=false, float overlayScale = 0, bool add_underflow=false, bool saveHistos=false, TString saveMacro = "");
+		      bool stacked=true, bool overlaySUSY=false, float overlayScale = 0, bool add_underflow=false, bool saveHistos=false, TString saveMacro = "", int type = 1);
         void MakePlot(std::vector<sample> Samples, TString var="misc.PseudoJetMT2", TString maincuts="misc.MET>30", TString basecuts="misc.HBHENoiseFlag == 1", 
 		      int njets=-2, int nbjets=-10, int nleps=0, TString HLT="", //njets: 2 -> njets==2, -2 -> njets>=2
 		      TString xtitle="MT2 [GeV]", const int nbins=50, const double min=0, const double max=1, 
 		      bool cleaned=false, bool logflag=true, bool composited=false, bool ratio=false, 
-		      bool stacked=true, bool overlaySUSY=false, float overlayScale = 0, bool add_underflow=false, bool saveHistos=false, TString saveMacro = "");
+		      bool stacked=true, bool overlaySUSY=false, float overlayScale = 0, bool add_underflow=false, bool saveHistos=false, TString saveMacro = "", int type = 1);
         void MakePlot(std::vector<sample> Samples, TString var="misc.PseudoJetMT2", TString cuts="misc.HBHENoiseFlag == 1", 
 		      int njets=-2, int nbjets=-10, int nleps=0, TString HLT="", //njets: 2 -> njets==2, -2 -> njets>=2
 		      TString xtitle="MT2 [GeV]", const int nbins=gNMT2bins, const double *bins=gMT2bins, 
 		      bool cleaned=false, bool logflag=true, bool composited=false, bool ratio=false, 
-		      bool stacked=true, bool overlaySUSY=false, float overlayScale = 0, bool add_underflow=false, bool saveHistos=false, TString saveMacro = "");
+		      bool stacked=true, bool overlaySUSY=false, float overlayScale = 0, bool add_underflow=false, bool saveHistos=false, TString saveMacro = "", int type = 1);
         void MakePlot(std::vector<sample> Samples, TString var="misc.PseudoJetMT2", TString maincuts="misc.MET>30", TString basecuts="misc.HBHENoiseFlag == 1", 
 		      int njets=-2, int nbjets=-10, int nleps=0, TString HLT="", //njets: 2 -> njets==2, -2 -> njets>=2
 		      TString xtitle="MT2 [GeV]", const int nbins=gNMT2bins, const double *bins=gMT2bins, 
 		      bool cleaned=false, bool logflag=true, bool composited=false, bool ratio=false, 
-		      bool stacked=true, bool overlaySUSY=false, float overlayScale = 0, bool add_underflow=false, bool saveHistos=false, TString saveMacro = "");
+		      bool stacked=true, bool overlaySUSY=false, float overlayScale = 0, bool add_underflow=false, bool saveHistos=false, TString saveMacro = "", int type = 1);
 	void printHisto(THStack* h, TString canvname, Option_t *drawopt,  bool logflag);
 	void printHisto(THStack* h, TH1* h_data, TLegend* leg,  TString canvname, Option_t *drawopt,  bool logflag, TString xtitle, TString ytitle);
         void printHisto(THStack* h, TH1* h_data, TH1* h_prediction, TLegend* leg,  TString canvname, Option_t *drawopt, bool logflag, TString xtitle, TString ytitle,int njets=-2, int nleps=0, bool stacked=true);
