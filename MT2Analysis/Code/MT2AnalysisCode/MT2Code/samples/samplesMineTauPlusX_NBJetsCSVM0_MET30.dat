@@ -606,7 +606,7 @@ Lumi            1.
 Type            data
 Color		1
 
-#SAMPLE
+SAMPLE
 Name		Run2012C_TauPlusX
 SName		TauPlusX-Data
 ShapeName	Data
@@ -618,7 +618,7 @@ Type            data
 Color		1
 
 
-#SAMPLE
+SAMPLE
 Name		Run2012D_TauPlusX
 SName		TauPlusX-Data
 ShapeName	Data

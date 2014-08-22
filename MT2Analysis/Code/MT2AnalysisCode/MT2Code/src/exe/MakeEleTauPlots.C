@@ -2,8 +2,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <stdio.h>
+#include <cstdio>
 #include <sstream>
+#include <cmath>
 
 // ROOT includes
 #include <TROOT.h>
@@ -116,7 +117,7 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vect
 	while( objcut = nextcut() ){
 	  ExtendedCut* thecut = (ExtendedCut*)objcut ;
 	  cout << thecut->Name << ":" << endl;
-	  thecut->SetTree( Sample.tree ,  Sample.name , Sample.sname , Sample.type);
+	  thecut->SetTree( Sample.tree ,  Sample.name , Sample.sname , Sample.type , Sample.xsection, Sample.nevents, Sample.kfact , Sample.PU_avg_weight);
 	}
 
 	if( Sample.type == "susy" ){
@@ -151,7 +152,10 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vect
 	if(! thecut->Pass(jentry , weight) ){
 	  break;
 	}else{
+	  if( isfinite (weight) )
 	    cutflowtable.Fill( cutindex , weight );
+	  else
+	    cout << "non-finite weight : " << weight << endl;
 	}
 	cutindex+=1.0;
       }
@@ -174,7 +178,8 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vect
     ExtendedCut* thecut = (ExtendedCut*)objcut ;
     thecut->Write( savefile, lumi , Significances , SUSYCatNames.size() );
   }
-  hAllSMSEvents->Write();
+  if(hAllSMSEvents)
+    hAllSMSEvents->Write();
 
   cutflowtable.Print("cutflowtable");
 
@@ -257,7 +262,7 @@ int main(int argc, char* argv[]) {
 	   <<" misc.CSCTightHaloIDFlag==0 && misc.HBHENoiseFlag==0 &&"
 	   <<" misc.hcalLaserEventFlag==0 && misc.trackingFailureFlag==0 &&"
 	   <<" misc.eeBadScFlag==0 && misc.EcalDeadCellTriggerPrimitiveFlag==0 ";
-  ExtendedCut* cleaningcut = new ExtendedCut("Cleaning" , cleaning.str().c_str() , true , false , "" , "pileUp.Weight * SFWeight.BTagCSV40eq0" , false , false);
+  ExtendedCut* cleaningcut = new ExtendedCut("Cleaning" , cleaning.str().c_str() , true , false , "" , "" , false , false);
   allCuts.Add( cleaningcut );
 
   //ExtendedCut* signalSelection =new ExtendedCut("Signal" , "((Susy.MassGlu - Susy.MassLSP) > 125)  && ((Susy.MassGlu - Susy.MassLSP) < 175)" , false , false , "" , "" , false , true); 
@@ -266,8 +271,14 @@ int main(int argc, char* argv[]) {
   ExtendedCut* triggerCut =new ExtendedCut("Trigger" , "trigger.HLT_EleTau" , true , false , "" , "" , false , false); //trigger sf should be added here
   allCuts.Add(triggerCut);
 
+  ExtendedCut* metcut =new ExtendedCut("MET" , "misc.MET > 30" , false , false , "" , "" , false , true);
+  allCuts.Add(metcut);
+
+  ExtendedCut* bVeto =new ExtendedCut("bVeto" , "NBJets40CSVM == 0" , false , false, "" , "" ,false , true);
+  allCuts.Add( bVeto );
+
   TString myChan = "eleTau[0]";
-  ExtendedCut* tauselection = new ExtendedCut("TauSelection" , std::string(myChan) + ".tau0Ind >=0"  , true , true , "" , "" , false , true); //tau id sf should be added here
+  ExtendedCut* tauselection = new ExtendedCut("TauSelection" , std::string(myChan) + ".tau0Ind >=0"  , true , true , "" , "pileUp.Weight * SFWeight.BTagCSV40eq0" , false , true); //tau id sf should be added here
   allCuts.Add( tauselection );
 
   ExtendedCut* electronselection = new ExtendedCut("ElectronSelection" , std::string(myChan) + ".ele0Ind >=0" , true , true , "" , "" , false , true); //electron id and iso sf here
@@ -276,7 +287,7 @@ int main(int argc, char* argv[]) {
   ExtendedCut* Isolated =new ExtendedCut("Isolated" , std::string(myChan) + ".Isolated == 1" , true , true, "" , "" , false , true);
   allCuts.Add(Isolated);
 
-  ExtendedCut* extrasignalcheck = new ExtendedCut("ExtraSignalCheck" , std::string(myChan) + ".signalEleTau" ,  true , true, "" , "eleTau[0].tauTrgSF * eleTau[0].eleTrgSF * eleTau[0].eleIdIsoSF" , false , true);
+  ExtendedCut* extrasignalcheck = new ExtendedCut("ExtraSignalCheck" , std::string(myChan) + ".hasNoVetoMu && eleTau[0].GetSumCharge() == 0 && HasNoVetoElecForEleTau()" ,  true , true, "" , "eleTau[0].tauTrgSF * eleTau[0].eleTrgSF * eleTau[0].eleIdIsoSF" , false , true);
   allCuts.Add( extrasignalcheck );
   CutsForControlPlots.Add(extrasignalcheck);
 
@@ -287,15 +298,6 @@ int main(int argc, char* argv[]) {
   ExtendedCut* ZPeakVeto =new ExtendedCut("ZPeakVeto" ,  invmass + " < 45.0 || " + invmass  + " > 75" , true , true , "" , "" , false , true);
   allCuts.Add( ZPeakVeto );
   CutsForControlPlots.Add(ZPeakVeto);
-
-  //ExtendedCut* metcut =new ExtendedCut("MET" , "misc.MET > 50" , true , true , "" , "" , false , true);
-  //allCuts.Add(metcut);
-  //CutsForControlPlots.Add(metcut);
-
-  //ExtendedCut* bVeto =new ExtendedCut("bVeto" , "NBJets40CSVM == 0" , true , true, "" , "SFWeight.BTagCSV40eq0" ,false , true);
-  //allCuts.Add( bVeto );
-  //CutsForControlPlots.Add(bVeto);  
-
 
   TList lastCuts;
 
@@ -309,8 +311,8 @@ int main(int argc, char* argv[]) {
 
 
 
-  TString SUSYCatCommand = "((Susy.MassGlu - Susy.MassLSP)/500.0)+(misc.ProcessID-10)";
-  std::vector<TString> SUSYCatNames = {"00_50" };
+  TString SUSYCatCommand = "((Susy.MassGlu - Susy.MassLSP)/50.0)+(misc.ProcessID-10)";
+  std::vector<TString> SUSYCatNames = {"00_50" , "50_100" , "100_150" , "150_200" , "200_250" , "250_300" , "300_350" , "350_400" , "400_450" , "450_500" };
 
   TIter cut(&  CutsForControlPlots );
   TObject* cuto ;
@@ -318,7 +320,26 @@ int main(int argc, char* argv[]) {
 
     TList allProps;
 
+    // *  * 
 
+    ExtendedObjectProperty* tauTrgSF = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "tauTrgSF" , "eleTau[0].tauTrgSF" , 10 , 0 , 100 , SUSYCatCommand , SUSYCatNames );
+    allProps.Add( tauTrgSF );
+
+    ExtendedObjectProperty* eleTrgSF = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "eleTrgSF" , "eleTau[0].eleTrgSF" , 10 , 0 , 100 , SUSYCatCommand , SUSYCatNames );
+    allProps.Add( eleTrgSF );
+
+    ExtendedObjectProperty* tauWSF = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "tauWSF" , "eleTau[0].tauWjetsSF" , 10 , 0 , 100 , SUSYCatCommand , SUSYCatNames );
+    allProps.Add( tauWSF );
+
+    ExtendedObjectProperty* eleIsoSF = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "eleIsoSF" , "eleTau[0].eleIdIsoSF" , 10 , 0 , 100 , SUSYCatCommand , SUSYCatNames );
+    allProps.Add( eleIsoSF );
+
+    ExtendedObjectProperty* BTagW = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "BTagW" , "SFWeight.BTagCSV40eq0" , 10 , 0 , 100 , SUSYCatCommand , SUSYCatNames );
+    allProps.Add( BTagW );
+    
+    ExtendedObjectProperty* PileUpW = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "PUW" , "pileUp.Weight" , 10 , 0 , 100 , SUSYCatCommand , SUSYCatNames );
+    allProps.Add( PileUpW );
+ 
     ExtendedObjectProperty* MassGlu = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "MassGlu" , "Susy.MassGlu" , 20 , 100 , 500 ,SUSYCatCommand , SUSYCatNames );
     allProps.Add( MassGlu );
 
@@ -329,6 +350,8 @@ int main(int argc, char* argv[]) {
     ExtendedObjectProperty* eleTauElePt = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "ElePt" , "ele[eleTau[0].ele0Ind].lv.Pt()" , 80 , 20 , 420 ,SUSYCatCommand , SUSYCatNames );
     allProps.Add( eleTauElePt );
 
+    ExtendedObjectProperty* eleTauEleEta = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "EleEta" , "ele[eleTau[0].ele0Ind].lv.Eta()" , 80 , 20 , 420 ,SUSYCatCommand , SUSYCatNames );
+    allProps.Add( eleTauEleEta );
 
     ExtendedObjectProperty* eleTauEleMT = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "EleMT" , "ele[eleTau[0].ele0Ind].MT" , 80 , 0 , 400 ,SUSYCatCommand , SUSYCatNames );
     allProps.Add( eleTauEleMT );
@@ -362,6 +385,9 @@ int main(int argc, char* argv[]) {
 
     ExtendedObjectProperty* eleTauTauPt = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "TauPt" , "tau[eleTau[0].tau0Ind].lv.Pt()" , 80 , 20 , 420 ,SUSYCatCommand , SUSYCatNames );
     allProps.Add( eleTauTauPt );
+
+    ExtendedObjectProperty* eleTauTauEta = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "TauEta" , "tau[eleTau[0].tau0Ind].lv.Eta()" , 25 , 2.5 , 2.5 ,SUSYCatCommand , SUSYCatNames );
+    allProps.Add( eleTauTauEta );
 
     ExtendedObjectProperty* eleTauDPt = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "DPt" , "tau[eleTau[0].tau0Ind].lv.Pt() - ele[eleTau[0].ele0Ind].lv.Pt()" , 40 , -200 , 200 ,SUSYCatCommand , SUSYCatNames );
     allProps.Add( eleTauDPt );

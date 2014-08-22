@@ -93,11 +93,15 @@ std::pair<int,int> MT2tree::GetTauEGQCD(){
 
 bool MT2tree::HasNoVetoElecForEleTau(int signalIndex){
   int nVeto = 0;
+  if(signalIndex == -1)
+    signalIndex = eleTau[0].GetEleIndex0() ;
+
   for(int i = 0; i < NEles; i++){
     if(i == signalIndex)
       continue;
     if(ele[i].IDVetoETau){
-      nVeto++;
+      if( ele[i].lv.Pt() > 20. && fabs( ele[i].lv.Eta() ) <  2.1 )
+	nVeto++;
     }
   }
   return (nVeto == 0);

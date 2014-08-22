@@ -317,6 +317,15 @@ bool MT2Analysis::IsGoodMT2ElectronSelIDforEleMu(const int index){
 
 bool MT2Analysis::IsGoodMT2ElectronVetoIDforEleTau(const int index){
         //MVA Loose
+
+  if(!(fabs(fTR->ElEta[index]) < 2.1) )  
+    return false;
+  
+  //For 2011 data Pt > 20 and For 2012 data Pt > 24
+  if( !(fabs(fTR->ElPt[index]) > 20.0 ) )
+    return false;
+
+
   if (!(IsGoodMT2ElectronMVANoTrigLoose(index))) 
 	    return false;
 

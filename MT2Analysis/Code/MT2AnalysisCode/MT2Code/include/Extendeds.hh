@@ -116,8 +116,13 @@ public :
 
   int Verbose;
 
+  double XSec; 
+  int NInitialEvents ; 
+  double KFactor ;
+  double AvgPuW ;
+
   ExtendedCut( TString name, TString cutstr , bool applyondata , bool applyonmc , TString dataweight , TString mcweight , bool susyweight , bool applyonsusy , int verbose = 0);
-  void SetTree( TTree* tree , TString samplename , TString samplesname , TString sampletype );
+  void SetTree( TTree* tree , TString samplename , TString samplesname , TString sampletype ,  double xsec=-1.0 , int ninitialevents = -1 , double kfactor=-1.0 , double avgpuw=-1.0);
   bool Pass(long currententryindex , double& weight );
   void Write(TDirectory* dirparent , int lumi , vector< pair<int,int> > a , int nSUSYSig );
   virtual void Print(Option_t* option = "") const;
