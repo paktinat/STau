@@ -449,9 +449,9 @@ void ExtendedObjectProperty::Write( TDirectory* dir , int lumi){
   h_stack->Write();
   Legend1->Write();
 
-  //plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY"] , true, false, Name + "_ratio", Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
-  //for(int i =0 ; i<SUSYNames.size() ; i++)
-  //  plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY_"+SUSYNames[i] ] , true, false, Name + "_ratio"+ "_"+SUSYNames[i], Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
+  plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY"] , true, false, Name + "_ratio", Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
+  for(int i =0 ; i<SUSYNames.size() ; i++)
+   plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY_"+SUSYNames[i] ] , true, false, Name + "_ratio"+ "_"+SUSYNames[i], Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
 
   for( std::vector< TGraph* >::const_iterator itr = AllSignificances.begin() ; itr != AllSignificances.end() ; itr++)
     (*itr)->Write();
@@ -468,6 +468,11 @@ void ExtendedCut::SaveTree(){
     ExtendedObjectProperty* castedobj = (ExtendedObjectProperty*)objtemp ;
     theTreeToSave->Branch( castedobj->Name , &(castedobj->dVal) , castedobj->Name + "/D" ) ;
   }  
+  theTreeToSave->Branch( "XSec" , &(this->XSec) , "XSec/D" );
+  theTreeToSave->Branch( "NInitialEvents" , &(this->NInitialEvents) , "NInitialEvents/I" );
+  theTreeToSave->Branch( "KFactor" , &(this->KFactor) , "KFactor/D" );
+  theTreeToSave->Branch( "AvgPuW" , &(this->AvgPuW) , "AvgPuW/D" );  
+
   theTreeToSave->Branch( "W" , &(this->CurrentWeightVal) , "W/D" );
   theTreeToSave->Branch( "isData" , &(this->isData) , "isData/O" );
   theTreeToSave->Branch( "isSUSY" , &(this->isSUSY) , "isSUSY/O" );
@@ -518,7 +523,12 @@ ExtendedCut::ExtendedCut(TString name, TString cutstr , bool applyondata , bool 
     this->Print();
 };
 
-void ExtendedCut::SetTree( TTree* tree , TString samplename , TString samplesname , TString sampletype ){
+void ExtendedCut::SetTree( TTree* tree , TString samplename , TString samplesname , TString sampletype , double xsec , int ninitialevents , double kfactor , double avgpuw  ){
+  XSec = xsec;
+  NInitialEvents = ninitialevents;
+  KFactor = kfactor ;
+  AvgPuW = avgpuw ;
+
   isData = (sampletype=="data");
   isMC = (sampletype == "mc" );
   isSUSY = (sampletype == "susy") ;

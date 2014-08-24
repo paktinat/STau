@@ -9636,3 +9636,84 @@ void MassPlotter::DrawMyPlots(TString myfileName, double *xbin, int NumberOfBins
 
 }
 
+
+void MassPlotter::setLimitCounting(TString channels, TString cuts, TString hypothesis) {
+
+    // === O U T - F I L E S ===                                                                                                                                                     
+    TFile *fout = new TFile("counting.root", "RECREATE");
+    fout->cd();
+
+    // === B O O K I N G ===                                                                                                                                                         
+    TH2D *h_TN_MLSP_MChi = new TH2D("h_TN_MLSP_MChi", "", 125, 0, 2500, 125, 0, 2500);
+    h_TN_MLSP_MChi->Sumw2();
+    TH2D *h_PN_MLSP_MChi = new TH2D("h_PN_MLSP_MChi", "", 125, 0, 2500, 125, 0, 2500);
+    h_PN_MLSP_MChi->Sumw2();
+
+    TH1D *h_PMET_Bkg = new TH1D("h_PMET_Bkg", "", 1, -1e6, 1e6);
+    h_PMET_Bkg->Sumw2();
+    TH1D *h_PN_Bkg = new TH1D("h_PN_Bkg", "", 1, 0, 1);
+    h_PN_Bkg->Sumw2();
+
+
+    // === F I L L I N G ===                                                                                                                                                         
+
+    for (size_t i = 0; i < fSamples.size(); ++i) {
+
+        cout << ">> " << fSamples[i].name << endl;
+
+        //af: To remove inf                                                                                                                                                          
+        if (fSamples[i].nevents == 0) fSamples[i].nevents = 1;
+
+        TString btagweight = "1.00"; //stored btag weights up to >=3, default is weight==1 to avoid non-existing weights
+        TString ChannelSpecificSF = "1.00";
+        if (fSamples[i].type != "data") {
+            Int_t nbjets = 0;
+            if (nbjets >= 0 && nbjets <= 3) btagweight = TString::Format("SFWeight.BTagCSV40eq%d", abs(nbjets));
+            else if (nbjets >= -3) btagweight = TString::Format("SFWeight.BTagCSV40ge%d", abs(nbjets));
+
+            if (channels == "muTau") {
+                ChannelSpecificSF += " * muTau[0].muIdSF * muTau[0].muIsoSF * muTau[0].muTrgSF * muTau[0].tauTrgSF * muTau[0].tauEnergySF";
+                if (fSamples[i].sname == "Wtolnu") ChannelSpecificSF += " * muTau[0].tauWjetsSF";
+            } else if (channels == "eleTau") {
+                ChannelSpecificSF += " * eleTau[0].tauTrgSF * eleTau[0].eleTrgSF * eleTau[0].eleIdIsoSF ";
+            } else
+                ChannelSpecificSF = "pileUp.Weight";
+        }
+
+        if (hypothesis == "sgn" && fSamples[i].type == "susy") {
+
+            Double_t weight = fSamples[i].kfact * fSamples[i].lumi / (fSamples[i].PU_avg_weight);
+            TString selection = TString::Format("(%.15f*pileUp.Weight*%s*%s) * (%s)", weight, btagweight.Data(), ChannelSpecificSF.Data(), cuts.Data());
+//            TString selection = TString::Format("(%.15f) * (%s)", 1.00, cuts.Data());
+            TString variable = TString::Format("Susy.MassLSP:Susy.MassGlu>>+%s", h_PN_MLSP_MChi->GetName());
+
+            fSamples[i].tree->Draw(variable, selection, "goff");
+
+            TH2D *h_SMSEvents = (TH2D*) fSamples[i].file->Get("h_SMSEvents");
+            h_SMSEvents->Rebin2D(4, 4);
+            h_TN_MLSP_MChi->Add(h_SMSEvents);
+            TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
+            h_PN_MLSP_MChi->Divide(h_TN_MLSP_MChi);
+            h_PN_MLSP_MChi->Multiply(hXsec);
+
+        } else if (hypothesis == "bkg" && fSamples[i].type == "mc") { // WARNING: checking statistical fluctuation in this pt bin!!!                                                       
+            Double_t weight = fSamples[i].xsection * fSamples[i].kfact * fSamples[i].lumi / (fSamples[i].nevents * fSamples[i].PU_avg_weight);
+            TString selection = TString::Format("(%.15f*pileUp.Weight*%s*%s) * (%s)", weight, btagweight.Data(), ChannelSpecificSF.Data(), cuts.Data());
+            TString variable = TString::Format("misc.MET>>+%s", h_PMET_Bkg->GetName());
+
+            fSamples[i].tree->Draw(variable, selection, "goff");
+
+            h_PN_Bkg->SetBinContent(1, h_PMET_Bkg->GetBinContent(1));
+            h_PN_Bkg->SetBinError(1, h_PMET_Bkg->GetBinError(1));
+
+        }
+    }//i fsamples.size()   
+
+    delete h_PMET_Bkg;
+    delete h_TN_MLSP_MChi;
+
+    fout->Write();
+    fout->Close();
+}
+
+

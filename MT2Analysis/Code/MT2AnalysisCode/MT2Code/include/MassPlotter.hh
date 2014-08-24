@@ -297,6 +297,9 @@ public:
 
   void QCD();
   double DeltaPhi(double phi1, double phi2);
+  
+  void setLimitCounting(TString channels, TString cuts, TString hypothesis);
+  
 private:
 	TString fOutputDir;
 	TFile *fOutputFile;

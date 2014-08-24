@@ -815,7 +815,7 @@ public:
   bool HasNoVetoMuForMuTau(int);
   bool HasNoVetoElecForMuTau();
   bool HasNoVetoMuForEleTau();
-  bool HasNoVetoElecForEleTau(int);
+  bool HasNoVetoElecForEleTau(int = -1);
   std::pair<int,int> GetQCDDoubleTau();
   std::pair<int,int> GetSignalDoubleTau();
   std::pair<int,int> GetTauMu();
