@@ -1330,6 +1330,7 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 	//TLegend* Legend1 = new TLegend(.3,.5,.6,.88);
 
 	for(size_t i = 0; i < Samples.size(); ++i){
+
 		h_samples.push_back(new TH1D(varname2+"_"+Samples[i].name, "", nbins, bins));
 		h_samples[i] -> Sumw2();
 		h_samples[i] -> SetFillColor(stacked ? Samples[i].color : 0);
@@ -1347,6 +1348,12 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 		}
 	
 		Double_t weight=0;
+
+		//------added be esmaeel
+		if (Samples[i].name == "QCD-Pt-15-20-MuEnriched"){
+		  fPUReweight = false;}
+		else fPUReweight = true;
+		//------added be esmaeel
 		if(fPUReweight) weight = Samples[i].xsection * Samples[i].kfact * Samples[i].lumi / (Samples[i].nevents*Samples[i].PU_avg_weight);
 		else            weight = Samples[i].xsection * Samples[i].kfact * Samples[i].lumi / (Samples[i].nevents);
 
@@ -1390,8 +1397,8 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 		      ChannelSpecificSF += "*muTau[0].tauWjetsSF";	  
 		    if(fTauEnergySF )
 		      ChannelSpecificSF += "*muTau[0].tauEnergySF";	  
-		  }else 
-		    ChannelSpecificSF = "pileUp.Weight";
+		  }
+		  else ChannelSpecificSF = "pileUp.Weight";
 		  
 
 		if(fPUReweight && fbSFReWeight) selection = TString::Format("(%.15f*pileUp.Weight*%s*%s) * (%s)",weight, btagweight.Data(), ChannelSpecificSF.Data(), theCuts.Data());

@@ -98,6 +98,7 @@ Type		mc
 Color		401
 
 ##-------------- QCD-Pt-EMEnriched --------------------
+
 SAMPLE
 Name		QCD-Pt-20-30-EMEnriched
 SName		QCD
@@ -135,18 +136,18 @@ SAMPLE
 Name		QCD-Pt-170-250-EMEnriched
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD_Pt_170_250_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/QCD_Pt_170_250_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
 Xsection  	4587.0 pb #CMS AN-12-468  Cross sections are LO
 Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+#SAMPLE
 Name		QCD-Pt-250-350-EMEnriched
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD_Pt_250_350_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/
 Xsection  	556.8 pb #CMS AN-12-468
 Kfact           1.0
 Lumi            19600.0
@@ -584,33 +585,24 @@ Type            mc
 Color		600
 
 ## --------- Data ---------------------------
+
 SAMPLE
-Name		Run2012A_TauPlusX
-SName		TauPlusX-Data
+Name		Run2012A_DoubleEle
+SName		DoubleEle-Data
 ShapeName	Data
-File            TauTau_V3_1/TauPlusX-Run2012A_2_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/DoubleElectron-Run2012A-22Jan2013-v1-AOD_NBJetsCSVM0_MET30.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.
 Type            data
 Color		1
 
+ 
 SAMPLE
-Name		Run2012B_TauPlusX
-SName		TauPlusX-Data
+Name		Run2012B_DoubleEle
+SName		DoubleEle-Data
 ShapeName	Data
-File            TauTau_V3_1/TauPlusX-Run2012B_NBJetsCSVM0_MET30.root
-Xsection  	1.
-Kfact           1.	
-Lumi            1.
-Type            data
-Color		1
-
-SAMPLE
-Name		Run2012C_TauPlusX
-SName		TauPlusX-Data
-ShapeName	Data
-File            TauTau_V3_1/TauPlusX-Run2012C-22Jan2013-v1_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/DoubleElectron-Run2012B-22Jan2013-v1-AOD-3_NBJetsCSVM0_MET30.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.
@@ -619,14 +611,36 @@ Color		1
 
 
 SAMPLE
-Name		Run2012D_TauPlusX
-SName		TauPlusX-Data
+Name		Run2012C_DoubleEle
+SName		DoubleEle-Data
 ShapeName	Data
-File            TauTau_V3_1/TauPlusX-Run2012D-22Jan2013-v1_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/DoubleElectron-Run2012C-22Jan2013-v1-AOD-3_NBJetsCSVM0_MET30.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.
 Type            data
-Color	        1
+Color		1
+
+SAMPLE
+Name		Run2012C_DoubleEle
+SName		DoubleEle-Data
+ShapeName	Data
+File            TauTau_V3_1/DoubleElectron-Run2012C-22Jan2013-v1-AOD-4_NBJetsCSVM0_MET30.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
+
+SAMPLE
+Name		Run2012D_DoubleEle
+SName		DoubleEle-Data
+ShapeName	Data
+File            TauTau_V3_1/DoubleElectron-Run2012D-22Jan2013-v1-AOD_NBJetsCSVM0_MET30.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
 
 
