@@ -147,7 +147,7 @@ Name		QCD-Pt-250-350-EMEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_250_350_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
-Xsection  	556.8 pb #CMS AN-12-468
+Xsection  	556.8 pb #CMS AN-12-468 Cross sections are LO
 Kfact           1.0
 Lumi            19600.0
 Type		mc
@@ -303,7 +303,7 @@ Name		GJets_HT-40To100
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/GJets_HT-40To100_8TeV-madgraph_NBJetsCSVM0_MET30.root
-Xsection  	20930.00 pb #http://cms.cern.ch/iCMS/jsp/mcprod/admin/requestmanagement.jsp?
+Xsection  	20930.00 pb #http://cms.cern.ch/iCMS/jsp/mcprod/admin/requestmanagement.jsp? Cross sections are LO
 Kfact           1.	
 Lumi            19600.0
 Type            mc
@@ -314,7 +314,7 @@ Name		GJets_HT-100To200
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/GJets_HT-100To200_8TeV-madgraph_NBJetsCSVM0_MET30.root
-Xsection  	5290.00 pb
+Xsection  	5290.00 pb   #http://cms.cern.ch/iCMS/jsp/mcprod/admin/requestmanagement.jsp?    Cross sections are LO
 Kfact           1.	
 Lumi            19600.0
 Type            mc
@@ -325,7 +325,7 @@ Name		GJets_HT-200To400
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/GJets_HT-200To400_8TeV-madgraph_v2_NBJetsCSVM0_MET30.root
-Xsection  	960.5 pb
+Xsection  	960.5 pb #http://cms.cern.ch/iCMS/jsp/mcprod/admin/requestmanagement.jsp?    Cross sections are LO
 Kfact           1.	
 Lumi            19600.0
 Type            mc
@@ -336,7 +336,7 @@ Name		GJets_HT-400ToInf
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3_NBJetsCSVM0_MET30.root
-Xsection  	107.5 pb
+Xsection  	107.5 pb #http://cms.cern.ch/iCMS/jsp/mcprod/admin/requestmanagement.jsp?    Cross sections are LO
 Kfact           1.	
 Lumi            19600.0
 Type            mc
