@@ -135,7 +135,7 @@ SAMPLE
 Name		QCD-Pt-170-250-EMEnriched
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/QCD_Pt_170_250_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/QCD_Pt_170_250_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
 Xsection  	4587.0 pb #CMS AN-12-468  Cross sections are LO
 Kfact           1.0
 Lumi            19600.0
