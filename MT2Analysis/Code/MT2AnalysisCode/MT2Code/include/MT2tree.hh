@@ -942,11 +942,20 @@ public:
 
 
 
+  Float_t JZB(){
+    
+    return ((pfmet[0] + muTau[0].GetLV()).Pt() - muTau[0].GetLV().Pt());
+    
+  }
+
   Float_t JZB(int a){
     
     return ((pfmet[0] + a * muTau[0].GetLV()).Pt());
     
   }
+
+  
+
   // MT2 & friends
   Float_t GetMT2            (Float_t testmass=0, bool massive=false,       Int_t PFJID=1, Float_t minJPt=20, Float_t maxJEta=2.4, 
 		              Int_t hemi_seed=2,   Int_t hemi_association=3, Int_t met=1 );

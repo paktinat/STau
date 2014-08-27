@@ -347,7 +347,7 @@ Color		401
 # -------- electroweak --------
 SAMPLE
 Name		WWJetsTo2L2Nu
-SName		Wtolnu
+SName		VV
 ShapeName	WJets  
 File            TauTau_V3_1/WWJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30.root
 Xsection  	5.8   #4.7 pb 

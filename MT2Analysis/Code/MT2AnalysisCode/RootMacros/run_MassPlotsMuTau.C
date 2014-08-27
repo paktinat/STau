@@ -83,8 +83,8 @@
 
 
   //DeltaM = 150
-  myChannelCuts.push_back("JZB(-1) > 150 ");//DeltaM = 150
-  myChannelCuts.push_back("abs(JZB(1)-muTau.lv.Pt()) > 40"); //DeltaM = 150
+   myChannelCuts.push_back("JZB(-1) > 150 ");//DeltaM = 150
+   myChannelCuts.push_back("abs(JZB()) > 40"); //DeltaM = 150
 
 
   //DeltaM = 50
@@ -105,9 +105,9 @@
 //   myChannelCuts.push_back("misc.Jet0Pass");
 //   myChannelCuts.push_back("misc.LeadingJPt > 350");
 
-//  myChannelCuts.push_back("muTau[0].MT2 > 100");
+//   myChannelCuts.push_back("muTau[0].MT2 > 65");
 
-  myChannelCuts.push_back("NJetsIDLoose50 < 4");
+//  myChannelCuts.push_back("NJetsIDLoose50 < 4");
 
   myChannelCuts.push_back("0 == 0");	//Place holder for Jet requirements
 
@@ -224,15 +224,18 @@
 //    tA->makePlot(vars[iVar], cuts, -10, 0 , -10, trigger, vars[iVar], 20, 0, 200, false, true, true, true, true, true, 1, true, true, "png");
 //  }
 
-  //tA->makePlot("muTau[0].MT2",     cuts,    -10,  0 , -10 ,   trigger , "muTau[0].MT2"            , 40, 0, 200,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+  //tA->makePlot("misc.MET - muTau.lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "MET - muTauPt"            , 60, -150, 150,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+//  tA->makePlot("misc.MET + muTau.lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "MET + muTauPt"            , 45, 0, 450,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+  //tA->makePlot("JZB(-1)",     cuts,    -10,  0 , -10 ,   trigger , "(MET - muTau).Pt"            , 45, 0, 450,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+  //tA->makePlot("abs(JZB())",     cuts,    -10,  0 , -10 ,   trigger , "|METnoMuTau - muTauPt|"            , 15, 0, 150,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 
-  //tA->makePlot("misc.Run",     cuts,    -10,  -10 , -10 ,   trigger , "Run"            ,19000,190000, 209000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+  tA->makePlot("tau[muTau[0].tau0Ind].lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "tau Pt"            ,25,0, 250,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 
 
   //void MassPlotter::plotSig(TString var, TString cuts, TString xtitle, int nbins, double min, double max, bool flip_order, int type , int LowerCut){ LowerCut = 0(default) <, LowerCut = 1 >
 
   //tA->plotSig("tau[muTau[0].tau0Ind].ElectronRej", cuts,  "tau.ElectronRej Upper Cut", 50, 0, 10, 0, 0, 1);
-  tA->plotSig("muo[muTau[0].mu0Ind].MT", cuts,  "(MET - muTau).Pt Lower Cut", 100, 0, 500, 0, 0, 1);
+  //tA->plotSig("muo[muTau[0].mu0Ind].MT", cuts,  "(MET - muTau).Pt Lower Cut", 100, 0, 500, 0, 0, 1);
   //tA->plotSig("abs(JZB(1)-muTau.lv.Pt())", cuts,  "muTauPt Lower Cut", 80, -200, 200, 0, 0, 1);
   //tA->muTauAnalysis(cuts, trigger, 10000000000, "N", 0);
   //tA->TauFakeRate(cuts, trigger, 10000000000, "PtEta_MuTau_Over_QCDMuTau_SinleMu_MET_NBJets");
@@ -252,5 +255,5 @@
 
   //tA->MakeCutFlowTable( myChannelCuts );
   //tA->muTauWJetsEstimation(cuts, trigger, "PtEta_MuTau_Over_QCDMuTau_SinleMu_MET_NBJets_FRHistos.root");
-  //tA->TauEfficiency(cuts, 10000000000, "PtEta_MuTau_Over_QCDMuTau_SignalSelection_Iso01");
+  //tA->TauEfficiency(cuts, 10000000000, "MT2_MuTau_Over_QCDMuTau_SignalSelectionNoZVeto_DYToLL_M50");
 }
