@@ -9729,31 +9729,32 @@ void MassPlotter::setLimitCounting(TString channels, TString cuts, TString hypot
         TString btagweight = "1.00"; //stored btag weights up to >=3, default is weight==1 to avoid non-existing weights
         TString ChannelSpecificSF = "1.00";
         if (fSamples[i].type != "data") {
-	  btagweight = "SFWeight.BTagCSV40eq0";
+            btagweight = "SFWeight.BTagCSV40eq0";
 
             if (channels == "muTau") {
                 ChannelSpecificSF += " * muTau[0].muIdSF * muTau[0].muIsoSF * muTau[0].muTrgSF * muTau[0].tauTrgSF * muTau[0].tauEnergySF";
                 if (fSamples[i].sname == "Wtolnu") ChannelSpecificSF += " * muTau[0].tauWjetsSF";
             } else if (channels == "eleTau") {
                 ChannelSpecificSF += " * eleTau[0].tauTrgSF * eleTau[0].eleTrgSF * eleTau[0].eleIdIsoSF ";
+                if (fSamples[i].sname == "Wtolnu") ChannelSpecificSF += " * muTau[0].tauWjetsSF";
             } else
                 ChannelSpecificSF = "pileUp.Weight";
         }
 
         if (hypothesis == "sgn" && fSamples[i].type == "susy") {
 
-	  Double_t weight = fSamples[i].lumi;
-	  TString selection = TString::Format("(%.15f*%s*%s) * (%s)", weight, btagweight.Data(), ChannelSpecificSF.Data(), cuts.Data());
-	  TString variable = TString::Format("Susy.MassLSP:Susy.MassGlu>>+%s", h_PN_MLSP_MChi->GetName());
+            Double_t weight = fSamples[i].lumi;
+            TString selection = TString::Format("(%.15f*%s*%s) * (%s)", weight, btagweight.Data(), ChannelSpecificSF.Data(), cuts.Data());
+            TString variable = TString::Format("Susy.MassLSP:Susy.MassGlu>>+%s", h_PN_MLSP_MChi->GetName());
 
-	  fSamples[i].tree->Draw(variable, selection, "goff");
+            fSamples[i].tree->Draw(variable, selection, "goff");
 
-	  TH2D *h_SMSEvents = (TH2D*) fSamples[i].file->Get("h_SMSEvents");
-	  h_SMSEvents->Rebin2D(4, 4);
-	  h_TN_MLSP_MChi->Add(h_SMSEvents);
-	  TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
-	  h_PN_MLSP_MChi->Divide(h_TN_MLSP_MChi);
-	  h_PN_MLSP_MChi->Multiply(hXsec);
+            TH2D *h_SMSEvents = (TH2D*) fSamples[i].file->Get("h_SMSEvents");
+            h_SMSEvents->Rebin2D(4, 4);
+            h_TN_MLSP_MChi->Add(h_SMSEvents);
+            TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
+            h_PN_MLSP_MChi->Divide(h_TN_MLSP_MChi);
+            h_PN_MLSP_MChi->Multiply(hXsec);
 
         } else if (hypothesis == "bkg" && fSamples[i].type == "mc") { // WARNING: checking statistical fluctuation in this pt bin!!!                                                       
             Double_t weight = fSamples[i].xsection * fSamples[i].kfact * fSamples[i].lumi / (fSamples[i].nevents * fSamples[i].PU_avg_weight);
@@ -9774,5 +9775,4 @@ void MassPlotter::setLimitCounting(TString channels, TString cuts, TString hypot
     fout->Write();
     fout->Close();
 }
-
 
