@@ -294,7 +294,7 @@ int main(int argc, char* argv[]) {
   ExtendedCut* Isolated =new ExtendedCut("Isolated" , std::string(myChan) + ".Isolated == 1" , true , true, "" , "" , false , true);
   allCuts.Add(Isolated);
 
-  ExtendedCut* extrasignalcheck = new ExtendedCut("ExtraSignalCheck" , std::string(myChan) + ".hasNoVetoMu && eleTau[0].GetSumCharge() == 0 && HasNoVetoElecForEleTau()" ,  true , true, "" , "eleTau[0].tauTrgSF * eleTau[0].eleTrgSF * eleTau[0].eleIdIsoSF" , true , true); //
+  ExtendedCut* extrasignalcheck = new ExtendedCut("ExtraSignalCheck" , std::string(myChan) + ".GetSumCharge() == 0 && HasNoVetoMuForEleTau() && HasNoVetoElecForEleTau()" ,  true , true, "" , "eleTau[0].tauTrgSF * eleTau[0].eleTrgSF * eleTau[0].eleIdIsoSF" , true , true); //
   allCuts.Add( extrasignalcheck );
   CutsForControlPlots.Add(extrasignalcheck);
 

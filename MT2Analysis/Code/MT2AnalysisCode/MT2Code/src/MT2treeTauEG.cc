@@ -100,7 +100,7 @@ bool MT2tree::HasNoVetoElecForEleTau(int signalIndex){
     if(i == signalIndex)
       continue;
     if(ele[i].IDVetoETau){
-      if( ele[i].lv.Pt() > 20. && fabs( ele[i].lv.Eta() ) <  2.1 )
+      if( ele[i].lv.Pt() > 10. && fabs( ele[i].lv.Eta() ) <  2.3 )
 	nVeto++;
     }
   }
@@ -109,10 +109,10 @@ bool MT2tree::HasNoVetoElecForEleTau(int signalIndex){
 
 bool MT2tree::HasNoVetoMuForEleTau(){
   int nVeto = 0;
-  for(int i = 0; i < NMuons; i++){ //Don't we need rjection against muons here?
-    /*if(muo[i].RejMu1_TauMu){
-      nveto++;
-      }*/
+  for(int i = 0; i < NMuons; i++){
+    if(muo[i].PassMu0_EleMu){
+      nVeto++;
+    }
   }
   return (nVeto == 0);
 }
