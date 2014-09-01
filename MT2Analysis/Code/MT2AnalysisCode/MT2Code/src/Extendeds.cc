@@ -640,7 +640,7 @@ bool ExtendedCut::Pass(long currententryindex , double& weight ){
       }
     }
 
-    if( StoreTree )
+    if( StoreTree && pass )
       theTreeToSave->Fill();
 
     return pass;

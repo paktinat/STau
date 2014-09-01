@@ -1,16 +1,15 @@
 #########################################################################################
 GENERAL
-Path         /hadoop/cms/store/user/hbakhshi/SMS-TChipChimStauSnu_mChi-120to500_mLSP-1to480_x-050_TuneZ2star_8TeV-pythia6-tauolapp/
+Path         ///dataLOCAL/MT2Tau/RootFiles/
 ________________________________________________________________________________________
 # list of samples
-
 ## -------- SMS --------
 
 SAMPLE
 Name            TStau
 SName           SUSY
 ShapeName       Signal
-File            V03-09-01_SMS-TChipChimStauSnu_mChi-120to500_mLSP-1to480_x-050_8TeV-tauolapp/793ad2798b4297df0a6d87efecfc8bd6_MT2tree_00ade7b8f2825fdf4fad6ead1a09ebcbe6e3336d/MT2tree_*.root
+File            TauTau_V3_1/SMS-TChipChimStauSnu-mChi-120to500-mLSP-1to480-x-050-TuneZ2star-8TeV-pythia6-tauolapp_NBJetsCSVM0_MET30.root
 Xsection        0.152 pb
 Kfact           1.
 Lumi            19600.0

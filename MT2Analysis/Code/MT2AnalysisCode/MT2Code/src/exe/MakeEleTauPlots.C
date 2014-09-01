@@ -1,4 +1,4 @@
-// C++ includes
+// includes++ C
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -20,6 +20,9 @@
 #include "BaseMassPlotter.hh"
 
 #include "helper/Utilities.hh"
+
+//#define TREE
+#define FROMEvtLst
 
 using namespace std;
 
@@ -74,6 +77,8 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vect
     if(elists != 0){
       TString ListName = cut + "_" + Sample.name ;
       elists->GetObject( ListName , list );
+      //elists->ls();
+      //cout << ListName << endl;
     }
    
     if(Sample.type == "data"){
@@ -265,21 +270,23 @@ int main(int argc, char* argv[]) {
   ExtendedCut* cleaningcut = new ExtendedCut("Cleaning" , cleaning.str().c_str() , true , false , "" , "" , false , false);
   allCuts.Add( cleaningcut );
 
-  //ExtendedCut* signalSelection =new ExtendedCut("Signal" , "((Susy.MassGlu - Susy.MassLSP) > 125)  && ((Susy.MassGlu - Susy.MassLSP) < 175)" , false , false , "" , "" , false , true); 
+  ExtendedCut* signalSelection =new ExtendedCut("Signal" , "((Susy.MassGlu >= 200) && (Susy.MassGlu <  220 ) && (Susy.MassLSP >= 0 ) && (Susy.MassLSP <  20 ))" , false , false , "" , "" , false , true); 
   //allCuts.Add(signalSelection);
-
-  ExtendedCut* triggerCut =new ExtendedCut("Trigger" , "trigger.HLT_EleTau" , true , false , "" , "" , false , false); //trigger sf should be added here
+  
+  ExtendedCut* triggerCut =new ExtendedCut("Trigger" , "trigger.HLT_EleTau && trigger.HLT_DiElectrons" , true , false , "" , "pileUp.Weight" , false , false); //trigger sf should be added here
   allCuts.Add(triggerCut);
 
   ExtendedCut* metcut =new ExtendedCut("MET" , "misc.MET > 30" , false , false , "" , "" , false , true);
-  allCuts.Add(metcut);
+  //allCuts.Add(metcut);
 
   ExtendedCut* bVeto =new ExtendedCut("bVeto" , "NBJets40CSVM == 0" , false , false, "" , "" ,false , true);
-  allCuts.Add( bVeto );
+  //allCuts.Add( bVeto );
 
   TString myChan = "eleTau[0]";
-  ExtendedCut* tauselection = new ExtendedCut("TauSelection" , std::string(myChan) + ".tau0Ind >=0"  , true , true , "" , "pileUp.Weight * SFWeight.BTagCSV40eq0" , false , true); //tau id sf should be added here
+  ExtendedCut* tauselection = new ExtendedCut("TauSelection" , std::string(myChan) + ".tau0Ind >=0"  , true , true , "" , "SFWeight.BTagCSV40eq0" , true , true); //tau id sf should be added here //
   allCuts.Add( tauselection );
+
+  
 
   ExtendedCut* electronselection = new ExtendedCut("ElectronSelection" , std::string(myChan) + ".ele0Ind >=0" , true , true , "" , "" , false , true); //electron id and iso sf here
   allCuts.Add( electronselection );
@@ -287,7 +294,7 @@ int main(int argc, char* argv[]) {
   ExtendedCut* Isolated =new ExtendedCut("Isolated" , std::string(myChan) + ".Isolated == 1" , true , true, "" , "" , false , true);
   allCuts.Add(Isolated);
 
-  ExtendedCut* extrasignalcheck = new ExtendedCut("ExtraSignalCheck" , std::string(myChan) + ".hasNoVetoMu && eleTau[0].GetSumCharge() == 0 && HasNoVetoElecForEleTau()" ,  true , true, "" , "eleTau[0].tauTrgSF * eleTau[0].eleTrgSF * eleTau[0].eleIdIsoSF" , false , true);
+  ExtendedCut* extrasignalcheck = new ExtendedCut("ExtraSignalCheck" , std::string(myChan) + ".hasNoVetoMu && eleTau[0].GetSumCharge() == 0 && HasNoVetoElecForEleTau()" ,  true , true, "" , "eleTau[0].tauTrgSF * eleTau[0].eleTrgSF * eleTau[0].eleIdIsoSF" , true , true); //
   allCuts.Add( extrasignalcheck );
   CutsForControlPlots.Add(extrasignalcheck);
 
@@ -299,6 +306,13 @@ int main(int argc, char* argv[]) {
   allCuts.Add( ZPeakVeto );
   CutsForControlPlots.Add(ZPeakVeto);
 
+  ExtendedCut* eleelecuts = new ExtendedCut("eleelecut" , "doubleEle[0].Ele0Ind>=0 && doubleEle[0].Ele1Ind>=0 && doubleEle[0].Isolated==1 && ( (ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0 && ele[doubleEle[0].Ele1Ind].lv.Pt() >= 20 && abs(ele[doubleEle[0].Ele1Ind].lv.Eta()) < 2.1 )" , true , true , "" , "" , false , true );
+  allCuts.Clear();
+  allCuts.Add( eleelecuts );
+  
+
+  ExtendedCut* treecut = eleelecuts ;
+  CutsForControlPlots.Add ( treecut );
   TList lastCuts;
 
   ExtendedCut* bVetoSole =new ExtendedCut("bVetoSole" , "NBJets40CSVM == 0" , true , true, "" , "SFWeight.BTagCSV40eq0 * pileUp.Weight" ,false , true);
@@ -358,6 +372,15 @@ int main(int argc, char* argv[]) {
 
     ExtendedObjectProperty* eleTauInvMass = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "InvMass" , invmass , 80 , 0 , 400 ,SUSYCatCommand , SUSYCatNames );
     allProps.Add( eleTauInvMass );
+
+    ExtendedObjectProperty* eleEleInvMass = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "InvMassEleEle" , "doubleEle[0].lv.M()" , 80 , 0 , 400 ,SUSYCatCommand , SUSYCatNames );
+    allProps.Add( eleEleInvMass );
+
+    ExtendedObjectProperty* eleele1pt = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "eleele1pt" , "ele[doubleEle[0].Ele1Ind].lv.Pt()" , 25 , 0 , 100 ,SUSYCatCommand , SUSYCatNames );
+    allProps.Add( eleele1pt );
+
+    ExtendedObjectProperty* eleele1eta = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "eleele1eta" , "ele[doubleEle[0].Ele0Ind].lv.Eta()" , 60 , -3 , 3 ,SUSYCatCommand , SUSYCatNames );
+    allProps.Add( eleele1eta );
 
     ExtendedObjectProperty* eleTauMT2 = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "MT2" , "eleTau[0].MT2" , 40 , 0 , 400 ,SUSYCatCommand , SUSYCatNames );
     allProps.Add( eleTauMT2 );
@@ -466,32 +489,44 @@ int main(int argc, char* argv[]) {
 
 
 
+  #ifdef TREE
+  cout << "TREE" << endl;
   TString fileName = outputdir;
   if(!fileName.EndsWith("/")) fileName += "/";
   Util::MakeOutputDir(fileName);
   fileName = fileName  + outputfile +"_TreeZPeakVeto.root";
   TFile* filetrees = TFile::Open( fileName , "recreate");
   filetrees->cd();
-  ZPeakVeto->SaveTree();
-  ZPeakVeto->theTreeToSave->Write();
-  
-  //TFile* finput = TFile::Open( "/dataLOCAL/hbakhshi/EleTau_Signal_METBJetsCuts_Histos.root") ;
-  //finput->cd();
-  //gDirectory->cd("ZPeakVeto" );
-  //gDirectory->cd("EventLists");
+  treecut->SaveTree();
+  treecut->theTreeToSave->Write();
+  #endif
 
+
+  #ifdef FROMEvtLst
+  cout << "FROM EventList" << endl;
+  TFile* finput = TFile::Open( "/dataLOCAL/hbakhshi/EE_EleTau_Histos.root" );
+  finput->cd();
+  //gDirectory->cd("ZPeakVeto" );
+  
+  gDirectory->cd("eleelecut") ;
+  gDirectory->cd("EventLists");
+  tA->eleTauAnalysis(&allCuts, neventperfile, Significances ,  outputfile, SUSYCatCommand , SUSYCatNames , gDirectory , "eleelecut");
   //tA->eleTauAnalysis(&lastCuts, &allCuts, neventperfile, Significances ,  outputfile, SUSYCatCommand , SUSYCatNames , gDirectory , "ZPeakVeto");
   // finput->Close();
-
+  #else
+  cout << "standard" << endl;
   try{
     tA->eleTauAnalysis(&allCuts, neventperfile, Significances ,  outputfile , SUSYCatCommand , SUSYCatNames );
   }catch(...){
     cout << "some error catched" << endl;
   }
+  #endif
 
+  #ifdef TREE
   filetrees->cd();
-  ZPeakVeto->theTreeToSave->Write();
+  treecut->theTreeToSave->Write();
   filetrees->Close();
+  #endif
 
   delete tA;
   return 0;
