@@ -1,13 +1,14 @@
 #include "TList.h"
 #include "Extendeds.hh"
 #include <vector>
+#include <string.h>
 
 void ExtendedObjectProperty::CalcSig(int LowerCut , int type , int SUSCat , bool verbose) {
   Float_t  x[nBins], y[nBins];
   theMCH = allHistos["MC"];
 
   TString SignalHistoName = "SUSY";
-  if( SUSCat > -1 && SUSCat < SUSYNames.size() )
+  if( SUSCat > -1 && SUSCat < int(SUSYNames.size()) )
     SignalHistoName += "_" + SUSYNames[SUSCat] ;
 
   for (int i = 1; i <=nBins+1; i++){
@@ -60,7 +61,7 @@ void ExtendedObjectProperty::CalcSig(int LowerCut , int type , int SUSCat , bool
 }
 
 void ExtendedObjectProperty::Print(Option_t* option ) const{
-  if(option == ""){
+  if( strcmp(option , "" ) ){
     cout << "\t" 
 	 << Name << " , " 
 	 << Formula << " : " << endl ;
@@ -76,7 +77,7 @@ void ExtendedObjectProperty::Print(Option_t* option ) const{
     }
 
     cout << endl;
-  }else if( option == "cutflowtable" ){
+  }else if( strcmp(option , "cutflowtable") ){
     cout << endl << "||" ;
     for( int i=0 ; i<NumberOfHistos ; i++)
       cout << histoNames[i] << "|" ;
@@ -92,6 +93,7 @@ void ExtendedObjectProperty::Print(Option_t* option ) const{
 }
 
 ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, TString formula , int nbins, double min, double max ,TString SUSYCatCommand_ , std::vector<TString> SUSYNames_,  std::vector<TString>* labels ) :
+  CutName( cutname ),
   Name(name),
   Formula(formula),
   nBins(nbins),
@@ -100,8 +102,7 @@ ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, 
   tFormula(0),
   tSUSYCatFormula(0),
   SUSYNames( SUSYNames_ ),
-  SUSYCatCommand( SUSYCatCommand_ ),
-  CutName( cutname ){
+  SUSYCatCommand( SUSYCatCommand_ ){
 
   gROOT->cd();
   NumberOfHistos = (7+SUSYNames_.size()) ;
@@ -112,7 +113,7 @@ ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, 
   vector<TString>  cnames = {"QCD", "Wtolnu", "DY", "Top", "MC", "SUSY" , "data" };
   vector<int>      ccolor = {  401,     417,     419,   600,  500, 1 , 632 };
 
-  for( int i=0 ; i< SUSYNames.size() ; i++){
+  for( int i=0 ; i< int(SUSYNames.size()) ; i++){
     cnames.push_back( "SUSY_" + SUSYNames[i] );
     ccolor.push_back( 1 );
   }
@@ -149,7 +150,8 @@ ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, 
 
 void ExtendedObjectProperty::SetTree( TTree* tree , TString sampletype, TString samplesname , TString cutname ){
 
-  CutName = cutname;
+  if( strcmp( cutname , "" ) != 0 )
+    CutName = cutname;
 
   if(tFormula != 0)
     delete tFormula;
@@ -189,7 +191,7 @@ void ExtendedObjectProperty::Fill(double w){
     allHistos["SUSY"]->Fill( dVal , w );
     double suscatd = tSUSYCatFormula->EvalInstance(0) ;
     int suscat = int(suscatd);
-    if( suscat < SUSYNames.size() ){
+    if( suscat < int(SUSYNames.size()) ){
       TString suscatname = SUSYNames[suscat];
       TString sushistname = "SUSY_" + suscatname ;
       allHistos[ sushistname ]->Fill( dVal , w );
@@ -206,7 +208,7 @@ void ExtendedObjectProperty::Fill(double dVal , double w ){
   else if(tSUSYCatFormula){
     allHistos["SUSY"]->Fill( dVal , w );
     int suscat =int(tSUSYCatFormula->EvalInstance(0)) ;
-    if( suscat < SUSYNames.size() ){
+    if( suscat < int(SUSYNames.size()) ){
       TString suscatname = SUSYNames[suscat];
       TString sushistname = "SUSY_" + suscatname ;
       allHistos[ sushistname ]->Fill( dVal , w );
@@ -259,7 +261,9 @@ TCanvas* ExtendedObjectProperty::plotRatioStack(THStack* hstack, TH1* h1_orig, T
 	
   float border = 0.2;
   float scale = (1-border)/border;
- 
+  if(border == scale)
+    cout << "just to avoid warning message" << endl;
+
   TPad *p_plot  = new TPad(name+"_plotpad"+ "_" + Name + "_" + CutName,  "Pad containing the overlay plot", 0,0.211838,1,1 /*0.00, border, 1.00, 1.00, 0, 0*/);
   //p_plot->SetBottomMargin(0.05);
   //p_plot->SetTopMargin(0.09);
@@ -425,13 +429,13 @@ TCanvas* ExtendedObjectProperty::plotRatioStack(THStack* hstack, TH1* h1_orig, T
   return c1;
 }
 
-void ExtendedObjectProperty::Write( TDirectory* dir , int lumi){
+void ExtendedObjectProperty::Write( TDirectory* dir , int lumi , bool plotratiostack){
   dir->mkdir(  Name  )->cd();
 
   THStack* h_stack     = new THStack( CutName + "_" + Name, "");
   TLegend* Legend1 = new TLegend(.71,.54,.91,.92);
 
-  for(int j = 0; j < (NumberOfHistos-SUSYNames.size()); j++){
+  for(uint j = 0; j < (NumberOfHistos-SUSYNames.size()); j++){
     theH = allHistos[ histoNames[j] ];
     AddOverAndUnderFlow(theH, true, true);
 
@@ -449,10 +453,11 @@ void ExtendedObjectProperty::Write( TDirectory* dir , int lumi){
   h_stack->Write();
   Legend1->Write();
 
-  plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY"] , true, false, Name + "_ratio", Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
-  for(int i =0 ; i<SUSYNames.size() ; i++)
-   plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY_"+SUSYNames[i] ] , true, false, Name + "_ratio"+ "_"+SUSYNames[i], Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
-
+  if(plotratiostack){
+    plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY"] , true, false, Name + "_ratio", Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
+    for(uint i =0 ; i<SUSYNames.size() ; i++)
+      plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY_"+SUSYNames[i] ] , true, false, Name + "_ratio"+ "_"+SUSYNames[i], Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
+  }
   for( std::vector< TGraph* >::const_iterator itr = AllSignificances.begin() ; itr != AllSignificances.end() ; itr++)
     (*itr)->Write();
 }
@@ -464,7 +469,7 @@ void ExtendedCut::SaveTree(){
 
   TIter nextprop( &Props );
   TObject* objtemp;
-  while( objtemp = nextprop() ){
+  while( (objtemp = nextprop()) ){
     ExtendedObjectProperty* castedobj = (ExtendedObjectProperty*)objtemp ;
     theTreeToSave->Branch( castedobj->Name , &(castedobj->dVal) , castedobj->Name + "/D" ) ;
   }  
@@ -490,13 +495,13 @@ void ExtendedCut::Print(Option_t* option) const{
   
   TIter nextprop( &Props );
   TObject* objtemp;
-  while( objtemp = nextprop() ){
+  while( (objtemp = nextprop()) ){
     ((ExtendedObjectProperty*)objtemp)->Print();
   }
 
   TIter nexteventlist( &Events );
   cout << "Available Event Lists :" << endl;
-  while( objtemp = nexteventlist() ){
+  while( (objtemp = nexteventlist()) ){
     cout << "\t" << objtemp->GetName() << endl;
   }
 
@@ -508,6 +513,7 @@ ExtendedCut::ExtendedCut(TString name, TString cutstr , bool applyondata , bool 
     Name(name),
     CutStr(cutstr),
     fCut(0),
+    OnSusy(applyonsusy),
     OnData(applyondata),
     OnMC(applyonmc),
     DataWeight(dataweight),
@@ -516,12 +522,11 @@ ExtendedCut::ExtendedCut(TString name, TString cutstr , bool applyondata , bool 
     fMCW(0),
     SUSYWeight(susyw),
     Verbose(verbose),
-    OnSusy(applyonsusy),
     StoreTree(false){
 
   if(Verbose>1)
     this->Print();
-};
+}
 
 void ExtendedCut::SetTree( TTree* tree , TString samplename , TString samplesname , TString sampletype , double xsec , int ninitialevents , double kfactor , double avgpuw  ){
   XSec = xsec;
@@ -567,7 +572,7 @@ void ExtendedCut::SetTree( TTree* tree , TString samplename , TString samplesnam
     TIter nextprop( &Props );
     TObject* objtemp;
     cout << Props.GetSize() << endl; 
-    while( objtemp = nextprop() ){
+    while( (objtemp = nextprop()) ){
       ((ExtendedObjectProperty*)objtemp)->SetTree( tree , sampletype , samplesname , Name );
       if( Verbose > 1 )
 	((ExtendedObjectProperty*)objtemp)->Print() ;
@@ -578,7 +583,7 @@ void ExtendedCut::SetTree( TTree* tree , TString samplename , TString samplesnam
     if( (isData && OnData) || (isMC && OnMC) || (isSUSY && OnSusy) ){
       TString ListName = Name + "_" + samplename ;
       TIter nexteventlist( &Events );
-      while( objtemp = nexteventlist() ){
+      while( (objtemp = nexteventlist()) ){
 	if(objtemp->GetName() == ListName)
 	  CurrentList = (TEventList*)objtemp;
       }
@@ -630,7 +635,7 @@ bool ExtendedCut::Pass(long currententryindex , double& weight ){
 
       TIter nextprop( &Props );
       TObject* objtemp;
-      while( objtemp = nextprop() ){
+      while( (objtemp = nextprop()) ){
 	((ExtendedObjectProperty*)objtemp)->Fill( weight );
       }
     }
@@ -648,7 +653,7 @@ void ExtendedCut::Write(TDirectory* dirparent , int lumi , vector< pair<int,int>
 
   TIter nextprop( &Props );
   TObject* objtemp;
-  while( objtemp = nextprop() ){
+  while( (objtemp = nextprop()) ){
 
     for( vector< pair<int,int> >::const_iterator itr = sig_types.begin() ; itr != sig_types.end() ; itr++ ){
       for( int susy_sig = -1 ; susy_sig < nSUSYSig ; susy_sig++ )
@@ -659,7 +664,7 @@ void ExtendedCut::Write(TDirectory* dirparent , int lumi , vector< pair<int,int>
 
   dir->mkdir( "EventLists" )->cd();
   TIter nexteventlist( &Events );
-  while( objtemp = nexteventlist() ){
+  while( (objtemp = nexteventlist()) ){
     objtemp->Write();
   }
     

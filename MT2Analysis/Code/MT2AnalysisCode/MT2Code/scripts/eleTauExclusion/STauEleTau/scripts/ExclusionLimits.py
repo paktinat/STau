@@ -12,8 +12,8 @@ LogFile = open( 'LogFile' , 'w' )
 class Cuts:
     def __init__(self ):
         self.File = None
-        self.fTotalNumbers = TFile('../nEvents.root')
-        self.hNEvents = self.fTotalNumbers.Get('hlspvschargino')
+        self.fTotalNumbers = TFile('/afs/cern.ch/work/h/hbakhshi/STau/CMSSW_6_1_1/src/HiggsAnalysis/all_Histos.root')
+        self.hNEvents = self.fTotalNumbers.Get('h_SMSEvents')
 
         PDFCTEQ66 = {100:[5823.40, 0.0 , +3.4 , -.6 , -3.2],
                      125:[2434.10, 0.0, 3.6 , -.6 , -3.5 ],
@@ -47,27 +47,27 @@ class Cuts:
             
             cc += 1
 
-        self.hWeights = TH2D("hWeights" , "Weights" , 20 , 100 , 500 , 20 , 0 , 500 )
+        self.hWeights = TH2D("hWeights" , "Weights" , 20 , 100 , 500 , 25 , 0 , 500 )
 
-        self.hMedian = TH2D("hMedian" , "Median" , 20 , 100 , 500 , 20 , 0 , 500 )
-        self.hMedianCurve = TH2D("hMedianCurve" , "Expected Exclusion" , 20 , 100 , 500 , 20 , 0 , 500 )
+        self.hMedian = TH2D("hMedian" , "Median" , 20 , 100 , 500 , 25 , 0 , 500 )
+        self.hMedianCurve = TH2D("hMedianCurve" , "Expected Exclusion" , 20 , 100 , 500 , 25 , 0 , 500 )
 
-        self.hp1Sigma = TH2D("hp1Sigma" , "+1#sigma" , 20 , 100 , 500 , 20 , 0 , 500 )
-        self.hp2Sigma = TH2D("hp2Sigma" , "+2#sigma" , 20 , 100 , 500 , 20 , 0 , 500 )
-        self.hm1Sigma = TH2D("hm1Sigma" , "-1#sigma" , 20 , 100 , 500 , 20 , 0 , 500 )
-        self.hm2Sigma = TH2D("hm2Sigma" , "-2#sigma" , 20 , 100 , 500 , 20 , 0 , 500 )
-        self.hObserved = TH2D("hObserved" , "Observed" , 20 , 100 , 500 , 20 , 0 , 500 )
+        self.hp1Sigma = TH2D("hp1Sigma" , "+1#sigma" , 20 , 100 , 500 , 25 , 0 , 500 )
+        self.hp2Sigma = TH2D("hp2Sigma" , "+2#sigma" , 20 , 100 , 500 , 25 , 0 , 500 )
+        self.hm1Sigma = TH2D("hm1Sigma" , "-1#sigma" , 20 , 100 , 500 , 25 , 0 , 500 )
+        self.hm2Sigma = TH2D("hm2Sigma" , "-2#sigma" , 20 , 100 , 500 , 25 , 0 , 500 )
+        self.hObserved = TH2D("hObserved" , "Observed" , 20 , 100 , 500 , 25 , 0 , 500 )
 
-        self.hEmpty  = TH2D("hEmpty" , "Empty" , 20 , 100 , 500 , 20 , 0 , 500 )
+        self.hEmpty  = TH2D("hEmpty" , "Empty" , 20 , 100 , 500 , 25 , 0 , 500 )
 
-        self.FixTH2D( self.hMedianCurve , 3,4,1)
-        self.FixTH2D( self.hm1Sigma , 2,2,9)
-        self.FixTH2D( self.hm2Sigma , 2,2,10)
-        self.FixTH2D( self.hp1Sigma , 2,2,9)
-        self.FixTH2D( self.hp2Sigma , 2,2,10)
+        self.FixTH2D( self.hMedianCurve , 3,2,1)
+        self.FixTH2D( self.hm1Sigma , 2,4,2)
+        self.FixTH2D( self.hm2Sigma , 2,4,3)
+        self.FixTH2D( self.hp1Sigma , 2,4,2)
+        self.FixTH2D( self.hp2Sigma , 2,4,3)
         self.FixTH2D( self.hObserved , 3,1,1)
 
-        self.hTimeMonitor = TH2D("hTimeMonitor" , "Time" , 20 , 100 , 500 , 20 , 0 , 500 )
+        self.hTimeMonitor = TH2D("hTimeMonitor" , "Time" , 20 , 100 , 500 , 25 , 0 , 500 )
 
         
 
@@ -83,7 +83,7 @@ class Cuts:
         return varNames[var]
 
     class BinResults:
-        def __init__(self , index , hBKG , hSignal ):
+        def __init__(self , index , hBKG , hSignal , hSigNorm ):
             self.Index = index
             self.BKG = hBKG
             self.DY = self.BKG.GetBinContent(1)
@@ -94,8 +94,9 @@ class Cuts:
             self.TotalBkg= self.DY + self.WJets + self.Top + self.QCD
             
             self.Signal = hSignal
+            self.hSignalNorm = hSigNorm
 
-            self.hNSignals = TH2D("hNSignals_%d" % (index) , "NSignals Bin#%d" % (index) , 20 , 100 , 500 , 20 , 0 , 500 )
+            self.hNSignals = TH2D("hNSignals_%d" % (index) , "NSignals Bin#%d" % (index) , 20 , 100 , 500 , 25 , 0 , 500 )
 
 
         def BinName(self):
@@ -118,6 +119,8 @@ class Cuts:
             signals = weight*currentSignal
 
             self.hNSignals.SetBinContent( mgluBin, mlspBin , signals )
+
+            signals = self.hSignalNorm.GetBinContent( mgluBin , mlspBin )
 
             return '%(sig)f\t%(dy)f\t%(w)f\t%(top)f\t%(qcd)f' % {'sig':signals,
                                                                  'dy':self.DY,
@@ -148,15 +151,18 @@ class Cuts:
 
 
     def run_cuts( self , cuts , binVariable , bins , name ):
-        if self.File:
-            self.File.Close()
+        #if self.File:
+        #    self.File.Close()
 
         self.Name  = name
 
         METmPZ , METpPZ , TauPt , zPt , MET , EleMT , MT2 = cuts
 
-        self.OutStreamDrawHist = os.system( ' '.join( str(i) for i in ["DrawHists" , -100 ] + cuts + [ binVariable ] + bins ) )  
-        self.File = TFile.Open( 'out.root'  )
+        command =  ' '.join( str(i) for i in ["DrawHists" , -100 , name + ".root" ] + cuts + [ binVariable ] + bins ) + " >& " + name + "_out"
+        print command
+        self.OutStreamDrawHist = os.system(command )
+
+        self.File = TFile.Open( name + '.root'  )
 
         self.CutsStr = ''
         for nCut in range( 0, len(cuts) ):
@@ -164,26 +170,35 @@ class Cuts:
                 continue
             if not self.CutsStr == '' :
                 self.CutsStr += " And "
-            self.CutsStr += '%s > %f' % ( self.getVarName(nCut) , cuts[nCut] )
+            if binVariable == nCut :
+                self.CutsStr += '%s > %f' % ( self.getVarName(nCut) , bins[0] )
+            else:
+                self.CutsStr += '%s > %f' % ( self.getVarName(nCut) , cuts[nCut] )
 
         if binVariable == -1:
             self.NBins = 1
             self.BinsStr = "No Binning"
         else:
             self.BinVar = self.getVarName( binVariable )
-            self.NBins = len(bins)+1
+            self.NBins = len(bins)
             self.BinsStr = 'No binning'
             if not self.NBins == 1:
                 self.BinsStr = 'bins :' + self.BinVar
-                allBins = [ cuts[binVariable] ] + bins 
+                allBins = bins 
                 self.BinsStr += ' | '.join( '>' + str(bbb) for bbb in allBins )
 
         self.BinsInfo = []
 
-        for binid in range(0 , self.NBins ):
+        rangeOfBins = range(1, self.NBins+1)
+        if self.NBins == 1:
+            rangeOfBins = [0]
+        for binid in rangeOfBins:
+            print >> LogFile, binid
+            self.File.ls()
             hhBKG = self.File.Get("hBKG_%d"%(binid)).Clone("hAllBKG___%d"%(binid))
             hhSignal = self.File.Get("hSignal_%d"%(binid)).Clone("hMGluMLSP___%d"%(binid))
-            bbinin = self.BinResults(binid , hhBKG , hhSignal )
+            hhsignorm = self.File.Get("hSignal_%d_Normalized"%(binid)).Clone("hMGluMLSP___%d_Normalized"%(binid))
+            bbinin = self.BinResults(binid , hhBKG , hhSignal , hhsignorm )
             
             self.BinsInfo.append( bbinin )
 
@@ -309,7 +324,7 @@ class Cuts:
         Lumi = 19.6
         self.WeightSignal = Lumi*XSection / TotalNumberOfSignals
 
-        print( '%d -- %d , W:%f' % (mgluBin , mlspBin , self.WeightSignal) )
+        #print( '%d -- %d , W:%f' % (mgluBin , mlspBin , self.WeightSignal) )
 
         cardfilename = self.makecardfile( MGlu , MLSP , self.WeightSignal , systematics  )
 
@@ -364,46 +379,56 @@ class Cuts:
                     self.hm2Sigma.SetBinContent( mgluBin, mlspBin , l)
                 elif q > -2.0 : 
                     self.hObserved.SetBinContent( mgluBin, mlspBin , l)
-                print ( '%d : %f' % (i , l) )
+                #print ( '%d : %f' % (i , l) )
 
             os.system('/bin/rm -f roostats-*')
             file.Close()
         
-            os.system('/bin/rm -f higgsCombineTest.Asymptotic.mH120.root')
-            os.system('/bin/rm -f %s' % (cardfilename) )
+            #os.system('/bin/rm -f higgsCombineTest.Asymptotic.mH120.root')
+            #os.system('/bin/rm -f %s' % (cardfilename) )
 
 if __name__ == "__main__":
-    fout = TFile('foutout.root', 'recreate')
+    fout = TFile('ExclusionOutput.root', 'recreate')
 
 
-    for i in range(5,7):
+    for i in range(0,1):
         m = Cuts()
 
         #METmPZ , METpPZ , TauPt , zPt , MET , EleMT , MT2 
-        if i==0:
-            m.run_cuts( [-999,-1,-1,-1,-1,-1,-1] , -1 , [] , 'NoCut' )
-        elif i==1:
-            m.run_cuts( [-999,-1,40,-1,30,-1,10] , -1 , [] , 'MET_TauPT' )
-        elif i==2:
-            m.run_cuts( [-999 , -1 , 50 , -1 , 30 , -1 , 10] , 4 , [ 40 , 60 , 80] , 'METBin_TauPt'  )
-        elif i==3:
-            m.run_cuts( [-50 , 150 , -1 , -1 , -1 , -1 , 50] , -1 , [] , 'MT2_MET_PZ' )
-        elif i==4:
-            m.run_cuts( [-90 , 180 , -1 , -1 , -1 , -1 , 50] , 1 , [200 , 220 , 250] , 'MT2_Met_Pz_Binned' )
-        elif i==5:
-            m.run_cuts( [-999 , -1 , -1 , -1 , -1 , -1 , 80] , 6 , [90, 100 , 110 , 120 , 130 , 140], 'MT2Binned' )
-        elif i==6:
-            m.run_cuts( [-50 , 175 , -1 , -1 , -1 , -1 , 50] , 6 , [70, 90 , 110 , 130 ], 'MT2Binned_Pz_MET' )
+        try:
+            if i==0:
+                m.run_cuts( [-50,175,-1,-1,-1,-1,-1] , 6 , [50,70,90,110,130] , 'SyncCuts' )
+            elif i==1:
+                m.run_cuts( [-999,-1,40,-1,-1,-1,20] , -1 , [50] , 'MET_TauPT' )
+            elif i==2:
+                m.run_cuts( [-999 , -1 , 50 , -1 , -1 , -1 , 10] , 4 , [  40 , 60 , 80] , 'METBin_TauPt'  )
+            elif i==3:
+                continue
+                m.run_cuts( [-50 , 150 , -1 , -1 , -1 , -1 , 50] , -1 , [] , 'MT2_MET_PZ' )
+            elif i==4:
+                m.run_cuts( [-50 , -1 , -1 , -1 , -1 , -1 , 50] , 1 , [180 , 200 , 220 , 250] , 'MT2_Met_Pz_Binned' )
+            elif i==5:
+                m.run_cuts( [-999 , -1 , -1 , -1 , -1 , -1 , -1] , 6 , [80 , 100 , 120 ], 'MT2Binned' )
+            elif i==6:
+                m.run_cuts( [-50 , 175 , -1 , -1 , -1 , -1 , -1] , 6 , [ 80, 100 , 120 ], 'MT280Binned_Pz_MET' )
+            elif i==7:
+                m.run_cuts( [-50 , 175 , -1 , -1 , -1 , -1 , -1] , 6 , [ 50 , 80 , 100 , 120 ], 'MT250Binned_Pz_MET' )
+
+        except:
+            print >> LogFile, m.Name + " Error " 
+            continue
 
         print >> LogFile , m.Name 
 
-        for mchargino in range(100 , 500 , 20):
-            LogFile.write( "\n%d" % (mchargino) )
-            for mlsp in range( 0 , 400 , 25 ):
-                LogFile.write("|%d" % (mlsp) )
-                LogFile.flush()
-                m.upperlimit(mchargino , mlsp , [ 1.4 ]*5 )
-
+        # for mchargino in range(100 , 500 , 20):
+        #     LogFile.write( "\n%d" % (mchargino) )
+        #     for mlsp in range( 0 , 500 , 20 ):
+        #         LogFile.write("|%d" % (mlsp) )
+        #         LogFile.flush()
+        #         m.upperlimit(mchargino , mlsp , [ 1.1 ]*5 )
+        
+        m.upperlimit( 200 , 0 , [1.1]*5 )
+                
 
         fout.mkdir( m.Name  ).cd()
         m.Write()

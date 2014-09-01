@@ -45,7 +45,7 @@ public:
 
   TCanvas* plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, TH1* h3, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle,int njets,int nbjets, int nleps, float overlayScale, TString saveMacro , int lumi_);
 
-  void Write( TDirectory* dir , int lumi);
+  void Write( TDirectory* dir , int lumi , bool plotratiostack = true);
 
   std::vector< TGraph* > AllSignificances;
   void CalcSig(int LowerCut=0 , int type = 0 , int susycat=-1 , bool verbose = false);
@@ -63,15 +63,16 @@ public:
   TString Name;
   TString Formula;
 
-  TTreeFormula* tFormula;
-  TTreeFormula* tSUSYCatFormula;
-  TString SUSYCatCommand;
-  vector<TString> SUSYNames;
-
   int nBins;
-
   double Min;
   double Max;
+
+
+  TTreeFormula* tFormula;
+  TTreeFormula* tSUSYCatFormula;
+  vector<TString> SUSYNames;
+  TString SUSYCatCommand;
+
 
   int NumberOfHistos;
   std::vector<TString> histoNames;
