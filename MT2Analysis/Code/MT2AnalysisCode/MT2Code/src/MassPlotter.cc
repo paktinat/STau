@@ -1332,7 +1332,7 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 	TLegend* Legend1 = new TLegend(.71,.68,.91,.92);
 	Legend1->SetName(varname2+"_legend");
 	//TLegend* Legend1 = new TLegend(.3,.5,.6,.88);
-
+	bool SetfPUReweight = fPUReweight; // To be able to control the pile weight from the run_MassPlot.C
 	for(size_t i = 0; i < Samples.size(); ++i){
 
 		h_samples.push_back(new TH1D(varname2+"_"+Samples[i].name, "", nbins, bins));
@@ -1353,10 +1353,12 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 	
 		Double_t weight=0;
 
+		
+
 		//------added be esmaeel
 		if (Samples[i].name == "QCD-Pt-15-20-MuEnriched"){
 		  fPUReweight = false;}
-		else fPUReweight = true;
+		else fPUReweight = SetfPUReweight;
 		//------added be esmaeel
 		if(fPUReweight) weight = Samples[i].xsection * Samples[i].kfact * Samples[i].lumi / (Samples[i].nevents*Samples[i].PU_avg_weight);
 		else            weight = Samples[i].xsection * Samples[i].kfact * Samples[i].lumi / (Samples[i].nevents);
