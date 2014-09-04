@@ -96,14 +96,26 @@ bool MT2tree::HasNoVetoElecForEleTau(int signalIndex){
   if(signalIndex == -1)
     signalIndex = eleTau[0].GetEleIndex0() ;
 
+  //cout << "ele veto: " ;
   for(int i = 0; i < NEles; i++){
-    if(i == signalIndex)
+    //cout << i << "," ;
+    if(i == signalIndex){
+      //cout << "same-" ;
       continue;
-    if(ele[i].IDVetoETau){
-      if( ele[i].lv.Pt() > 10. && fabs( ele[i].lv.Eta() ) <  2.3 )
+    }
+    if( ele[i].Iso04 < .2 ){
+      //cout << "iso," ;
+      if(ele[i].PassE0_EE){
+	//cout << "e0-" ;
+  	nVeto++;
+      }
+      else if(ele[i].PassE1_EE){
+	//cout << "e1-" ;
 	nVeto++;
+      }
     }
   }
+  //cout << nVeto << endl;
   return (nVeto == 0);
 }
 

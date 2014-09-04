@@ -267,13 +267,13 @@ int main(int argc, char* argv[]) {
 	   <<" misc.CSCTightHaloIDFlag==0 && misc.HBHENoiseFlag==0 &&"
 	   <<" misc.hcalLaserEventFlag==0 && misc.trackingFailureFlag==0 &&"
 	   <<" misc.eeBadScFlag==0 && misc.EcalDeadCellTriggerPrimitiveFlag==0 ";
-  ExtendedCut* cleaningcut = new ExtendedCut("Cleaning" , cleaning.str().c_str() , true , false , "" , "" , false , false);
+  ExtendedCut* cleaningcut = new ExtendedCut("Cleaning" , cleaning.str().c_str() , true , false , "" , "pileUp.Weight" , false , false);
   allCuts.Add( cleaningcut );
 
   ExtendedCut* signalSelection =new ExtendedCut("Signal" , "((Susy.MassGlu >= 200) && (Susy.MassGlu <  220 ) && (Susy.MassLSP >= 0 ) && (Susy.MassLSP <  20 ))" , false , false , "" , "" , false , true); 
   //allCuts.Add(signalSelection);
   
-  ExtendedCut* triggerCut =new ExtendedCut("Trigger" , "trigger.HLT_EleTau && trigger.HLT_DiElectrons" , true , false , "" , "pileUp.Weight" , false , false); //trigger sf should be added here
+  ExtendedCut* triggerCut =new ExtendedCut("Trigger" , "trigger.HLT_EleTau" , true , false , "" , "SFWeight.BTagCSV40eq0" , true , false); //trigger sf should be added here
   allCuts.Add(triggerCut);
 
   ExtendedCut* metcut =new ExtendedCut("MET" , "misc.MET > 30" , false , false , "" , "" , false , true);
@@ -283,20 +283,26 @@ int main(int argc, char* argv[]) {
   //allCuts.Add( bVeto );
 
   TString myChan = "eleTau[0]";
-  ExtendedCut* tauselection = new ExtendedCut("TauSelection" , std::string(myChan) + ".tau0Ind >=0"  , true , true , "" , "SFWeight.BTagCSV40eq0" , true , true); //tau id sf should be added here //
+  ExtendedCut* tauselection = new ExtendedCut("TauSelection" , std::string(myChan) + ".tau0Ind >=0"  , true , true , "" , "eleTau[0].tauTrgSF" , true , true); //tau id sf should be added here //
   allCuts.Add( tauselection );
 
   
 
-  ExtendedCut* electronselection = new ExtendedCut("ElectronSelection" , std::string(myChan) + ".ele0Ind >=0" , true , true , "" , "" , false , true); //electron id and iso sf here
+  ExtendedCut* electronselection = new ExtendedCut("ElectronSelection" , std::string(myChan) + ".ele0Ind >=0" , true , true , "" , "eleTau[0].eleTrgSF * eleTau[0].eleIdIsoSF" , false , true); //electron id and iso sf here
   allCuts.Add( electronselection );
 
-  ExtendedCut* Isolated =new ExtendedCut("Isolated" , std::string(myChan) + ".Isolated == 1" , true , true, "" , "" , false , true);
+  ExtendedCut* Isolated =new ExtendedCut("Isolated" , std::string(myChan) + ".Isolated == 1" , true , true, "" , "" , true , true);
   allCuts.Add(Isolated);
 
-  ExtendedCut* extrasignalcheck = new ExtendedCut("ExtraSignalCheck" , std::string(myChan) + ".GetSumCharge() == 0 && HasNoVetoMuForEleTau() && HasNoVetoElecForEleTau()" ,  true , true, "" , "eleTau[0].tauTrgSF * eleTau[0].eleTrgSF * eleTau[0].eleIdIsoSF" , true , true); //
-  allCuts.Add( extrasignalcheck );
-  CutsForControlPlots.Add(extrasignalcheck);
+  ExtendedCut* OS = new ExtendedCut("OS" , std::string(myChan) + ".GetSumCharge() == 0" ,  true , true, "" , "" , true , true); 
+  allCuts.Add( OS );
+
+  ExtendedCut* muveto = new ExtendedCut("MuVeto" , "HasNoVetoMuForEleTau()" ,  true , true, "" , "" , true , true); 
+  allCuts.Add( muveto );
+
+  ExtendedCut* eleveto = new ExtendedCut("EleVeto" , "HasNoVetoElecForEleTau()" ,  true , true, "" , "" , true , true); 
+  allCuts.Add( eleveto );
+  CutsForControlPlots.Add(eleveto);
 
   std::string invmass = std::string(std::string(myChan) + ".lv.M()");
   ExtendedCut* lowmassveto =new ExtendedCut("LowMassVeto" , invmass +  " > 15." , true , true , "" , "" , false , true);
@@ -304,14 +310,13 @@ int main(int argc, char* argv[]) {
   
   ExtendedCut* ZPeakVeto =new ExtendedCut("ZPeakVeto" ,  invmass + " < 45.0 || " + invmass  + " > 75" , true , true , "" , "" , false , true);
   allCuts.Add( ZPeakVeto );
-  CutsForControlPlots.Add(ZPeakVeto);
+  //CutsForControlPlots.Add(ZPeakVeto);
 
-  ExtendedCut* eleelecuts = new ExtendedCut("eleelecut" , "doubleEle[0].Ele0Ind>=0 && doubleEle[0].Ele1Ind>=0 && doubleEle[0].Isolated==1 && ( (ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0 && ele[doubleEle[0].Ele1Ind].lv.Pt() >= 20 && abs(ele[doubleEle[0].Ele1Ind].lv.Eta()) < 2.1 )" , true , true , "" , "" , false , true );
-  allCuts.Clear();
-  allCuts.Add( eleelecuts );
+  //ExtendedCut* eleelecuts = new ExtendedCut("eleelecut" , "doubleEle[0].Ele0Ind>=0 && doubleEle[0].Ele1Ind>=0 && doubleEle[0].Isolated==1 && ( (ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)" , true , true , "" , "" , false , true );
+  //allCuts.Add( eleelecuts );
   
 
-  ExtendedCut* treecut = eleelecuts ;
+  ExtendedCut* treecut = ZPeakVeto ;
   CutsForControlPlots.Add ( treecut );
   TList lastCuts;
 
@@ -364,7 +369,7 @@ int main(int argc, char* argv[]) {
     ExtendedObjectProperty* eleTauElePt = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "ElePt" , "ele[eleTau[0].ele0Ind].lv.Pt()" , 80 , 20 , 420 ,SUSYCatCommand , SUSYCatNames );
     allProps.Add( eleTauElePt );
 
-    ExtendedObjectProperty* eleTauEleEta = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "EleEta" , "ele[eleTau[0].ele0Ind].lv.Eta()" , 80 , 20 , 420 ,SUSYCatCommand , SUSYCatNames );
+    ExtendedObjectProperty* eleTauEleEta = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "EleEta" , "ele[eleTau[0].ele0Ind].lv.Eta()" , 40 , -2 , 2 ,SUSYCatCommand , SUSYCatNames );
     allProps.Add( eleTauEleEta );
 
     ExtendedObjectProperty* eleTauEleMT = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "EleMT" , "ele[eleTau[0].ele0Ind].MT" , 80 , 0 , 400 ,SUSYCatCommand , SUSYCatNames );
@@ -373,14 +378,14 @@ int main(int argc, char* argv[]) {
     ExtendedObjectProperty* eleTauInvMass = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "InvMass" , invmass , 80 , 0 , 400 ,SUSYCatCommand , SUSYCatNames );
     allProps.Add( eleTauInvMass );
 
-    ExtendedObjectProperty* eleEleInvMass = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "InvMassEleEle" , "doubleEle[0].lv.M()" , 80 , 0 , 400 ,SUSYCatCommand , SUSYCatNames );
-    allProps.Add( eleEleInvMass );
+//     ExtendedObjectProperty* eleEleInvMass = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "InvMassEleEle" , "doubleEle[0].lv.M()" , 80 , 0 , 400 ,SUSYCatCommand , SUSYCatNames );
+//     allProps.Add( eleEleInvMass );
 
-    ExtendedObjectProperty* eleele1pt = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "eleele1pt" , "ele[doubleEle[0].Ele1Ind].lv.Pt()" , 25 , 0 , 100 ,SUSYCatCommand , SUSYCatNames );
-    allProps.Add( eleele1pt );
+//     ExtendedObjectProperty* eleele1pt = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "eleele1pt" , "ele[doubleEle[0].Ele1Ind].lv.Pt()" , 25 , 0 , 100 ,SUSYCatCommand , SUSYCatNames );
+//     allProps.Add( eleele1pt );
 
-    ExtendedObjectProperty* eleele1eta = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "eleele1eta" , "ele[doubleEle[0].Ele0Ind].lv.Eta()" , 60 , -3 , 3 ,SUSYCatCommand , SUSYCatNames );
-    allProps.Add( eleele1eta );
+//     ExtendedObjectProperty* eleele1eta = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "eleele1eta" , "ele[doubleEle[0].Ele0Ind].lv.Eta()" , 60 , -3 , 3 ,SUSYCatCommand , SUSYCatNames );
+//     allProps.Add( eleele1eta );
 
     ExtendedObjectProperty* eleTauMT2 = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "MT2" , "eleTau[0].MT2" , 40 , 0 , 400 ,SUSYCatCommand , SUSYCatNames );
     allProps.Add( eleTauMT2 );
@@ -397,11 +402,11 @@ int main(int argc, char* argv[]) {
     ExtendedObjectProperty* NJets50 = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "NJets50" , "NJetsIDLoose50" , 10 , 0 , 10 ,SUSYCatCommand , SUSYCatNames );
     allProps.Add( NJets50 );
 
-    ExtendedObjectProperty* NJetsLoose = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "NJetsLoose" , "NJetsIDLoose" , 10 , 0 , 10 ,SUSYCatCommand , SUSYCatNames );
-    allProps.Add( NJetsLoose );
+    ExtendedObjectProperty* NVertices = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "NVertices" , "pileUp.NVertices" , 100 , 0 , 100 ,SUSYCatCommand , SUSYCatNames );
+    allProps.Add( NVertices );
 
-    ExtendedObjectProperty* NBJetsLoose = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "NBJets40CSVL" , "NBJets40CSVL" , 10 , 0 , 10 ,SUSYCatCommand , SUSYCatNames );
-    allProps.Add( NBJetsLoose );
+    ExtendedObjectProperty* NBJets = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "NBJets40CSVM" , "NBJets40CSVM" , 10 , 0 , 10 ,SUSYCatCommand , SUSYCatNames );
+    allProps.Add( NBJets );
 
     ExtendedObjectProperty* eleTauMT2Imb = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "MT2Imb" , "eleTau[0].MT2Imbalanced" , 40 , 0 , 400 ,SUSYCatCommand , SUSYCatNames );
     allProps.Add( eleTauMT2Imb );
@@ -494,7 +499,8 @@ int main(int argc, char* argv[]) {
   TString fileName = outputdir;
   if(!fileName.EndsWith("/")) fileName += "/";
   Util::MakeOutputDir(fileName);
-  fileName = fileName  + outputfile +"_TreeZPeakVeto.root";
+
+  fileName = fileName  + outputfile +"_Tree" + treecut->Name + ".root";
   TFile* filetrees = TFile::Open( fileName , "recreate");
   filetrees->cd();
   treecut->SaveTree();
@@ -503,16 +509,15 @@ int main(int argc, char* argv[]) {
 
 
   #ifdef FROMEvtLst
-  cout << "FROM EventList" << endl;
-  TFile* finput = TFile::Open( "/dataLOCAL/hbakhshi/EE_EleTau_Histos.root" );
+  TString CutName = "ZPeakVeto" ;
+
+  cout << "FROM EventList : " << CutName << endl;
+  TFile* finput = TFile::Open( "/dataLOCAL/hbakhshi/AfterLepRejection_Histos.root") ;
   finput->cd();
-  //gDirectory->cd("ZPeakVeto" );
-  
-  gDirectory->cd("eleelecut") ;
+  gDirectory->cd( CutName );
   gDirectory->cd("EventLists");
-  tA->eleTauAnalysis(&allCuts, neventperfile, Significances ,  outputfile, SUSYCatCommand , SUSYCatNames , gDirectory , "eleelecut");
-  //tA->eleTauAnalysis(&lastCuts, &allCuts, neventperfile, Significances ,  outputfile, SUSYCatCommand , SUSYCatNames , gDirectory , "ZPeakVeto");
-  // finput->Close();
+  tA->eleTauAnalysis(&allCuts, neventperfile, Significances ,  outputfile, SUSYCatCommand , SUSYCatNames , gDirectory , CutName);
+  finput->Close();
   #else
   cout << "standard" << endl;
   try{
