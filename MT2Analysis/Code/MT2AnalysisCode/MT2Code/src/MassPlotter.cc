@@ -1228,6 +1228,10 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 			   TString xtitle, const int nbins, const double *bins, 
 			   bool flip_order, bool logflag, bool composited, bool ratio, 
 			   bool stacked, bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos, TString saveMacro, int type){
+
+        TH2D *h_PN_MLSP_MChi = new TH2D("h_PN_MLSP_MChi", "", 125, 0, 2500, 125, 0, 2500);
+	h_PN_MLSP_MChi->Sumw2();
+
         TString varname = Util::removeFunnyChar(var.Data());
 
 	TString nMinCut = var;
@@ -1406,7 +1410,25 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 		else if(fbSFReWeight) selection = TString::Format("(%.15f*%s*%s) * (%s)",              weight, btagweight.Data(), ChannelSpecificSF.Data(), theCuts.Data());
 		else                  selection = TString::Format("(%.15f*%s) * (%s)",                 weight,                    ChannelSpecificSF.Data(), theCuts.Data()); 
 
-// 		if(     Samples[i].type=="susy")  selection = TString::Format("(%.15f) * (%s)",weight, theCuts.Data());
+
+		if(     Samples[i].type=="susy"){
+		  if(fPUReweight) weight = Samples[i].lumi / (Samples[i].PU_avg_weight);
+		  else            weight = Samples[i].lumi;
+		  TString SUSYselection;
+		  if(fPUReweight && fbSFReWeight) SUSYselection = TString::Format("(%.15f*pileUp.Weight*%s*%s) * (%s)",weight, btagweight.Data(), ChannelSpecificSF.Data(), theCuts.Data());
+		  else if(fPUReweight)  SUSYselection = TString::Format("(%.15f*pileUp.Weight*%s) * (%s)",   weight,                    ChannelSpecificSF.Data(), theCuts.Data());
+		  else if(fbSFReWeight) SUSYselection = TString::Format("(%.15f*%s*%s) * (%s)",              weight, btagweight.Data(), ChannelSpecificSF.Data(), theCuts.Data());
+		  else                  SUSYselection = TString::Format("(%.15f*%s) * (%s)",                 weight,                    ChannelSpecificSF.Data(), theCuts.Data()); 
+
+		  TString SUSYvariable = TString::Format("Susy.MassLSP:Susy.MassGlu>>+%s", h_PN_MLSP_MChi->GetName());
+
+		if(fVerbose>2) cout << "  +++++++ Drawing SUSY " << SUSYvariable  << endl
+				    << "  +++++++ with cuts:   " << setw(40)  << SUSYselection << endl;
+		
+		  fSamples[i].tree->Draw(SUSYvariable, SUSYselection, "goff");
+
+		}
+
 
 	//	TString selection;
 	//	if(Samples[i].type!="data" && fPUReweight) selection      = TString::Format("(%.15f*pileUp.Weight) * (%s)",weight,theCuts.Data());
@@ -1416,6 +1438,13 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 				    << "  +++++++ with cuts:   " << setw(40)  << selection << endl;
 
 		int nev = Samples[i].tree->Draw(variable.Data(),selection.Data(),"goff");
+
+
+
+
+ 	
+
+
 
 		// Add underflow & overflow bins
 		// This failed for older ROOT version when the first(last) bin is empty
@@ -1788,16 +1817,33 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
   MyC->cd(2);
   sig2->Draw("ACP");
 
+  TString fileName = fOutputDir;
+  if(!fileName.EndsWith("/")) fileName += "/";
+  Util::MakeOutputDir(fileName);
+  fileName = fileName + "countingForExclusion_" + myChannel +"_Histos.root";
+  TFile *savefile = new TFile(fileName.Data(), "RECREATE");
+  savefile ->cd();
 
+  h_stack->SetName("h_stack");
+  h_mc_sum->SetName("h_mc_sum");
+  h_data->SetName("h_data");
 
-// 	for(int i=0; i<h_samples.size(); ++i){
-// 		delete h_samples[i];
-// 	}
-// 	delete h_mc_sum;
-// 	delete Legend1;
-// 	delete h_data;
-// 	delete h_susy;
-	
+  h_stack->Write();
+  h_mc_sum->Write();
+  h_data->Write();
+  h_PN_MLSP_MChi->Write();
+
+  savefile->Close();
+  
+  std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
+
+  // 	for(int i=0; i<h_samples.size(); ++i){
+  // 		delete h_samples[i];
+  // 	}
+  // 	delete h_mc_sum;
+  // 	delete Legend1;
+  // 	delete h_data;
+  // 	delete h_susy;
 }
 
 
