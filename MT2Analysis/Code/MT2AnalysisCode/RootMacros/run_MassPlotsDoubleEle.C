@@ -11,7 +11,7 @@
   //     TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30.dat";
 
   //  TString samples = "./samples/samplesMineDoubleElectronQCDBCtoE-SMS050_MET30_NBJet0.dat";
-  //  TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat";
+   TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat";
 
   //  TString samples = "./samples/samplesMineQCD.dat";
   //  TString samples = "./samples/samplesMineDoubleElectronQCDHtBin-SMS050.dat";                                                               
