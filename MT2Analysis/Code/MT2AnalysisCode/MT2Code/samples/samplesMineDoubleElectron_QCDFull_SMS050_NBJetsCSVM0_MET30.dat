@@ -86,11 +86,11 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-350-BCtoE
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/
+File            TauTau_V3_1/QCD_Pt_350_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
 Xsection  	23.92 pb #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
 Kfact           1.0
 Lumi            19600.0

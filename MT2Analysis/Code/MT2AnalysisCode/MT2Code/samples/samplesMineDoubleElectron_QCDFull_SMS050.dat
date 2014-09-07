@@ -75,11 +75,11 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-350-BCtoE
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/
+File            TauTau_V3_1/QCD_Pt_350_BCtoE_TuneZ2star_8TeV_pythia6.root
 Xsection  	23.92 pb #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
 Kfact           1.0
 Lumi            19600.0
@@ -797,7 +797,7 @@ Type            data
 Color		1
 
 SAMPLE
-Name		Run2012C_TauPlusX
+Name		Run2012C_DoubleEle
 SName		TauPlusX-Data
 ShapeName	Data
 File            TauTau_V3_1/DoubleElectron-Run2012C-22Jan2013-v1-AOD-3.root
@@ -819,7 +819,7 @@ Type            data
 Color		1
 
 SAMPLE
-Name		Run2012D_TauPlusX
+Name		Run2012D_DoubleEle
 SName		TauPlusX-Data
 ShapeName	Data
 File            TauTau_V3_1/DoubleElectron-Run2012D-22Jan2013-v1-AOD.root

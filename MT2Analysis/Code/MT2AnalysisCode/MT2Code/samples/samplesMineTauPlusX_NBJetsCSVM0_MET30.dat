@@ -265,33 +265,33 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-600-800-MuEnriched
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/
+File            TauTau_V3_1/QCD_Pt-600to800_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
 Xsection  	2.690196 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
 Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-800-1000-MuEnriched
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/
+File            TauTau_V3_1/QCD_Pt-800to1000_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
 Xsection  	0.368781 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
 Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-1000-MuEnriched
 SName		QCD
 ShapeName	QCD
-File            TauTau_V3_1/
+File            TauTau_V3_1/QCD_Pt-1000_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
 Xsection  	0.0849078 pb #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications  
 Kfact           1.0
 Lumi            19600.0
