@@ -381,7 +381,7 @@ private:
 
   float xMT2bin[NumberOfMT2Bins];//bins of MT2
 
-  static const int NumberOfSamples = 6;
+  static const int NumberOfSamples = 8;
   TH1* MT2[NumberOfSamples];
 
   //Few functions for debugging and ready for .tex printout

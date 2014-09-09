@@ -5005,23 +5005,23 @@ void MassPlotter::Cout(int k, TH2F * Histo){
 
 void MassPlotter::printYield(){
 
-    cout<<"\n           & "<<MT2[0]->GetName()     << " & "<<MT2[2]->GetName()      <<" & "<<MT2[1]->GetName()      <<" & "<<MT2[3]->GetName()     <<" & "<<MT2[4]->GetName()<<"& "<<MT2[6]->GetName()     <<"& "<<MT2[5]->GetName()     <<"\\"<<endl;
+    cout<<"\n           & "<<MT2[0]->GetName()     << " & "<<MT2[2]->GetName()      <<" & "<<MT2[1]->GetName()      <<" & "<<MT2[3]->GetName()     <<" & "<<MT2[4]->GetName()<<" & "<<MT2[5]->GetName()<<"& "<<MT2[7]->GetName()     <<"& "<<MT2[6]->GetName()     <<"\\"<<endl;
   
     
     double err;
     
-    int binNumber1 = MT2[4]->GetNbinsX();
-    MT2[4]->IntegralAndError(0,binNumber1,err);
+    int binNumber1 = MT2[5]->GetNbinsX();
+    MT2[5]->IntegralAndError(0,binNumber1,err);
  
-     cout<<" full selection & "<<MT2[0]->Integral()     << " & "<<MT2[2]->Integral()      <<" & "<<MT2[1]->Integral()      <<" & "<<MT2[3]->Integral()     <<" & "<<MT2[4]->Integral(0,binNumber1)<<" $pm$ "<<err<<" & "<<MT2[6]->Integral()     <<" & "<<MT2[5]->Integral()     <<"\\"<<endl;
+     cout<<" full selection & "<<MT2[0]->Integral()     << " & "<<MT2[2]->Integral()      <<" & "<<MT2[1]->Integral()      <<" & "<<MT2[3]->Integral()     <<" & "<<MT2[4]->Integral()     << " & "<<MT2[5]->Integral()<<" $pm$ "<<err<<" & "<<MT2[7]->Integral()     <<" & "<<MT2[6]->Integral()     <<"\\"<<endl;
 
 
     for(int i = 0; i < NumberOfMT2Bins-1; i++){
-      binNumber1     = MT2[4]->FindBin(xMT2bin[i] + 0.1);
-      int binNumber2 = MT2[4]->FindBin(xMT2bin[i+1] - 0.1);
+      binNumber1     = MT2[5]->FindBin(xMT2bin[i] + 0.1);
+      int binNumber2 = MT2[5]->FindBin(xMT2bin[i+1] - 0.1);
 
-      MT2[4]->IntegralAndError(binNumber1, binNumber2,err);
-      cout<<"$"<<xMT2bin[i]<<"-"<<xMT2bin[i+1]<<"$ &      "<<MT2[0]->Integral(binNumber1, binNumber2)<< " & "<<MT2[2]->Integral(binNumber1, binNumber2) <<" & "<<MT2[1]->Integral(binNumber1, binNumber2) <<" & "<<MT2[3]->Integral(binNumber1, binNumber2)<<" & "<<MT2[4]->Integral(binNumber1, binNumber2)<<" $pm$ "<<err<<" & "<<MT2[6]->Integral(binNumber1, binNumber2)<<" & "<<MT2[5]->Integral(binNumber1, binNumber2)<<"\\"<<endl;
+      MT2[5]->IntegralAndError(binNumber1, binNumber2,err);
+      cout<<"$"<<xMT2bin[i]<<"-"<<xMT2bin[i+1]<<"$ &      "<<MT2[0]->Integral(binNumber1, binNumber2)<< " & "<<MT2[2]->Integral(binNumber1, binNumber2) <<" & "<<MT2[1]->Integral(binNumber1, binNumber2) <<" & "<<MT2[3]->Integral(binNumber1, binNumber2)<<" & "<<MT2[4]->Integral(binNumber1, binNumber2)<<" & "<<MT2[5]->Integral(binNumber1, binNumber2)<<" $pm$ "<<err<<" & "<<MT2[7]->Integral(binNumber1, binNumber2)<<" & "<<MT2[6]->Integral(binNumber1, binNumber2)<<"\\"<<endl;
     }
 }
 
@@ -8588,11 +8588,11 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
   TH1::SetDefaultSumw2();
   setFlags(10);
 
-  TString  cnames[NumberOfSamples+1] = {"QCD", "Wjets", "Zjets", "Top", "MC", "susy","data"};
-  int      ccolor[NumberOfSamples+1] = { 401,       417,    419,   600,  500,      1, 632};
+  TString  cnames[NumberOfSamples+1] = {"QCD", "Wjets", "Zjets", "Top", "WWjets", "MC", "susy","data"};
+  int      ccolor[NumberOfSamples+1] = { 401,       417,    419,   600,       603,  500,      1, 632};
   TString varname = "MT2";
   for (int i=0; i<(NumberOfSamples+1); i++){
-    MT2[i] = new TH1D(varname+"_"+cnames[i], "", 10, 0, 10);
+    MT2[i] = new TH1D(varname+"_"+cnames[i], "", 50, 0, 50);
     MT2[i] -> SetFillColor (ccolor[i]);
     MT2[i] -> SetLineColor (ccolor[i]);
     MT2[i] -> SetLineWidth (2);
@@ -8600,12 +8600,12 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
     MT2[i] -> SetStats(false);
   }
 
-  MT2[6] -> SetMarkerStyle(20);
-  MT2[6] -> SetMarkerColor(kBlack);
-  MT2[6] -> SetLineColor(kBlack);
+  MT2[7] -> SetMarkerStyle(20);
+  MT2[7] -> SetMarkerColor(kBlack);
+  MT2[7] -> SetLineColor(kBlack);
   
-  MT2[4] -> SetFillStyle(3004);
-  MT2[4] -> SetFillColor(kBlack);
+  MT2[5] -> SetFillStyle(3004);
+  MT2[5] -> SetFillColor(kBlack);
 
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
@@ -8625,7 +8625,11 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
     fMT2tree = new MT2tree();
     Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
 
-    float Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents * Sample.PU_avg_weight);
+    
+    float Weight;
+    
+    if(fPUReweight) Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents*Sample.PU_avg_weight);
+    else            Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
 
     std::cout << setfill('=') << std::setw(70) << "" << std::endl;
     cout << "looping over :     " <<endl;	
@@ -8690,21 +8694,47 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 	  weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq0/Sample.PU_avg_weight);// * fMT2tree->SFWeight.TauTagge1/Sample.PU_avg_weight);//
 	*/
 
-	weight *= fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq0 * fMT2tree->muTau[0].GetTauEnergySF() * fMT2tree->muTau[0].GetMuIdSF() * fMT2tree->muTau[0].GetMuIsoSF() * fMT2tree->muTau[0].GetMuTrgSF() * fMT2tree->muTau[0].GetTauTrgSF();
+	weight *= fMT2tree->SFWeight.BTagCSV40eq0 * fMT2tree->muTau[0].GetTauEnergySF() * fMT2tree->muTau[0].GetMuIdSF() * fMT2tree->muTau[0].GetMuIsoSF() * fMT2tree->muTau[0].GetMuTrgSF() * fMT2tree->muTau[0].GetTauTrgSF();
+
+	if(fPUReweight)
+	  weight *= fMT2tree->pileUp.Weight;
 
 	if(Sample.sname == "Wtolnu")
 	  weight *= fMT2tree->muTau[0].GetTauWjetsSF();
- }
-      
-      float myQuantity = fMT2tree->muTau[0].GetLV().M();
- 
-      int nExtraTaus = 0;
 
-      for(int i=0; i<fMT2tree->NTaus; ++i){
-	if(fMT2tree->tau[i].PassQCDTau_MuTau && fMT2tree->tau[i].Isolation > 0 && i != fMT2tree->muTau[0].GetTauIndex0())//
-	  nExtraTaus++;
-      }
-      myQuantity = nExtraTaus;
+// 	if(fMT2tree->pileUp.NVertices <= 5)
+// 	  weight *= 0.935;
+// 	else
+// 	  if(fMT2tree->pileUp.NVertices <= 10)
+// 	    weight *= 1.262;
+// 	  else 
+// 	    if(fMT2tree->pileUp.NVertices <= 15)
+// 	      weight *= 1.421;
+// 	    else 
+// 	      if(fMT2tree->pileUp.NVertices <= 20)
+// 		weight *= 1.182;
+// 	      else 
+// 		if(fMT2tree->pileUp.NVertices <= 25)
+// 		  weight *= 0.742; 
+// 		else 
+// 		  if(fMT2tree->pileUp.NVertices <= 30)
+// 		    weight *= 0.868;
+// 		  else 
+// 		    weight *= 0.432;
+
+	
+}
+      
+      float myQuantity = fMT2tree->muTau[0].GetMT2();
+ 
+ //      int nExtraTaus = 0;
+
+//       for(int i=0; i<fMT2tree->NTaus; ++i){
+// 	if(fMT2tree->tau[i].PassQCDTau_MuTau && fMT2tree->tau[i].Isolation > 0 && i != fMT2tree->muTau[0].GetTauIndex0())//
+// 	  nExtraTaus++;
+//       }
+      
+      myQuantity = fMT2tree->pileUp.NVertices;//nExtraTaus;
 
      /*
 	std::vector<int> Tau0;
@@ -8754,13 +8784,13 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
       */
       if(data == 1){
       
-	MT2[6]->Fill(myQuantity, weight);//data
+	MT2[7]->Fill(myQuantity, weight);//data
       
       }else{
 	if(Sample.sname == "SUSY")
-	  MT2[5]->Fill(myQuantity, weight);
+	  MT2[6]->Fill(myQuantity, weight);
 	else
-	  MT2[4]->Fill(myQuantity, weight);
+	  MT2[5]->Fill(myQuantity, weight);
       
 	if(Sample.sname == "Top")
 	  MT2[3]->Fill(myQuantity, weight);
@@ -8775,6 +8805,9 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 	    else
 	      if(Sample.sname == "QCD")
 		MT2[0]->Fill(myQuantity, weight);
+	      else
+		if(Sample.sname == "VV")
+		  MT2[4]->Fill(myQuantity, weight);
       }
 
 }
@@ -8785,7 +8818,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
   for(int j = 0; j < (NumberOfSamples+1); j++){
     AddOverAndUnderFlow(MT2[j], true, true);
   }
-  printYield();
+   printYield();
 
   THStack* h_stack = new THStack(varname, "");
   for(int j = 0; j < (NumberOfSamples+1); j++){
@@ -8799,11 +8832,10 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
   Legend1->AddEntry(MT2[1], "W+jets", "f");
   Legend1->AddEntry(MT2[2], "Z+jets", "f");
   Legend1->AddEntry(MT2[3], "Top", "f");
-  Legend1->AddEntry(MT2[5], "SMS", "l");
-  Legend1->AddEntry(MT2[6], "data", "l");
-  // vector<TH1D*> h_signals;
-  // h_signals.push_back(&(*MT2[5]));
-  // TLegend *Legend1;
+  Legend1->AddEntry(MT2[4], "WW+jets", "f");
+  Legend1->AddEntry(MT2[6], "SMS", "l");
+  Legend1->AddEntry(MT2[7], "data", "l");
+
 
   TString fileName = fOutputDir;
   if(!fileName.EndsWith("/")) fileName += "/";
@@ -8819,34 +8851,37 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
   MT2[4]->Write();
   MT2[5]->Write();
   MT2[6]->Write();
+  MT2[7]->Write();
   Legend1->Write();
   savefile->Close();
   std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
 
-  printHisto(h_stack, MT2[6], MT2[4], MT2[5], Legend1 , "MTC", "hist", true, "MT2", "Events", 0, -10, 2, true);
+  printHisto(h_stack, MT2[7], MT2[5], MT2[6], Legend1 , "MTC", "hist", true, "MT2", "Events", 0, -10, 2, true);
 
-  plotRatioStack(h_stack, MT2[4], MT2[6], MT2[5], true, false, "MT2_ratio", Legend1, "MT2", "Events", 0, -10, 2, true);
+  plotRatioStack(h_stack, MT2[5], MT2[7], MT2[6], true, false, "MT2_ratio", Legend1, "MT2", "Events", 0, -10, 2, true);
 
-  int nbins = MT2[4]->GetNbinsX();
+  int nbins = MT2[5]->GetNbinsX();
 
   Float_t  x[nbins], y1[nbins], y2[nbins];
   for (int i = 1; i <=nbins+1; i++){
-    x[i-1] = MT2[4]->GetBinLowEdge(i);
-    //cout<<i<<" x[i-1] "<<x[i-1]<<endl;
+    x[i-1] = MT2[5]->GetBinLowEdge(i);
+//     cout<<i<<" x[i-1] "<<x[i-1]<<endl;
     float s1, s2;
 
-    s1 = MT2[5]  ->Integral(i,nbins+1);
-    
-    s2 = MT2[5]  ->Integral(0, i - 1);
-    //cout<<" s "<<s<<endl;
+    s1 = MT2[6]  ->Integral(i,nbins+1);
+   
+    s2 = MT2[6]  ->Integral(0, i - 1);
+//     cout<<" s1 "<<s1<<endl;
+//     cout<<" s2 "<<s2<<endl;
     float b1, b2;
     
-    b1 = MT2[4]->Integral(i,nbins+1);
+    b1 = MT2[5]->Integral(i,nbins+1);
     
-    b2 = MT2[4]->Integral(0, i - 1);
-    //cout<<" b "<<b<<endl;
+    b2 = MT2[5]->Integral(0, i - 1);
+//     cout<<" b1 "<<b1<<endl;
+//     cout<<" b2 "<<b2<<endl;
     if(b1 == 0)
       y1[i-1] = 5.0;
     else{
@@ -8859,7 +8894,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
       if (type==2) {
 	y1[i-1] = s1/b1;
       }
-      //cout<<" y[i-1] "<<y[i-1]<<endl;
+//       cout<<" y1[i-1] "<<y1[i-1]<<endl;
     }
     
     if(b2 == 0)
@@ -8874,7 +8909,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
       if (type==2) {
 	y2[i-1] = s2/b2;
       }
-      //cout<<" y[i-1] "<<y[i-1]<<endl;
+//       cout<<" y2[i-1] "<<y2[i-1]<<endl;
     }
   }
   TGraph *sig1 = new TGraph(nbins+1,x,y1);
@@ -8892,7 +8927,8 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 	  
   }
 
-
+//   cout<<" y222[i-1] "<<endl;
+ 
 
   TGraph *sig2 = new TGraph(nbins+1,x,y2);
   sig2->SetTitle("");
@@ -8908,6 +8944,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
     sig2->GetYaxis()->SetTitle("S/B");
 	  
   }
+//   cout<<" y212[i-1] "<<endl;
 
   TCanvas *MyC = new TCanvas("MyC", "MyC");
   MyC->Divide(2,1);
@@ -8915,7 +8952,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
   sig1->Draw("ACP");
   MyC->cd(2);
   sig2->Draw("ACP");
-
+//   cout<<" y232[i-1] "<<endl;
 
 }
 
