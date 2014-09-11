@@ -2538,8 +2538,24 @@ int     MT2tree::GenLeptonAnalysis( int neles , int nmus , int ntaus ){
   else if(neles == 1){
     if(nmus == 1){
       channel = 4; // ele-mu
-      lept1 = 9;
-      lept2 = 9;
+      
+      if(nGEle > 0)
+	lept1 = 1;
+      else if(nGEleTau > 0)
+	lept1 = 2;
+      else
+	lept1 = 3;
+
+      if(nGMu > 0)
+	lept2 = 1;
+      else if(nGMuTau > 0)
+	lept2 = 2;
+      else
+	lept2 = 3;
+      
+      //4[1,2,3][1,2,3]
+
+
     }else{
       channel = 5; // ele-tau
       if(nGEle > 0)
@@ -2626,6 +2642,40 @@ TString MT2tree::GenLeptonAnalysisInterpretation( int nele, int nmu, int ntau, b
     //tau-tau
   case 399:
     return "tau-tau";
+    //ele-mu
+  case 411:
+    return "pp";
+  case 433:
+    return "ff";
+  case 413:
+    return "pf";
+  case 431:
+    return "fp";
+  case 422:
+    if(LeptsFromTau)
+      return "pp";
+    else
+      return "tt";
+  case 412:
+    if(LeptsFromTau)
+      return "pp";
+    else
+      return "pt";
+  case 421:
+    if(LeptsFromTau)
+      return "pp";
+    else
+      return "tp";
+  case 432:
+    if(LeptsFromTau)
+      return "fp";
+    else
+      return "ft";
+  case 423:
+    if(LeptsFromTau)
+      return "pf";
+    else
+      return "tf";
     //ele-tau
   case 511:
     return "pp";
