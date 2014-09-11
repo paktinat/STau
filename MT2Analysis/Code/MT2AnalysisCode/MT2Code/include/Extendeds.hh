@@ -59,6 +59,7 @@ public:
   bool CurrentIsData; 
 
   double dVal;
+  TString sVal;
 
   TString CutName;
   TString Name;
@@ -69,6 +70,7 @@ public:
   double Max;
 
 
+  bool isString;
   TTreeFormula* tFormula;
   TTreeFormula* tSUSYCatFormula;
   vector<TString> SUSYNames;
@@ -173,6 +175,7 @@ struct sample{
   int color;
 
   void Print(double Weight);
+  void ReconstructSName();
 };
 
 

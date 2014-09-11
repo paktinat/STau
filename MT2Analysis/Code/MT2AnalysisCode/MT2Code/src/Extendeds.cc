@@ -99,19 +99,24 @@ ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, 
   nBins(nbins),
   Min(min),
   Max(max),
+  isString(false),
   tFormula(0),
   tSUSYCatFormula(0),
   SUSYNames( SUSYNames_ ),
   SUSYCatCommand( SUSYCatCommand_ ){
 
   gROOT->cd();
-  NumberOfHistos = (7+SUSYNames_.size()) ;
 
   TH1::SetDefaultSumw2();
    
 
-  vector<TString>  cnames = {"QCD", "Wtolnu", "DY", "Top", "MC", "SUSY" , "data" };
-  vector<int>      ccolor = {  401,     417,     419,   600,  500, 1 , 632 };
+  //  vector<TString>  cnames = {"QCD", "Wtolnu", "DY", "Top", "MC", "SUSY" , "data" };
+  //  vector<int>      ccolor = {  401,     417,     419,   600,  500, 1 , 632 };
+
+  vector<TString>  cnames = {"BCtoE", "EMEnriched" , "MuEnriched" , "GJets" , "VV" , "Wtolnu", "DY", "Top" ,"TTV" , "STop" , "MC", "SUSY" , "data" };
+  vector<int>      ccolor = {  kYellow, kYellow+3 , kYellow-9 , kYellow-6 , kGreen-7 ,  kGreen+3,   kOrange-3 , kBlue  ,kBlue-7  , kCyan-2,  500, kBlack , kRed };
+
+  NumberOfHistos = (cnames.size() +SUSYNames_.size()) ;
 
   for( int i=0 ; i< int(SUSYNames.size()) ; i++){
     cnames.push_back( "SUSY_" + SUSYNames[i] );
@@ -136,12 +141,12 @@ ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, 
 	theH->GetXaxis()->SetBinLabel( i , *itr);
     }
 
-    if(i == 6){
+    if(i == cnames.size()-1){
       theH -> SetMarkerStyle(20);
       theH -> SetMarkerColor(kBlack);
       theH -> SetLineColor(kBlack);
     }
-    if( i == 4){
+    if( i == cnames.size()-3){
       theH -> SetFillStyle(3004);
       theH -> SetFillColor(kBlack);
     }
@@ -149,7 +154,6 @@ ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, 
 }
 
 void ExtendedObjectProperty::SetTree( TTree* tree , TString sampletype, TString samplesname , TString cutname ){
-
   if( strcmp( cutname , "" ) != 0 )
     CutName = cutname;
 
@@ -162,6 +166,7 @@ void ExtendedObjectProperty::SetTree( TTree* tree , TString sampletype, TString 
   }
 
   tFormula = new TTreeFormula( Name.Data() , Formula.Data() , tree );
+  isString = tFormula->IsString() ;
 
   theH = 0;
   CurrentIsData =( sampletype == "data" ) ;
@@ -183,23 +188,31 @@ void ExtendedObjectProperty::SetTree( TTree* tree , TString sampletype, TString 
 }
 
 void ExtendedObjectProperty::Fill(double w){
-  dVal = tFormula->EvalInstance(0);
+  if(isString){
+    sVal = tFormula->EvalStringInstance(0);
+  }
+  else
+    dVal = tFormula->EvalInstance(0);
 
-  if( theH )
-    theH->Fill( dVal , w);
+  if( theH ){
+    if(isString)
+      theH->Fill( sVal , w);
+    else
+      theH->Fill( dVal , w);
+  }
   else if(tSUSYCatFormula){
-    allHistos["SUSY"]->Fill( dVal , w );
+    isString ? allHistos["SUSY"]->Fill(  sVal , w ) : allHistos["SUSY"]->Fill(  dVal , w );
     double suscatd = tSUSYCatFormula->EvalInstance(0) ;
     int suscat = int(suscatd);
     if( suscat < int(SUSYNames.size()) ){
       TString suscatname = SUSYNames[suscat];
       TString sushistname = "SUSY_" + suscatname ;
-      allHistos[ sushistname ]->Fill( dVal , w );
+      isString ? allHistos[ sushistname ]->Fill( sVal , w ) : allHistos[ sushistname ]->Fill( dVal , w );
     }
   }
 
   if( theMCH )
-    theMCH->Fill(dVal , w);
+    isString ? theMCH->Fill(sVal , w) : theMCH->Fill(dVal , w);
 }
 
 void ExtendedObjectProperty::Fill(double dVal , double w ){
@@ -673,6 +686,26 @@ void ExtendedCut::Write(TDirectory* dirparent , int lumi , vector< pair<int,int>
 
 
 
+void sample::ReconstructSName(){
+  std::map< TString , TString > name_snames;
+  name_snames["BCtoE"] = "BCtoE";
+  name_snames["EMEnriched"] = "EMEnriched";
+  name_snames["MuEnriched"] = "MuEnriched";
+  name_snames["GJets_HT"] = "GJets";
+  name_snames["WWJets"] = "VV";
+  name_snames["ZZJets"] = "VV";
+  name_snames["WZJets"] = "VV";
+  name_snames["TTGJets"] = "TTV";
+  name_snames["TTH"] = "TTV";
+  name_snames["TTW"] = "TTV";
+  name_snames["TTZ"] = "TTV";
+  name_snames["SingleTop"] = "STop";
+
+  for(auto nn : name_snames ){
+    if( name.Index( nn.first  ) != kNPOS )
+      sname = nn.second ;
+  }
+}
 
 void sample::Print(double Weight){
   std::cout << setfill('=') << std::setw(70) << "" << std::endl;

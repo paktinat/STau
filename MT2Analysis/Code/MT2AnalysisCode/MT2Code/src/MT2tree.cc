@@ -2418,6 +2418,260 @@ Float_t MT2tree::ElClosestJet(){
 	return dR;
 }
 
+int     MT2tree::GenLeptonAnalysis( int neles , int nmus , int ntaus ){
+  if( neles + nmus + ntaus != 2 )
+    throw 100;
+
+  int nGEle = 0;
+  int nGMu = 0;
+  int nGHadTau = 0;
+  int nGMuTau = 0;
+  int nGEleTau = 0;
+
+  int nW = 0;
+  int nTops = 0;
+
+  vector<TLorentzVector> tauLvs ;
+
+  for(int i=0; i<NGenLepts; ++i){
+    if( abs(genlept[i].ID)==11 ) {
+      if( abs( genlept[i].MID ) == 15 ){
+	nGEleTau ++;
+	TLorentzVector motherLV = genlept[i].Mlv;
+	auto existingTau = std::find_if( tauLvs.begin() , tauLvs.end() , 
+					 [motherLV]( const TLorentzVector s ){ 
+					   double diff = (s.Vect()-motherLV.Vect()).Mag() ;
+					   return  (diff < (s.Vect().Mag()/100.0)) ;
+					 } 
+	  );
+      if( existingTau == tauLvs.end() ){
+	tauLvs.push_back( motherLV );
+      }else
+	nGHadTau--;
+    }
+    else
+      nGEle++;
+  }
+
+    if( abs(genlept[i].ID)==13 ) {
+      if( abs( genlept[i].MID ) == 15 ){
+	nGMuTau ++;
+	TLorentzVector motherLV = genlept[i].Mlv;
+	auto existingTau = std::find_if( tauLvs.begin() , tauLvs.end() , 
+					 [motherLV]( const TLorentzVector s ){ 
+					   double diff = (s.Vect()-motherLV.Vect()).Mag() ;
+					   return  (diff < (s.Vect().Mag()/100.0)) ;
+					 } );
+	if( existingTau == tauLvs.end() ){
+	  tauLvs.push_back( motherLV );
+	}else
+	  nGHadTau--;
+      }
+      else
+	nGMu++;
+    }
+
+    if( abs(genlept[i].ID)==15 ) {
+      TLorentzVector motherLV = genlept[i].lv;
+      auto existingTau = std::find_if( tauLvs.begin() , tauLvs.end() , 
+				       [motherLV]( const TLorentzVector s ){ 
+					 double diff = (s.Vect()-motherLV.Vect()).Mag() ;
+					 return  (diff < (s.Vect().Mag()/100.0)) ;}
+					   );
+      if( existingTau == tauLvs.end() ){
+	tauLvs.push_back( motherLV );
+	nGHadTau ++;
+      }
+    }
+  }
+
+  if( nGEle + nGMu + nGHadTau + nGMuTau + nGEleTau == 0 )
+    return -1;
+
+  int channel = 0;
+  int lept1 = 0;
+  int lept2 = 0;
+  if( neles == 2 ){
+    channel = 1; //double ele
+    if( nGEle > 1){
+      lept1 = 1;
+      lept2 = 1; //111
+    }else if(nGEle == 1){
+      lept1 = 1;
+      if(nGEleTau > 0)
+	lept2 = 2;  //112
+      else
+	lept2 = 3; // 113
+    }else if(nGEle == 0){
+      lept2 = lept1 = 3; //133
+      if(nGEleTau > 0)
+	lept1 = 2;  //123
+      if(nGEleTau > 1)
+	lept2 = 2; // 122
+    }
+  }
+  else if( nmus == 2){
+    channel = 2; // double mu
+
+    if( nGMu > 1){
+      lept1 = 1;
+      lept2 = 1; //211
+    }else if(nGMu == 1){
+      lept1 = 1;
+      if(nGMuTau > 0)
+	lept2 = 2;  //212
+      else
+	lept2 = 3; // 213
+    }else if(nGMu == 0){
+      lept2 = lept1 = 3; //233
+      if(nGMuTau > 0)
+	lept1 = 2;  //223
+      if(nGMuTau > 1)
+	lept2 = 2; // 222
+    }
+  }
+  else if(ntaus == 2){
+    channel = 3;  //double tau
+    lept1 = 9;
+    lept2 = 9;
+  }
+  else if(neles == 1){
+    if(nmus == 1){
+      channel = 4; // ele-mu
+      lept1 = 9;
+      lept2 = 9;
+    }else{
+      channel = 5; // ele-tau
+      if(nGEle > 0)
+	lept1 = 1;
+      else if(nGEleTau > 0)
+	lept1 = 2;
+      else 
+	lept1 = 3;
+
+      if(nGHadTau > 0 )
+	lept2 = 1;
+      else 
+	lept2 = 3;
+
+      // 5[1,2,3][1,3]
+    }
+  }else{
+    channel = 6; // mu-tau
+    if(nGMu > 0)
+      lept1 = 1;
+    else if(nGMuTau > 0)
+      lept1 = 2;
+    else
+      lept1 = 3;
+
+    if(nGHadTau > 0)
+      lept2  = 1;
+    else
+      lept2 = 3;
+
+    // 6[1,2,3][1,3]
+  }
+  return channel*100+lept1*10+lept2 ;
+}
+TString MT2tree::GenLeptonAnalysisInterpretation( int nele, int nmu, int ntau, bool LeptsFromTau ){
+  int in = GenLeptonAnalysis( nele , nmu , ntau );
+  switch( in ){
+  case -1 :
+    return "nothing" ;
+    //ele-ele
+  case 111:
+    return "pp";
+  case 112:
+    if(LeptsFromTau)
+      return "pp";
+    else
+      return "pt";
+  case 113:
+    return "pf";
+  case 122:
+    if(LeptsFromTau)
+      return "pp";
+    else
+      return "tt";
+  case 123:
+    if(LeptsFromTau)
+      return "pf";
+    else
+      return "tf";
+  case 133:
+    return "ff";
+    // mu-mu :
+  case 211:
+    return "pp";
+  case 212:
+    if(LeptsFromTau)
+      return "pp";
+    else
+      return "pt";
+  case 213:
+    return "pf";
+  case 222:
+    if(LeptsFromTau)
+      return "pp";
+    else
+      return "tt";
+  case 223:
+    if(LeptsFromTau)
+      return "pf";
+    else
+      return "tf";
+  case 233:
+    return "ff";
+    //tau-tau
+  case 399:
+    return "tau-tau";
+    //ele-tau
+  case 511:
+    return "pp";
+  case 513:
+    return "pf";
+  case 531:
+    return "fp";
+  case 533:
+    return "ff";
+  case 521:
+    if(LeptsFromTau)
+      return "pp";
+    else
+      return "tp";
+  case 523:
+    if(LeptsFromTau)
+      return "pf";
+    else
+      return "tf";
+    // mu-tau
+  case 611:
+    return "pp";
+  case 613:
+    return "pf";
+  case 631:
+    return "fp";
+  case 633:
+    return "ff";
+  case 621:
+    if(LeptsFromTau)
+      return "pp";
+    else
+      return "tp";
+  case 623:
+    if(LeptsFromTau)
+      return "pf";
+    else
+      return "tf";
+  default:
+    return "wrong";
+  }
+
+}
+
+
+
 Int_t MT2tree::TopDecayMode(){
 	// bit map: 
 	// 1 = electron 1

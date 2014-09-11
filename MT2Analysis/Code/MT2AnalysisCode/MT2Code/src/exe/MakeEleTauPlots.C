@@ -558,6 +558,19 @@ int main(int argc, char* argv[]) {
   allProps.Add( SUSYCategory );
 
 
+  vector<TString> labels = {"pp", "pf" , "fp" , "ff" , "tp" , "tf" , "nothing", "wrong"};
+  allProps.Clear();
+  ExtendedObjectProperty* GenLeptonAnalysis = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "GenLeptonAnalysis" , "GenLeptonAnalysisInterpretation( 1,0,1 )" , 8 , 0 , 8 ,SUSYCatCommand , SUSYCatNames , &labels );
+  allProps.Add( GenLeptonAnalysis );
+
+  ExtendedObjectProperty* GenLeptonAnalysisF = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "GenLeptonAnalysisF" , "GenLeptonAnalysisInterpretation( 1,0,1 , false )" , 8 , 0 , 8 ,SUSYCatCommand , SUSYCatNames , &labels );
+  allProps.Add( GenLeptonAnalysisF );
+
+  ExtendedObjectProperty* GenLeptonAnalysisR = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "GenLeptonAnalysisR" , "GenLeptonAnalysis(1,0,1)" , 1000 , 0 , 1000 ,SUSYCatCommand , SUSYCatNames );
+  allProps.Add( GenLeptonAnalysisR );
+
+
+
     TIter prop(&allProps);
     TObject* propo ;
     while( propo = prop() )

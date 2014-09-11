@@ -996,6 +996,8 @@ public:
   Int_t   WDecayMode();
   Int_t   TopDecayMode();
   Bool_t  TopDecayModeResult(Int_t nlepts);
+  int     GenLeptonAnalysis( int neles , int nmus , int ntaus );
+  TString GenLeptonAnalysisInterpretation( int neles , int nmus , int ntaus , bool LeptFromTau = true);
   Bool_t  SLTopAccept(float pt, float eta);
   Float_t SLTopEta(float pt);
   Float_t LeptJetDR(int pid, int index, bool bjet, int ID);
