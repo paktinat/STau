@@ -19,6 +19,7 @@
 #include "TPad.h"
 #include "TCanvas.h"
 #include "TFile.h"
+#include "TEfficiency.h"
 
 #include <vector>
 #include <utility>
@@ -33,11 +34,11 @@ class ExtendedObjectProperty : public TObject {
 public:
   ExtendedObjectProperty(TString cutname , TString name, TString formula , int nbins, double min, double max , TString SUSYCatCommand , std::vector<TString> SUSYNames  ,  std::vector<TString>* labels = NULL);
 
-  void SetTree( TTree* tree , TString sampletype , TString samplesname , TString Cutname = "");
+  virtual void SetTree( TTree* tree , TString sampletype , TString samplesname , TString Cutname = "");
 
-  void Fill(double w = 1.0);
+  virtual void Fill(double w = 1.0);
 
-  void Fill(double dVal , double w );
+  virtual void Fill(double dVal , double w );
 
   void AddOverAndUnderFlow(TH1 * Histo, bool overflow, bool underflow);
 
@@ -45,7 +46,7 @@ public:
 
   TCanvas* plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, TH1* h3, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle,int njets,int nbjets, int nleps, float overlayScale, TString saveMacro , int lumi_);
 
-  void Write( TDirectory* dir , int lumi , bool plotratiostack = true);
+  virtual void Write( TDirectory* dir , int lumi , bool plotratiostack = true);
 
   std::vector< TGraph* > AllSignificances;
   void CalcSig(int LowerCut=0 , int type = 0 , int susycat=-1 , bool verbose = false);
@@ -77,8 +78,32 @@ public:
   int NumberOfHistos;
   std::vector<TString> histoNames;
   std::map<TString , TH1*> allHistos;
+protected:
+  ExtendedObjectProperty() {};
 };
 
+class ExtendedEfficiency : public ExtendedObjectProperty {
+public:
+  ExtendedEfficiency(TString cutname , TString name, TString valueformula , TString nformula , TString precond ,  TString condition , int nbins, double* bins );
+  void SetTree( TTree* tree , TString sampletype , TString samplesname , TString Cutname = "");
+  void Fill(double w = 1.0);
+  void Write( TDirectory* dir , int lumi , bool plotratiostack = true);
+
+  TEfficiency* theEff;
+  TEfficiency* theMCEff;
+
+  double* Bins;
+
+  TString NFormula;
+  TString PreCondFormula;
+  TString CondFormula;
+  
+  TTreeFormula* tNFormula;
+  TTreeFormula* tPreCondFormula;
+  TTreeFormula* tCondFormula;
+
+  std::map<TString , TEfficiency*> allEffs;
+};
 
 class ExtendedCut : public TObject{
 public :

@@ -689,3 +689,114 @@ void sample::Print(double Weight){
 
 }
 
+
+
+ExtendedEfficiency::ExtendedEfficiency(TString cutname , TString name, TString valueformula , TString nformula ,TString precond, TString condition , int nbins, double* bins ) : ExtendedObjectProperty::ExtendedObjectProperty(cutname, name , valueformula , nbins , 0.0 , 0.0 , "0" , {"A"} ){
+//   ExtendedObjectProperty::CutName( cutname ),
+//   ExtendedObjectProperty::Name(name),
+//   ExtendedObjectProperty::Formula(valueformula),
+//   ExtendedObjectProperty::nBins(nbins),
+//   ExtendedObjectProperty::Min(-1),
+//   ExtendedObjectProperty::Max(-1),
+//   ExtendedObjectProperty::tFormula(0),
+//   tCondFormula(0),
+//   tNFormula(0),
+//   ExtendedObjectProperty::tSUSYCatFormula(0),
+//   NFormula(nformula),
+//   CondFormula(condition)
+// {
+
+  NFormula = nformula;
+  PreCondFormula = precond ;
+  CondFormula = condition;
+  Bins = bins;
+
+  gROOT->cd();
+  NumberOfHistos = 7;
+
+  TH1::SetDefaultSumw2();
+
+  vector<TString>  cnames = {"QCD", "Wtolnu", "DY", "Top", "MC", "SUSY" , "data" };
+  vector<int>      ccolor = {  401,     417,     419,   600,  500, 1 , 632 };
+
+  TString varname = Name;
+  for (int i=0; i<NumberOfHistos ; i++){
+
+    histoNames.push_back( cnames[i] );
+
+    TEfficiency* theEff = allEffs[ cnames[i] ] = new TEfficiency( CutName + "_" + varname+"_"+cnames[i]+ "_eff" , "", nBins, bins) ;
+    theEff -> SetFillColor  (ccolor[i]);
+    theEff -> SetLineColor  (ccolor[i]);
+    theEff -> SetLineWidth  (2);
+    theEff -> SetMarkerColor(ccolor[i]);
+
+    if(i == 6){
+      theEff -> SetMarkerStyle(20);
+      theEff -> SetMarkerColor(kBlack);
+      theEff -> SetLineColor(kBlack);
+    }
+    if( i == 4){
+      theEff -> SetFillStyle(3004);
+      theEff -> SetFillColor(kBlack);
+    }
+  }
+}
+
+void ExtendedEfficiency::SetTree( TTree* tree , TString sampletype , TString samplesname , TString Cutname){
+  if( strcmp( Cutname , "" ) != 0 )
+    CutName = Cutname;
+
+  if(tFormula != 0){
+    delete tFormula;
+    delete tNFormula;
+    delete tCondFormula;
+    delete tPreCondFormula;
+  }
+
+  tFormula = new TTreeFormula( Name.Data() , Formula.Data() , tree );
+  tNFormula = new TTreeFormula( (Name+"_NN").Data() , NFormula.Data() , tree);
+  tCondFormula = new TTreeFormula( (Name+"_Cond").Data() , CondFormula.Data() , tree );
+  tPreCondFormula = new TTreeFormula( (Name+"_PreCond").Data() , PreCondFormula.Data() , tree );
+
+  theEff = 0;
+  CurrentIsData =( sampletype == "data" ) ;
+  CurrentSampleType = sampletype;
+  CurrentSampleSName = samplesname;
+  if(CurrentIsData)
+    theEff = allEffs["data"];
+  else if(CurrentSampleType == "susy"){
+    theEff = allEffs["SUSY"];
+  }
+  else
+    theEff = allEffs[ CurrentSampleSName ];
+
+  if( CurrentSampleType == "mc" )
+    theMCEff = allEffs["MC"];
+  else
+    theMCEff = 0;
+}
+void ExtendedEfficiency::Fill(double w ){
+  int N = tNFormula->EvalInstance(0);
+
+  for (int i=0 ; i<N ; i++){
+    if( tPreCondFormula->EvalInstance(i) == 0.0 )
+      continue;
+
+    dVal = tFormula->EvalInstance(i);
+    double cond = tCondFormula->EvalInstance(i);
+
+    if( theEff )
+      theEff->FillWeighted(cond != 0 , w , dVal);
+
+    if( theMCH )
+      theMCEff->FillWeighted(cond != 0 , w , dVal);
+  }
+}
+
+void ExtendedEfficiency::Write( TDirectory* dir , int lumi , bool plotratiostack){
+  dir->mkdir( Name )->cd();
+  for(auto eff : allEffs){
+    eff.second->Write();
+  }
+}
+

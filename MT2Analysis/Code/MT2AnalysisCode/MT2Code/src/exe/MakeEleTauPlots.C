@@ -22,7 +22,8 @@
 #include "helper/Utilities.hh"
 
 //#define TREE
-#define FROMEvtLst
+//#define FROMEvtLst
+#define TauFR
 
 using namespace std;
 
@@ -94,6 +95,10 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vect
     double Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents*Sample.PU_avg_weight);
     if(data == 1)
       Weight = 1.0;
+    #ifdef TauFR
+    else
+      continue;
+    #endif
     if( Sample.type == "susy" )
       Weight = 1.0;
 
@@ -208,6 +213,83 @@ void usage( int status ,TString execname ) {
   exit(status);
 }
 
+
+#ifdef TauFR
+int main(int argc, char* argv[]) {
+  TString execname = TString(argv[0]);
+  // Default options
+  TString outputfile = "EleTau_Signal_METBJetsCuts"; 
+  TString outputdir = "../MassPlots/";
+  TString samples = "./samples/samplesMineTauPlusX.dat";
+  Long64_t neventperfile = LONG_MAX;
+  int verbose = 0;
+
+  // Parse options
+  char ch;
+  while ((ch = getopt(argc, argv, "n:f:d:v:s:lh?")) != -1 ) {
+    switch (ch) {
+    case 'd': outputdir = TString(optarg); break;
+    case 's': samples = TString(optarg); break;
+    case 'v': verbose = atoi(optarg); break;
+    case 'f': outputfile = TString(optarg); break;
+    case 'n': neventperfile = atoi(optarg); break;
+    case '?':
+    case 'h': usage(0,execname); break;
+    default:
+      cerr << "*** Error: unknown option " << optarg << std::endl;
+      usage(-1 , execname);
+    }
+  }
+	
+  argc -= optind;
+  argv += optind;
+
+  // Check arguments
+  if( argc>1 ) {
+    usage(-1,execname );
+  }
+
+  cout << "--------------" << endl;
+  cout << "OutputDir is:     " << outputdir << endl;
+  cout << "Verbose level is: " << verbose << endl;
+  cout << "Using sample file: " << samples << endl;
+  cout << "nEventsPerFile is: " << neventperfile << endl;
+  cout << "OutputFile is : " << outputfile << endl;
+  cout << "--------------" << endl;
+
+  MassPlotterEleTau *tA = new MassPlotterEleTau(outputdir);
+  tA->setVerbose(verbose);
+  tA->init(samples);
+
+  TList allCuts;
+
+  std::ostringstream cleaning;
+  cleaning <<" misc.CrazyHCAL==0 && misc.NegativeJEC==0 &&"
+	   <<" misc.CSCTightHaloIDFlag==0 && misc.HBHENoiseFlag==0 &&"
+	   <<" misc.hcalLaserEventFlag==0 && misc.trackingFailureFlag==0 &&"
+	   <<" misc.eeBadScFlag==0 && misc.EcalDeadCellTriggerPrimitiveFlag==0 ";
+  ExtendedCut* cleaningcut = new ExtendedCut("Cleaning" , cleaning.str().c_str() , true , false , "" , "pileUp.Weight" , false , false);
+  allCuts.Add( cleaningcut );
+
+  ExtendedCut* triggerCut =new ExtendedCut("Trigger" , "trigger.HLT_EleTau" , true , false , "" , "" , false , false);
+  allCuts.Add(triggerCut);
+
+  double ptBins[] {20,50,100,1000};
+  double etaBins[] {0 , 1.479 , 2.3 };
+  ExtendedEfficiency* effpt = new ExtendedEfficiency("Trigger" , "TauFR_Pt" , "tau.lv.Pt()" , "NTaus" , "tau.PassQCDTau_ElTau", "tau.PassTau_ElTau" , 3 , ptBins );
+  ExtendedEfficiency* effeta = new ExtendedEfficiency("Trigger" , "TauFR_Eta" , "tau.lv.Eta()" , "NTaus" ,"tau.PassQCDTau_ElTau", "tau.PassTau_ElTau",  2 , etaBins );
+  triggerCut->Props.Add( effpt );
+  triggerCut->Props.Add( effeta );
+
+
+  TString SUSYCatCommand = "((Susy.MassGlu - Susy.MassLSP)/50.0)+(misc.ProcessID-10)";
+  std::vector<TString> SUSYCatNames = {"00_50" , "50_100" , "100_150" , "150_200" , "200_250" , "250_300" , "300_350" , "350_400" , "400_450" , "450_500" };
+  vector< pair<int,int> > Significances;
+
+  tA->eleTauAnalysis(&allCuts, neventperfile, Significances ,  outputfile , SUSYCatCommand , SUSYCatNames );
+
+}
+#else
 //_____________________________________________________________________________________
 int main(int argc, char* argv[]) {
   TString execname = TString(argv[0]);
@@ -536,4 +618,6 @@ int main(int argc, char* argv[]) {
   delete tA;
   return 0;
 }
+
+#endif
 
