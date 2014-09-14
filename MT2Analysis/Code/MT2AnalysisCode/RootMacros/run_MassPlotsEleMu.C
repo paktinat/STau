@@ -1,7 +1,9 @@
 
 { TString outputdir = "../MassPlots/";
   
-  TString samples = "./samples/samplesMineMuEG.dat";
+ TString samples = "./samples/samplesMineMuEG.dat";
+  //TString samples = "./samples/samplesMineSingleMu.dat";
+
   int verbose =3;
   
 
@@ -63,6 +65,7 @@
   // You need to specify the channel
     TString myChan = "eleMu";
 
+    myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP) < 175.0 && (Susy.MassGlu - Susy.MassLSP) > 125.0))"); 
   // You need to carefully define the cut variables based on MT2"Channel".hh
   //  myChannelCuts.push_back("NBJetsCSVM>=0");
   //  myChannelCuts.push_back("NJetsIDLoose40>= 0");
@@ -73,11 +76,12 @@
     myChannelCuts.push_back(std::string(std::string(myChan) + ".eleMu[0].HasNoVetomuoForEleMu"));
     myChannelCuts.push_back(std::string(std::string(myChan) + ".eleMu[0].HasNoVetoElecForEleMu"));
     myChannelCuts.push_back("((muo[eleMu[0].mu0Ind].lv.Pt()>20)||(ele[eleMu[0].ele0Ind].lv.Pt()>20))" );
-    myChannelCuts.push_back("(eleMu[0].lv.M()>10) ");
+    myChannelCuts.push_back("(eleMu[0].lv.M()>15) ");
     myChannelCuts.push_back("NBJetsCSVM==0");
-    myChannelCuts.push_back("misc.MET>50"); 
-  
-//  myChannelCuts.push_back( "misc.ProcessID!=10 ||  125 < Susy.MassGlu - Susy.MassLSP < 175");
+    myChannelCuts.push_back("misc.MET>30"); 
+    myChannelCuts.push_back("JZB1EleMu()>80"); 
+    myChannelCuts.push_back("JZB2EleMu()>-50");
+
         
     myChannelCuts.push_back("0 == 0");	        										
  
@@ -185,19 +189,24 @@ tA->makePlot(vars3[iVar3], cuts, -10, -10 , -10, trigger, vars3[iVar3],20,0,20 ,
 
 //tA->makePlot("eleMu[0].lv.M()",     cuts,    -10,  0 , -10 ,   trigger , "eleMu[0].lv.M()"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "gif");
 //tA->makePlot("eleMu[0].MT2",     cuts,    -10,  0 , -10 ,   trigger , "eleMu[0].MT2"            ,50,0,500,          false,        true ,  true,   true,  true,  true, 1,false, false, "gif");
-//tA->elemuAnalysis(cuts, trigger, 10000000000, "MT2_EleMu_Iso7");
-int NumberOfBins = 50;
-  //double * xbin;
-// int NumberOfBins = 17;     
-double xbin[] =  {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,110,120,130,140,150,160,170,180,190,200,210.0,220.0,230.0,240.0,250.0,260.0,270.0,280.0,290.0,300.0,
-310,320,330,340,350,360,370,380,390,400,410,420,430,440,450,460,470,480,490,500,510};
+tA->elemuAnalysis(cuts, trigger, 10000000000, "MT2_EleMu_Iso7",1);
+
+//int NumberOfBins = 20;    
+//double xbin[] =  {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,110,120,130,140,150,160,170,180,190,200};
+//,210.0,220.0,230.0,240.0,250.0,260.0,270.0,280.0,290.0,300.0,
+//310,320,330,340,350,360,370,380,390,400,410,420,430,440,450,460,470,480,490,500};
 //,520,530,540.0,550.0,560.0,570.0,580.0,590.0,600,
 //610.0,620.0,630.0,640.0,650.0,660.0,670.0,680.0,690,700,710.0,720.0,730.0,740.0,750.0,760.0,770.0,780.0,790.0,
 //,800,810,820,830,840,850,860,870,880,890,900,910,920,930,940,950,960,970,980,990,1000,1010,1020}; //MT2
+
+//double * xbin[];
+// int NumberOfBins = 17;   
 //double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
 
-tA->DrawMyPlots("MT2_EleMu_Iso7_Histos.root", xbin, NumberOfBins);
- 
+//tA->DrawMyPlots("MT2_EleMu_Iso7_Histos.root", xbin, NumberOfBins);
+//tA->EleFakeRate(cuts,  trigger, 100000000,"PtEta_EleMu_SingleMu");
+//tA->EleEfficiency( cuts, 100000000, "MT2_EleMu_MuEG");
+//tA->elemuWJetsEstimation( cuts,  trigger, "PtEta_EleMu_SingleMu_FRHistos.root");
 }
 
 
