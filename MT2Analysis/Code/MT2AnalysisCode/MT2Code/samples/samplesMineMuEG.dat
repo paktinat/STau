@@ -3,71 +3,354 @@ GENERAL
 Path           ///dataLOCAL/MT2Tau/RootFiles/
 ________________________________________________________________________________________
 # list of samples
-#
+
 ## -------- SMS --------
-     
-SAMPLE
+
+#SAMPLE
 Name            TStau
 SName           SUSY
 ShapeName       Signal
-File            TChipChimSTauSnu_NTupleProducer_53X_MC/TChipChimSTauSnu_250_0_MassTree_V2_2.root
+File            TChipChimSTauSnu_NTupleProducer_53X_MC/TChipChimSTauSnu_250_0_MassTree_V2_2_NBJetsCSVM0_MET30.root
 Xsection        0.152 pb
 Kfact           1.
 Lumi            19600.0
 Type            susy
 Color           1
 
-## -------- QCD ----------------
 SAMPLE
-Name		QCD_HT_100To250
+Name            TStau
+SName           SUSY
+ShapeName       Signal
+File            TauTau_V3_1/SMS-TChipChimStauSnu-mChi-120to500-mLSP-1to480-x-050-TuneZ2star-8TeV-pythia6-tauolapp_NBJetsCSVM0_MET30.root
+Xsection        0.152 pb
+Kfact           1.
+Lumi            19600.0
+Type            susy
+Color           1
+
+
+##------------ QCD-Pt-BCtoE ----------------
+
+SAMPLE
+Name		QCD-Pt-20-30-BCtoE
 SName		QCD
 ShapeName	QCD
-File            TauTau_V2_2/QCD-HT-100To250-TuneZ2star-8TeV-madgraph-pythia-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection  	1.036E7 pb #xsection TESCOdatareplication
-Kfact           1.59
+File            TauTau_V3_1/QCD_Pt_20_30_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	167400.0 pb # at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+SAMPLE
+Name		QCD-Pt-30-80-BCtoE
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt_30_80_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	167000.0 pb #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+SAMPLE
+Name		QCD-Pt-80-170-BCtoE
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt_80_170_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	12980.0 pb #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+SAMPLE
+Name		QCD-Pt-170-250-BCtoE
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt_170_250_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	632.0 pb #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+SAMPLE
+Name		QCD-Pt-250-350-BCtoE
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt_250_350_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	103.3 pb #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+SAMPLE
+Name		QCD-Pt-350-BCtoE
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt_350_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	23.92 pb #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+##-------------- QCD-Pt-EMEnriched --------------------
+SAMPLE
+Name		QCD-Pt-20-30-EMEnriched
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt_20_30_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	2915000.0 pb     #CMS AN-12-468 Cross sections are LO
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+SAMPLE
+Name		QCD-Pt-30-80-EMEnriched
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt_30_80_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	4616000.0 pb     #CMS AN-12-468 Cross sections are LO
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+SAMPLE
+Name		QCD-Pt-80-170-EMEnriched
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt_80_170_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	183300.0 pb #CMS AN-12-468 Cross sections are LO
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+SAMPLE
+Name		QCD-Pt-170-250-EMEnriched
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt_170_250_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	4587.0 pb #CMS AN-12-468  Cross sections are LO
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+SAMPLE
+Name		QCD-Pt-250-350-EMEnriched
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt_250_350_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	556.8 pb #CMS AN-12-468 Cross sections are LO
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+SAMPLE
+Name		QCD-Pt-350-EMEnriched
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt_350_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	89.1 pb   #CMS AN-12-468 Cross sections are LO
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+
+##------------ QCD-Pt-MuEnriched ----------------
+SAMPLE
+Name		QCD-Pt-15-20-MuEnriched
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt-15to20_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	2.73858E06 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
+Kfact           1.0
 Lumi            19600 
 Type		mc
 Color		401
-#
+
 SAMPLE
-Name		QCD_HT_250To500
+Name		QCD-Pt-20-30-MuEnriched
 SName		QCD
 ShapeName	QCD
-File            TauTau_V2_2/QCD-HT-250To500-TuneZ2star-8TeV-madgraph-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1-2.root
-Xsection  	276000.0 pb #xsection TESCOdatareplication
-Kfact           1.59
+File            TauTau_V3_1/QCD_Pt-20to30_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	1.8655E06 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
+Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
-#
+
 SAMPLE
-Name		QCD_HT_500To1000
+Name		QCD-Pt-30-50-MuEnriched
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt-30to50_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	806298.0 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+SAMPLE
+Name		QCD-Pt-50-80-MuEnriched
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt-50to80_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	176187.6 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+SAMPLE
+Name		QCD-Pt-80-120-MuEnriched
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt-80to120_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	40448 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+SAMPLE
+Name		QCD-Pt-120-170-MuEnriched
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt-120to170_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	7463.94 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+SAMPLE
+Name		QCD-Pt-170-300-MuEnriched
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt-170to300_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	2299.752 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+SAMPLE
+Name		QCD-Pt-300-470-MuEnriched
 SName		QCD
 ShapeName	QCD   
-File            TauTau_V2_2/QCD-HT-500To1000-TuneZ2star-8TeV-madgraph-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1-2.root
-Xsection  	8426.0 pb #xsection TESCOdatareplication
-Kfact           1.59
+File            TauTau_V3_1/QCD_Pt-300to470_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	151.8048 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications  
+Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
-#
+
 SAMPLE
-Name		QCD_HT_1000ToInf
+Name		QCD-Pt-470-600-MuEnriched
 SName		QCD
 ShapeName	QCD
-File            TauTau_V2_2/QCD-HT-1000ToInf-TuneZ2star-8TeV-madgraph-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1-2.root
-Xsection  	204.0 pb  #xsection TESCOdatareplication
-Kfact           1.59
+File            TauTau_V3_1/QCD_Pt-470to600_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	11.79648 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
+Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
+
+SAMPLE
+Name		QCD-Pt-600-800-MuEnriched
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt-600to800_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	2.690196 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+SAMPLE
+Name		QCD-Pt-800-1000-MuEnriched
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt-800to1000_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	0.368781 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+SAMPLE
+Name		QCD-Pt-1000-MuEnriched
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/QCD_Pt-1000_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	0.0849078 pb #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications  
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+##--------------------------------------------------------
+SAMPLE
+Name		GJets_HT-40To100
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/GJets_HT-40To100_8TeV-madgraph_NBJetsCSVM0_MET30.root
+Xsection  	20930.00 pb #http://cms.cern.ch/iCMS/jsp/mcprod/admin/requestmanagement.jsp? Cross sections are LO
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		401
+
+SAMPLE
+Name		GJets_HT-100To200
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/GJets_HT-100To200_8TeV-madgraph_NBJetsCSVM0_MET30.root
+Xsection  	5290.00 pb   #http://cms.cern.ch/iCMS/jsp/mcprod/admin/requestmanagement.jsp?    Cross sections are LO
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		401
+
+SAMPLE
+Name		GJets_HT-200To400
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/GJets_HT-200To400_8TeV-madgraph_v2_NBJetsCSVM0_MET30.root
+Xsection  	960.5 pb #http://cms.cern.ch/iCMS/jsp/mcprod/admin/requestmanagement.jsp?    Cross sections are LO
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		401
+
+SAMPLE
+Name		GJets_HT-400ToInf
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3_NBJetsCSVM0_MET30.root
+Xsection  	107.5 pb #http://cms.cern.ch/iCMS/jsp/mcprod/admin/requestmanagement.jsp?    Cross sections are LO
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		401
+
+
+
 # -------- electroweak --------
 SAMPLE
 Name		WWJetsTo2L2Nu
-SName		Wtolnu
+SName		VV
 ShapeName	WJets  
-File            TauTau_V2_2/WWJetsTo2L2Nu-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection        5.8	  #xsection AN-171  #4.7 pb 
+File            TauTau_V3_1/WWJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30.root
+Xsection  	5.8   #4.7 pb 
 Kfact           1.	
 Lumi            19600.0
 Type            mc
@@ -77,21 +360,20 @@ SAMPLE
 Name		WJetsToLNu
 SName		Wtolnu
 ShapeName	WJets
-File            TauTau_V2_2/WJetsToLNu-TuneZ2Star-8TeV-madgraph-tarball-Summer12-DR53X-PU-S10-START53-V7A-v2.root
-Xsection        36257.2	 #xsection AN-171
+File            TauTau_V3_1/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball_NBJetsCSVM0_MET30.root
+Xsection  	36257.2
 Kfact           1.
 Lumi            19600.0
 Type            mc
 Color		417
-
 
 #----------------DY----------------
 SAMPLE
 Name		DYToLL_M10To50
 SName		DY
 ShapeName	ZJetsToLL
-File            TauTau_V2_2/DYJetsToLL-M-10To50filter-8TeV-madgraph-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection  	876.8      #xsection TESCOdatareplication
+File            TauTau_V3_1/DYJetsToLL_M-10To50filter_8TeV-madgraph_NBJetsCSVM0_MET30.root
+Xsection  	876.8
 Kfact           1.
 Lumi            19600.0
 Type            mc
@@ -101,87 +383,42 @@ SAMPLE
 Name		DYToLL_M50
 SName		DY
 ShapeName	ZJetsToLL
-File            TauTau_V2_2/DYJetsToLL-M-50-TuneZ2Star-8TeV-madgraph-tarball-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection  	3503.71     #xsection TESCOdatareplication
+File            TauTau_V3_1/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_NBJetsCSVM0_MET30.root
+Xsection  	3503.71
 Kfact           1.
-Lumi            19600.0   
+Lumi            19600.0
 Type            mc
 Color		419 
                   
-SAMPLE
-Name		DYToNuNu_HT_50To100
-SName		DY
-ShapeName	ZJetsToNuNu
-File            TauTau_V2_2/ZJetsToNuNu-50-HT-100-TuneZ2Star-8TeV-madgraph-ext-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection  	452.75 #xsection LPCSusyDataset  #381.2
-Kfact           1.
-Lumi            19600.0
-Type            mc
-Color		419
-
-SAMPLE
-Name		DYToNuNu_HT_100To200
-SName		DY
-ShapeName	ZJetsToNuNu
-File            TauTau_V2_2/ZJetsToNuNu-100-HT-200-TuneZ2Star-8TeV-madgraph-ext-Summer12-DR53X-PU-S10-START53-V7C-v1.root
-Xsection  	190.39 #xsection LPCSusyDataset  #160.3
-Kfact           1.
-Lumi            19600.0
-Type            mc
-Color		419
-
-SAMPLE
-Name		DYToNuNu_HT_200To400
-SName		DY
-ShapeName	ZJetsToNuNu
-File            TauTau_V2_2/ZJetsToNuNu-200-HT-400-TuneZ2Star-8TeV-madgraph-ext-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection        49.28 #xsection LPCSusyDataset  	# 41.49
-Kfact           1.
-Lumi            19600.0
-Type            mc
-Color		419
-
-SAMPLE
-Name		DYToNuNu_HT_400
-SName		DY
-ShapeName	ZJetsToNuNu
-File            TauTau_V2_2/ZJetsToNuNu-400-HT-inf-TuneZ2Star-8TeV-madgraph-ext-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection  	6.26 #xsection LPCSusyDataset    #5.274
-Kfact           1.
-Lumi            19600.0
-Type            mc
-Color		419
-
 
 SAMPLE
 Name		ZZJetsTo2L2Nu
 SName		DY
 ShapeName	ZZJetsTo2L2Nu
-File            TauTau_V2_2/ZZJetsTo2L2Nu-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v3.root
-Xsection  	0.7  #xsection AN-171  #0.28 pb 
+File            TauTau_V3_1/ZZJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30.root
+Xsection  	0.7   #0.28 pb 
 Kfact           1.
 Lumi            19600.0
 Type            mc
 Color		419
-
-
+ 
 SAMPLE
 Name		ZZJetsTo2L2Q
 SName		DY
 ShapeName	ZZJetsTo2L2Q
-File            TauTau_V2_2/ZZJetsTo2L2Q-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection  	2.5 #xsection AN-171     #0.91 pb
+File            TauTau_V3_1/ZZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30.root
+Xsection  	2.5     #0.91 pb
 Kfact           1.
 Lumi            19600.0
 Type            mc
 Color		419
-   
+    
 SAMPLE
 Name		ZZJetsTo4L
 SName		DY
 ShapeName	ZZJetsTo4L
-File            TauTau_V2_2/ZZJetsTo4L-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection        0.2    #xsection AN-171 #0.1296 pb
+File            TauTau_V3_1/ZZJetsTo4L_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30.root
+Xsection  	0.2 #0.1296 pb
 Kfact           1.
 Lumi            19600.0
 Type            mc
@@ -191,8 +428,8 @@ SAMPLE
 Name		WZJetsTo3LNu
 SName		DY
 ShapeName	WZJetsTo3LNu
-File            TauTau_V2_2/WZJetsTo3LNu-TuneZ2-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection  	1.1   #xsection AN-171  #0.8674 pb
+File            TauTau_V3_1/WZJetsTo3LNu_TuneZ2_8TeV-madgraph-tauola_NBJetsCSVM0_MET30.root
+Xsection  	1.1     #0.8674 pb
 Kfact           1.
 Lumi            19600.0
 Type            mc
@@ -202,99 +439,53 @@ SAMPLE
 Name		WZJetsTo2L2Q
 SName		DY
 ShapeName	WZJetsTo2L2Q
-File            TauTau_V2_2/WZJetsTo2L2Q-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection  	2.2   #xsection AN-171  #1.755 pb 
+File            TauTau_V3_1/WZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30.root
+Xsection  	2.2     #1.755 pb
 Kfact           1.
 Lumi            19600.0
 Type            mc
 Color		419  
 
-#SAMPLE
-Name		DY1JetsToLL_M_50
-SName		DY
-ShapeName	DY1JetsToLL_M_50
-File            TauTau_V2_2/DY1JetsToLL-M-50-TuneZ2Star-8TeV-madgraph--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM--NTupleProdPlus.root
-Xsection  	666.3 pb  #xsection AN-171
-Kfact           1.
-Lumi            19600.0
-Type            mc
-Color		419 
-
-#SAMPLE
-Name		DY2JetsToLL_M_50
-SName		DY
-ShapeName	DY2JetsToLL_M_50
-File            TauTau_V2_2/DY2JetsToLL-M-50-TuneZ2Star-8TeV-madgraph--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM--NTupleProdPlus.root         
-Xsection  	215.0 pb   #xsection AN-171
-Kfact           1.
-Lumi            19600.0
-Type            mc
-Color		419
- 
-#SAMPLE
-Name		DY3JetsToLL_M_50
-SName		DY
-ShapeName	DY3JetsToLL_M_50
-File            TauTau_V2_2/DY3JetsToLL-M-50-TuneZ2Star-8TeV-madgraph--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM--NTupleProdPlus.root
-Xsection  	60.7 pb   #xsection AN-171
-Kfact           1.
-Lumi            19600.0
-Type            mc
-Color		419
- 
-#SAMPLE
-Name		DY4JetsToLL_M_50
-SName		DY
-ShapeName	DY4JetsToLL_M_50
-File            TauTau_V2_2/DY4JetsToLL-M-50-TuneZ2Star-8TeV-madgraph--Summer12-DR53X-PU-S10-START53-V7A-v1--AODSIM--NTupleProdPlus.root
-Xsection  	27.3 pb    #xsection AN-171
-Kfact           1.
-Lumi            19600.0
-Type            mc
-Color		419 
 ## --------------- Top ----------
-
 SAMPLE
 Name		TTGJets
 SName		Top
 ShapeName	Top
-File            TauTau_V2_2/TTGJets-8TeV-madgraph-Summer12-DR53X-PU-S10-START53-V19-v1.root
-Xsection  	2.166  #xsectin TESCOdatareplication
+File            TauTau_V3_1/TTGJets_8TeV-madgraph_NBJetsCSVM0_MET30.root
+Xsection  	2.166
 Kfact           1.	
 Lumi            19600.0
 Type            mc
 Color		600
-
 
 SAMPLE
 Name		TTH_Inclusive
 SName		Top
-ShapeName	Top 
-File            TauTau_V2_2/TTH-Inclusive-M-125-8TeV-pythia6-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection  	0.130 #xsectin TESCOdatareplication
+ShapeName	Top   
+File            TauTau_V3_1/TTH_Inclusive_M-125_8TeV_pythia6_NBJetsCSVM0_MET30.root
+Xsection  	0.130
 Kfact           1.	
 Lumi            19600.0
 Type            mc
 Color		600
-
 
 SAMPLE
 Name		TTWJets
 SName		Top
 ShapeName	Top   
-File            TauTau_V2_2/TTWJets-8TeV-madgraph-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection  	0.232 pb #xsectiont TESCOdatareplication
+File            TauTau_V3_1/TTWJets_8TeV-madgraph_NBJetsCSVM0_MET30.root
+Xsection  	0.232 pb 
 Kfact           1.	
 Lumi            19600.0
 Type            mc
 Color		600
-
+ 
 SAMPLE
 Name		TTWWJets
 SName		Top
-ShapeName	Top
-File            TauTau_V2_2/TTWWJets-8TeV-madgraph-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection  	0.002037 #xsectiont TESCOdatareplication
+ShapeName	Top   
+File            TauTau_V3_1/TTWWJets_8TeV-madgraph_NBJetsCSVM0_MET30.root
+Xsection  	0.002037
 Kfact           1.	
 Lumi            19600.0
 Type            mc
@@ -303,20 +494,20 @@ Color		600
 SAMPLE
 Name		TTZJets
 SName		Top
-ShapeName	Top 
-File            TauTau_V2_2/TTZJets-8TeV-madgraph-v2-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection  	0.2057  #xsection LPCSusyDataset
+ShapeName	Top  
+File            TauTau_V3_1/TTZJets_8TeV-madgraph_v2_NBJetsCSVM0_MET30.root
+Xsection  	0.2057
 Kfact           1.	
 Lumi            19600.0
 Type            mc
 Color		600
 
 SAMPLE
-Name		TTJets
+Name		TTbar
 SName		Top
-ShapeName	Top
-File            TauTau_V2_2/TTJets-MassiveBinDECAY-TuneZ2star-8TeV-madgraph-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection  	245.8   #xsection AN-171       # 234
+ShapeName	Top   
+File            TauTau_V3_1/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30.root
+Xsection  	245.8   # 234
 Kfact           1.	
 Lumi            19600.0
 Type            mc
@@ -326,9 +517,9 @@ SAMPLE
 Name		SingleTop_s
 SName		Top
 ShapeName	Top
-File            TauTau_V2_2/T-s-channel-TuneZ2star-8TeV-powheg-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection  	3.79  #StandardModelCrossSectin  # 2.82
-Kfact           1.	
+File            TauTau_V3_1/T_s-channel_TuneZ2star_8TeV-powheg-tauola_NBJetsCSVM0_MET30.root
+Xsection  	3.79    # 2.82
+Kfact           1.0	
 Lumi            19600.0
 Type            mc
 Color		600
@@ -338,9 +529,9 @@ SAMPLE
 Name		SingleTopbar_s
 SName		Top
 ShapeName	Top
-File            TauTau_V2_2/Tbar-s-channel-TuneZ2star-8TeV-powheg-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection  	1.76    #StandardModelCrossSectin  #1.57
-Kfact           1.	
+File            TauTau_V3_1/Tbar_s-channel_TuneZ2star_8TeV-powheg-tauola_NBJetsCSVM0_MET30.root
+Xsection  	1.76      #1.57
+Kfact           1.0	
 Lumi            19600.0
 Type            mc
 Color		600
@@ -349,9 +540,9 @@ SAMPLE
 Name		SingleTop_t
 SName		Top
 ShapeName	Top
-File            TauTau_V2_2/T-t-channel-TuneZ2star-8TeV-powheg-tauola-Summer12-DR53X-PU-S10-START53-V7A-v3.root 
-Xsection  	56.4 #StandardModelCrossSectin   # 47.0
-Kfact           1.	
+File            TauTau_V3_1/T_t-channel_TuneZ2star_8TeV-powheg-tauola_NBJetsCSVM0_MET30.root
+Xsection  	56.4    # 47.0
+Kfact           1.0	
 Lumi            19600.0
 Type            mc
 Color		600
@@ -361,21 +552,21 @@ SAMPLE
 Name		SingleTopbar_t
 SName		Top
 ShapeName	Top
-File            TauTau_V2_2/Tbar-t-channel-TuneZ2star-8TeV-powheg-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection  	30.7   #StandardModelCrossSectin  # 25.0
-Kfact           1.	
+File            TauTau_V3_1/Tbar_s-channel_TuneZ2star_8TeV-powheg-tauola_NBJetsCSVM0_MET30.root
+Xsection  	30.7    # 25.0
+Kfact           1.0	
 Lumi            19600.0
 Type            mc
 Color		600
 
 
 SAMPLE
-Name		SingleTop_tW
+Name        	SingleTop_tW
 SName		Top
 ShapeName	Top
-File            TauTau_V2_2/T-tW-channel-DR-TuneZ2star-8TeV-powheg-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection  	22.4    #xsection AN-171   # 11.1773     # 10.7
-Kfact           1.	
+File            TauTau_V3_1/T_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola_NBJetsCSVM0_MET30.root
+Xsection  	22.4 # 11.1773     # 10.7
+Kfact           1.0	
 Lumi            19600.0
 Type            mc
 Color		600
@@ -385,20 +576,19 @@ SAMPLE
 Name		SingleTopbar_tW
 SName		Top
 ShapeName	Top
-File            TauTau_V2_2/Tbar-tW-channel-DR-TuneZ2star-8TeV-powheg-tauola-Summer12-DR53X-PU-S10-START53-V7A-v1.root
-Xsection  	22.4    #xsection AN-171         # 11.1773      # 10.7
-Kfact           1.	
+File            TauTau_V3_1/Tbar_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola_NBJetsCSVM0_MET30.root
+Xsection        22.4	#11.1773      # 10.7
+Kfact           1.0	
 Lumi            19600.0
 Type            mc
 Color		600
-
 ## --------- Data ---------------------------
 
 SAMPLE
 Name		Run2012A_MuEG
 SName		MuEG-Data
 ShapeName	Data
-File            TauTau_V2_2/MuEG-Run2012A-22Jan2013-v1-AOD.root
+File            TauTau_V3_1/MuEG-Run2012A-22Jan2013-v1-AOD_NBJetsCSVM0_MET30.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.
@@ -409,7 +599,7 @@ SAMPLE
 Name		Run2012B_MuEG
 SName		MuEG-Data
 ShapeName	Data
-File            TauTau_V2_2/MuEG-Run2012B-22Jan2013-v1-AOD.root
+File            TauTau_V3_1/MuEG-Run2012B-22Jan2013-v1-AOD_NBJetsCSVM0_MET30.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.
@@ -420,7 +610,7 @@ SAMPLE
 Name		Run2012C_MuEG
 SName		MuEG-Data
 ShapeName	Data
-File            TauTau_V2_2/MuEG-Run2012C-22Jan2013-v1-AOD.root
+File            TauTau_V3_1/MuEG-Run2012C-22Jan2013-v1-AOD_NBJetsCSVM0_MET30.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.
@@ -431,7 +621,7 @@ SAMPLE
 Name		Run2012D_MuEG
 SName		MuEG-Data
 ShapeName	Data
-File            TauTau_V2_2/MuEG-Run2012D-22Jan2013-v1-AOD.root
+File            TauTau_V3_1/MuEG-Run2012D-22Jan2013-v1-AOD_NBJetsCSVM0_MET30.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.
