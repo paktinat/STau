@@ -256,8 +256,8 @@ public:
   void TauEfficiency(TString cuts, Long64_t nevents, TString myfilename);
   void DrawMyPlots(TString myfileName, double *xbin, int NumberOfBins);
   void EleEleAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfileName);
-  
-  void elemuAnalysis(TString cuts,  TString trigger, Long64_t nevents, TString myfileName );
+  void elemuAnalysis(TString cuts,  TString trigger, Long64_t nevents, TString myfileName , int type);
+ 
   void setFlags(int flag); //To determine which analysis we look at HighHT/LowHT MT2(b) options are:
   // 5  :: LowHT  MT2  
   // 7  :: HighHT MT2 

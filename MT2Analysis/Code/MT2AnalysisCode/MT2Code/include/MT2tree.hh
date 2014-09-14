@@ -938,7 +938,8 @@ public:
   Float_t METPlusPtZEleEle();
   Float_t JZBInDirectEleEle();
   Float_t absJZBInDirectEleEle();
-
+  Float_t JZB1EleMu();
+  Float_t JZB2EleMu();
 
 
 
