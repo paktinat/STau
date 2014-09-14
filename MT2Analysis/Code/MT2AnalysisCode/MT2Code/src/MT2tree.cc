@@ -3680,7 +3680,13 @@ float MT2tree::absJZBInDirectEleEle(){
   double C = B-doubleEle[0].lv.Pt();
   return fabs(C);
 }
+float MT2tree::JZB1EleMu(){
+return fabs(misc.MET+ eleMu[0].lv.Pt());
+}
 
+float MT2tree::JZB2EleMu(){
+return fabs(misc.MET- eleMu[0].lv.Pt());
+}
 
 
 // ----------------------------------------------------------------------------------------------------------

@@ -9169,12 +9169,12 @@ MT2[0]->Fill(myQuantity, weight);
   plotRatioStack(h_stack, MT2[4], MT2[6], MT2[5], true, false, "MT2_ratio", Legend1, "MT2", "Events", 0, -10, 2, true);
 }
 
-void MassPlotter::elemuAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfileName){
+void MassPlotter::elemuAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfileName ,int type){
 
   TH1::SetDefaultSumw2();
 
-  TString cnames[NumberOfSamples+1] = {"QCD", "Wjets", "Zjets", "Top", "MC", "susy","data"};
-  int ccolor[NumberOfSamples+1] = { 401, 417, 419, 600, 500, 1, 632};
+  TString cnames[NumberOfSamples+1] = {"QCD", "Wjets", "Zjets", "Top","WWjets", "MC", "susy","data"};
+  int ccolor[NumberOfSamples+1] = { 401, 417, 419, 600, 603,500, 1, 632};
   TString varname = "MT2";
   
     for (int i=0; i<(NumberOfSamples+1); i++){
@@ -9186,12 +9186,12 @@ void MassPlotter::elemuAnalysis(TString cuts, TString trigger, Long64_t nevents,
     MT2[i] -> SetStats(false);
   }
 
-  MT2[6] -> SetMarkerStyle(20);
-  MT2[6] -> SetMarkerColor(kBlack);
-  MT2[6] -> SetLineColor(kBlack);
+  MT2[7] -> SetMarkerStyle(20);
+  MT2[7] -> SetMarkerColor(kBlack);
+  MT2[7] -> SetLineColor(kBlack);
   
-  MT2[4] -> SetFillStyle(3004);
-  MT2[4] -> SetFillColor(kBlack);
+  MT2[5] -> SetFillStyle(3004);
+  MT2[5] -> SetFillColor(kBlack);
 
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
@@ -9273,15 +9273,18 @@ weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq0/Sample.PU_a
 
 if(data == 1){
       
-      MT2[6]->Fill(myQuantity, weight);//data
+      MT2[7]->Fill(myQuantity, weight);//data
       
     }else{
       if(Sample.sname == "SUSY")
-MT2[5]->Fill(myQuantity, weight);
+MT2[6]->Fill(myQuantity, weight);
       else
+MT2[5]->Fill(myQuantity, weight);
+  
+if(Sample.sname == "VV")
 MT2[4]->Fill(myQuantity, weight);
-      
-      if(Sample.sname == "Top")
+    
+    else if(Sample.sname == "Top")
 MT2[3]->Fill(myQuantity, weight);
       else
 if(Sample.sname == "DY")	
@@ -9318,8 +9321,9 @@ MT2[0]->Fill(myQuantity, weight);
   Legend1->AddEntry(MT2[1], "W+jets", "f");
   Legend1->AddEntry(MT2[2], "Z+jets", "f");
   Legend1->AddEntry(MT2[3], "Top", "f");
-  Legend1->AddEntry(MT2[5], "SMS", "l");
-  Legend1->AddEntry(MT2[6], "data", "l");
+  Legend1->AddEntry(MT2[4], "WWjets", "f");
+  Legend1->AddEntry(MT2[6], "SMS", "l");
+   Legend1->AddEntry(MT2[7], "data", "l");
   // vector<TH1D*> h_signals;
   // h_signals.push_back(&(*MT2[5]));
   // TLegend *Legend1;
@@ -9338,15 +9342,110 @@ MT2[0]->Fill(myQuantity, weight);
   MT2[4]->Write();
   MT2[5]->Write();
   MT2[6]->Write();
+  MT2[7]->Write();
   Legend1->Write();
   savefile->Close();
   std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
 
-  printHisto(h_stack, MT2[6], MT2[4], MT2[5], Legend1 , "MTC", "hist", true, "MT2", "Events", 0, -10, 2, true);
+  printHisto(h_stack, MT2[7], MT2[5], MT2[6], Legend1 , "MTC", "hist", true, "MT2", "Events", 0, -10, 2, true);
 
-  plotRatioStack(h_stack, MT2[4], MT2[6], MT2[5], true, false, "MT2_ratio", Legend1, "MT2", "Events", 0, -10, 2, true);
+  plotRatioStack(h_stack, MT2[5], MT2[7], MT2[6], true, false, "MT2_ratio", Legend1, "MT2", "Events", 0, -10, 2, true);
+int nbins = MT2[5]->GetNbinsX();
+
+  Float_t  x[nbins], y1[nbins], y2[nbins];
+  for (int i = 1; i <=nbins+1; i++){
+    x[i-1] = MT2[5]->GetBinLowEdge(i);
+//     cout<<i<<" x[i-1] "<<x[i-1]<<endl;
+    float s1, s2;
+
+    s1 = MT2[6]  ->Integral(i,nbins+1);
+   
+    s2 = MT2[6]  ->Integral(0, i - 1);
+//     cout<<" s1 "<<s1<<endl;
+//     cout<<" s2 "<<s2<<endl;
+    float b1, b2;
+    
+    b1 = MT2[5]->Integral(i,nbins+1);
+    
+    b2 = MT2[5]->Integral(0, i - 1);
+//     cout<<" b1 "<<b1<<endl;
+//     cout<<" b2 "<<b2<<endl;
+    if(b1 == 0)
+      y1[i-1] = 5.0;
+    else{
+      if (type==0) {
+	y1[i-1] = s1/sqrt(b1);
+      }
+      if (type==1) {
+	y1[i-1] = s1/sqrt(s1+b1);
+      }
+      if (type==2) {
+	y1[i-1] = s1/b1;
+      }
+//       cout<<" y1[i-1] "<<y1[i-1]<<endl;
+    }
+    
+    if(b2 == 0)
+      y2[i-1] = 5.0;
+    else{
+      if (type==0) {
+	y2[i-1] = s2/sqrt(b2);
+      }
+      if (type==1) {
+	y2[i-1] = s2/sqrt(s2+b2);
+      }
+      if (type==2) {
+	y2[i-1] = s2/b2;
+      }
+//       cout<<" y2[i-1] "<<y2[i-1]<<endl;
+    }
+  }
+  TGraph *sig1 = new TGraph(nbins+1,x,y1);
+  sig1->SetTitle("");
+  sig1->GetXaxis()->SetTitle("LowerCut");
+  sig1->SetMarkerStyle(20);
+  if (type==0){
+    sig1->GetYaxis()->SetTitle("S/#sqrt{B}");
+  }
+  if (type==1){
+    sig1->GetYaxis()->SetTitle("S/#sqrt{S+B}");
+  }
+  if (type==2){
+    sig1->GetYaxis()->SetTitle("S/B");
+	  
+  }
+
+
+ 
+
+  TGraph *sig2 = new TGraph(nbins+1,x,y2);
+  sig2->SetTitle("");
+  sig2->GetXaxis()->SetTitle("UpperCut");
+  sig2->SetMarkerStyle(20);
+  if (type==0){
+    sig2->GetYaxis()->SetTitle("S/#sqrt{B}");
+  }
+  if (type==1){
+    sig2->GetYaxis()->SetTitle("S/#sqrt{S+B}");
+  }
+  if (type==2){
+    sig2->GetYaxis()->SetTitle("S/B");
+	  
+  }
+
+
+  TCanvas *MyC = new TCanvas("MyC", "MyC");
+  MyC->Divide(2,1);
+  MyC->cd(1);
+  sig1->Draw("ACP");
+  MyC->cd(2);
+  sig2->Draw("ACP");
+
+
+
+
 }
 
 void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString myfileName){
