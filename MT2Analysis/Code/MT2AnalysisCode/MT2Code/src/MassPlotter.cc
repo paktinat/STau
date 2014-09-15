@@ -93,6 +93,11 @@ MassPlotter::MassPlotter(){
 	fTauWjetsSF=true;
 	fTauEnergySF=true;
 
+        fE0IdIsoSF=true;
+        fE1IdIsoSF=true;
+        fETrgSF =true;
+
+
 // Default constructor, no samples are set
   cout.precision(2);
   cout.setf(ios::fixed,ios::floatfield);
@@ -116,6 +121,10 @@ MassPlotter::MassPlotter(TString outputdir){
 	fTauTrgSF=true;
 	fTauWjetsSF=true;
 	fTauEnergySF=true;
+
+        fE0IdIsoSF=true;
+        fE1IdIsoSF=true;
+        fETrgSF =true;
 
 // Default constructor, no samples are set
   cout.precision(2);
@@ -141,6 +150,10 @@ MassPlotter::MassPlotter(TString outputdir, TString outputfile){
 	fTauTrgSF=true;
 	fTauWjetsSF=true;
 	fTauEnergySF=true;
+
+        fE0IdIsoSF=true;
+        fE1IdIsoSF=true;
+        fETrgSF =true;
 
 // Default constructor, no samples are set
   cout.precision(2);
@@ -1403,6 +1416,15 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 		      ChannelSpecificSF += "*muTau[0].tauWjetsSF";	  
 		    if(fTauEnergySF )
 		      ChannelSpecificSF += "*muTau[0].tauEnergySF";	  
+		  }
+
+		  if(myChannel == "ee"){
+		    if(fE0IdIsoSF)
+		      ChannelSpecificSF += "doubleEle[0].Ele0IdIsoSF";
+		    if(fE1IdIsoSF)
+		      ChannelSpecificSF += "*doubleEle[0].Ele1IdIsoSF";
+		    if(fETrgSF)
+		      ChannelSpecificSF += "*doubleEle[0].DiEleTrgSF";
 		  }
 		  else ChannelSpecificSF = "pileUp.Weight";
 		  
@@ -9714,7 +9736,7 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 	if(fTauEnergySF )
 	  ChannelSpecificSF += "*muTau[0].tauEnergySF";	  
       }
-      
+
       TString selection;
 
       if(fPUReweight && fbSFReWeight) selection = TString::Format("(%.15f*pileUp.Weight*%s*%s) * (%s)",Weight, btagweight.Data(), ChannelSpecificSF.Data(), myCuts.Data());

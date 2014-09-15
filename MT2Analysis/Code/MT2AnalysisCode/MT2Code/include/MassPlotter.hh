@@ -293,6 +293,17 @@ public:
     
   }
 
+ void SetEEChannel(bool E0IdIsoSF = true, bool E1IdIsoSF = true, bool ETrgSF = true){
+    if(myChannel != "TBD" && myChannel != "ee")
+      cout<<"The channel is already defined as "<<myChannel<<endl;
+
+    myChannel = "ee";
+
+    fE0IdIsoSF      = E0IdIsoSF;
+    fE1IdIsoSF      = E1IdIsoSF;
+    fETrgSF         = ETrgSF;
+    
+  }
 
 
   void QCD();
@@ -319,7 +330,13 @@ private:
         bool fTauTrgSF;
         bool fTauWjetsSF;
         bool fTauEnergySF;
+
+
+        bool fE0IdIsoSF;
+        bool fE1IdIsoSF;
+        bool fETrgSF;
   
+
         MT2tree* fMT2tree;
 	TTree*   fTree;
 
