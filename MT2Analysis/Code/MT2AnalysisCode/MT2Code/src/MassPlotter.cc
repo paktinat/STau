@@ -8589,10 +8589,11 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
   setFlags(10);
 
   TString  cnames[NumberOfSamples+1] = {"QCD", "Wjets", "Zjets", "Top", "WWjets", "MC", "susy","data"};
-  int      ccolor[NumberOfSamples+1] = { 401,       417,    419,   600,       603,  500,      1, 632};
+  int      ccolor[NumberOfSamples+1] = { 401,       417,    419,   855,       603,  603,      1, 632};
   TString varname = "MT2";
-  for (int i=0; i<(NumberOfSamples+1); i++){
+  for (int i=0; i<(NumberOfSamples); i++){
     MT2[i] = new TH1D(varname+"_"+cnames[i], "", 50, 0, 50);
+    //MT2[i] = new TH1D(varname+"_"+cnames[i], "", 8, 0, 8);
     MT2[i] -> SetFillColor (ccolor[i]);
     MT2[i] -> SetLineColor (ccolor[i]);
     MT2[i] -> SetLineWidth (2);
@@ -8734,7 +8735,26 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 // 	  nExtraTaus++;
 //       }
       
-      myQuantity = fMT2tree->pileUp.NVertices;//nExtraTaus;
+//       myQuantity = fMT2tree->pileUp.NVertices;//nExtraTaus;
+
+//      TString genMuTauStatus = fMT2tree->GenLeptonAnalysisInterpretation(0,1,1, false);
+
+//       if(genMuTauStatus == "pp")
+// 	myQuantity = 0.5;
+//       if(genMuTauStatus == "pf")
+// 	myQuantity = 1.5;
+//       if(genMuTauStatus == "fp")
+// 	myQuantity = 2.5;
+//       if(genMuTauStatus == "ff")
+// 	myQuantity = 3.5;
+//       if(genMuTauStatus == "tp")
+// 	myQuantity = 4.5;
+//       if(genMuTauStatus == "tf")
+// 	myQuantity = 5.5;
+//       if(genMuTauStatus == "nothing")
+// 	myQuantity = 6.5;
+//       if(genMuTauStatus == "wrong")
+// 	myQuantity = 7.5;
 
      /*
 	std::vector<int> Tau0;
@@ -8815,15 +8835,15 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
   }//for(ii<fSamples)
 
 
-  for(int j = 0; j < (NumberOfSamples+1); j++){
+  for(int j = 0; j < (NumberOfSamples); j++){
     AddOverAndUnderFlow(MT2[j], true, true);
   }
    printYield();
 
   THStack* h_stack = new THStack(varname, "");
-  for(int j = 0; j < (NumberOfSamples+1); j++){
+  for(int j = 0; j < (NumberOfSamples); j++){
     // MT2[j]->Rebin(3);
-    if(j < (NumberOfSamples - 1))
+    if(j < (NumberOfSamples - 3))
       h_stack -> Add(MT2[j]);
   }
 
@@ -9506,10 +9526,10 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
   TH1* hMT2All   = hOldMT2All->Rebin(10, "hMT2All");
   TH1* hMT2Pass  = hOldMT2Pass->Rebin(10, "hMT2Pass");
   
-  for(int j = 1; j < hMT2All->GetNbinsX(); j++){
-    cout<<" bin "<<j<<" hMT2All  "<<hMT2All ->GetBinContent(j)<<" +- "<<hMT2All ->GetBinError(j)<<endl;
-    cout<<" bin "<<j<<" hMT2Pass "<<hMT2Pass->GetBinContent(j)<<" +- "<<hMT2Pass->GetBinError(j)<<endl;
-  }
+//   for(int j = 1; j < hMT2All->GetNbinsX(); j++){
+//     cout<<" bin "<<j<<" hMT2All  "<<hMT2All ->GetBinContent(j)<<" +- "<<hMT2All ->GetBinError(j)<<endl;
+//     cout<<" bin "<<j<<" hMT2Pass "<<hMT2Pass->GetBinContent(j)<<" +- "<<hMT2Pass->GetBinError(j)<<endl;
+//   }
 
 //   TH1F* hMT2All  = new TH1F("hMT2All",  "All",  nbins, bins);
 //   TH1F* hMT2Pass = new TH1F("hMT2Pass", "Pass", nbins, bins);
@@ -9525,20 +9545,18 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 //   }
   
   hMT2Pass->Divide(hMT2All);
-  for(int j = 1; j < hMT2All->GetNbinsX(); j++){
-    cout<<" bin "<<j<<" hMT2Pass "<<hMT2Pass->GetBinContent(j)<<" +- "<<hMT2Pass->GetBinError(j)<<endl;
-  }
+//   for(int j = 1; j < hMT2All->GetNbinsX(); j++){
+//     cout<<" bin "<<j<<" hMT2Pass "<<hMT2Pass->GetBinContent(j)<<" +- "<<hMT2Pass->GetBinError(j)<<endl;
+//   }
 
 
   TH1F *myWeights       = new TH1F("myWeights",       "myWeights",       30, -0.1, 0.2);
   TH2F *WeightsFakeRate = new TH2F("WeightsFakeRate", "WeightsFakeRate", 30, 0, 0.025, 30, -0.1, 0.2);
-  
-  TString  cnames[NumberOfSamples+1] = {"QCD", "Wjets", "Zjets", "Top", "MC", "susy","data"};
-  int      ccolor[NumberOfSamples+1] = { 401,       417,    419,   600,  500,      1, 632};
+ 
+  TString  cnames[NumberOfSamples] = {"QCD", "Wjets", "Zjets", "Top", "WWjets", "MC", "susy","data"};
+  int      ccolor[NumberOfSamples] = { 401,       417,    419,   855,       603,  603,      1, 632};
   TString varname = "MT2";
-
-
-  for (int i=0; i<(NumberOfSamples+1); i++){
+  for (int i=0; i<(NumberOfSamples); i++){
     MT2[i] = new TH1D(varname+"_"+cnames[i], "", nbins, bins);
     MT2[i] -> SetFillColor (ccolor[i]);
     MT2[i] -> SetLineColor (ccolor[i]);
@@ -9547,12 +9565,12 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
     MT2[i] -> SetStats(false);
   }
 
-  MT2[6] -> SetMarkerStyle(20);
-  MT2[6] -> SetMarkerColor(kBlack);
-  MT2[6] -> SetLineColor(kBlack);
+  MT2[7] -> SetMarkerStyle(20);
+  MT2[7] -> SetMarkerColor(kBlack);
+  MT2[7] -> SetLineColor(kBlack);
   
-  MT2[4] -> SetFillStyle(3004);
-  MT2[4] -> SetFillColor(kBlack);
+  MT2[5] -> SetFillStyle(3004);
+  MT2[5] -> SetFillColor(kBlack);
 
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
@@ -9588,7 +9606,11 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
     fMT2tree = new MT2tree();
     Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
 
-    float Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents * Sample.PU_avg_weight);
+
+    float Weight;
+    
+    if(fPUReweight) Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents*Sample.PU_avg_weight);
+    else            Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
 
     std::cout << setfill('=') << std::setw(70) << "" << std::endl;
     cout << "looping over :     " <<endl;	
@@ -9660,22 +9682,27 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 	
 	WeightsFakeRate->Fill(fakeRate, weight);
 
-	MT2[6]->Fill(myQuantity, weight);//data
+	MT2[7]->Fill(myQuantity, weight);//data
       }
     }else{
-       if(Sample.sname != "Wtolnu" && Sample.sname != "QCD" && Sample.sname != "SUSY") 
-	 continue;
-       
+      //       if(Sample.sname != "Wtolnu" && Sample.sname != "QCD" && Sample.sname != "SUSY") 
+      //	 continue;
+
+       int genMuTauStatus = fMT2tree->GenLeptonAnalysis(0,1,1);
+
+       if(genMuTauStatus != 613 && genMuTauStatus != 623 && genMuTauStatus != 633 && genMuTauStatus != -1)
+	 continue;       
+
       TString variable  = TString::Format("muTau[0].MT2>>%s",h_samples[ii]->GetName());
       //TString variable  = TString::Format("muo[muTau[0].mu0Ind].MT>>%s",h_samples[ii]->GetName());
 
       TString btagweight = "SFWeight.BTagCSV40eq0";
 
-      TString ChannelSpecificSF;// = "1.00";
+      TString ChannelSpecificSF = "1.00";
 		  
       if(myChannel == "muTau"){
 	if(fMuIdSF)
-	  ChannelSpecificSF += "muTau[0].muIdSF";
+	  ChannelSpecificSF += "*muTau[0].muIdSF";
 	if(fMuIsoSF)
 	  ChannelSpecificSF += "*muTau[0].muIsoSF";
 	if(fMuTrgSF)
@@ -9686,8 +9713,7 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 	  ChannelSpecificSF += "*muTau[0].tauWjetsSF";	  
 	if(fTauEnergySF )
 	  ChannelSpecificSF += "*muTau[0].tauEnergySF";	  
-      }else 
-	ChannelSpecificSF = "pileUp.Weight";
+      }
       
       TString selection;
 
@@ -9712,7 +9738,7 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
       if(fVerbose>2) cout << "  +++++++ Events:       " << clone->GetBinContent(1) << " +- " << clone->GetBinError(1) << endl;
 
       if(Sample.type != "susy")
-	MT2[4]->Add(h_samples[ii]);
+	MT2[5]->Add(h_samples[ii]);
 
       if (Sample.sname == "QCD") {
 	MT2[0]->Add(h_samples[ii]);
@@ -9726,12 +9752,15 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
       else if(Sample.sname=="DY") {
 	MT2[2]->Add(h_samples[ii]);
       }
+      else if(Sample.sname == "VV") {
+	MT2[4]->Add(h_samples[ii]);
+      }
       else if(Sample.type == "susy"){
-	MT2[5]->Add(h_samples[ii]);
+	MT2[6]->Add(h_samples[ii]);
       }
     }
   }
-  for(int j = 0; j < (NumberOfSamples+1); j++){
+  for(int j = 0; j < (NumberOfSamples); j++){
     AddOverAndUnderFlow(MT2[j], true, true);
   }
 
@@ -9739,9 +9768,9 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
   printYield();
 
   THStack* h_stack = new THStack(varname, "");
-  for(int j = 0; j < (NumberOfSamples+1); j++){
+  for(int j = 0; j < (NumberOfSamples); j++){
     // MT2[j]->Rebin(3);
-    if(j < (NumberOfSamples - 1))
+    if(j < (NumberOfSamples - 3))
       h_stack -> Add(MT2[j]);
   }
 
@@ -9750,8 +9779,9 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
   Legend1->AddEntry(MT2[1], "W+jets", "f");
   Legend1->AddEntry(MT2[2], "Z+jets", "f");
   Legend1->AddEntry(MT2[3], "Top", "f");
-  Legend1->AddEntry(MT2[5], "SMS", "l");
-  Legend1->AddEntry(MT2[6], "data", "l");
+  Legend1->AddEntry(MT2[4], "WW+jets", "f");
+  Legend1->AddEntry(MT2[6], "SMS", "l");
+  Legend1->AddEntry(MT2[7], "data", "l");
  
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
@@ -9770,12 +9800,9 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
   AddOverAndUnderFlow(myWeights);
   myWeights->Draw();
 
+  printHisto(h_stack, MT2[7], MT2[5], MT2[6], Legend1 , "MTC", "hist", true, "MT2", "Events", 0, -10, 2, true);
 
-  printHisto(h_stack, MT2[6], MT2[4], MT2[5], Legend1 , "MTC", "hist", true, "MT2", "Events", 0, -10, 2, true);
-
-  plotRatioStack(h_stack, MT2[4], MT2[6], MT2[5], true, false, "MT2_ratio", Legend1, "MT2", "Events", 0, -10, 2, true);
-
-
+  plotRatioStack(h_stack, MT2[5], MT2[7], MT2[6], true, false, "MT2_ratio", Legend1, "MT2", "Events", 0, -10, 2, true);
 
 }
 
