@@ -9947,6 +9947,7 @@ void MassPlotter::setLimitCounting(TString channels, TString cuts, TString hypot
 	if (fSamples[i].sname == "Wtolnu") ChannelSpecificSF += " * eleTau[0].tauWjetsSF";
       } else if (channels == "eleMu") {
 	ChannelSpecificSF += "* muIdSFeleMu *  muTrgSFeleMu * eleIdSFeleMu * eleTrgSFeleMu ";
+      }
     }
 
     if (hypothesis == "sgn" && fSamples[i].type == "susy") {
