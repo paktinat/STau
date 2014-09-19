@@ -251,7 +251,7 @@ public:
     oEleTauPt = new ExtendedObjectProperty( "AllCuts" , "EleTauPt" , "EleTauPt" , 20 , 0 , 300 , susyFormula , ThisSUSYCatName );
     oTauPt = new ExtendedObjectProperty( "AllCuts" , "TauPt" , "TauPt" , 20 , 0 , 300 , susyFormula , ThisSUSYCatName );
     oEleMT = new ExtendedObjectProperty( "AllCuts" , "EleMT" , "EleMT" , 30 , 0 , 300 , susyFormula , ThisSUSYCatName );
-    oCalculatedW = new ExtendedObjectProperty( "AllCuts" , "CalculatedW" , "tauTrgSF*eleTrgSF*eleIsoSF*BTagW" , 300 , 0 , 300 , susyFormula , ThisSUSYCatName ); //*PUW*XSec*KFactor*19600/(AvgPuW*NInitialEvents)
+    oCalculatedW = new ExtendedObjectProperty( "AllCuts" , "CalculatedW" , "W*PUW" , 300 , 0 , 300 , susyFormula , ThisSUSYCatName ); //*PUW*XSec*KFactor*19600/(AvgPuW*NInitialEvents)
     allObjs = {oMET , oMT2 , oMETModPPZMod , oMETModMPZMod , oEleTauPt, oTauPt , oEleMT , oMETPElePt , oJPTModMZPTMod , oCalculatedW } ;
 
 
@@ -470,29 +470,29 @@ public:
       // else if( last_proce_id == 0 || last_proce_id == 10 )
       // 	CalculatedW = 1.0;
 
-      TLorentzVector lv;
-      lv.SetPtEtaPhiM( TauPt , TauEta , 0 , 0 );
-      double newtautrgw = Eff_ETauTrg_Tau_Data_2012(lv);
-      hWOldNew->Fill( tauTrgSF , newtautrgw );
+      // TLorentzVector lv;
+      // lv.SetPtEtaPhiM( TauPt , TauEta , 0 , 0 );
+      // double newtautrgw = Eff_ETauTrg_Tau_Data_2012(lv);
+      // hWOldNew->Fill( tauTrgSF , newtautrgw );
+      //if( !isData() && !isSignal() )
       //W = CalculatedW ;
       
       //if( MT2<20.0 && isBKG( -100 ) )
       //W /= 2;
 
+
       double BinVal = vals[ this->nVarToBin ];
-      if( BinVal > binnedProps.begin()->first ){
+      bool ret2 = ( ret && ( BinVal > binnedProps.begin()->first ) );
+      efficiencies[last_proce_id].WAll += W;
+      if(ret2)
+	efficiencies[last_proce_id].WPassed += W;
 	
-	efficiencies[last_proce_id].WAll += W;
-	if(ret)
-	  efficiencies[last_proce_id].WPassed += W;
-	
-	if( last_proce_id < 10 && last_proce_id > 0)
-	  if( isBKG(last_proce_id) ){
-	    bkgeff.WAll += W;
-	    if(ret)
-	      bkgeff.WPassed += W;
-	  }
-      }
+      if( last_proce_id < 10 && last_proce_id > 0)
+	if( isBKG(last_proce_id) ){
+	  bkgeff.WAll += W;
+	  if(ret2)
+	    bkgeff.WPassed += W;
+	}
 
       return ret;
   };
@@ -587,7 +587,10 @@ int main(int argc, char* argv[]) {
   TFile fout(outfilename , "recreate");
   cout << "| " ;
   for(int i=0; i<nVarsToCut ; i++)
-    cout << std::setprecision(0) << fixed << cutstouse[i] << "," ;
+    if( i == nVarToBin )
+      cout << std::setprecision(0) << fixed << Bins[0]  << "," ;
+    else
+      cout << std::setprecision(0) << fixed << cutstouse[i] << "," ;
   cout << "| " ;
   vars.Write( &fout );
   fout.Close();

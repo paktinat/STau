@@ -1029,6 +1029,7 @@ public:
 
   //Bosons
   Float_t GetGenVPt(int pid);
+  int GetNGenPartons();
 
   Int_t   NJets;
   Int_t   NGenJets;

@@ -754,6 +754,19 @@ void MT2SFWeight::Reset(){
 
 
 // MT2tree ----------------------------------
+int MT2tree::GetNGenPartons(){
+  int njet = -4; //two partons from proton, two W parents 
+  for (int j=0; j< NGenParticles ; j++)
+    { 
+      if( abs(genparticle[j].ID) < 6 || abs(genparticle[j].ID) == 21 ){
+	//cout << mt2->genparticle[j].ID << "," << mt2->genparticle[mt2->genparticle[j].MIndex].ID<< "," << mt2->genparticle[mt2->genparticle[j].GMIndex].ID<< endl;
+	njet++; 
+      }
+    }
+
+  return njet;
+}
+
 MT2tree::MT2tree(){
   // debug level for TopSearch:
   // = 0 if no printout at all
