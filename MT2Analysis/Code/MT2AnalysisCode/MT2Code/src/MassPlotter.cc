@@ -190,23 +190,51 @@ void MassPlotter::makeSmallCopy(int nevents, int sample, TString cuts, TString t
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
 
+  TFile *pileup_data = new TFile(GETDATALOCALPATH(Certification/pileUp_data/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.root),"READ");
+  
+  TH1F* pileup_data_histo = (TH1F*) pileup_data->Get("pileup");
+
+  TFile *pileup_mc = new TFile(GETDATALOCALPATH(Certification/pileUp_mc/MC2012PU_S10_60bins.root),"READ");
+  
+  TH1F* pileup_mc_histo = (TH1F*) pileup_mc->Get("pileup");
+  
+  pileup_data_histo->Scale(1.0/pileup_data_histo->Integral());
+
+  pileup_mc_histo->Scale(1.0/pileup_mc_histo->Integral());
+
+//   pileup_data_histo->Divide(pileup_mc_histo);
+
+  for(int i = 0; i < pileup_data_histo->GetNbinsX();i++){
+    pileup_data_histo->SetBinContent(i+1,  pileup_data_histo->GetBinContent(i+1)/pileup_mc_histo->GetBinContent(i+1));
+  }
+
+
+
   for(int ii = 0; ii < fSamples.size(); ii++){
     if(fSamples.size() > sample && ii != sample)
       continue;
     //  if(fSamples[ii].type != "data" || fSamples[ii].name != "Run2012D1F")
     // continue;
 
+
+    fMT2tree = new MT2tree();
+    fSamples[ii].tree->SetBranchAddress("MT2tree", &fMT2tree);
+
+
     cout << "making small copy of tree " << fSamples[ii].name << endl;
  //      TFile *newfile = new TFile(fOutputDir+"/"+fSamples[ii].name+"_small.root","recreate");
     TString fileName = fSamples[ii].file->GetName();
 
-    fileName =  fileName.ReplaceAll(".root", "_NBJetsCSVM0_MET30.root");
+    //    fileName =  fileName.ReplaceAll(".root", "_NBJetsCSVM0_MET30.root");
+    fileName =  fileName.ReplaceAll(".root", "_NewPU.root");
 
     TFile *newfile = new TFile(fOutputDir+"/"+fileName,"recreate");
     TTree *newtree = fSamples[ii].tree->CloneTree(0);
     TH1F *h_PUWeights = (TH1F*) fSamples[ii].file->Get("h_PUWeights");
     TH1F *h_Events    = (TH1F*) fSamples[ii].file->Get("h_Events");
     
+    h_PUWeights->Reset();
+
     if(fSamples[ii].file->Get("h_SMSEvents")){
       h_SMSEvents    = (TH2F*) fSamples[ii].file->Get("h_SMSEvents");
       h_mSugraEvents = (TH2F*) fSamples[ii].file->Get("h_mSugraEvents");
@@ -232,8 +260,20 @@ void MassPlotter::makeSmallCopy(int nevents, int sample, TString cuts, TString t
       }
  
       fSamples[ii].tree->GetEntry(myEvtList->GetEntry(i));
+      
+      float oldWeight = fMT2tree->pileUp.Weight;
+
+      int binNumber = pileup_data_histo->FindBin(fMT2tree->pileUp.PUtrueNumInt);
+
+      fMT2tree->pileUp.Weight = pileup_data_histo->GetBinContent(binNumber);
+
+      float newWeight = fMT2tree->pileUp.Weight;
+
       newtree->Fill();
+
+      h_PUWeights->Fill(newWeight);
    
+//       cout<<"old weight "<<oldWeight<<" new weight "<<newWeight<<endl;
     }
     cout << endl;
 	
@@ -1401,11 +1441,11 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 		  if(nbjets>=0 && nbjets<=3) btagweight = TString::Format("SFWeight.BTagCSV40eq%d",abs(nbjets));
 		  else if(nbjets>=-3)        btagweight = TString::Format("SFWeight.BTagCSV40ge%d",abs(nbjets));
 
-		  TString ChannelSpecificSF;// = "1.00";
+		  TString ChannelSpecificSF = "1.00";
 		  
 		  if(myChannel == "muTau"){
 		    if(fMuIdSF)
-		      ChannelSpecificSF += "muTau[0].muIdSF";
+		      ChannelSpecificSF += "*muTau[0].muIdSF";
 		    if(fMuIsoSF)
 		      ChannelSpecificSF += "*muTau[0].muIsoSF";
 		    if(fMuTrgSF)
@@ -1417,17 +1457,17 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 		    if(fTauEnergySF )
 		      ChannelSpecificSF += "*muTau[0].tauEnergySF";	  
 		  }
+		  else
+		    if(myChannel == "ee"){
+		      if(fE0IdIsoSF)
+			ChannelSpecificSF += "*doubleEle[0].Ele0IdIsoSF";
+		      if(fE1IdIsoSF)
+			ChannelSpecificSF += "*doubleEle[0].Ele1IdIsoSF";
+		      if(fETrgSF)
+			ChannelSpecificSF += "*doubleEle[0].DiEleTrgSF";
+		    }
 
-		  if(myChannel == "ee"){
-		    if(fE0IdIsoSF)
-		      ChannelSpecificSF += "doubleEle[0].Ele0IdIsoSF";
-		    if(fE1IdIsoSF)
-		      ChannelSpecificSF += "*doubleEle[0].Ele1IdIsoSF";
-		    if(fETrgSF)
-		      ChannelSpecificSF += "*doubleEle[0].DiEleTrgSF";
-		  }
-		  else ChannelSpecificSF = "pileUp.Weight";
-		  
+
 
 		if(fPUReweight && fbSFReWeight) selection = TString::Format("(%.15f*pileUp.Weight*%s*%s) * (%s)",weight, btagweight.Data(), ChannelSpecificSF.Data(), theCuts.Data());
  		else if(fPUReweight)  selection = TString::Format("(%.15f*pileUp.Weight*%s) * (%s)",   weight,                    ChannelSpecificSF.Data(), theCuts.Data());
@@ -8615,13 +8655,21 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
   TString varname = "MT2";
   for (int i=0; i<(NumberOfSamples); i++){
     MT2[i] = new TH1D(varname+"_"+cnames[i], "", 50, 0, 50);
+    //following to check the promptness and faking of the events
     //MT2[i] = new TH1D(varname+"_"+cnames[i], "", 8, 0, 8);
     MT2[i] -> SetFillColor (ccolor[i]);
     MT2[i] -> SetLineColor (ccolor[i]);
     MT2[i] -> SetLineWidth (2);
     MT2[i] -> SetMarkerColor(ccolor[i]);
     MT2[i] -> SetStats(false);
-  }
+
+    //following to check the promptness and faking of the events: 
+    /*    TString  genStatus[8] = {"pp", "pf", "fp", "ff", "tp", "tf", "nothing", "wrong"};
+    for(int k = 0; k < MT2[i]->GetNbinsX(); k++)
+      MT2[i] ->GetXaxis()->SetBinLabel(k+1,genStatus[k]);
+    */  
+}
+
 
   MT2[7] -> SetMarkerStyle(20);
   MT2[7] -> SetMarkerColor(kBlack);
@@ -8683,6 +8731,40 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 
       int tauIndex = -1;//fMT2tree->muTau[0].GetTauIndex0();
 
+      if(Sample.sname == "Wtolnu" || (Sample.shapename == "ZJetsToLL" && Sample.name != "DYToLL_M10To50")){
+
+	int nExtraJets = fMT2tree->GetNGenPartons();
+	
+	if(Sample.sname == "Wtolnu"){
+	  if(nExtraJets == 0)
+	    Weight = Sample.lumi * 0.001 * 0.4928715355;
+	  else if(nExtraJets == 1)
+	    Weight = Sample.lumi * 0.001 * 0.181745835;
+	  else if(nExtraJets == 2)
+	    Weight = Sample.lumi * 0.001 * 0.0561922559;
+	  else if(nExtraJets == 3)
+	    Weight = Sample.lumi * 0.001 * 0.0380293689;
+	  else if(nExtraJets >= 4)
+	    Weight = Sample.lumi * 0.001 * 0.0189706568;
+	}else{
+	  //DYJets  NEvents: 28433561  IL = 9638.495254 Invpb     
+	  //DY1Jets NEvents: 19978008  IL = 35611.42245 Invpb
+	  //DY2Jets NEvents: 2352304   IL = 12996.1546 Invpb
+	  //DY3Jets NEvents: 11015445  IL = 215566.4384 Invpb
+	  //DY4Jets NEvents: 6402827   IL = 278383.7826 Invpb
+	  if(nExtraJets == 0)
+	    Weight = Sample.lumi * 1.1876949153/9638.495254;
+	  if(nExtraJets == 1)
+	    Weight = Sample.lumi * 1.1876949153/(9638.495254 + 35611.42245);
+	  if(nExtraJets == 2)
+	    Weight = Sample.lumi * 1.1876949153/(9638.495254 + 12996.1546);
+	  if(nExtraJets == 3)
+	    Weight = Sample.lumi * 1.1876949153/(9638.495254 + 215566.4384);
+	  if(nExtraJets >= 4)
+	    Weight = Sample.lumi * 1.1876949153/(9638.495254 + 278383.7826);
+	}
+
+      }
  
       float weight = Weight;
 
@@ -8748,7 +8830,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 	
 }
       
-      float myQuantity = fMT2tree->muTau[0].GetMT2();
+       float myQuantity = fMT2tree->pileUp.NVertices;//fMT2tree->muTau[0].GetMT2();
  
  //      int nExtraTaus = 0;
 
@@ -8759,24 +8841,9 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
       
 //       myQuantity = fMT2tree->pileUp.NVertices;//nExtraTaus;
 
-//      TString genMuTauStatus = fMT2tree->GenLeptonAnalysisInterpretation(0,1,1, false);
+//following to check the promptness and faking of the events:
+//       TString myQuantity = fMT2tree->GenLeptonAnalysisInterpretation(0,1,1, false);
 
-//       if(genMuTauStatus == "pp")
-// 	myQuantity = 0.5;
-//       if(genMuTauStatus == "pf")
-// 	myQuantity = 1.5;
-//       if(genMuTauStatus == "fp")
-// 	myQuantity = 2.5;
-//       if(genMuTauStatus == "ff")
-// 	myQuantity = 3.5;
-//       if(genMuTauStatus == "tp")
-// 	myQuantity = 4.5;
-//       if(genMuTauStatus == "tf")
-// 	myQuantity = 5.5;
-//       if(genMuTauStatus == "nothing")
-// 	myQuantity = 6.5;
-//       if(genMuTauStatus == "wrong")
-// 	myQuantity = 7.5;
 
      /*
 	std::vector<int> Tau0;
