@@ -356,6 +356,52 @@ Lumi            19600.0
 Type            mc
 Color		417
 
+
+SAMPLE
+Name		W1JetsToLNu
+SName		Wtolnu
+ShapeName	WJets
+File            TauTau_V3_1/W1JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU.root
+Xsection  	1.23 * 5400
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		417
+
+SAMPLE
+Name		W2JetsToLNu
+SName		Wtolnu
+ShapeName	WJets
+File            TauTau_V3_1/W2JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU.root
+Xsection  	1.23 * 1750
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		417
+
+SAMPLE
+Name		W3JetsToLNu
+SName		Wtolnu
+ShapeName	WJets
+File            TauTau_V3_1/W3JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU.root
+Xsection  	1.23 * 519
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		417
+
+SAMPLE
+Name		W4JetsToLNu
+SName		Wtolnu
+ShapeName	WJets
+File            TauTau_V3_1/W4JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU.root
+Xsection  	1.23 * 214
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		417
+
+
 #----------------DY----------------
 SAMPLE
 Name		DYToLL_M10To50
@@ -373,7 +419,51 @@ Name		DYToLL_M50
 SName		DY
 ShapeName	ZJetsToLL
 File            TauTau_V3_1/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_NBJetsCSVM0_MET30_NewPU.root
-Xsection  	3503.71
+Xsection  	1.187695 * 2950
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		419 
+                  
+SAMPLE
+Name		DY1ToLL_M50
+SName		DY
+ShapeName	ZJetsToLL
+File            TauTau_V3_1/DY1JetsToLL_M-50_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU.root
+Xsection  	1.187695 * 561
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		419 
+                  
+SAMPLE
+Name		DY2ToLL_M50
+SName		DY
+ShapeName	ZJetsToLL
+File            TauTau_V3_1/DY2JetsToLL_M-50_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU.root
+Xsection  	1.187695 * 181
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		419 
+                  
+SAMPLE
+Name		DY3ToLL_M50
+SName		DY
+ShapeName	ZJetsToLL
+File            TauTau_V3_1/DY3JetsToLL_M-50_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU.root
+Xsection  	1.187695 * 51.1
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		419 
+                  
+SAMPLE
+Name		DY4ToLL_M50
+SName		DY
+ShapeName	ZJetsToLL
+File            TauTau_V3_1/DY4JetsToLL_M-50_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU.root
+Xsection  	1.187695 * 23
 Kfact           1.
 Lumi            19600.0
 Type            mc
