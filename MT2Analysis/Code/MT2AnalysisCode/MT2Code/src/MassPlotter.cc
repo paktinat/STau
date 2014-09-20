@@ -8764,6 +8764,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 	    Weight = Sample.lumi * 1.1876949153/(9638.495254 + 278383.7826);
 	}
 
+	if(fPUReweight) Weight /= Sample.PU_avg_weight;
       }
  
       float weight = Weight;
