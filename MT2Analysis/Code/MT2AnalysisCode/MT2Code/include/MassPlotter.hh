@@ -80,7 +80,7 @@ public:
 	void init(TString filename = "samples.dat");
 	void loadSamples(const char* filename = "samples.dat");
 
-  void MakeCutFlowTable( std::vector<std::string> all_cuts );
+        void MakeCutFlowTable( std::vector<std::string> all_cuts );
 	void makePlots();
 	void makeSmallCopy(int nevents, int sample, TString cuts, TString trigger);
 	void SetSave(bool save=true){fSave=save;};
@@ -89,6 +89,9 @@ public:
 	void SetMT2bAnalysis(bool isMT2bAnalysis){fMT2bAnalysis=isMT2bAnalysis;};
 	void SetEventsPerGeV(bool eventspergev){fEventsPerGeV=eventspergev;};
 	void SetPileUpReweight(bool PU){fPUReweight=PU; std::cout << "PU Reweighting =" << fPUReweight << std::endl;};
+        void SetStitching(bool stitching){fStitching = stitching;}
+
+
 	void SetbSFWeights(bool bSF){fbSFReWeight=bSF;};
         void vs(Long64_t  nevents, TString cuts, TString trigger);
 
@@ -322,6 +325,7 @@ private:
 	bool fMT2Analysis;
 	bool fEventsPerGeV;
 	bool fPUReweight;
+        bool fStitching;
 	bool fbSFReWeight;
         TString myChannel;
         bool fMuIdSF;

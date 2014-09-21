@@ -766,6 +766,48 @@ int MT2tree::GetNGenPartons(){
 
   return njet;
 }
+float MT2tree::NewWeightFromStitching(int VBosonID){
+
+  int nExtraJets = GetNGenPartons();
+  float Weight = 1.0;
+
+//   if(Sample.sname == "Wtolnu"){
+  if(VBosonID == 24){
+    //Numbers for W and cross sections for DY are taken from
+    //https://twiki.cern.ch/twiki/pub/CMS/HiggsToTauTauWorkingSummer2013/WplusNjetWeights2.xls
+
+    if(nExtraJets == 0)
+      Weight = 0.001 * 0.4928715355;
+    else if(nExtraJets == 1)
+      Weight = 0.001 * 0.181745835;
+    else if(nExtraJets == 2)
+      Weight = 0.001 * 0.0561922559;
+    else if(nExtraJets == 3)
+      Weight = 0.001 * 0.0380293689;
+    else if(nExtraJets >= 4)
+      Weight = 0.001 * 0.0189706568;
+  }else{
+    //DYJets  NEvents: 28433561  IL = 9638.495254 Invpb     
+    //DY1Jets NEvents: 19978008  IL = 35611.42245 Invpb
+    //DY2Jets NEvents: 2352304   IL = 12996.1546 Invpb
+    //DY3Jets NEvents: 11015445  IL = 215566.4384 Invpb
+    //DY4Jets NEvents: 6402827   IL = 278383.7826 Invpb
+    if(nExtraJets == 0)
+      Weight = 1.1876949153/9638.495254;
+    if(nExtraJets == 1)
+      Weight = 1.1876949153/(9638.495254 + 35611.42245);
+    if(nExtraJets == 2)
+      Weight = 1.1876949153/(9638.495254 + 12996.1546);
+    if(nExtraJets == 3)
+      Weight = 1.1876949153/(9638.495254 + 215566.4384);
+    if(nExtraJets >= 4)
+      Weight = 1.1876949153/(9638.495254 + 278383.7826);
+  }
+  return Weight;
+}
+
+
+
 
 MT2tree::MT2tree(){
   // debug level for TopSearch:

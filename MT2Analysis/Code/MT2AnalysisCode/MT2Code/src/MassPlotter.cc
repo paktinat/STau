@@ -81,6 +81,7 @@ MassPlotter::MassPlotter(){
 	fSave=true;
 	fisPhoton=false;
 	fPUReweight=true;
+	fStitching=true;
 	fbSFReWeight=true;
 	myChannel = "TBD";
 	
@@ -110,6 +111,7 @@ MassPlotter::MassPlotter(TString outputdir){
        	fSave=true;
 	fisPhoton=false;
 	fPUReweight=true;
+	fStitching=true;
 	fbSFReWeight=true;
 	myChannel = "TBD";
 	
@@ -139,6 +141,7 @@ MassPlotter::MassPlotter(TString outputdir, TString outputfile){
 	fSave=true;
 	fisPhoton=false;
 	fPUReweight=true;
+	fStitching=true;
 	fbSFReWeight=true;
 	myChannel = "TBD";
 	
@@ -1468,14 +1471,32 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 		    }
 
 
+		  if(fStitching && (Samples[i].sname == "Wtolnu" || (Samples[i].shapename == "ZJetsToLL" && Samples[i].name != "DYToLL_M10To50"))){
+		    weight = Samples[i].lumi;
+		    if(fPUReweight) weight /= Samples[i].PU_avg_weight;
 
-		if(fPUReweight && fbSFReWeight) selection = TString::Format("(%.15f*pileUp.Weight*%s*%s) * (%s)",weight, btagweight.Data(), ChannelSpecificSF.Data(), theCuts.Data());
- 		else if(fPUReweight)  selection = TString::Format("(%.15f*pileUp.Weight*%s) * (%s)",   weight,                    ChannelSpecificSF.Data(), theCuts.Data());
-		else if(fbSFReWeight) selection = TString::Format("(%.15f*%s*%s) * (%s)",              weight, btagweight.Data(), ChannelSpecificSF.Data(), theCuts.Data());
-		else                  selection = TString::Format("(%.15f*%s) * (%s)",                 weight,                    ChannelSpecificSF.Data(), theCuts.Data()); 
+		    TString NewWeight;
+		    
+		    if(Samples[i].sname == "Wtolnu")
+		      NewWeight = "NewWeightFromStitchingW()";
+		    else
+		      NewWeight = "NewWeightFromStitchingZ()";
+		    
+		    
+		    if(fPUReweight && fbSFReWeight) selection = TString::Format("(%.15f*%s*pileUp.Weight*%s*%s) * (%s)",weight, NewWeight.Data(), btagweight.Data(), ChannelSpecificSF.Data(), theCuts.Data());
+		    else if(fPUReweight)  selection = TString::Format("(%.15f*%s*pileUp.Weight*%s) * (%s)",   weight, NewWeight.Data(),                    ChannelSpecificSF.Data(), theCuts.Data());
+		    else if(fbSFReWeight) selection = TString::Format("(%.15f*%s*%s*%s) * (%s)",              weight, NewWeight.Data(), btagweight.Data(), ChannelSpecificSF.Data(), theCuts.Data());
+		    else                  selection = TString::Format("(%.15f*%s*%s) * (%s)",                 weight, NewWeight.Data(),                    ChannelSpecificSF.Data(), theCuts.Data()); 
+		  }else{
+	  
+		    if(fPUReweight && fbSFReWeight) selection = TString::Format("(%.15f*pileUp.Weight*%s*%s) * (%s)",weight, btagweight.Data(), ChannelSpecificSF.Data(), theCuts.Data());
+		    else if(fPUReweight)  selection = TString::Format("(%.15f*pileUp.Weight*%s) * (%s)",   weight,                    ChannelSpecificSF.Data(), theCuts.Data());
+		    else if(fbSFReWeight) selection = TString::Format("(%.15f*%s*%s) * (%s)",              weight, btagweight.Data(), ChannelSpecificSF.Data(), theCuts.Data());
+		    else                  selection = TString::Format("(%.15f*%s) * (%s)",                 weight,                    ChannelSpecificSF.Data(), theCuts.Data()); 
+		  }
 
-
-		if(     Samples[i].type=="susy"){
+		  
+		  if(     Samples[i].type=="susy"){
 		  if(fPUReweight) weight = Samples[i].lumi / (Samples[i].PU_avg_weight);
 		  else            weight = Samples[i].lumi;
 		  TString SUSYselection;
@@ -8654,7 +8675,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
   int      ccolor[NumberOfSamples+1] = { 401,       417,    419,   855,       603,  603,      1, 632};
   TString varname = "MT2";
   for (int i=0; i<(NumberOfSamples); i++){
-    MT2[i] = new TH1D(varname+"_"+cnames[i], "", 50, 0, 50);
+    MT2[i] = new TH1D(varname+"_"+cnames[i], "", 50, 0, 250);
     //following to check the promptness and faking of the events
     //MT2[i] = new TH1D(varname+"_"+cnames[i], "", 8, 0, 8);
     MT2[i] -> SetFillColor (ccolor[i]);
@@ -8732,38 +8753,13 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
       int tauIndex = -1;//fMT2tree->muTau[0].GetTauIndex0();
 
       if(Sample.sname == "Wtolnu" || (Sample.shapename == "ZJetsToLL" && Sample.name != "DYToLL_M10To50")){
+	int VBosonID = 24;
+	if(Sample.sname == "Wtolnu")
+	  VBosonID = 24;
+	else
+	  VBosonID = 23;
 
-	int nExtraJets = fMT2tree->GetNGenPartons();
-	
-	if(Sample.sname == "Wtolnu"){
-	  if(nExtraJets == 0)
-	    Weight = Sample.lumi * 0.001 * 0.4928715355;
-	  else if(nExtraJets == 1)
-	    Weight = Sample.lumi * 0.001 * 0.181745835;
-	  else if(nExtraJets == 2)
-	    Weight = Sample.lumi * 0.001 * 0.0561922559;
-	  else if(nExtraJets == 3)
-	    Weight = Sample.lumi * 0.001 * 0.0380293689;
-	  else if(nExtraJets >= 4)
-	    Weight = Sample.lumi * 0.001 * 0.0189706568;
-	}else{
-	  //DYJets  NEvents: 28433561  IL = 9638.495254 Invpb     
-	  //DY1Jets NEvents: 19978008  IL = 35611.42245 Invpb
-	  //DY2Jets NEvents: 2352304   IL = 12996.1546 Invpb
-	  //DY3Jets NEvents: 11015445  IL = 215566.4384 Invpb
-	  //DY4Jets NEvents: 6402827   IL = 278383.7826 Invpb
-	  if(nExtraJets == 0)
-	    Weight = Sample.lumi * 1.1876949153/9638.495254;
-	  if(nExtraJets == 1)
-	    Weight = Sample.lumi * 1.1876949153/(9638.495254 + 35611.42245);
-	  if(nExtraJets == 2)
-	    Weight = Sample.lumi * 1.1876949153/(9638.495254 + 12996.1546);
-	  if(nExtraJets == 3)
-	    Weight = Sample.lumi * 1.1876949153/(9638.495254 + 215566.4384);
-	  if(nExtraJets >= 4)
-	    Weight = Sample.lumi * 1.1876949153/(9638.495254 + 278383.7826);
-	}
-
+	Weight = Sample.lumi * fMT2tree->NewWeightFromStitching(VBosonID);
 	if(fPUReweight) Weight /= Sample.PU_avg_weight;
       }
  
@@ -8831,7 +8827,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 	
 }
       
-       float myQuantity = fMT2tree->pileUp.NVertices;//fMT2tree->muTau[0].GetMT2();
+       float myQuantity = fMT2tree->muTau[0].GetMT2();
  
  //      int nExtraTaus = 0;
 

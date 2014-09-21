@@ -1030,6 +1030,13 @@ public:
   //Bosons
   Float_t GetGenVPt(int pid);
   int GetNGenPartons();
+  float NewWeightFromStitching(int VBosonID);
+  float NewWeightFromStitchingW(){
+    return NewWeightFromStitching(24);
+  }
+  float NewWeightFromStitchingZ(){
+    return NewWeightFromStitching(23);
+  }
 
   Int_t   NJets;
   Int_t   NGenJets;
