@@ -19,8 +19,11 @@
   //  TString samples = "./samples/samplesMineDoubleElectronQCDHtBin-SMS005.dat";                                                                     
   //  TString samples = "./samples/samplesMineDoubleElectronQCDHtBin-SMS005.dat";  
 
-  TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30.dat";
+  //  TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30.dat";
+ TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30_NewPU_Stitched.dat";
+
   Int_t channel = 22; //2* 11 (Electron PDG Id)
+
 
   int verbose =3;
   
@@ -83,13 +86,13 @@
       myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==1"));
       myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)");
       myChannelCuts.push_back("NBJetsCSVM==0");
-      myChannelCuts.push_back("((doubleEle[0].lv.M() > 12 && doubleEle[0].lv.M() < 76) || (doubleEle[0].lv.M() > 106))");
+      myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 76) || (doubleEle[0].lv.M() > 106))");
       myChannelCuts.push_back("misc.MET > 30");
 
 
       myChannelCuts.push_back("((misc.MET)+(doubleEle[0].lv.Pt()))>80");
       myChannelCuts.push_back("((misc.MET)-(doubleEle[0].lv.Pt()))>-50");
-      myChannelCuts.push_back("(doubleEle[0].MT2 > 80)");
+      //      myChannelCuts.push_back("(doubleEle[0].MT2 > 80)");
 
       myChannelCuts.push_back("0 == 0");	
 
@@ -108,11 +111,15 @@
 ///////////////////////////////////////////////////////////////Make Plot/////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2", 50, 0, 500, false, true, true, true, true, true, 1, true, false, "png");
+tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2", 20, 0, 200, false, true, true, true, true, true, 1, true, false, "png");
 //tA->makePlot("misc.MET", cuts, -10, 0, -10, trigger, "MET", 50, 0, 500, false, true, true, true, true, true, 1, true, false, "png");
 //tA->makePlot("MCTEleEle()", cuts, -10, 0, -10, trigger, "MCT", 50, 0, 500, false, true , true, true, true, true, 1, true, false, "png");
 
-//tA->makePlot("ele[doubleEle[0].Ele0Ind].MT",     cuts,    -10,  0 , -10 ,   trigger , "First Electron MT"            ,30,0,300,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+// tA->makePlot("ele[doubleEle[0].Ele0Ind].MT",     cuts,    -10,  0 , -10 ,   trigger , "First Electron MT"            ,20,0,200,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+// tA->makePlot("ele[doubleEle[0].Ele1Ind].MT",     cuts,    -10,  0 , -10 ,   trigger , "Second Electron MT"           ,20,0,200,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+// tA->makePlot("ele[doubleEle[0].Ele0Ind].lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "First Electron Pt"            ,20,0,200,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+// tA->makePlot("ele[doubleEle[0].Ele1Ind].lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "Second Electron Pt"            ,20,0,200,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+
 // tA->makePlot("METMinusPtZEleEle()", cuts, -10,  0 , -10 , trigger , "|MET-Pt_Z| 175", 50, 0, 500, false, true , true,  true, true, true, 1, true, false, "png");
 // tA->makePlot("JZBInDirectEleEle()",     cuts,    -10,  0 , -10 ,   trigger , "JZB"     ,50,0,500,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 //tA->makePlot("doubleEle[0].DPhi",     cuts,    -10,  0 , -10 ,   trigger , "Di-Electron Delta_Phi"            ,10,0,3,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
@@ -124,7 +131,7 @@ tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2", 50, 0, 500, 
 
 //tA->vs(1000000000000000,cuts,trigger);// , "MT2MCT-MT0MT1");
 
-
+//tA->makePlot("pileUp.NVertices",     cuts,    -10,  0 , -10 ,   trigger , "NVertices"            ,60,0,60,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////Plot Sig/////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -361,7 +368,7 @@ tA->makePlot(vars3[iVar3], cuts, -10, -10 , -10, trigger, vars3[iVar3],20,0,20 ,
 // tA->makePlot("PositiveChargedLeptonDecayAngleinZframeEleEle()",     cuts,    -10,  -10 , -10 ,   trigger , "PositiveChargedLeptonDecayAngleinZframeEleEle"            ,10,0,5,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 //tA->makePlot("MinMetLepDPhiEleEle()",     cuts,    -10,  -10 , -10 ,   trigger , "Min Met_Lep Delta_Phi"            ,10,0,5,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 // tA->makePlot("PositiveChargedLepWithZBeamPlaneEleEle()",     cuts,    -10,  -10 , -10 ,   trigger , "Positron angle with Z_Beam Plane"            ,10,0,5,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-// //tA->makePlot("pileUp.NVertices",     cuts,    -10,  -10 , -10 ,   trigger , "pileUp.NVertices"            ,60,0,60,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+
 // // tA->makePlot("NBJetsCSVM",     cuts,    -10,  -10 , -10 ,   trigger , "#BJets_CSVM"            ,5,0,5,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 
 //tA->makePlot("doubleEle[0].Ele1Ind",     cuts,    -10,  -10 , -10 ,   trigger , "doubleEle[0].Ele1Ind"            ,10,-5,5,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
