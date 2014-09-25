@@ -1300,6 +1300,8 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
         TH2D *h_PN_MLSP_MChi = new TH2D("h_PN_MLSP_MChi", "", 125, 0, 2500, 125, 0, 2500);
 	h_PN_MLSP_MChi->Sumw2();
 
+	int SusySampleInd = -1;
+
         TString varname = Util::removeFunnyChar(var.Data());
 
 	TString nMinCut = var;
@@ -1494,38 +1496,30 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 		  else                  selection = TString::Format("(%.15f*%s) * (%s)",                 weight,                    ChannelSpecificSF.Data(), theCuts.Data()); 
 		  
 		  if(     Samples[i].type=="susy"){
-		  if(fPUReweight) weight = Samples[i].lumi / (Samples[i].PU_avg_weight);
-		  else            weight = Samples[i].lumi;
-		  TString SUSYselection;
-		  if(fPUReweight && fbSFReWeight) SUSYselection = TString::Format("(%.15f*pileUp.Weight*%s*%s) * (%s)",weight, btagweight.Data(), ChannelSpecificSF.Data(), theCuts.Data());
-		  else if(fPUReweight)  SUSYselection = TString::Format("(%.15f*pileUp.Weight*%s) * (%s)",   weight,                    ChannelSpecificSF.Data(), theCuts.Data());
-		  else if(fbSFReWeight) SUSYselection = TString::Format("(%.15f*%s*%s) * (%s)",              weight, btagweight.Data(), ChannelSpecificSF.Data(), theCuts.Data());
-		  else                  SUSYselection = TString::Format("(%.15f*%s) * (%s)",                 weight,                    ChannelSpecificSF.Data(), theCuts.Data()); 
+		    if(fPUReweight) weight = Samples[i].lumi / (Samples[i].PU_avg_weight);
+		    else            weight = Samples[i].lumi;
+		    TString SUSYselection;
+		    if(fPUReweight && fbSFReWeight) SUSYselection = TString::Format("(%.15f*pileUp.Weight*%s*%s) * (%s)",weight, btagweight.Data(), ChannelSpecificSF.Data(), theCuts.Data());
+		    else if(fPUReweight)  SUSYselection = TString::Format("(%.15f*pileUp.Weight*%s) * (%s)",   weight,                    ChannelSpecificSF.Data(), theCuts.Data());
+		    else if(fbSFReWeight) SUSYselection = TString::Format("(%.15f*%s*%s) * (%s)",              weight, btagweight.Data(), ChannelSpecificSF.Data(), theCuts.Data());
+		    else                  SUSYselection = TString::Format("(%.15f*%s) * (%s)",                 weight,                    ChannelSpecificSF.Data(), theCuts.Data()); 
 
-		  TString SUSYvariable = TString::Format("Susy.MassLSP:Susy.MassGlu>>+%s", h_PN_MLSP_MChi->GetName());
+		    TString SUSYvariable = TString::Format("Susy.MassLSP:Susy.MassGlu>>+%s", h_PN_MLSP_MChi->GetName());
 
-		if(fVerbose>2) cout << "  +++++++ Drawing SUSY " << SUSYvariable  << endl
-				    << "  +++++++ with cuts:   " << setw(40)  << SUSYselection << endl;
+		    if(fVerbose>2) cout << "  +++++++ Drawing SUSY " << SUSYvariable  << endl
+					<< "  +++++++ with cuts:   " << setw(40)  << SUSYselection << endl;
 		
-		  fSamples[i].tree->Draw(SUSYvariable, SUSYselection, "goff");
+		    fSamples[i].tree->Draw(SUSYvariable, SUSYselection, "goff");
 
-		}
-
-
-	//	TString selection;
-	//	if(Samples[i].type!="data" && fPUReweight) selection      = TString::Format("(%.15f*pileUp.Weight) * (%s)",weight,theCuts.Data());
-	//	else                                       selection      = TString::Format("(%.15f) * (%s)"              ,weight,theCuts.Data()); 
+		    SusySampleInd = i; 	  
+		  
+		  }
+		 
 		}
 		if(fVerbose>2) cout << "  +++++++ Drawing      " << variable  << endl
 				    << "  +++++++ with cuts:   " << setw(40)  << selection << endl;
 
 		int nev = Samples[i].tree->Draw(variable.Data(),selection.Data(),"goff");
-
-
-
-
- 	
-
 
 
 		// Add underflow & overflow bins
@@ -1899,37 +1893,39 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
   MyC->cd(2);
   sig2->Draw("ACP");
 
+  TH1F *h_PN_Bkg  = (TH1F*)h_mc_sum->Clone();
+  h_PN_Bkg->SetName("h_PN_Bkg");
+  h_PN_Bkg->Rebin(h_PN_Bkg->GetNbinsX());
+  
+  TH1F *h_PN_data  = (TH1F*)h_data->Clone();
+  h_PN_data->SetName("h_PN_data");
+  h_PN_data->Rebin(h_PN_data->GetNbinsX());
+
+  TH2D *h_SMSEvents = (TH2D*) fSamples[SusySampleInd].file->Get("h_SMSEvents");
+  h_SMSEvents->Rebin2D(4, 4);
+  h_PN_MLSP_MChi->Divide(h_SMSEvents);
+  TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
+  h_PN_MLSP_MChi->Multiply(hXsec);
+
   TString fileName = fOutputDir;
   if(!fileName.EndsWith("/")) fileName += "/";
   Util::MakeOutputDir(fileName);
   fileName = fileName + "countingForExclusion_" + myChannel +"_Histos.root";
   TFile *savefile = new TFile(fileName.Data(), "RECREATE");
   savefile ->cd();
-
+  
   h_stack->SetName("h_stack");
-  h_mc_sum->SetName("h_mc_sum");
-  h_data->SetName("h_data");
 
   h_stack->Write();
-  h_mc_sum->Write();
-  h_data->Write();
+  h_PN_Bkg->Write();
+  h_PN_data->Write();
   h_PN_MLSP_MChi->Write();
 
   savefile->Close();
   
   std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
-
-  // 	for(int i=0; i<h_samples.size(); ++i){
-  // 		delete h_samples[i];
-  // 	}
-  // 	delete h_mc_sum;
-  // 	delete Legend1;
-  // 	delete h_data;
-  // 	delete h_susy;
 }
-
-
-
+ 
 
 //__________________________________________________________________________
 void MassPlotter::abcd_MT2(TString var, TString basecut, TString upper_cut, TString lower_cut, const int nbins,const double min, const double max, double fit_min, double fit_max){
@@ -8060,8 +8056,8 @@ void MassPlotter::vs(Long64_t  nevents, TString cuts, TString trigger){
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
 
-  TH2F *AvsBSignal = new TH2F("AvsBSignal"  , "AvsBSignal" , 20,   0, 450, 20,   0, 150);
-  TH2F *AvsBBkg    = new TH2F("AvsBBkg"     , "AvsBBkg"    , 20,   0, 450, 20,   0, 150);
+  TH2F *AvsBSignal = new TH2F("AvsBSignal"  , "AvsBSignal" , 60,   0, 600, 30,   0, 150);
+  TH2F *AvsBBkg    = new TH2F("AvsBBkg"     , "AvsBBkg"    , 60,   0, 600, 30,   0, 150);
   TH2F *AvsB2Signal = new TH2F("AvsB2Signal", "AvsB2Signal", 20,   -150, 150, 20,   0, 450);
   TH2F *AvsB2Bkg    = new TH2F("AvsB2Bkg"   , "AvsB2Bkg"   , 20,   -150, 150, 20,   0, 450);
 
@@ -8092,6 +8088,14 @@ void MassPlotter::vs(Long64_t  nevents, TString cuts, TString trigger){
     cout << "   Weight:         " << Weight <<endl;
     std::cout << setfill('-') << std::setw(70) << "" << std::endl;
 
+
+    if(fStitching && (Sample.sname == "Wtolnu" || (Sample.shapename == "ZJetsToLL" && Sample.name != "DYToLL_M10To50"))){
+
+      Weight = Sample.lumi;
+      if(fPUReweight) Weight /= Sample.PU_avg_weight;
+       
+    }
+
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
     Sample.tree->SetEventList(myEvtList);
@@ -8105,17 +8109,17 @@ void MassPlotter::vs(Long64_t  nevents, TString cuts, TString trigger){
 	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
 	fflush(stdout);
       }
-      
+      float weight = Weight * fMT2tree->pileUp.Weight;
 
       if(Sample.type == "susy"){
-	AvsBSignal->Fill(fMT2tree->JZB(-1), abs(fMT2tree->JZB()), Weight);
-	AvsB2Signal->Fill(fMT2tree->misc.MET - fMT2tree->muTau[0].GetLV().Pt(), fMT2tree->misc.MET + fMT2tree->muTau[0].GetLV().Pt(), Weight);
+	AvsBSignal->Fill(fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT + fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT, fMT2tree->muTau[0].GetMT2(), weight);
+	AvsB2Signal->Fill(fMT2tree->misc.MET - fMT2tree->muTau[0].GetLV().Pt(), fMT2tree->misc.MET + fMT2tree->muTau[0].GetLV().Pt(), weight);
       }
        //     if(Sample.sname == "Wtolnu")
       else
 	{
-	  AvsBBkg->Fill(fMT2tree->JZB(-1), abs(fMT2tree->JZB()), Weight);
-	  AvsB2Bkg->Fill(fMT2tree->misc.MET - fMT2tree->muTau[0].GetLV().Pt(), fMT2tree->misc.MET + fMT2tree->muTau[0].GetLV().Pt(), Weight);
+	  AvsBBkg->Fill(fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT + fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT, fMT2tree->muTau[0].GetMT2(), weight);
+	  AvsB2Bkg->Fill(fMT2tree->misc.MET - fMT2tree->muTau[0].GetLV().Pt(), fMT2tree->misc.MET + fMT2tree->muTau[0].GetLV().Pt(), weight);
 	}
     }
   }
@@ -8618,16 +8622,16 @@ void MassPlotter::TauFakeRate(TString cuts, TString trigger, Long64_t nevents, T
       if(hasMuon == 0)
 	continue;
 
-      int TauMatchedtoLeadingJetIndex = -1;
+//       int TauMatchedtoLeadingJetIndex = -1;
       
-      for(int j=0; j<fMT2tree->NJets; ++j){ 
-    	if(fMT2tree->jet[j].isPFIDLoose==false) continue;
-    	if (!((fMT2tree->jet[j].lv.Pt() > 20)  &&  fabs(fMT2tree->jet[j].lv.Eta()<2.3)))  
-    	  continue;
+//       for(int j=0; j<fMT2tree->NJets; ++j){ 
+//     	if(fMT2tree->jet[j].isPFIDLoose==false) continue;
+//     	if (!((fMT2tree->jet[j].lv.Pt() > 20)  &&  fabs(fMT2tree->jet[j].lv.Eta()<2.3)))  
+//     	  continue;
 	
-    	TauMatchedtoLeadingJetIndex = fMT2tree->jet[j].isTauMatch;
-	break;    
-      }
+//     	TauMatchedtoLeadingJetIndex = fMT2tree->jet[j].isTauMatch;
+// 	break;    
+//       }
 
       for(int t=0; t<fMT2tree->NTaus; t++){ 
 	
@@ -8642,7 +8646,7 @@ void MassPlotter::TauFakeRate(TString cuts, TString trigger, Long64_t nevents, T
 	if(fMT2tree->tau[t].PassQCDTau_MuTau == 1)
 	  hPtEtaAll->Fill(fMT2tree->tau[t].lv.Eta(), fMT2tree->tau[t].lv.Pt()); 
 
-	if(fMT2tree->tau[t].PassTau_MuTau == 1)
+	if(fMT2tree->tau[t].PassTau_MuTau == 1 && fMT2tree->tau[t].Isolation3Hits <= 3)
 	  hPtEtaPass->Fill(fMT2tree->tau[t].lv.Eta(), fMT2tree->tau[t].lv.Pt()); 
       }
       
@@ -8672,9 +8676,9 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
   int      ccolor[NumberOfSamples+1] = { 401,       417,    419,   855,       603,  603,      1, 632};
   TString varname = "MT2";
   for (int i=0; i<(NumberOfSamples); i++){
-    MT2[i] = new TH1D(varname+"_"+cnames[i], "", 50, 0, 250);
+    //MT2[i] = new TH1D(varname+"_"+cnames[i], "", 50, 0, 250);
     //following to check the promptness and faking of the events
-    //MT2[i] = new TH1D(varname+"_"+cnames[i], "", 8, 0, 8);
+    MT2[i] = new TH1D(varname+"_"+cnames[i], "", 8, 0, 8);
     MT2[i] -> SetFillColor (ccolor[i]);
     MT2[i] -> SetLineColor (ccolor[i]);
     MT2[i] -> SetLineWidth (2);
@@ -8682,10 +8686,10 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
     MT2[i] -> SetStats(false);
 
     //following to check the promptness and faking of the events: 
-    /*    TString  genStatus[8] = {"pp", "pf", "fp", "ff", "tp", "tf", "nothing", "wrong"};
+    TString  genStatus[8] = {"pp", "pf", "fp", "ff", "tp", "tf", "nothing", "wrong"};
     for(int k = 0; k < MT2[i]->GetNbinsX(); k++)
       MT2[i] ->GetXaxis()->SetBinLabel(k+1,genStatus[k]);
-    */  
+    
 }
 
 
@@ -8768,8 +8772,8 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 	  weight *= fMT2tree->muTau[0].GetTauWjetsSF();
       }
       
-       float myQuantity = fMT2tree->muTau[0].GetMT2();
- 
+      //float myQuantity = fMT2tree->muTau[0].GetMT2();
+        
  //      int nExtraTaus = 0;
 //       int tauIndex = -1;//fMT2tree->muTau[0].GetTauIndex0();
 
@@ -8782,7 +8786,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 //       myQuantity = fMT2tree->pileUp.NVertices;//nExtraTaus;
 
 //following to check the promptness and faking of the events:
-//       TString myQuantity = fMT2tree->GenLeptonAnalysisInterpretation(0,1,1, false);
+       TString myQuantity = fMT2tree->GenLeptonAnalysisInterpretation(0,1,1, false);
 
 
      /*
@@ -9630,7 +9634,7 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
       data = 1;
       myCuts += "&& (muTau[0].Isolated >= 0) && " + trigger;
     }else
-      myCuts += "&& (muTau[0].Isolated == 1)";
+      myCuts += "&& (muTau[0].Isolated == 1) && (tau[muTau[0].tau0Ind].Isolation3Hits <= 3.)";
   
     fMT2tree = new MT2tree();
     Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
