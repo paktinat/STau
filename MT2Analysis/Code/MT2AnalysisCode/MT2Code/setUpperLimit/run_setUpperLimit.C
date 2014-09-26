@@ -1,7 +1,7 @@
 
 #include <TString.h>
 
-void makeCard(double S, double dS, double B, double dB, string sOut) {
+void makeCard(double N, double S, double dS, double B, double dB, string sOut) {
 
     // === DATA CARD ===
     ofstream fOut(sOut.c_str());
@@ -11,7 +11,7 @@ void makeCard(double S, double dS, double B, double dB, string sOut) {
     fOut << "kmax 2  number of nuisance parameters (sources of systematic uncertainties)" << std::endl;
     fOut << "---" << std::endl;
     fOut << "bin 1" << std::endl;
-    fOut << "observation " << B << std::endl;
+    fOut << "observation " << N << std::endl;
     fOut << "---" << std::endl;
     fOut << "bin              1     1" << std::endl;
     fOut << "process         SMS    All" << std::endl;
@@ -31,11 +31,11 @@ bool isOUT(double x, double y) {
 
     double a = (100. - 480.) / (120. - 500.);
     double b = -a * 120. + 100.;
-    if (y > a * x + b) return true;
+    if (y > (a * x + b) ) return true;
 
     a = (80. - 0.) / (120. - 200.);
     b = -a * 120. + 80.;
-    if (y < a * x + b) return true;
+    if (y < (a * x + b) ) return true;
 
     return false;
 }
@@ -46,7 +46,6 @@ run_setUpperLimit() {
     int argc = gApplication->Argc();
     for (int i = 0; i < argc; i++) {
         TString argvi = gApplication->Argv(i);
-        //        if (argvi == "run_setUpperLimit.C")
         if (argvi.Contains("run_setUpperLimit.C"))
             for (int j = i + 1; j < argc; j++) {
                 TString argvj = gApplication->Argv(j);
@@ -54,6 +53,14 @@ run_setUpperLimit() {
                 i++;
             }
     }
+
+    Double_t dS = sin[0].Atof();
+    Double_t dB = sin[0].Atof();
+    sin.erase(sin.begin());
+
+    TString EO = sin[0];
+    sin.erase(sin.begin());
+
 
     TH2D* htmp = (TH2D*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
     TFile* fout = new TFile("upperLimit.root", "RECREATE");
@@ -69,7 +76,7 @@ run_setUpperLimit() {
 
     TFile* fin;
     for (int ix = 1; ix <= htmp->GetXaxis()->GetNbins(); ix++) {
-        for (int iy = 1; iy <= htmp->GetYaxis()->GetNbins(); iy++) {
+        for (int iy = 1; iy <= htmp->GetYaxis()->GetNbins(); iy++) {    
 
             if (isOUT(20 * ix, 20 * iy)) continue;
 
@@ -79,27 +86,29 @@ run_setUpperLimit() {
 
                 fin = new TFile(sin[isin]);
 
+                TH1* hData = (EO.Contains("OBS"))?fin->GetObjectChecked("h_PN_Data", "TH1"):fin->GetObjectChecked("h_PN_Bkg", "TH1");
+                Double_t N = hData->GetBinContent(1);
+                
                 TH1* hBkg = fin->GetObjectChecked("h_PN_Bkg", "TH1");
                 Double_t B = hBkg->GetBinContent(1);
-                Double_t dB = 0.10;
 
                 TH2* hSgn = fin->GetObjectChecked("h_PN_MLSP_MChi", "TH2*");
                 Double_t S = hSgn->GetBinContent(ix, iy);
-                Double_t dS = 0.10;
 
                 fin->Close("R");
 
                 cout << "B = " << B << "\tS = " << S << endl;
-                if (S == 0) continue;
+                //                if (S == 0) continue;
+                if (S == 0) S = 1e-3;
 
                 stringstream ss;
                 ss << "datacard_" << isin;
-                makeCard(S, dS, B, dB, ss.str());
+                makeCard(N, S, dS, B, dB, ss.str());
             }//isin
 
             if (!(std::ifstream("datacard_0")).good()) continue;
             system("combineCards.py datacard_* > datacard");
-            system("/bin/rm -f datacard_*");
+            system("rm -f datacard_*");
             system("combine -M Asymptotic datacard");
 
             TTree* tree;
@@ -130,18 +139,14 @@ run_setUpperLimit() {
             hSgmP2->SetBinContent(ix, iy, SgmP2);
             hSgmM2->SetBinContent(ix, iy, SgmM2);
 
-            if ((std::ifstream("higgsCombineTest.Asymptotic.mH120.root")).good()) system("rm higgsCombineTest.Asymptotic.mH120.root");
-            if ((std::ifstream("datacard")).good()) system("rm datacard");
+            system("rm -f higgsCombineTest.Asymptotic.mH120.root");
+            system("rm -f datacard");
 
         }//iy
     }//ix
 
     fout->Write();
     fout->Close();
-
-    //    cout << "give a char ... " ; 
-    //    getchar();
-    //    system("/bin/ls  -a1lG");
 
 }
 
