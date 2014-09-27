@@ -307,7 +307,15 @@ public:
     fETrgSF         = ETrgSF;
     
   }
+void SeteleMuChannel(bool MuTrgSF = true,bool MuIdIsoSF=true, bool  EleTrgSF=true, bool EleIdIsoSF=true ){
 
+        myChannel = "eleMu";
+        fMuTrgSFeleMu=  MuTrgSF;
+        fMuIdIsoSF   =  MuIdIsoSF ;  
+        fEleTrgSF    =  EleTrgSF ;
+        fEleIdIsoSF=EleIdIsoSF;
+
+}
 
   void QCD();
   double DeltaPhi(double phi1, double phi2);
@@ -339,6 +347,13 @@ private:
         bool fE0IdIsoSF;
         bool fE1IdIsoSF;
         bool fETrgSF;
+
+       //eleMu channel 
+
+       bool fMuTrgSFeleMu;
+       bool fMuIdIsoSF;
+       bool fEleTrgSF;
+       bool fEleIdIsoSF;
   
 
         MT2tree* fMT2tree;

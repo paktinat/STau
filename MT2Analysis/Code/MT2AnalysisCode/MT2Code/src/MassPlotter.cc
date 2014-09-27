@@ -98,6 +98,13 @@ MassPlotter::MassPlotter(){
         fE1IdIsoSF=true;
         fETrgSF =true;
 
+        //eleMu channel
+       fMuTrgSFeleMu=true;
+       fMuIdIsoSF=true;
+       fEleTrgSF=true;
+       fEleIdIsoSF=true;
+
+
 
 // Default constructor, no samples are set
   cout.precision(2);
@@ -128,6 +135,15 @@ MassPlotter::MassPlotter(TString outputdir){
         fE1IdIsoSF=true;
         fETrgSF =true;
 
+       //eleMu channel
+       fMuTrgSFeleMu=true;
+       fMuIdIsoSF=true;
+       fEleTrgSF=true;
+       fEleIdIsoSF=true;
+
+
+
+
 // Default constructor, no samples are set
   cout.precision(2);
   cout.setf(ios::fixed,ios::floatfield);
@@ -157,6 +173,14 @@ MassPlotter::MassPlotter(TString outputdir, TString outputfile){
         fE0IdIsoSF=true;
         fE1IdIsoSF=true;
         fETrgSF =true;
+
+        //eleMu channel
+       fMuTrgSFeleMu=true;
+       fMuIdIsoSF=true;
+       fEleTrgSF=true;
+       fEleIdIsoSF=true;
+
+
 
 // Default constructor, no samples are set
   cout.precision(2);
@@ -1483,6 +1507,21 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 		      if(fETrgSF)
 			ChannelSpecificSF += "*doubleEle[0].DiEleTrgSF";
 		    }
+                 else if (myChannel == "eleMu"){
+                   
+                  if (fMuTrgSFeleMu)
+                  ChannelSpecificSF += "*eleMu[0].MuTrgSF";
+                  if (fMuIdIsoSF)
+                  ChannelSpecificSF += "*eleMu[0].MuIdIsoSF";
+                  if (fEleTrgSF)
+                  ChannelSpecificSF += "*eleMu[0].EleTrgSF";
+                   if ( fEleIdIsoSF )
+                  ChannelSpecificSF += "*eleMu[0].EleIdIsoSF";
+
+                                           }
+      
+
+
 
 
 		  if(fStitching && (Samples[i].sname == "Wtolnu" || (Samples[i].shapename == "ZJetsToLL" && Samples[i].name != "DYToLL_M10To50"))){
@@ -9232,12 +9271,19 @@ void MassPlotter::elemuAnalysis(TString cuts, TString trigger, Long64_t nevents,
   
     for (int i=0; i<(NumberOfSamples+1); i++){
     MT2[i] = new TH1D(varname+"_"+cnames[i], "", 1000, 0, 1000);
+  //MT2[i] = new TH1D(varname+"_"+cnames[i], "", 11, 0, 11);
     MT2[i] -> SetFillColor (ccolor[i]);
     MT2[i] -> SetLineColor (ccolor[i]);
     MT2[i] -> SetLineWidth (2);
     MT2[i] -> SetMarkerColor(ccolor[i]);
     MT2[i] -> SetStats(false);
   }
+  //  TString  genStatus[11] = {"pp", "pf", "fp", "ff", "tp", "pt","tf","ft","tt", "nothing", "wrong"};
+  //  for(int k = 0; k < MT2[i]->GetNbinsX(); k++)
+   //   MT2[i] ->GetXaxis()->SetBinLabel(k+1,genStatus[k]);
+
+
+
 
   MT2[7] -> SetMarkerStyle(20);
   MT2[7] -> SetMarkerColor(kBlack);
@@ -9296,7 +9342,7 @@ fflush(stdout);
       float weight = Weight;
 
       if(data == 1)
-  weight = 1.0;
+       weight = 1.0;
       else{
 
       float muIdSFeleMu = fMT2tree->muo[fMT2tree->eleMu[0].mu0Ind].GetMuIDISOSFelemu();
@@ -9322,7 +9368,7 @@ weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq0/Sample.PU_a
       }
       
       float myQuantity = fMT2tree->eleMu[0].MT2;
-    
+    //TString myQuantity = fMT2tree->GenLeptonAnalysisInterpretation( 1, 1, 0, false );
 
 if(data == 1){
       
@@ -9354,17 +9400,17 @@ MT2[0]->Fill(myQuantity, weight);
 
 
 
-  for(int j = 0; j < (NumberOfSamples+1); j++){
+  for(int j = 0; j < (NumberOfSamples); j++){
     AddOverAndUnderFlow(MT2[j], true, true);
   }
   printYield();
 
   THStack* h_stack = new THStack(varname, "");
-  for(int j = 0; j < (NumberOfSamples+1); j++){
+  for(int j = 0; j < (NumberOfSamples); j++){
     // MT2[j]->Rebin(3);
     TH1F* mt2 = (TH1F*)MT2[j]->Clone();
     mt2->SetName("mt2");
-    if(j < (NumberOfSamples - 1))
+    if(j < (NumberOfSamples - 3))
       h_stack -> Add(MT2[j]);
     delete mt2;
   }
