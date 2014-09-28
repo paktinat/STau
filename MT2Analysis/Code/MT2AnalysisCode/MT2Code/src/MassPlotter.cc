@@ -1936,9 +1936,9 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
   h_PN_Bkg->SetName("h_PN_Bkg");
   h_PN_Bkg->Rebin(h_PN_Bkg->GetNbinsX());
   
-  TH1F *h_PN_data  = (TH1F*)h_data->Clone();
-  h_PN_data->SetName("h_PN_data");
-  h_PN_data->Rebin(h_PN_data->GetNbinsX());
+  TH1F *h_PN_Data  = (TH1F*)h_data->Clone();
+  h_PN_Data->SetName("h_PN_Data");
+  h_PN_Data->Rebin(h_PN_Data->GetNbinsX());
 
   TH2D *h_SMSEvents = (TH2D*) fSamples[SusySampleInd].file->Get("h_SMSEvents");
   h_SMSEvents->Rebin2D(4, 4);
@@ -1957,7 +1957,7 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 
   h_stack->Write();
   h_PN_Bkg->Write();
-  h_PN_data->Write();
+  h_PN_Data->Write();
   h_PN_MLSP_MChi->Write();
 
   savefile->Close();
@@ -8583,14 +8583,24 @@ void MassPlotter::TauEfficiency(TString cuts, Long64_t nevents, TString myfileNa
   cout<<" cuts "<<cuts<<endl;
 }
 
-
 void MassPlotter::TauFakeRate(TString cuts, TString trigger, Long64_t nevents, TString myfileName){
  TH1::SetDefaultSumw2();
 
  
  TH2F *hPtEtaAll  = new TH2F("hPtEtaAll", "hPtEtaAll",  60, -3.0, 3.0, 1000, 0, 1000);
  TH2F *hPtEtaPass = new TH2F("hPtEtaPass","hPtEtaPass", 60, -3.0, 3.0, 1000, 0, 1000);
+
+ TH2F *hTauPtMuPt  = new TH2F("hTauPtMuPt", "hTauPtMuPt",  40, 20, 220, 40, 20, 220);
+ TH2F *hTauPtMET   = new TH2F("hTauPtMET",  "hTauPtMET",   40, 20, 220, 40, 20, 220);
  
+ float xBins[7] = {30, 50, 75, 100, 150, 250, 500};
+
+ TH1F *hMETAll   = new TH1F("hMETAll"  ,"hMETAll"  ,6, xBins);
+ TH1F *hMETPass  = new TH1F("hMETPass" ,"hMETPass" ,6, xBins);
+ TH1F *hMuPtAll  = new TH1F("hMuPtAll" ,"hMuPtAll" ,6, xBins);
+ TH1F *hMuPtPass = new TH1F("hMuPtPass","hMuPtPass",6, xBins);
+ TH1F *hMT2All   = new TH1F("hMT2All"  ,"hMT2All"  ,6, xBins);
+ TH1F *hMT2Pass  = new TH1F("hMT2Pass" ,"hMT2Pass" ,6, xBins);
 
  for(int ii = 0; ii < fSamples.size(); ii++){
     
@@ -8661,35 +8671,74 @@ void MassPlotter::TauFakeRate(TString cuts, TString trigger, Long64_t nevents, T
       if(hasMuon == 0)
 	continue;
 
-//       int TauMatchedtoLeadingJetIndex = -1;
-      
-//       for(int j=0; j<fMT2tree->NJets; ++j){ 
-//     	if(fMT2tree->jet[j].isPFIDLoose==false) continue;
-//     	if (!((fMT2tree->jet[j].lv.Pt() > 20)  &&  fabs(fMT2tree->jet[j].lv.Eta()<2.3)))  
-//     	  continue;
-	
-//     	TauMatchedtoLeadingJetIndex = fMT2tree->jet[j].isTauMatch;
-// 	break;    
-//       }
+      float MaxPtMuTau = -1;
+
+      int TauInd = -1;
 
       for(int t=0; t<fMT2tree->NTaus; t++){ 
-	
-// 	if(t == TauMatchedtoLeadingJetIndex)
-// 	  continue;
+	  
+
+	if(fMT2tree->tau[t].PassQCDTau_MuTau == 0)
+	  continue;
 
 	float deltaR = Util::GetDeltaR(fMT2tree->tau[t].lv.Eta(), LeadingMuon.Eta(), fMT2tree->tau[t].lv.Phi(), LeadingMuon.Phi());
 	
 	if(deltaR < 0.2)
 	  continue;
 
-	if(fMT2tree->tau[t].PassQCDTau_MuTau == 1)
-	  hPtEtaAll->Fill(fMT2tree->tau[t].lv.Eta(), fMT2tree->tau[t].lv.Pt()); 
+	float maxPtMuTau = fMT2tree->tau[t].lv.Pt() + LeadingMuon.Pt();
 
-	if(fMT2tree->tau[t].PassTau_MuTau == 1 && fMT2tree->tau[t].Isolation3Hits <= 3)
-	  hPtEtaPass->Fill(fMT2tree->tau[t].lv.Eta(), fMT2tree->tau[t].lv.Pt()); 
+	if(maxPtMuTau > MaxPtMuTau){
+	  MaxPtMuTau = maxPtMuTau;
+	  TauInd = t;
+	}
+      }
+
+      if(TauInd == -1)
+	continue;
+
+      float MT2 = fMT2tree->CalcMT2(0, false, fMT2tree->tau[TauInd].lv, LeadingMuon, fMT2tree->misc.MET);
+
+      if(fMT2tree->tau[TauInd].PassQCDTau_MuTau == 1){
+	hPtEtaAll->Fill(fMT2tree->tau[TauInd].lv.Eta(), fMT2tree->tau[TauInd].lv.Pt()); 
+	hMETAll->Fill(fMT2tree->misc.MET);
+	hMT2All->Fill(MT2);
+	hMuPtAll->Fill(LeadingMuon.Pt());
       }
       
-    }}
+      if(fMT2tree->tau[TauInd].PassTau_MuTau == 1){
+	hPtEtaPass->Fill(fMT2tree->tau[TauInd].lv.Eta(), fMT2tree->tau[TauInd].lv.Pt()); 
+	hMETPass->Fill(fMT2tree->misc.MET);
+	hMT2Pass->Fill(MT2);
+	hMuPtPass->Fill(LeadingMuon.Pt());      
+	hTauPtMuPt->Fill(fMT2tree->tau[TauInd].lv.Pt(), LeadingMuon.Pt());
+	hTauPtMET ->Fill(fMT2tree->tau[TauInd].lv.Pt(), fMT2tree->misc.MET);
+      }
+    }
+ }
+
+ TCanvas *MyC = new TCanvas("Fake","Fake");
+ MyC->Divide(4,2);
+ MyC->cd(1);
+ hMuPtAll->Draw();
+ MyC->cd(2);
+ hMETAll->Draw();
+ MyC->cd(3);
+ hMT2All->Draw();
+ MyC->cd(4);
+ hTauPtMuPt->Draw();
+ MyC->cd(5);
+ hMuPtPass->Divide(hMuPtAll);
+ hMuPtPass->Draw();
+ MyC->cd(6);
+ hMETPass->Divide(hMETAll);
+ hMETPass->Draw();
+ MyC->cd(7);
+ hMT2Pass->Divide(hMT2All);
+ hMT2Pass->Draw();
+ MyC->cd(8);
+ hTauPtMET->Draw();
+
  TString fileName = fOutputDir;
  if(!fileName.EndsWith("/")) fileName += "/";
   Util::MakeOutputDir(fileName);
