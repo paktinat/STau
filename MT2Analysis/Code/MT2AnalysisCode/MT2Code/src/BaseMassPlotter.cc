@@ -144,7 +144,7 @@ void BaseMassPlotter::loadSamples(const char* filename){
 	    s.nevents = 10000;
 	  }
       }
-      s.ReconstructSName();
+      //s.ReconstructSName();
       if(fVerbose > 0){
 	cout << " ---- " << endl;
 	cout << "  New sample added: " << s.name << endl;

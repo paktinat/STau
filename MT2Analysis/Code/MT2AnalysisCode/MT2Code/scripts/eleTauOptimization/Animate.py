@@ -9,7 +9,7 @@ import array
 from ROOT import gSystem, gROOT, gApplication, TFile, TTree, TCut, gDirectory , TH1F , TFormula, std, TPad , TCanvas, TGraph, TLegend
 from ROOT import kYellow , kBlue , kOrange , kCyan , kRed , kSpring , kMagenta, kTeal , kViolet , kGreen 
 
-SUSYNAMES = [ '00_50' , '50_100' , '100_150' , '150_200' , '200_250' , '250_300' , '300_350' , '350_400' , '400_450' , '450_500' ]
+SUSYNAMES = [ '00_100' , '100_200' , '200_300' , '300_400' , '400_500' ]
 COLOR =  [ kYellow-2 , kBlue , kOrange , kCyan , kRed , kSpring , kMagenta, kTeal , kViolet , kGreen ]
 
 if __name__ == "__main__":
@@ -29,7 +29,7 @@ if __name__ == "__main__":
     contents = directory.GetListOfKeys()
     for dirid in range(0 , contents.GetSize()):
         dirname = contents[dirid].GetName()
-        if dirname == 'MT2' :
+        if dirname == 'EleMTpTauMT' :
             dir = directory.GetDirectory( dirname )
             print dir.GetName()
             for lower in range( 1 , 2):
@@ -42,7 +42,7 @@ if __name__ == "__main__":
                     histo = dir.Get( name )
                     #c1.Clear()
                     #histo.Draw()
-                    #c1.Print( canvas_name + '.gif+100' )
+                    #c1.Print( canvas_name + '.gif+10000' )
                     
                     x = array.array( 'd' , [0.0])
                     y = array.array( 'd' , [0.0])
@@ -52,7 +52,7 @@ if __name__ == "__main__":
                     maximum = -1.0
                     for point in range(0 , histo.GetN() ):
                         histo.GetPoint( point , x , y )
-                        if x[0] < 300 :
+                        if x[0] < 800 :
                             newx.append(x[0])
                             newy.append(y[0])
                             if y[0] > maximum :
@@ -69,7 +69,7 @@ if __name__ == "__main__":
                     histo.SetLineWidth( 3 )
                     histo.Draw( option )
                     mmm += 1
-                    histo.GetXaxis().SetLimits( 0 , 300 )
+                    histo.GetXaxis().SetLimits( 0 , 800 )
                     histo.GetXaxis().SetTitle( "MT2 Cut")
                     histo.GetYaxis().SetTitle( "Normalized Significance" )
-                    c1.SaveAs( susyname + ".gif" )
+                    c1.SaveAs( options.dir +  ".gif+10" )
