@@ -67,7 +67,7 @@ run_makeLimitPlot() {
     int argc = gApplication->Argc();
     for (int i = 0; i < argc; i++) {
         TString argvi = gApplication->Argv(i);
-        if (argvi == "make_limitPlot.C")
+        if (argvi == "run_makeLimitPlot.C")
             for (int j = i + 1; j < argc; j++) {
                 TString argvj = gApplication->Argv(j);
                 sin.push_back(argvj);
