@@ -10,10 +10,10 @@ void makeCard(double N, double S, double dS, double B, double dB, string sOut) {
     fOut << "jmax 1  number of backgrounds" << std::endl;
     fOut << "kmax 2  number of nuisance parameters (sources of systematic uncertainties)" << std::endl;
     fOut << "---" << std::endl;
-    fOut << "bin 1" << std::endl;
+    fOut << "bin b1" << std::endl;
     fOut << "observation " << N << std::endl;
     fOut << "---" << std::endl;
-    fOut << "bin              1     1" << std::endl;
+    fOut << "bin              b1     b1" << std::endl;
     fOut << "process         SMS    All" << std::endl;
     fOut << "process          0     1  " << std::endl;
     fOut << "rate           " << S << "\t" << B << std::endl;
@@ -61,7 +61,8 @@ run_setUpperLimit() {
     TString EO = sin[0];
     sin.erase(sin.begin());
 
-
+    
+    
     TH2D* htmp = (TH2D*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
     TFile* fout = new TFile("upperLimit.root", "RECREATE");
     fout->cd();
@@ -78,11 +79,11 @@ run_setUpperLimit() {
     for (int ix = 1; ix <= htmp->GetXaxis()->GetNbins(); ix++) {
         for (int iy = 1; iy <= htmp->GetYaxis()->GetNbins(); iy++) {    
 
-            if (isOUT(20 * ix, 20 * iy)) continue;
+            if (isOUT(20 * (ix-1), 20 * (iy-1))) continue;
 
             cout << "\n ============================================" << endl;
             for (int isin = 0; isin < sin.size(); isin++) {
-                cout << ">> " << 20 * ix << "," << 20 * iy << ": " << sin[isin] << endl;
+                cout << ">> " << 20 * (ix-1) << "," << 20 * (iy-1) << ": " << sin[isin] << endl;
 
                 fin = new TFile(sin[isin]);
 
@@ -141,6 +142,7 @@ run_setUpperLimit() {
 
             system("rm -f higgsCombineTest.Asymptotic.mH120.root");
             system("rm -f datacard");
+            system("rm -f roostat_*");
 
         }//iy
     }//ix
