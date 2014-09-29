@@ -61,7 +61,7 @@ TGraph* accRange() {
     return g00;
 }
 
-run_makelimitPlot() {
+run_makeLimitPlot() {
 
     std::vector< TString > sin;
     int argc = gApplication->Argc();
