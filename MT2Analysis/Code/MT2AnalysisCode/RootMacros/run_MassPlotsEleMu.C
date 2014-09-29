@@ -27,7 +27,7 @@
   tA->setVerbose(verbose);
   tA->init(samples);
   tA->SetIsPhoton(false);
-  
+  tA->SeteleMuChannel();
   
   /*
    std::ostringstream cutStream;
@@ -187,9 +187,9 @@ tA->makePlot(vars3[iVar3], cuts, -10, -10 , -10, trigger, vars3[iVar3],20,0,20 ,
 // bool flip_order, bool logflag, bool composited, bool ratio,
 // bool stacked, bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos)
 
-//tA->makePlot("eleMu[0].lv.M()",     cuts,    -10,  0 , -10 ,   trigger , "eleMu[0].lv.M()"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "gif");
+tA->makePlot("eleMu[0].lv.M()",     cuts,    -10,  0 , -10 ,   trigger , "eleMu[0].lv.M()"            ,100,0,1000,          false,        true ,  true,   true,  true,  true, 1,true, false, "gif");
 //tA->makePlot("eleMu[0].MT2",     cuts,    -10,  0 , -10 ,   trigger , "eleMu[0].MT2"            ,50,0,500,          false,        true ,  true,   true,  true,  true, 1,false, false, "gif");
-tA->elemuAnalysis(cuts, trigger, 10000000000, "MT2_EleMu_Iso7",1);
+//tA->elemuAnalysis(cuts, trigger, 10000000000, "MT2_EleMu_Iso7",1);
 
 //int NumberOfBins = 20;    
 //double xbin[] =  {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,110,120,130,140,150,160,170,180,190,200};

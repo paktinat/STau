@@ -21,9 +21,9 @@
 
 #include "helper/Utilities.hh"
 
-//#define TREE
-//#define FROMEvtLst
-#define TauFR
+#define TREE
+#define FROMEvtLst
+//#define TauFR
 
 using namespace std;
 
@@ -86,7 +86,7 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vect
       data = 1;
     }else
       lumi = Sample.lumi; 
-
+    
     if(wToLNuW){
       delete wToLNuW;
     }
@@ -102,6 +102,13 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vect
     if( Sample.type == "susy" )
       Weight = 1.0;
 
+    if( (Sample.sname == "Wtolnu"  || (Sample.shapename == "ZJetsToLL" && Sample.name != "DYToLL_M10To50")) )
+      //if( Sample.name != "WJetsToLNu" )
+      //if( Sample.name != "DYToLL_M10To50" )
+      {
+	//continue;
+	Weight = (Sample.lumi / Sample.PU_avg_weight);
+      }
     Sample.Print(Weight);
 
     string lastFileName = "";
@@ -397,23 +404,38 @@ int main(int argc, char* argv[]) {
   //ExtendedCut* eleelecuts = new ExtendedCut("eleelecut" , "doubleEle[0].Ele0Ind>=0 && doubleEle[0].Ele1Ind>=0 && doubleEle[0].Isolated==1 && ( (ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)" , true , true , "" , "" , false , true );
   //allCuts.Add( eleelecuts );
   
-
   ExtendedCut* treecut = ZPeakVeto ;
   CutsForControlPlots.Add ( treecut );
-  TList lastCuts;
+  TList lastCuts ;
+  TIter allCuts_iter1(&  allCuts );
+  TObject* cuto_temp1 ;
+  while( cuto_temp1 = allCuts_iter1() )
+    lastCuts.Add( cuto_temp1 );
 
-  ExtendedCut* bVetoSole =new ExtendedCut("bVetoSole" , "NBJets40CSVM == 0" , true , true, "" , "SFWeight.BTagCSV40eq0 * pileUp.Weight" ,false , true);
-  lastCuts.Add( bVetoSole );
-  CutsForControlPlots.Add(bVetoSole);  
+  ExtendedCut* MT2PreCut = new ExtendedCut("MT2PreCut" , "eleTau[0].MT2 > 20" , true , true, "" , "" ,false , true); 
+  lastCuts.Add( MT2PreCut );
+  CutsForControlPlots.Add(MT2PreCut);  
 
-  ExtendedCut* metcutSole =new ExtendedCut("MET" , "misc.MET > 50" , true , true , "" , "" , false , true);
-  //lastCuts.Add(metcutSole);
-  CutsForControlPlots.Add(metcutSole);
+  ExtendedCut* ElePTCut = new ExtendedCut("ElePTCut" , "ele[eleTau[0].ele0Ind].lv.Pt()" , true , true, "" , "" ,false , true);
+  lastCuts.Add( ElePTCut );
+  CutsForControlPlots.Add(ElePTCut);
+
+  ExtendedCut* metPpz =new ExtendedCut("METpPZ" , "DeltaMETEleTau(2) > 150" , true , true , "" , "" , true , true); 
+  //eleTau[0].eleTrgSF * eleTau[0].eleIdIsoSF*eleTau[0].tauTrgSF*SFWeight.BTagCSV40eq0
+  lastCuts.Add(metPpz);
+  CutsForControlPlots.Add(metPpz);
+
+  ExtendedCut* metMpz =new ExtendedCut("METmPZ" , "DeltaMETEleTau(1) > -50" , true , true , "" , "" , true , true);
+  lastCuts.Add(metMpz);
+  CutsForControlPlots.Add(metMpz);
+
+  ExtendedCut* MT2Cut =new ExtendedCut("MT2Cut" , "eleTau[0].MT2 > 80" , true , true, "" , "" ,false , true); //pileUp.Weight
+  lastCuts.Add( MT2Cut );
+  CutsForControlPlots.Add(MT2Cut);  
 
 
-
-  TString SUSYCatCommand = "((Susy.MassGlu - Susy.MassLSP)/50.0)+(misc.ProcessID-10)";
-  std::vector<TString> SUSYCatNames = {"00_50" , "50_100" , "100_150" , "150_200" , "200_250" , "250_300" , "300_350" , "350_400" , "400_450" , "450_500" };
+  TString SUSYCatCommand = "((Susy.MassGlu - Susy.MassLSP)/100.0)+(misc.ProcessID-10)";
+  std::vector<TString> SUSYCatNames = {"00_100" , "100_200" , "200_300" , "300_400" , "400_500" };
 
   TIter cut(&  CutsForControlPlots );
   TObject* cuto ;
@@ -484,7 +506,7 @@ int main(int argc, char* argv[]) {
     ExtendedObjectProperty* NJets50 = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "NJets50" , "NJetsIDLoose50" , 10 , 0 , 10 ,SUSYCatCommand , SUSYCatNames );
     allProps.Add( NJets50 );
 
-    ExtendedObjectProperty* NVertices = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "NVertices" , "pileUp.NVertices" , 100 , 0 , 100 ,SUSYCatCommand , SUSYCatNames );
+    ExtendedObjectProperty* NVertices = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "NVertices" , "pileUp.NVertices" , 60 , 0 , 60 ,SUSYCatCommand , SUSYCatNames );
     allProps.Add( NVertices );
 
     ExtendedObjectProperty* NBJets = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "NBJets40CSVM" , "NBJets40CSVM" , 10 , 0 , 10 ,SUSYCatCommand , SUSYCatNames );
@@ -559,7 +581,7 @@ int main(int argc, char* argv[]) {
 
 
   vector<TString> labels = {"pp", "pf" , "fp" , "ff" , "tp" , "tf" , "nothing", "wrong"};
-  allProps.Clear();
+  //allProps.Clear();
   ExtendedObjectProperty* GenLeptonAnalysis = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "GenLeptonAnalysis" , "GenLeptonAnalysisInterpretation( 1,0,1 )" , 8 , 0 , 8 ,SUSYCatCommand , SUSYCatNames , &labels );
   allProps.Add( GenLeptonAnalysis );
 
@@ -570,6 +592,10 @@ int main(int argc, char* argv[]) {
   allProps.Add( GenLeptonAnalysisR );
 
 
+  allProps.Clear();
+  ExtendedObjectProperty* eleMTpTauMT = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "EleMTpTauMT" , "ele[eleTau[0].ele0Ind].MT+tau[eleTau[0].tau0Ind].MT" , 80 , 0 , 800 ,SUSYCatCommand , SUSYCatNames );
+  allProps.Add( eleMTpTauMT );
+    
 
     TIter prop(&allProps);
     TObject* propo ;
@@ -607,11 +633,11 @@ int main(int argc, char* argv[]) {
   TString CutName = "ZPeakVeto" ;
 
   cout << "FROM EventList : " << CutName << endl;
-  TFile* finput = TFile::Open( "/dataLOCAL/hbakhshi/AfterLepRejection_Histos.root") ;
+  TFile* finput = TFile::Open( "/dataLOCAL/hbakhshi/PreSel_NewPU_Stitching_Histos.root");
   finput->cd();
   gDirectory->cd( CutName );
   gDirectory->cd("EventLists");
-  tA->eleTauAnalysis(&allCuts, neventperfile, Significances ,  outputfile, SUSYCatCommand , SUSYCatNames , gDirectory , CutName);
+  tA->eleTauAnalysis(&lastCuts, neventperfile, Significances ,  outputfile, SUSYCatCommand , SUSYCatNames , gDirectory , CutName);
   finput->Close();
   #else
   cout << "standard" << endl;

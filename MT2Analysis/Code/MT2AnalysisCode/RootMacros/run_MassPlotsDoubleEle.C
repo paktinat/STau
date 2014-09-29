@@ -90,8 +90,8 @@
       myChannelCuts.push_back("misc.MET > 30");
 
 
-      myChannelCuts.push_back("((misc.MET)+(doubleEle[0].lv.Pt()))>80");
-      myChannelCuts.push_back("((misc.MET)-(doubleEle[0].lv.Pt()))>-50");
+      //      myChannelCuts.push_back("((misc.MET)+(doubleEle[0].lv.Pt()))>80");
+      //      myChannelCuts.push_back("((misc.MET)-(doubleEle[0].lv.Pt()))>-50");
       //      myChannelCuts.push_back("(doubleEle[0].MT2 > 80)");
 
       myChannelCuts.push_back("0 == 0");	
@@ -111,11 +111,12 @@
 ///////////////////////////////////////////////////////////////Make Plot/////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2", 20, 0, 200, false, true, true, true, true, true, 1, true, false, "png");
-//tA->makePlot("misc.MET", cuts, -10, 0, -10, trigger, "MET", 50, 0, 500, false, true, true, true, true, true, 1, true, false, "png");
+//tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2", 20, 0, 200, false, true, true, true, true, true, 1, true, false, "png");
+//tA->makePlot("misc.MET", cuts, -10, 0, -10, trigger, "MET", 20, 0, 200, false, true, true, true, true, true, 1, true, false, "png");
 //tA->makePlot("MCTEleEle()", cuts, -10, 0, -10, trigger, "MCT", 50, 0, 500, false, true , true, true, true, true, 1, true, false, "png");
 
 // tA->makePlot("ele[doubleEle[0].Ele0Ind].MT",     cuts,    -10,  0 , -10 ,   trigger , "First Electron MT"            ,20,0,200,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+//tA->makePlot("(ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT)",     cuts,    -10,  0 , -10 ,   trigger , "1stElectron MT+2ndElectron MT"            ,20,0,200,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 // tA->makePlot("ele[doubleEle[0].Ele1Ind].MT",     cuts,    -10,  0 , -10 ,   trigger , "Second Electron MT"           ,20,0,200,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 // tA->makePlot("ele[doubleEle[0].Ele0Ind].lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "First Electron Pt"            ,20,0,200,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 // tA->makePlot("ele[doubleEle[0].Ele1Ind].lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "Second Electron Pt"            ,20,0,200,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
@@ -132,7 +133,31 @@ tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2", 20, 0, 200, 
 //tA->vs(1000000000000000,cuts,trigger);// , "MT2MCT-MT0MT1");
 
 //tA->makePlot("pileUp.NVertices",     cuts,    -10,  0 , -10 ,   trigger , "NVertices"            ,60,0,60,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//------------------------
+    tA->EleEleAnalysisFake(cuts, trigger, 1000000000000,"FakePrompt");
+//   tA->EleEleAnalysis(cuts, trigger, 1000000000000,"MET");
+//    int NumberOfBins = 16;
+//    double xbin[NumberOfBins+1] = {-700,-620,-550,-490,-440,-400,-360,-320,-280,-240,-200,-180,-160,-140,-120,-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,0,10,20,30,40,50,60,70,80,90,100,120,140,160,180,200,240,280,320,360,400,440,490,550,620,700};      //MT2
+//      double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,115.0,130.0,145.0,160.0,180.0,200.0};      //MT2
+
+// //    // double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
+//    double xbin[NumberOfBins+1] = {0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0}; //Mass
+
+//  tA->DrawMyPlots("MET_Histos.root", xbin, NumberOfBins);
+   // double * xbin;
+   // double xbin[NumberOfBins+1] = {0.0,50.0,100.0,150.0,200.0,250.0,300};
+
+   //   //tA->muTauAnalysis(cuts, trigger, 10000000000, "MT2_NBCVM_NonIsoMuSS_LoosenIso196");
+   //   int NumberOfBins = 17;
+   //   //double * xbin;
+  
+   //   double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};      //MT2
+   //   //double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
+
+    //      tA->DrawMyPlots("MT2_NBCVM_NonIsoMuSS_LoosenIso196_Histos.root", xbin, NumberOfBins);
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 ////////////////////////////////////////////////////////////////Plot Sig/////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -386,25 +411,6 @@ tA->makePlot(vars3[iVar3], cuts, -10, -10 , -10, trigger, vars3[iVar3],20,0,20 ,
 
 
 //  tA->NonIsoOStoNonIsoSSRatio(cuts, trigger, 100000, "MT2");
-//    tA->EleEleAnalysis(cuts, trigger, 1000000000000,"JZBDir");
-//    int NumberOfBins = 50;
-//    double xbin[NumberOfBins+1] = {-700,-620,-550,-490,-440,-400,-360,-320,-280,-240,-200,-180,-160,-140,-120,-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,0,10,20,30,40,50,60,70,80,90,100,120,140,160,180,200,240,280,320,360,400,440,490,550,620,700};      //MT2
-    //    double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,115.0,130.0,145.0,160.0,180.0,200.0,230.0,260.0,290.0,340.0,400.0};      //MT2
-
-// //    // double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
-
-//  tA->DrawMyPlots("JZBDir_Histos.root", xbin, NumberOfBins);
-   // double * xbin;
-   // double xbin[NumberOfBins+1] = {0.0,50.0,100.0,150.0,200.0,250.0,300};
-
-   //   //tA->muTauAnalysis(cuts, trigger, 10000000000, "MT2_NBCVM_NonIsoMuSS_LoosenIso196");
-   //   int NumberOfBins = 17;
-   //   //double * xbin;
-  
-   //   double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};      //MT2
-   //   //double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
-
-    //      tA->DrawMyPlots("MT2_NBCVM_NonIsoMuSS_LoosenIso196_Histos.root", xbin, NumberOfBins);
 
 
    //      

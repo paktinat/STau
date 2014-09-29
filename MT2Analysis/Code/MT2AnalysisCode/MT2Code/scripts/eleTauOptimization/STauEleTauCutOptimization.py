@@ -20,21 +20,29 @@ os.environ['DISPLAY'] = '0'
 os.environ['TMVASYS'] = os.environ['ROOTSYS']
 
 # Default settings for command line arguments
-DEFAULT_INFNAME  = "AfterBVetoMET_Trees.root"
-DEFAULT_TREENAME = "bVeto"
+DEFAULT_INFNAME  = "/dataLOCAL/hbakhshi/FullSel_NewPU_STitching_FromTree_TreeZPeakVeto.root"
+DEFAULT_TREENAME = "ZPeakVeto"
 
 
-VARIABLES = {"ElePt":['F'] , "EleMT":['F'] ,  "MT2":['F'] , "MCT":['F'] , "MT2Imb":['F'] ,"TauPt":['F'] , "DPt":['F'] , "MET":['F'] ,"EleTauPt":['F'] ,"JPTModMZPTMod":['F'] , 'METModPPZMod':['F'] , 'METModMPZMod':['F'] , 'ModMETmPZ':['F'] }
+#VARIABLES = {"ElePt":['F'] , "EleMT":['F'] ,  "MT2":['F'] , "MCT":['F'] , "MT2Imb":['F'] ,"TauPt":['F'] , "DPt":['F'] , "MET":['F'] ,"EleTauPt":['F'] ,"JPTModMZPTMod":['F'] , 'METModPPZMod':['F'] , 'METModMPZMod':['F'] , 'ModMETmPZ':['F'] }
+VARIABLES = {"EleMTpTauMT":['F'] ,  "MT2":['F'] , 'METModPPZMod':['F'] , 'METModMPZMod':['F']  }
 
-Category1 = [ 'EleTauPt' , 'METModPPZMod' , 'ModMETmPZ' ]
-Category2 = [ 'MCT' , 'MT2' , 'MT2Imb' ]
+Category1 = [ ] #'EleTauPt' , 'METModPPZMod' , 'ModMETmPZ' ]
+Category2 = [ ] # 'MCT' , 'MT2' , 'MT2Imb' ]
 
 
-SUSYCats = {"50-100":"SUSYCategory >= 1  && SUSYCategory < 2" ,  "100-150":"SUSYCategory >= 2  && SUSYCategory < 3" , 
-            "150-200":"SUSYCategory >= 3  && SUSYCategory < 4" , "200-250":"SUSYCategory >= 4  && SUSYCategory < 5" , 
-            "250-300":"SUSYCategory >= 5  && SUSYCategory < 6" , "300-350":"SUSYCategory >= 6  && SUSYCategory < 7" , 
-            "350-400":"SUSYCategory >= 7  && SUSYCategory < 8" , "400-450":"SUSYCategory >= 8  && SUSYCategory < 9" , 
-            "450-500":"SUSYCategory >= 9  && SUSYCategory < 10" }
+# SUSYCats = {"50-100":"SUSYCategory >= 1  && SUSYCategory < 2" ,  "100-150":"SUSYCategory >= 2  && SUSYCategory < 3" , 
+#             "150-200":"SUSYCategory >= 3  && SUSYCategory < 4" , "200-250":"SUSYCategory >= 4  && SUSYCategory < 5" , 
+#             "250-300":"SUSYCategory >= 5  && SUSYCategory < 6" , "300-350":"SUSYCategory >= 6  && SUSYCategory < 7" , 
+#             "350-400":"SUSYCategory >= 7  && SUSYCategory < 8" , "400-450":"SUSYCategory >= 8  && SUSYCategory < 9" , 
+#             "450-500":"SUSYCategory >= 9  && SUSYCategory < 10" }
+
+SUSYCats = {"000-100":"(MassGlu-MassLSP) >= 0   && (MassGlu-MassLSP) < 100",
+            "100-200":"(MassGlu-MassLSP) >= 100 && (MassGlu-MassLSP) < 200",
+            "200-300":"(MassGlu-MassLSP) >= 200 && (MassGlu-MassLSP) < 300",
+            "300-400":"(MassGlu-MassLSP) >= 300 && (MassGlu-MassLSP) < 400",
+            "400-500":"(MassGlu-MassLSP) >= 400 && (MassGlu-MassLSP) < 500"}
+
 
 class MethodInfo :
 
@@ -234,7 +242,6 @@ if __name__ == "__main__":
                     print "two members from the same category, skipped"
                     continue
 
-
                 outfname = options.dir + "/" + Name + ".root"
                 outputFile = TFile( outfname, 'RECREATE' )
 
@@ -245,8 +252,8 @@ if __name__ == "__main__":
                 factory.SetVerbose( verbose )
 
                 #it crashes when these variables are being studied
-                forbidden_vars = [ 'METModPPZMod' , 'JPTModMZPTMod' , 'MET' , 'METModMPZMod' ]
-                forbidden_vars2 = [ 'EleTauPt' , 'MET' , 'METModMPZMod' ]
+                forbidden_vars = [ ] #'METModPPZMod' , 'JPTModMZPTMod' , 'MET' , 'METModMPZMod' ]
+                forbidden_vars2 = [ ] #'EleTauPt' , 'MET' , 'METModMPZMod' ]
                 n_forbidden_vars = 0
                 n_forbidden_vars2 = 0
 

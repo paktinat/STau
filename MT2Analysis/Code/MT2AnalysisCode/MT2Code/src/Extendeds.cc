@@ -110,11 +110,11 @@ ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, 
   TH1::SetDefaultSumw2();
    
 
-  //  vector<TString>  cnames = {"QCD", "Wtolnu", "DY", "Top", "MC", "SUSY" , "data" };
-  //  vector<int>      ccolor = {  401,     417,     419,   600,  500, 1 , 632 };
+  vector<TString>  cnames = {"QCD", "Wtolnu","VV", "DY", "Top", "MC", "SUSY" , "data" };
+  vector<int>      ccolor = {  401,     417, kGreen-7 , 419,   600,  500, 1 , 632 };
 
-  vector<TString>  cnames = {"BCtoE", "EMEnriched" , "MuEnriched" , "GJets" , "VV" , "Wtolnu", "DY", "Top" ,"TTV" , "STop" , "MC", "SUSY" , "data" };
-  vector<int>      ccolor = {  kYellow, kYellow+3 , kYellow-9 , kYellow-6 , kGreen-7 ,  kGreen+3,   kOrange-3 , kBlue  ,kBlue-7  , kCyan-2,  500, kBlack , kRed };
+  //vector<TString>  cnames = {"BCtoE", "EMEnriched" , "MuEnriched" , "GJets" , "VV" , "Wtolnu", "DY", "Top" ,"TTV" , "STop" , "MC", "SUSY" , "data" };
+  //vector<int>      ccolor = {  kYellow, kYellow+3 , kYellow-9 , kYellow-6 , kGreen-7 ,  kGreen+3,   kOrange-3 , kBlue  ,kBlue-7  , kCyan-2,  500, kBlack , kRed };
 
   NumberOfHistos = (cnames.size() +SUSYNames_.size()) ;
 
