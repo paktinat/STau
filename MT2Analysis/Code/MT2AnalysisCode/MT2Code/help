@@ -1,3 +1,8 @@
+# To create the environment in the CMSSW_6_1_1
+setenv SCRAM_ARCH slc5_amd64_gcc472
+cmsrel CMSSW_6_1_1
+cd CMSSW_6_1_1/src
+
 # To create the directory for the first time
 git clone --branch master https://github.com/paktinat/STau MT2_Tau_V02-03-02
 

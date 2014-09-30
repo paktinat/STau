@@ -8,11 +8,21 @@ void rootlogon() {
   TString compilerdirective = "-D'GETDATALOCALPATH(arg)=(std::string(\"" + staurootdir  + "/\") + std::string(\#arg)).c_str()'" ;
   compilerdirective = "-D'DATALOCAPATH=\"" + staurootdir  + "/\"'" ;
 
-  gSystem->SetIncludePath( compilerdirective + " -I./include/ -I../TESCO/include/ -I${VO_CMS_SW_DIR}/slc5_amd64_gcc462/cms/cmssw/CMSSW_5_3_7/src/ -I${CMS_PATH}/${SCRAM_ARCH}/lcg/roofit/5.32.03-cms16/include/");
-  gSystem->Load("$(VO_CMS_SW_DIR)/slc5_amd64_gcc462/cms/cmssw/CMSSW_5_3_7/lib/$(SCRAM_ARCH)/libFWCoreFWLite.so");
-  gSystem->Load("$(VO_CMS_SW_DIR)/slc5_amd64_gcc462/cms/cmssw/CMSSW_5_3_7/lib/$(SCRAM_ARCH)/libFWCoreUtilities.so");
-  gSystem->Load("$(VO_CMS_SW_DIR)/slc5_amd64_gcc462/cms/cmssw/CMSSW_5_3_7/lib/$(SCRAM_ARCH)/libDataFormatsCommon.so");
-  gSystem->Load("$(VO_CMS_SW_DIR)/slc5_amd64_gcc462/cms/cmssw/CMSSW_5_3_7/lib/$(SCRAM_ARCH)/libDataFormatsFWLite.so");
+  roofitinc =gSystem->GetFromPipe("scram tool tag roofitcore INCLUDE");
+
+  gSystem->SetIncludePath( compilerdirective + " -I./include/ -I../TESCO/include/ -I${CMSSW_RELEASE_BASE}/src/ -I"+roofitinc);
+
+  TString CMSSW_BASE_VERSION = gSystem->Getenv("CMSSW_VERSION");
+
+  int f =  CMSSW_BASE_VERSION.First("p");
+
+  if(f > -1) CMSSW_BASE_VERSION = CMSSW_BASE_VERSION.Remove( f-1 , 7 ).Data();
+
+
+  gSystem->Load("${CMS_PATH}/${SCRAM_ARCH}/cms/cmssw/"+CMSSW_BASE_VERSION+"/lib/${SCRAM_ARCH}/libFWCoreFWLite.so");
+  gSystem->Load("${CMS_PATH}/${SCRAM_ARCH}/cms/cmssw/"+CMSSW_BASE_VERSION+"/lib/${SCRAM_ARCH}/libFWCoreUtilities.so");
+  gSystem->Load("${CMS_PATH}/${SCRAM_ARCH}/cms/cmssw/"+CMSSW_BASE_VERSION+"/lib/${SCRAM_ARCH}/libDataFormatsCommon.so");
+  gSystem->Load("${CMS_PATH}/${SCRAM_ARCH}/cms/cmssw/"+CMSSW_BASE_VERSION+"/lib/${SCRAM_ARCH}/libDataFormatsFWLite.so");
 
   gSystem->Load("libRooFit");
   gSystem->Load("libRooFitCore");
