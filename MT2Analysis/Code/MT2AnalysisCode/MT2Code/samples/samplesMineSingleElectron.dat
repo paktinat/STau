@@ -1,0 +1,95 @@
+#########################################################################################
+GENERAL
+Path         ///dataLOCAL/MT2Tau/RootFiles/
+________________________________________________________________________________________
+# list of samples
+
+## --------- Single Electron Data ---------------------------
+
+SAMPLE
+Name		Run2012D_SingleElectron
+SName		SingleElectron-Data
+ShapeName	Data
+File            TauTau_V3_1/V03-09-01_SingleElectron-Run2012D_Part1.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
+
+SAMPLE
+Name		Run2012D_SingleElectron
+SName		SingleElectron-Data
+ShapeName	Data
+File            TauTau_V3_1/V03-09-01_SingleElectron-Run2012D_Part2.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
+
+SAMPLE
+Name		Run2012D_SingleElectron
+SName		SingleElectron-Data
+ShapeName	Data
+File            TauTau_V3_1/V03-09-01_SingleElectron-Run2012D_Part3.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
+
+SAMPLE
+Name		Run2012D_SingleElectron
+SName		SingleElectron-Data
+ShapeName	Data
+File            TauTau_V3_1/V03-09-01_SingleElectron-Run2012D_Part4.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
+
+SAMPLE
+Name		Run2012D_SingleElectron
+SName		SingleElectron-Data
+ShapeName	Data
+File            TauTau_V3_1/V03-09-01_SingleElectron-Run2012D_Part5.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
+
+SAMPLE
+Name		Run2012D_SingleElectron
+SName		SingleElectron-Data
+ShapeName	Data
+File            TauTau_V3_1/V03-09-01_SingleElectron-Run2012D_Part6.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
+
+SAMPLE
+Name		Run2012D_SingleElectron
+SName		SingleElectron-Data
+ShapeName	Data
+File            TauTau_V3_1/V03-09-01_SingleElectron-Run2012D_Part7.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
+
+SAMPLE
+Name		Run2012D_SingleElectron
+SName		SingleElectron-Data
+ShapeName	Data
+File            TauTau_V3_1/V03-09-01_SingleElectron-Run2012D_Part8.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
