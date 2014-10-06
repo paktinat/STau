@@ -8095,8 +8095,8 @@ void MassPlotter::vs(Long64_t  nevents, TString cuts, TString trigger){
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
 
-  TH2F *AvsBSignal = new TH2F("AvsBSignal"  , "AvsBSignal" , 60,   0, 600, 30,   0, 150);
-  TH2F *AvsBBkg    = new TH2F("AvsBBkg"     , "AvsBBkg"    , 60,   0, 600, 30,   0, 150);
+  //  TH2F *AvsBSignal = new TH2F("AvsBSignal"  , "AvsBSignal" , 60,   0, 6, 40,   0, 4);
+  //  TH2F *AvsBBkg    = new TH2F("AvsBBkg"     , "AvsBBkg"    , 60,   0, 6, 40,   0, 4);
   TH2F *AvsB2Signal = new TH2F("AvsB2Signal", "AvsB2Signal", 20,   -150, 150, 20,   0, 450);
   TH2F *AvsB2Bkg    = new TH2F("AvsB2Bkg"   , "AvsB2Bkg"   , 20,   -150, 150, 20,   0, 450);
 
@@ -8151,29 +8151,30 @@ void MassPlotter::vs(Long64_t  nevents, TString cuts, TString trigger){
       float weight = Weight * fMT2tree->pileUp.Weight;
 
       if(Sample.type == "susy"){
-	AvsBSignal->Fill(fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT + fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT, fMT2tree->muTau[0].GetMT2(), weight);
-	AvsB2Signal->Fill(fMT2tree->misc.MET - fMT2tree->muTau[0].GetLV().Pt(), fMT2tree->misc.MET + fMT2tree->muTau[0].GetLV().Pt(), weight);
+	cout << fMT2tree->DeltaREleEle();
+	//AvsBSignal->Fill(fMT2tree->DeltaREleEle(),fMT2tree->doubleEle[0].DPhi, weight);
+	AvsB2Signal->Fill(((fMT2tree->misc.MET)-(fMT2tree->doubleEle[0].lv.Pt())),((fMT2tree->misc.MET)+(fMT2tree->doubleEle[0].lv.Pt())), weight);
       }
        //     if(Sample.sname == "Wtolnu")
       else
 	{
-	  AvsBBkg->Fill(fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT + fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT, fMT2tree->muTau[0].GetMT2(), weight);
-	  AvsB2Bkg->Fill(fMT2tree->misc.MET - fMT2tree->muTau[0].GetLV().Pt(), fMT2tree->misc.MET + fMT2tree->muTau[0].GetLV().Pt(), weight);
+	  //AvsBBkg->Fill(fMT2tree->DeltaREleEle(),fMT2tree->doubleEle[0].DPhi, weight);
+	  	  AvsB2Bkg->Fill(((fMT2tree->misc.MET)-(fMT2tree->doubleEle[0].lv.Pt())),((fMT2tree->misc.MET)+(fMT2tree->doubleEle[0].lv.Pt())), weight);
 	}
     }
   }
 
   TCanvas *MyC = new TCanvas("MyC", "MyC");
-  MyC->Divide(2,2);
+  MyC->Divide(2,1);
+  //  MyC->cd(1);
+  //  AvsBBkg->Draw();
+  //  MyC->cd(2);
+  //  AvsBSignal->Draw();
   MyC->cd(1);
-  AvsBBkg->Draw();
-  MyC->cd(2);
-  AvsBSignal->Draw();
-  MyC->cd(3);
   AvsB2Bkg->Draw();
-  MyC->cd(4);
+  MyC->cd(2);
   AvsB2Signal->Draw();
-
+  
 }
 
 
@@ -9095,6 +9096,158 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
   sig2->Draw("ACP");
 //   cout<<" y232[i-1] "<<endl;
 
+}
+
+
+void MassPlotter::EleFakeRate(TString cuts, TString trigger, Long64_t nevents, TString myfileName){
+ TH1::SetDefaultSumw2();
+
+ 
+ // TH2F *hPtEtaAll  = new TH2F("hPtEtaAll", "hPtEtaAll",  60, -3.0, 3.0, 1000, 0, 1000);
+ // TH2F *hPtEtaPass = new TH2F("hPtEtaPass","hPtEtaPass", 60, -3.0, 3.0, 1000, 0, 1000);
+
+ // TH2F *hTauPtMuPt  = new TH2F("hTauPtMuPt", "hTauPtMuPt",  40, 20, 220, 40, 20, 220);
+ // TH2F *hTauPtMET   = new TH2F("hTauPtMET",  "hTauPtMET",   40, 20, 220, 40, 20, 220);
+ 
+ float xBins[7] = {30, 50, 75, 100, 150, 250, 500};
+
+ TH1F *hMETAll   = new TH1F("hMETAll"  ,"hMETAll"  ,6, xBins);
+ TH1F *hMETPass  = new TH1F("hMETPass" ,"hMETPass" ,6, xBins);
+ TH1F *hElePtAll  = new TH1F("hElePtAll" ,"hElePtAll" ,6, xBins);
+ TH1F *hElePtPass = new TH1F("hElePtPass","hElePtPass",6, xBins);
+ TH1F *hMT2All   = new TH1F("hMT2All"  ,"hMT2All"  ,6, xBins);
+ TH1F *hMT2Pass  = new TH1F("hMT2Pass" ,"hMT2Pass" ,6, xBins);
+
+ for(int ii = 0; ii < fSamples.size(); ii++){
+    
+   TString myCuts = cuts;
+ 
+   int data = 0;
+   sample Sample = fSamples[ii];
+    
+   if(Sample.type == "data"){
+     data = 1;
+     myCuts += " && " + trigger;
+   }else 
+     continue;
+   
+
+   fMT2tree = new MT2tree();
+   Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
+
+   float Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
+
+   std::cout << setfill('=') << std::setw(70) << "" << std::endl;
+    cout << "looping over :     " <<endl;	
+    cout << "   Name:           " << Sample.name << endl;
+    cout << "   File:           " << (Sample.file)->GetName() << endl;
+    cout << "   Events:         " << Sample.nevents  << endl;
+    cout << "   Events in tree: " << Sample.tree->GetEntries() << endl; 
+    cout << "   Xsection:       " << Sample.xsection << endl;
+    cout << "   kfactor:        " << Sample.kfact << endl;
+    cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
+    cout << "   Weight:         " << Weight <<endl;
+    std::cout << setfill('-') << std::setw(70) << "" << std::endl;
+   
+    Sample.tree->Draw(">>selList", myCuts);
+    TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
+    Sample.tree->SetEventList(myEvtList);
+
+    Long64_t nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
+
+    for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
+      //Sample.tree->GetEntry(jentry); 
+      Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
+
+      if ( fVerbose>2 && jentry % 100000 == 0 ){  
+	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+	fflush(stdout);
+      }
+
+     float weight = Weight;
+
+      if(data == 1)
+ 	weight = 1.0;
+      else{
+	if(Sample.type != "susy")
+	  weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq0/Sample.PU_avg_weight);//* fMT2tree->SFWeight.TauTagge1/Sample.PU_avg_weight);//
+      }      
+
+      int LeadingElectronIndex = -2;
+      TLorentzVector SubLeadingElectron;
+      
+      for(int i=0; i<fMT2tree->NEles; ++i){ 
+	if (fMT2tree->ele[i].PassE0_EE == 1)
+	  LeadingElectronIndex = i;
+        break;
+           }
+
+      for(int j=0; j<fMT2tree->NEles; ++j){ 
+
+	float MT2 = fMT2tree->CalcMT2(0,0,fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv,fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv,fMT2tree->misc.MET); 
+
+	if (j != LeadingElectronIndex){
+	SubLeadingElectron = fMT2tree->ele[j].lv;
+
+      //	hPtEtaAll->Fill(fMT2tree->tau[TauInd].lv.Eta(), fMT2tree->tau[TauInd].lv.Pt()); 
+      	hMETAll->Fill(fMT2tree->misc.MET);
+      	hMT2All->Fill(MT2);
+	hElePtAll->Fill(SubLeadingElectron.Pt());
+      }
+      
+      if( j != LeadingElectronIndex && fMT2tree->ele[j].PassE0_EE == 1){
+	//	hPtEtaPass->Fill(fMT2tree->tau[TauInd].lv.Eta(), fMT2tree->tau[TauInd].lv.Pt()); 
+
+	hMETPass->Fill(fMT2tree->misc.MET);
+	hMT2Pass->Fill(MT2);
+	hElePtPass->Fill(SubLeadingElectron.Pt());      
+
+      }
+
+      }
+
+
+ }
+ }
+ TCanvas *MyC = new TCanvas("Fake","Fake");
+ MyC->Divide(3,2);
+
+ MyC->cd(1);
+ hElePtAll->Draw();
+
+ MyC->cd(2);
+ hMETAll->Draw();
+
+ MyC->cd(3);
+ hMT2All->Draw();
+
+ MyC->cd(4);
+ hElePtPass->Divide(hElePtAll);
+ hElePtPass->Draw();
+
+ MyC->cd(5);
+ hMETPass->Divide(hMETAll);
+ hMETPass->Draw();
+
+ MyC->cd(6);
+ hMT2Pass->Divide(hMT2All);
+ hMT2Pass->Draw();
+
+ TString fileName = fOutputDir;
+ if(!fileName.EndsWith("/")) fileName += "/";
+  Util::MakeOutputDir(fileName);
+  fileName = fileName  + myfileName +"_FRHistos.root";
+  TFile *savefile = new TFile(fileName.Data(), "RECREATE");
+  savefile ->cd();
+ 
+ hElePtPass->Write();
+  hMETPass->Write();
+  hMT2Pass->Write();
+
+  savefile->Close();
+  std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
+  cout<<" trigger "<<trigger<<endl;
+  cout<<" cuts "<<cuts<<endl;
 }
 
 

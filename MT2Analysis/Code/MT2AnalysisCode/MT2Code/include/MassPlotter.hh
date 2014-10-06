@@ -258,6 +258,7 @@ public:
   void TauFakeRate(TString cuts, TString trigger, Long64_t nevents, TString myfilename);
   void TauEfficiency(TString cuts, Long64_t nevents, TString myfilename);
   void DrawMyPlots(TString myfileName, double *xbin, int NumberOfBins);
+  void EleFakeRate(TString cuts, TString trigger, Long64_t nevents, TString myfilename);
   void EleEleAnalysisFake(TString cuts, TString trigger, Long64_t nevents, TString myfileName);
   void EleEleAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfileName);
   void elemuAnalysis(TString cuts,  TString trigger, Long64_t nevents, TString myfileName , int type = 0);

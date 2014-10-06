@@ -940,7 +940,7 @@ public:
   Float_t absJZBInDirectEleEle();
   Float_t JZB1EleMu();
   Float_t JZB2EleMu();
-
+  Float_t DeltaREleEle();
 
 
   Float_t JZB(){
