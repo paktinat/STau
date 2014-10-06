@@ -3743,6 +3743,12 @@ float MT2tree::JZB2EleMu(){
 return fabs(misc.MET- eleMu[0].lv.Pt());
 }
 
+float MT2tree::DeltaREleEle(){
+float deltaR = Util::GetDeltaR(ele[doubleEle[0].Ele0Ind].lv.Eta(),ele[doubleEle[0].Ele1Ind].lv.Eta(),ele[doubleEle[0].Ele0Ind].lv.Phi(),ele[doubleEle[0].Ele1Ind].lv.Phi());
+return deltaR;
+}
+
+
 
 // ----------------------------------------------------------------------------------------------------------
 ClassImp(MT2Susy)

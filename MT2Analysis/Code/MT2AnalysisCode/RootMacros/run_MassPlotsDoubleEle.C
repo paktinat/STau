@@ -19,8 +19,10 @@
   //  TString samples = "./samples/samplesMineDoubleElectronQCDHtBin-SMS005.dat";                                                                     
   //  TString samples = "./samples/samplesMineDoubleElectronQCDHtBin-SMS005.dat";  
 
-  //  TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30.dat";
- TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30_NewPU_Stitched.dat";
+  // TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30.dat";
+   TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30_NewPU_Stitched.dat";
+
+  //  TString samples = "./samples/samplesMineSingleElectron.dat";
 
   Int_t channel = 22; //2* 11 (Electron PDG Id)
 
@@ -68,8 +70,9 @@
      myChannelCuts.push_back(std::string(trigger));
 
 
-         myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 125)  && (Susy.MassGlu - Susy.MassLSP) < 175))");
-
+     //      myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 125)  && (Susy.MassGlu - Susy.MassLSP) < 175))");
+              myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 175)  && (Susy.MassGlu - Susy.MassLSP) < 225))");
+     //   myChannelCuts.push_back("(misc.ProcessID!=10 || (  (Susy.MassLSP < 150) && (Susy.MassGlu < 400) ))");
 
      //     myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 25)  && (Susy.MassGlu - Susy.MassLSP) < 75))");
      //myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 175)  && (Susy.MassGlu - Susy.MassLSP) < 225))");
@@ -86,14 +89,20 @@
       myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==1"));
       myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)");
       myChannelCuts.push_back("NBJetsCSVM==0");
-      myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 76) || (doubleEle[0].lv.M() > 106))");
       myChannelCuts.push_back("misc.MET > 30");
+      myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 76) || (doubleEle[0].lv.M() > 106))");
+  
+      myChannelCuts.push_back("(doubleEle[0].MT2 > 50)");
 
+//            myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>250");
+//            myChannelCuts.push_back("((misc.MET)+(doubleEle[0].lv.Pt()))>80");
+//            myChannelCuts.push_back("((misc.MET)-(doubleEle[0].lv.Pt()))>-50");
 
-      //      myChannelCuts.push_back("((misc.MET)+(doubleEle[0].lv.Pt()))>80");
-      //      myChannelCuts.push_back("((misc.MET)-(doubleEle[0].lv.Pt()))>-50");
-      //      myChannelCuts.push_back("(doubleEle[0].MT2 > 80)");
-
+      //      myChannelCuts.push_back("(doubleEle[0].MT2 > 50) && (doubleEle[0].MT2 < 80)");
+      //      myChannelCuts.push_back("(doubleEle[0].MT2 > 80) && (doubleEle[0].MT2 < 100)");
+      //      myChannelCuts.push_back("(doubleEle[0].MT2 > 100) && (doubleEle[0].MT2 < 120)");
+      //      myChannelCuts.push_back("(doubleEle[0].MT2 > 120) && (doubleEle[0].MT2 < 150)");
+      //      myChannelCuts.push_back("(doubleEle[0].MT2 > 150)");
       myChannelCuts.push_back("0 == 0");	
 
  
@@ -111,12 +120,20 @@
 ///////////////////////////////////////////////////////////////Make Plot/////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2", 20, 0, 200, false, true, true, true, true, true, 1, true, false, "png");
-//tA->makePlot("misc.MET", cuts, -10, 0, -10, trigger, "MET", 20, 0, 200, false, true, true, true, true, true, 1, true, false, "png");
+//tA->makePlot("(ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT)",     cuts,    -10,  0 , -10 ,   trigger , "1stElectron MT+2ndElectron MT"            ,20,0,200,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+//tA->makePlot("(misc.MET)+(doubleEle[0].lv.Pt())",     cuts,    -10,  0 , -10 ,   trigger , "MET+Pt_Z"     ,50,0,500,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+//tA->makePlot("(misc.MET)-(doubleEle[0].lv.Pt())",     cuts,    -10,  0 , -10 ,   trigger , "MET-Pt_Z"     ,100,-500,500,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+//tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2", 50, 0, 500, false, true, true, true, true, true, 1, true, false, "png");
+//tA->makePlot("misc.MET", cuts, -10, 0, -10, trigger, "MET", 50, 0, 500, false, true, true, true, true, true, 1, true, false, "png");
+//tA->makePlot("DeltaREleEle()", cuts, -10, 0, -10, trigger, "MT2", 7, 0, 7, false, true, true, true, true, true, 1, true, false, "png");
+//tA->makePlot("DeltaREleEle()", cuts, -10, 0, -10, trigger, "DeltaR", 7, 0, 7, false, true, true, true, true, true, 1, true, false, "png"); 
+
+
+
 //tA->makePlot("MCTEleEle()", cuts, -10, 0, -10, trigger, "MCT", 50, 0, 500, false, true , true, true, true, true, 1, true, false, "png");
 
 // tA->makePlot("ele[doubleEle[0].Ele0Ind].MT",     cuts,    -10,  0 , -10 ,   trigger , "First Electron MT"            ,20,0,200,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-//tA->makePlot("(ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT)",     cuts,    -10,  0 , -10 ,   trigger , "1stElectron MT+2ndElectron MT"            ,20,0,200,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+
 // tA->makePlot("ele[doubleEle[0].Ele1Ind].MT",     cuts,    -10,  0 , -10 ,   trigger , "Second Electron MT"           ,20,0,200,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 // tA->makePlot("ele[doubleEle[0].Ele0Ind].lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "First Electron Pt"            ,20,0,200,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 // tA->makePlot("ele[doubleEle[0].Ele1Ind].lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "Second Electron Pt"            ,20,0,200,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
@@ -127,14 +144,13 @@
 
 //    tA->makePlot("(misc.MET)+(ele[doubleEle[0].Ele0Ind].lv.Pt())",     cuts,    -10,  0 , -10 ,   trigger , "MET+FirElePt"     ,50,0,500,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 //    tA->makePlot("(misc.MET)+(ele[doubleEle[0].Ele1Ind].lv.Pt())",     cuts,    -10,  0 , -10 ,   trigger , "MET+SecElePt"     ,50,0,500,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-//tA->makePlot("(misc.MET)-(doubleEle[0].lv.Pt())",     cuts,    -10,  0 , -10 ,   trigger , "MET-Pt_Z"     ,100,-500,500,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-//tA->makePlot("(misc.MET)+(doubleEle[0].lv.Pt())",     cuts,    -10,  0 , -10 ,   trigger , "MET+Pt_Z"     ,50,0,500,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 
-//tA->vs(1000000000000000,cuts,trigger);// , "MT2MCT-MT0MT1");
+
+
 
 //tA->makePlot("pileUp.NVertices",     cuts,    -10,  0 , -10 ,   trigger , "NVertices"            ,60,0,60,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 //------------------------
-    tA->EleEleAnalysisFake(cuts, trigger, 1000000000000,"FakePrompt");
+//    tA->EleEleAnalysisFake(cuts, trigger, 1000000000000,"FakePrompt");
 //   tA->EleEleAnalysis(cuts, trigger, 1000000000000,"MET");
 //    int NumberOfBins = 16;
 //    double xbin[NumberOfBins+1] = {-700,-620,-550,-490,-440,-400,-360,-320,-280,-240,-200,-180,-160,-140,-120,-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,0,10,20,30,40,50,60,70,80,90,100,120,140,160,180,200,240,280,320,360,400,440,490,550,620,700};      //MT2
@@ -155,6 +171,10 @@
    //   //double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
 
     //      tA->DrawMyPlots("MT2_NBCVM_NonIsoMuSS_LoosenIso196_Histos.root", xbin, NumberOfBins);
+
+//tA->EleFakeRate(cuts, trigger,10000000000000000,  "xxx");
+
+tA->vs(1000000000000000,cuts,trigger);// , "MT2MCT-MT0MT1");
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
