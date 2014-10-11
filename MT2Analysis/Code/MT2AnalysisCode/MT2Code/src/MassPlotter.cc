@@ -9999,6 +9999,262 @@ int nbins = MT2[5]->GetNbinsX();
 
 }
 
+ void MassPlotter::EleFakeRateforeleMu(TString cuts, TString trigger, Long64_t nevents, TString myfileName){
+ TH1::SetDefaultSumw2();
+
+ 
+ TH2F *hPtEtaAll  = new TH2F("hPtEtaAll", "hPtEtaAll",  60, -3.0, 3.0, 1000, 0, 1000);
+ TH2F *hPtEtaPass = new TH2F("hPtEtaPass","hPtEtaPass", 60, -3.0, 3.0, 1000, 0, 1000);
+ TH2F *hPtEtaFakeRate = new TH2F("hPtEtaFakeRate","hPtEtaFakeRate", 60, -3.0, 3.0, 1000, 0, 1000);
+  for(int ii = 0; ii < fSamples.size(); ii++){
+    
+   TString myCuts = cuts;
+ 
+   int data = 0;
+   sample Sample = fSamples[ii];
+    
+   if(Sample.type == "data"){
+     data = 1;
+     myCuts += " && " + trigger;
+   }else 
+     continue;
+   
+
+   fMT2tree = new MT2tree();
+   Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
+
+   float Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
+
+   std::cout << setfill('=') << std::setw(70) << "" << std::endl;
+    cout << "   looping over :  " <<endl;	
+    cout << "   Name:           " << Sample.name << endl;
+    cout << "   File:           " << (Sample.file)->GetName() << endl;
+    cout << "   Events:         " << Sample.nevents  << endl;
+    cout << "   Events in tree: " << Sample.tree->GetEntries() << endl; 
+    cout << "   Xsection:       " << Sample.xsection << endl;
+    cout << "   kfactor:        " << Sample.kfact << endl;
+    cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
+    cout << "   Weight:         " << Weight <<endl;
+    std::cout << setfill('-') << std::setw(70) << "" << std::endl;
+   
+    Sample.tree->Draw(">>selList", myCuts);
+    TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
+    Sample.tree->SetEventList(myEvtList);
+
+    Long64_t nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
+
+    for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
+      //Sample.tree->GetEntry(jentry); 
+      Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
+
+      if ( fVerbose>2 && jentry % 100000 == 0 ){  
+	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+	fflush(stdout);
+      }
+
+     float weight = Weight;
+
+      if(data == 1)
+ 	weight = 1.0;
+      else{
+	if(Sample.type != "susy")
+	  weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq0/Sample.PU_avg_weight);
+      }      
+
+      int hasMuon = 0;
+      TLorentzVector LeadingMuon;
+      
+        for(int i=0; i<fMT2tree->NMuons; ++i){ 
+	if(fMT2tree->muo[i].PassMu0_EleMu== 1){
+	  hasMuon = 1;
+	  LeadingMuon = fMT2tree->muo[i].lv;
+	  break;
+	}
+      }
+      
+        if(hasMuon == 0)
+	continue;
+
+      float MaxPtEleMu = -1;
+
+      int EleInd = -1;
+
+      for(int t=0; t<fMT2tree->NEles; t++){ 
+	  float deltaR = Util::GetDeltaR(fMT2tree->ele[t].lv.Eta(), LeadingMuon.Eta(), fMT2tree->ele[t].lv.Phi(), LeadingMuon.Phi());
+	
+	if(deltaR < 0.1)
+	  continue;
+
+	float maxPtEleMu= fMT2tree->ele[t].lv.Pt() + LeadingMuon.Pt();
+
+	if(maxPtEleMu > MaxPtEleMu){
+	  MaxPtEleMu = maxPtEleMu;
+	  EleInd = t;
+	}
+      }
+
+      if(EleInd == -1)
+	continue;
+
+      
+
+      
+	hPtEtaAll->Fill(fMT2tree->ele[EleInd].lv.Eta(), fMT2tree->ele[EleInd].lv.Pt()); 
+	
+     
+      
+      if(fMT2tree->ele[EleInd].IDSelEMU== 1){
+	hPtEtaPass->Fill(fMT2tree->ele[EleInd].lv.Eta(), fMT2tree->ele[EleInd].lv.Pt()); 
+	
+      }
+    }
+ }
+
+ TCanvas *MyC = new TCanvas("Fake","Fake");
+ MyC->Divide(2,2);
+ MyC->cd(1);
+ hPtEtaPass->Draw();
+ MyC->cd(2);
+ hPtEtaAll->Draw();
+ MyC->cd(3);
+ hPtEtaFakeRate->Divide(hPtEtaPass,hPtEtaAll);
+
+ TString fileName = fOutputDir;
+ if(!fileName.EndsWith("/")) fileName += "/";
+  Util::MakeOutputDir(fileName);
+  fileName = fileName  + myfileName +"_FRHistos.root";
+  TFile *savefile = new TFile(fileName.Data(), "RECREATE");
+  savefile ->cd();
+  hPtEtaAll->Write();
+  hPtEtaPass->Write();
+  savefile->Close();
+  std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
+  cout<<" trigger "<<trigger<<endl;
+  cout<<" cuts "<<cuts<<endl;
+}
+
+void MassPlotter::EleEfficiencyforelemu(TString cuts, Long64_t nevents, TString myfileName){
+  TH1::SetDefaultSumw2();
+ 
+//   TH2F *hPtEtaAll  = new TH2F("hPtEtaAll", "hPtEtaAll",  60, -3.0, 3.0, 1000, 0, 1000);
+//   TH2F *hPtEtaPass = new TH2F("hPtEtaPass","hPtEtaPass", 60, -3.0, 3.0, 1000, 0, 1000);
+     TH1F *hPtEtaAll  = new TH1F("hPtEtaAll", "hPtEtaAll",  200, 0, 200);
+     TH1F *hPtEtaPass = new TH1F("hPtEtaPass","hPtEtaPass", 200, 0, 200);
+     TH1F *hPtEtaPromptRate = new TH1F("hPtEtaPromptRate","hPtEtaPromptRate", 200, 0, 200);
+
+
+     for(int ii = 0; ii < fSamples.size(); ii++){
+    
+     TString myCuts = cuts;
+ 
+
+     sample Sample = fSamples[ii];
+    
+     if(Sample.sname != "DY")
+     continue;
+
+     fMT2tree = new MT2tree();
+     Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
+
+     float Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
+
+    std::cout << setfill('=') << std::setw(70) << "" << std::endl;
+    cout << "looping over :     " <<endl;	
+    cout << "   Name:           " << Sample.name << endl;
+    cout << "   File:           " << (Sample.file)->GetName() << endl;
+    cout << "   Events:         " << Sample.nevents  << endl;
+    cout << "   Events in tree: " << Sample.tree->GetEntries() << endl; 
+    cout << "   Xsection:       " << Sample.xsection << endl;
+    cout << "   kfactor:        " << Sample.kfact << endl;
+    cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
+    cout << "   Weight:         " << Weight <<endl;
+    std::cout << setfill('-') << std::setw(70) << "" << std::endl;
+   
+    Sample.tree->Draw(">>selList", myCuts);
+    TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
+    Sample.tree->SetEventList(myEvtList);
+
+    Long64_t nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
+
+    for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
+      //Sample.tree->GetEntry(jentry); 
+      Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
+
+      if ( fVerbose>2 && jentry % 100000 == 0 ){  
+	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+	fflush(stdout);
+      }
+
+     float weight = Weight;
+     
+     weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq0/Sample.PU_avg_weight);//* fMT2tree->SFWeight.TauTagge1/Sample.PU_avg_weight);//
+ 
+     int GenEle = 0;
+     
+     for(int j = 0; j < fMT2tree->NGenLepts; j++){
+     if(abs(fMT2tree->genlept[j].ID) != 11)
+     continue;
+     GenEle++;
+
+	
+	
+	float minDR = 100.0;
+
+	float genleptEta = fMT2tree->genlept[j].lv.Eta();
+
+	float genleptPt  = fMT2tree->genlept[j].lv.Pt();
+
+	float genleptPhi = fMT2tree->genlept[j].lv.Phi();
+	
+	
+	for(int t = 0;t < fMT2tree->NEles; t++){
+	  float deltaR = Util::GetDeltaR(genleptEta, fMT2tree->ele[t].lv.Eta(), genleptPhi, fMT2tree->ele[t].lv.Phi());
+	  if(deltaR < minDR){
+	    minDR = deltaR;
+	    
+	  }
+	
+
+	if(minDR < 0.1){
+	  
+	    hPtEtaAll->Fill(fMT2tree->eleMu[0].MT2, weight);
+	     
+	 
+
+	  if(fMT2tree->ele[t].IDSelEMU== 1){
+	    hPtEtaPass->Fill(fMT2tree->eleMu[0].MT2, weight);
+	        
+	  }
+	}
+     }
+    }
+  }
+ }
+  
+  TCanvas *MyC = new TCanvas("MyC", "MyC");
+  MyC->Divide(2,2);
+  MyC->cd(1);
+  hPtEtaPass->Draw();
+  MyC->cd(2);
+  hPtEtaAll->Draw();
+  MyC->cd(3);
+  hPtEtaPromptRate->Divide(hPtEtaPass,hPtEtaAll);
+  TString fileName = fOutputDir;
+  if(!fileName.EndsWith("/")) fileName += "/";
+  Util::MakeOutputDir(fileName);
+  fileName = fileName  + myfileName +"_PRHistos.root";
+  TFile *savefile = new TFile(fileName.Data(), "RECREATE");
+  savefile ->cd();
+  hPtEtaAll->Write();
+  hPtEtaPass->Write();
+  savefile->Close();
+  std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
+  cout<<" cuts "<<cuts<<endl;
+}
+
+
+
+
 void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString myfileName){
   
   TH1::SetDefaultSumw2();
