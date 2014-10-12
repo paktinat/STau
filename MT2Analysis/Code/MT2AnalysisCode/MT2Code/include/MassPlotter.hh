@@ -262,7 +262,9 @@ public:
   void EleEleAnalysisFake(TString cuts, TString trigger, Long64_t nevents, TString myfileName);
   void EleEleAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfileName);
   void elemuAnalysis(TString cuts,  TString trigger, Long64_t nevents, TString myfileName , int type = 0);
- 
+  void EleFakeRateforeleMu(TString cuts, TString trigger, Long64_t nevents, TString myfileName);
+  void EleEfficiencyforelemu(TString cuts, Long64_t nevents, TString myfileName);
+  
   void setFlags(int flag); //To determine which analysis we look at HighHT/LowHT MT2(b) options are:
   // 5  :: LowHT  MT2  
   // 7  :: HighHT MT2 
