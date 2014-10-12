@@ -447,7 +447,6 @@ public:
 	void Delete(){if(ptResol_ != NULL) delete ptResol_; }
 	double EvalPFJetSigma(TLorentzVector jet){
 		double jpt  = jet.Pt();
-		double jphi = jet.Phi();
 		double jeta = jet.Eta();
 		double jdeltapt = 999.;
 		double ptResolThreshold_ = 10.; //To be changed -------------------
@@ -943,6 +942,12 @@ public:
   Float_t DeltaREleEle();
 
 
+  Float_t JZBDPhi(){
+    TLorentzVector jzb = pfmet[0] + muTau[0].GetLV();
+    return TMath::Abs(jzb.DeltaPhi(muTau[0].GetLV()));
+  }
+
+
   Float_t JZB(){
     
     return ((pfmet[0] + muTau[0].GetLV()).Pt() - muTau[0].GetLV().Pt());
@@ -955,6 +960,11 @@ public:
     
   }
 
+    float muTauDR(){
+    TLorentzVector muLV  = muo[muTau[0].GetMuIndex0()].lv;
+    TLorentzVector tauLV = tau[muTau[0].GetTauIndex0()].lv;
+    return (muLV.DeltaR(tauLV));
+  }
   
 
   // MT2 & friends

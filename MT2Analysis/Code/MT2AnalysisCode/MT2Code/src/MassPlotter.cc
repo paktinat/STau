@@ -210,13 +210,13 @@ void MassPlotter::init(TString filename){
 }
 
 //___________________________________________________________________________
-void MassPlotter::makeSmallCopy(int nevents, int sample, TString cuts, TString trigger){
-  // 	if(fSamples.size()<sample) return;
+void MassPlotter::makeSmallCopy(unsigned int nevents, unsigned int mysample, TString cuts, TString trigger){
+  // 	if(fSamples.size()<mysample) return;
 
 
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
-
+  /*
   TFile *pileup_data = new TFile(GETDATALOCALPATH(Certification/pileUp_data/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.root),"READ");
   
   TH1F* pileup_data_histo = (TH1F*) pileup_data->Get("pileup");
@@ -235,10 +235,10 @@ void MassPlotter::makeSmallCopy(int nevents, int sample, TString cuts, TString t
     pileup_data_histo->SetBinContent(i+1,  pileup_data_histo->GetBinContent(i+1)/pileup_mc_histo->GetBinContent(i+1));
   }
 
+ */
 
-
-  for(int ii = 0; ii < fSamples.size(); ii++){
-    if(fSamples.size() > sample && ii != sample)
+  for(unsigned int ii = 0; ii < fSamples.size(); ii++){
+    if(fSamples.size() > mysample && ii != mysample)
       continue;
     //  if(fSamples[ii].type != "data" || fSamples[ii].name != "Run2012D1F")
     // continue;
@@ -253,14 +253,14 @@ void MassPlotter::makeSmallCopy(int nevents, int sample, TString cuts, TString t
     TString fileName = fSamples[ii].file->GetName();
 
     //    fileName =  fileName.ReplaceAll(".root", "_NBJetsCSVM0_MET30.root");
-    fileName =  fileName.ReplaceAll(".root", "_Stitching.root");
+    fileName =  fileName.ReplaceAll(".root", "_MuTauPreselection.root");
 
     TFile *newfile = new TFile(fOutputDir+"/"+fileName,"recreate");
     TTree *newtree = fSamples[ii].tree->CloneTree(0);
     TH1F *h_PUWeights = (TH1F*) fSamples[ii].file->Get("h_PUWeights");
     TH1F *h_Events    = (TH1F*) fSamples[ii].file->Get("h_Events");
     
-    h_PUWeights->Reset();
+    //    h_PUWeights->Reset();
 
     if(fSamples[ii].file->Get("h_SMSEvents")){
       h_SMSEvents    = (TH2F*) fSamples[ii].file->Get("h_SMSEvents");
@@ -276,9 +276,9 @@ void MassPlotter::makeSmallCopy(int nevents, int sample, TString cuts, TString t
     fSamples[ii].tree->SetEventList(myEvtList);
 
 
-    Int_t nentries = myEvtList->GetN();
+    unsigned int nentries = myEvtList->GetN();
 
-    for (Int_t i=0;i<nentries; i++) {
+    for (unsigned int i=0;i<nentries; i++) {
       if(i > nevents) continue;
 
       if ( i % 100000 == 0 ){ 	
@@ -287,7 +287,7 @@ void MassPlotter::makeSmallCopy(int nevents, int sample, TString cuts, TString t
       }
  
       fSamples[ii].tree->GetEntry(myEvtList->GetEntry(i));
-      
+      /*
       float oldWeight = fMT2tree->pileUp.Weight;
 
       int binNumber = pileup_data_histo->FindBin(fMT2tree->pileUp.PUtrueNumInt);
@@ -307,10 +307,10 @@ void MassPlotter::makeSmallCopy(int nevents, int sample, TString cuts, TString t
 
       if(fMT2tree->eleMu[0].ele0Ind >= 0)
 	fMT2tree->eleMu[0].EleIdIsoSF  = fMT2tree->ele[fMT2tree->eleMu[0].ele0Ind].GetEleIDISOSFelemu();
-      
+      */
       newtree->Fill();
 
-      h_PUWeights->Fill(newWeight);
+//       h_PUWeights->Fill(newWeight);
    
 //       cout<<"old weight "<<oldWeight<<" new weight "<<newWeight<<endl;
     }
@@ -332,12 +332,12 @@ void MassPlotter::makeSmallCopy(int nevents, int sample, TString cuts, TString t
 //___________________________________________________________________________
 void MassPlotter::makePlots(){
 	double dPhisplit[4]={0., 1.0, 1.5, 3.142};
-	MakeMT2PredictionAndPlots(false, dPhisplit, 2.5);  // not cleaned, fudgefactor 2
+	MakeMT2PredictionAndPlots(false, dPhisplit);  //, 2.5);  // not cleaned, fudgefactor 2
 }
 
 
 //__________________________________________________________________________
-void MassPlotter::MakeMT2PredictionAndPlots(bool cleaned , double dPhisplit[], double fudgefactor){
+void MassPlotter::MakeMT2PredictionAndPlots(bool cleaned , double dPhisplit[]){//, double fudgefactor){
 	TString cleanflag;
 	if(cleaned) cleanflag="cleaned";
 	else        cleanflag="notcleaned";
@@ -353,7 +353,7 @@ void MassPlotter::MakeMT2PredictionAndPlots(bool cleaned , double dPhisplit[], d
 	std::vector<sample>  QCDSamples;
 	std::vector<sample>  Samples_NOTData;
 	std::vector<sample>  QCDandDataSamples;
-	for(int i=0; i< fSamples.size(); ++i){
+	for(unsigned int i=0; i< fSamples.size(); ++i){
 		if(fSamples[i].sname=="QCD"){
 			QCDSamples.push_back(fSamples[i]);
 			QCDandDataSamples.push_back(fSamples[i]);
@@ -366,8 +366,8 @@ void MassPlotter::MakeMT2PredictionAndPlots(bool cleaned , double dPhisplit[], d
 		}
 	}
 
-	double ZerotoPi[4]    ={0., 3.142, 3.142, 3.142};
-	double controlsplit[4]={dPhisplit[2], dPhisplit[3], dPhisplit[3], dPhisplit[3]};
+	//	double ZerotoPi[4]    ={0., 3.142, 3.142, 3.142};
+	//	double controlsplit[4]={dPhisplit[2], dPhisplit[3], dPhisplit[3], dPhisplit[3]};
 
 	std::ostringstream cutStream;
 	cutStream  
@@ -430,7 +430,7 @@ void MassPlotter::MakePlot(TString var, TString cuts, int njets, int nbjets, int
 }
 
 // ________________________________________________________________________
-void MassPlotter::PrintWEfficiency(int sample_index ,TString process,  std::string lept, Long64_t nevents, bool includeTaus){
+void MassPlotter::PrintWEfficiency(int sample_index ,TString process,  std::string lept, unsigned int nevents, bool includeTaus){
 	sample Sample = fSamples[sample_index];
 
 	std::cout << setfill('=') << std::setw(70) << "" << std::endl;
@@ -438,9 +438,9 @@ void MassPlotter::PrintWEfficiency(int sample_index ,TString process,  std::stri
 	     << Sample.name << endl;	
 	std::cout << setfill('-') << std::setw(70) << "" << std::endl;
 
-	enum counters_t { count_begin, all=count_begin, presel, NJetsIDLoose , PassJetID, MinMetJetDPhi, VectorSumPt, MT2,  count_end };
+	enum counters_t { count_begin, all=count_begin, presel, NJetsIDLoose , PassJetID, MinMetJetDPhi, VectorSumPt, MT2Cut,  count_end };
 	Monitor counters[count_end];
-	TString lablx[count_end] = {"all events", "presel", "NJetsIDLoose" , "PassJetID", "MinMetJetDPhi", "VectorSumPt", "MT2"};
+	TString lablx[count_end] = {"all events", "presel", "NJetsIDLoose" , "PassJetID", "MinMetJetDPhi", "VectorSumPt", "MT2Cut"};
 
 	string to_measure;
 	if     (lept == "ele" && process=="W" )       {to_measure = "W->enu  recoed";} 
@@ -450,9 +450,9 @@ void MassPlotter::PrintWEfficiency(int sample_index ,TString process,  std::stri
 
 	fMT2tree = new MT2tree();
 	Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
-	Long64_t nentries =  Sample.tree->GetEntries();
-	Long64_t nbytes = 0, nb = 0;
-	for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
+	unsigned int nentries =  Sample.tree->GetEntries();
+	unsigned int nbytes = 0, nb = 0;
+	for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
 		nb = Sample.tree->GetEntry(jentry);   nbytes += nb;
 		Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
       
@@ -529,9 +529,9 @@ void MassPlotter::PrintWEfficiency(int sample_index ,TString process,  std::stri
 		if(fMT2tree->misc.MT2 <200 || fMT2tree->misc.MT2>400 )  continue;
 //		if(fMT2tree->misc.MT2 <150 || fMT2tree->misc.MT2>300 )  continue;
 //		if(fMT2tree->misc.MT2 <100 || fMT2tree->misc.MT2>150  )  continue;
-		if(eventgood)   counters[MT2].fill("MT2", weight);
-		if(acceptance)  counters[MT2].fill("acceptance", weight);
-		if(leptfound)   counters[MT2].fill(to_measure, weight);
+		if(eventgood)   counters[MT2Cut].fill("MT2Cut", weight);
+		if(acceptance)  counters[MT2Cut].fill("acceptance", weight);
+		if(leptfound)   counters[MT2Cut].fill(to_measure, weight);
 		
 	}
 
@@ -634,401 +634,14 @@ void MassPlotter::PrintWEfficiency(int sample_index ,TString process,  std::stri
 
 //________________________________________________________________________
 
-void MassPlotter::PrintCutFlow(int njets, int nleps, TString trigger, TString cuts){
-  
-  Monitor counters[fSamples.size()];
-
-  const int   nProc      = 17;  
-  TString  cnames[nProc] = {"QCD", "W+jets", "Z+jets", "Top","Other", "Total Bkg.", "data", "LM1", "LM2", "LM3", "LM4", "LM5", "LM8", "LM9", "LM11", "LM12", "LM13"};
-  Monitor  ccount[nProc], ccount_100[nProc];
-
-  for(size_t i = 0; i < fSamples.size(); ++i){
-
-    Double_t sample_weight =0;
-    if(fPUReweight) sample_weight= fSamples[i].xsection * fSamples[i].kfact * fSamples[i].lumi / (fSamples[i].nevents * fSamples[i].PU_avg_weight );
-    else            sample_weight= fSamples[i].xsection * fSamples[i].kfact * fSamples[i].lumi / (fSamples[i].nevents );
-    if(fVerbose>2) cout << "PrintCutFlow: looping over " << fSamples[i].name << endl;
-    if(fVerbose>2) cout << "              sample has weight " << sample_weight << " and " << fSamples[i].tree->GetEntries() << " entries" << endl; 
-    if(fVerbose>2) cout << "              Average PU weight: " << fSamples[i].PU_avg_weight << endl;
-    if(fVerbose>2) cout << "              PU reweightung:    " << fPUReweight << endl;
-    if(fVerbose>2) cout << "              Original Entries: " << fSamples[i].nevents << endl;
-    
-    fMT2tree = new MT2tree();
-    fSamples[i].tree->SetBranchAddress("MT2tree", &fMT2tree);
-    Long64_t nentries =  fSamples[i].tree->GetEntries();
-    Long64_t nbytes = 0, nb = 0;
-    int nev =0;
-
-    //leo tweak - filtering out the TTree
-    TString myCuts = cuts;
-
-    if( fSamples[i].type=="data") myCuts += " && " + trigger; //cuts to be aplied only on data
-    cout << "Cuts for Flow: " << myCuts << endl;
-    fSamples[i].tree->Draw(">>selList", myCuts);
-
-
-    TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-    fSamples[i].tree->SetEventList(myEvtList);
-    int counter=0;
-    cout << "Filtering done, size=" <<myEvtList->GetN()  << endl;
-    
-    if(myEvtList->GetSize()==0) continue;
-    
-    while(myEvtList->GetEntry(counter++) !=-1){
-      
-      int jentry = myEvtList->GetEntry(counter-1);
-      
-      //for (Long64_t jentry=0; jentry<nentries;jentry++) {
-      nb =  fSamples[i].tree->GetEntry(jentry);   nbytes += nb;
-      fSamples[i].tree->SetBranchAddress("MT2tree", &fMT2tree);
-      
-      if ( fVerbose>2 && jentry % 50000 == 0 )  cout << "+++ Proccessing event " << jentry << endl;
-      
-      Double_t weight = sample_weight;
-      if (!fMT2tree->misc.isData ) weight = weight * fMT2tree->pileUp.Weight; // pile-up reweighting for MC 
-
-       bool isMT2gt100 = fMT2tree->misc.MT2 > 100.;
-
-      if( fMT2tree->NJetsIDLoose < 1 || !fMT2tree->misc.Jet0Pass                                      )  continue;
-      if( fMT2tree->NJetsIDLoose < 2 || !fMT2tree->misc.Jet1Pass    || fMT2tree->misc.SecondJPt < 100 )  continue;
-      if( !(!fMT2tree->misc.isData   || (fMT2tree->misc.Run <162803 || fMT2tree->misc.Run >162909  )) )  continue;
-      if(trigger=="HT"){
-	      if( fMT2tree->misc.isData ==1 
-		  && fMT2tree->trigger.HLT_PFHT650_v5 ==0 
-		  && fMT2tree->trigger.HLT_PFHT650_v6 ==0 
-		  && fMT2tree->trigger.HLT_PFHT650_v7 ==0 ) continue;
-	      if( fMT2tree->misc.MET     < 30)  continue;
-      }else if(trigger=="MHT_HT"){
-	      if( fMT2tree->misc.isData ==1 
-		  && fMT2tree->trigger.HLT_PFHT350_PFMET100_v3 ==0 
-		  && fMT2tree->trigger.HLT_PFHT350_PFMET100_v4 ==0 
-		  && fMT2tree->trigger.HLT_PFHT350_PFMET100_v5 ==0 ) continue;
-	      if( fMT2tree->misc.MET       <   30) continue;
-	      if( fMT2tree->misc.HT        <  450) continue;
-      }
-
-      if     (njets>1) {
-	if(fMT2tree->NJetsIDLoose != njets) continue;
-	TString text = TString::Format("All events (jets == %d)",njets);
-	counters[i].fill(text.Data(),weight);
-	FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, text, weight);
-	if(isMT2gt100)     FillMonitor(ccount_100, fSamples[i].sname, fSamples[i].type, text, weight);
-      }
-      else if(njets <-1) {
-	if(fMT2tree->NJetsIDLoose < abs(njets)) continue;
-	TString text = TString::Format("All events(jets >= %d)",abs(njets));
-	counters[i].fill(text.Data(),weight);
-	FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, text, weight);
-	if(isMT2gt100)     FillMonitor(ccount_100, fSamples[i].sname, fSamples[i].type, text, weight);
-      }
-
-      if(fMT2tree->PassMinMetJetDPhi03() ==0)      continue;      
-      counters[i].fill("Minimum DPhi(MET,jet) > 0.3",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "Minimum DPhi(MET,jet) > 0.3", weight);
-      if(isMT2gt100)     FillMonitor(ccount_100, fSamples[i].sname, fSamples[i].type, "Minimum DPhi(MET,jet) > 0.3", weight);
-
-      if( fMT2tree->misc.HBHENoiseFlag != 1 )  continue;
-      if( fMT2tree->misc.CrazyHCAL     != 0 )  continue;
-      counters[i].fill("HBHE noise veto",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "HBHE noise veto", weight);
-      if(isMT2gt100)     FillMonitor(ccount_100, fSamples[i].sname, fSamples[i].type, "HBHE noise veto", weight);
-
-//      if( fMT2tree->misc.EcalDeadCellBEFlag != 1 )  continue;
-//      counters[i].fill("Boundary energy veto (dead ecal)",weight);
-//      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "Boundary energy veto (dead ecal)", weight);
-//      if(isMT2gt100)     FillMonitor(ccount_100, fSamples[i].sname, fSamples[i].type, "Boundary energy veto (dead ecal)", weight);
-
-      if( fMT2tree->misc.Vectorsumpt > 70. )  continue;
-      counters[i].fill("VectorSumPt < 70",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "VectorSumPt < 70", weight);
-      if(isMT2gt100)     FillMonitor(ccount_100, fSamples[i].sname, fSamples[i].type, "VectorSumPt < 70", weight);
-
-      if( !fMT2tree->misc.PassJetID )  continue;
-      counters[i].fill("jets > 50GeV failing PFID event veto",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "jets > 50GeV failing PFID event veto", weight);
-      if(isMT2gt100)     FillMonitor(ccount_100, fSamples[i].sname, fSamples[i].type, "jets > 50GeV failing PFID event veto", weight);
-
-      // Only considering (so far): no lepton requirement (<0);  1 lepton (==1), lepton veto (otherwise)
-      string nLeps = (std::string) TString::Format("%d",abs(nleps));
-      if(nleps !=-10){ 
-	      if(nleps>0){ // exactly nleps lepton
-		string cut_name = "NLeps == "+nLeps;
-		if( (fMT2tree->NEles + fMT2tree->NMuons) != abs(nleps))  continue;
-		counters[i].fill(cut_name,weight);
-		FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, cut_name, weight);
-		if(isMT2gt100)     FillMonitor(ccount_100, fSamples[i].sname, fSamples[i].type, cut_name, weight);
-	      }
-	      else if( nleps==0 ) { // lepton veto
-		string cut_name = "Lepton veto";
-		if( (fMT2tree->NEles + fMT2tree->NMuons) != 0 )  continue;
-		counters[i].fill(cut_name,weight);
-		FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, cut_name, weight);
-		if(isMT2gt100)     FillMonitor(ccount_100, fSamples[i].sname, fSamples[i].type, cut_name, weight);
-	      }
-	      else if(nleps<0){ // at least nleps lepton
-		string cut_name = "NLeps >= "+nLeps;
-		if( (fMT2tree->NEles + fMT2tree->NMuons) < abs(nleps))  continue;
-		counters[i].fill(cut_name ,weight);
-		FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, cut_name, weight);
-		if(isMT2gt100)     FillMonitor(ccount_100, fSamples[i].sname, fSamples[i].type, cut_name, weight);
-	      }
-      }
-      
-//      if( !(fMT2tree->GetNBtags(2,1.74) >= 1) ) continue;
-//      TString text = "b-tags >=1";
-//      counters[i].fill(text.Data(),weight);
-//      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, text, weight);
-//      if(isMT2gt100)     FillMonitor(ccount_100, fSamples[i].sname, fSamples[i].type, text, weight);
-      
-      if( fMT2tree->misc.MT2 < 80. )  continue;
-      counters[i].fill("MT2 > 80 GeV" ,weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "MT2 > 80 GeV", weight);
-      if( fMT2tree->misc.MT2 < 100. )  continue;
-      counters[i].fill("MT2 > 100 GeV",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "MT2 > 100 GeV", weight);
-      if( fMT2tree->misc.MT2 < 120. )  continue;
-      counters[i].fill("MT2 > 120 GeV",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "MT2 > 120 GeV", weight);
-      if( fMT2tree->misc.MT2 < 135. )  continue;
-      counters[i].fill("MT2 > 135 GeV",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "MT2 > 135 GeV", weight);
-      if( fMT2tree->misc.MT2 < 150. )  continue;
-      counters[i].fill("MT2 > 150 GeV",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "MT2 > 150 GeV", weight);
-      if( fMT2tree->misc.MT2 < 165. )  continue;
-      counters[i].fill("MT2 > 165 GeV",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "MT2 > 165 GeV", weight);
-      if( fMT2tree->misc.MT2 < 180. )  continue;
-      counters[i].fill("MT2 > 180 GeV",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "MT2 > 180 GeV", weight);
-      if( fMT2tree->misc.MT2 < 200. )  continue;
-      counters[i].fill("MT2 > 200 GeV",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "MT2 > 200 GeV", weight);
-      if( fMT2tree->misc.MT2 < 225. )  continue;
-      counters[i].fill("MT2 > 225 GeV",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "MT2 > 225 GeV", weight);
-      if( fMT2tree->misc.MT2 < 250. )  continue;
-      counters[i].fill("MT2 > 250 GeV",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "MT2 > 250 GeV", weight);
-      if( fMT2tree->misc.MT2 < 275. )  continue;
-      counters[i].fill("MT2 > 275 GeV",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "MT2 > 275 GeV", weight);
-      if( fMT2tree->misc.MT2 < 300. )  continue;
-      counters[i].fill("MT2 > 300 GeV",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "MT2 > 300 GeV", weight);
-      if( fMT2tree->misc.MT2 < 325. )  continue;
-      counters[i].fill("MT2 > 325 GeV",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "MT2 > 325 GeV", weight);
-      if( fMT2tree->misc.MT2 < 350. )  continue;
-      counters[i].fill("MT2 > 350 GeV",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "MT2 > 350 GeV", weight);
-      if( fMT2tree->misc.MT2 < 375. )  continue;
-      counters[i].fill("MT2 > 375 GeV",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "MT2 > 375 GeV", weight);
-      if( fMT2tree->misc.MT2 < 400. )  continue;
-      counters[i].fill("MT2 > 400 GeV",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "MT2 > 400 GeV", weight);
-      if( fMT2tree->misc.MT2 < 425. )  continue;
-      counters[i].fill("MT2 > 425 GeV",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "MT2 > 425 GeV", weight);
-      if( fMT2tree->misc.MT2 < 450. )  continue;
-      counters[i].fill("MT2 > 450 GeV",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "MT2 > 450 GeV", weight);
-      if( fMT2tree->misc.MT2 < 475. )  continue;
-      counters[i].fill("MT2 > 475 GeV",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "MT2 > 475 GeV", weight);
-      if( fMT2tree->misc.MT2 < 500. )  continue;
-      counters[i].fill("MT2 > 500 GeV",weight);
-      FillMonitor(ccount, fSamples[i].sname, fSamples[i].type, "MT2 > 500 GeV", weight);
-      
-    }
-    delete fMT2tree;
-  }
-
-  std::cout << setfill('=') << std::setw(70) << "" << std::endl;
-  std::cout << "Statistics - by sample" << std::endl;
-  std::cout << setfill('_') << std::setw(70) << "" << setfill(' ') << std::endl;
-  for ( size_t i = 0; i < fSamples.size(); ++i){
-    std::cout << "++++  " << fSamples[i].name << std::endl;  
-    std::cout << setfill('-') << std::setw(70) << "" << setfill(' ') << std::endl;    
-    counters[i].print();
-    std::cout << setfill('_') << std::setw(70) << "" << setfill(' ') << std::endl;    
-  }  
-
-  std::cout << setfill('=') << std::setw(70) << "" << std::endl;
-  std::cout << "Statistics - by process" << std::endl;
-  std::cout << setfill('_') << std::setw(70) << "" << setfill(' ') << std::endl;
-  for ( size_t i = 0; i < nProc; ++i){
-    std::cout << "++++  " << cnames[i] << std::endl;  
-    std::cout << setfill('-') << std::setw(70) << "" << setfill(' ') << std::endl;    
-    ccount[i].print();
-    std::cout << setfill('_') << std::setw(70) << "" << setfill(' ') << std::endl;    
-  }  
-
-  std::cout << setfill('=') << std::setw(70) << "" << std::endl;
-  std::cout << "Statistics - by process (MT2 > 100GeV)" << std::endl;
-  std::cout << setfill('_') << std::setw(70) << "" << setfill(' ') << std::endl;
-  for ( size_t i = 0; i < nProc; ++i){
-    std::cout << "++++  " << cnames[i] << std::endl;  
-    std::cout << setfill('-') << std::setw(70) << "" << setfill(' ') << std::endl;    
-    ccount_100[i].print();
-    std::cout << setfill('_') << std::setw(70) << "" << setfill(' ') << std::endl;    
-  }  
-
-}
-
-// MT2 vs HT cutflot  --------------------------------------------------------------------
-void MassPlotter::PrintCutFlowMT2vsHT(TString trigger, TString cuts){
-  
-  // define here the HT & MT2 sampling to be used
-  int   numHTbins   =  15;
-  float minHT       = 400;
-  float HTgridsize  =  50;
-  float minMT2cut   = 100;
-  float maxMT2cut   = 700;
-  float MT2gridsize =  25;
-  
-  const int   nProc      = 17;  
-  TString  cnames[nProc] = {"QCD", "W+jets", "Z+jets", "Top", "Other", "Total Bkg.", "data", "LM1", "LM2", "LM3", "LM4", "LM5", "LM8", "LM9", "LM11", "LM12", "LM13"};
-  Monitor Monitors[numHTbins][nProc];
-  Monitor counters[fSamples.size()];
-
-  // Loop over samples
-  for(size_t i = 0; i < fSamples.size(); ++i){
-
-    Double_t sample_weight =0;
-    if(fPUReweight) sample_weight= fSamples[i].xsection * fSamples[i].kfact * fSamples[i].lumi / (fSamples[i].nevents * fSamples[i].PU_avg_weight );
-    else            sample_weight= fSamples[i].xsection * fSamples[i].kfact * fSamples[i].lumi / (fSamples[i].nevents );
-    if(fVerbose>2) cout << "PrintCutFlow: looping over " << fSamples[i].name << endl;
-    if(fVerbose>2) cout << "              sample has weight " << sample_weight << " and " << fSamples[i].tree->GetEntries() << " entries" << endl; 
-    if(fVerbose>2) cout << "              Average PU weight: " << fSamples[i].PU_avg_weight << endl;
-    if(fVerbose>2) cout << "              PU reweightung:    " << fPUReweight << endl;
-    if(fVerbose>2) cout << "              Original Entries: " << fSamples[i].nevents << endl;
-
-    
-    fMT2tree = new MT2tree();
-    fSamples[i].tree->SetBranchAddress("MT2tree", &fMT2tree);
-    Long64_t nentries =  fSamples[i].tree->GetEntries();
-    Long64_t nbytes = 0, nb = 0;
-    int nev =0;
-
-    // don't do anything for empty trees: (maybe tree already skimmed)
-    if (fSamples[i].tree->GetEntries()==0) continue;
-
-    //leo tweak - filtering out the TTree
-    TString myCuts = cuts;
-
-    if( fSamples[i].type=="data" && trigger!="") myCuts += " && " + trigger; //cuts to be aplied only on data
-    cout << "              Cuts for Flow: " << myCuts << endl;
-    fSamples[i].tree->Draw(">>selList", myCuts);
-
-
-    TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-    fSamples[i].tree->SetEventList(myEvtList);
-    int counter=0;
-    cout << "              Filtering done, size=" <<myEvtList->GetN()  << endl;
-    
-    if(myEvtList->GetSize()==0) continue;
-    
-    // loop over entried in MT2trees
-    while(myEvtList->GetEntry(counter++) !=-1){
-      
-      int jentry = myEvtList->GetEntry(counter-1);
-      
-      nb =  fSamples[i].tree->GetEntry(jentry);   nbytes += nb;
-      fSamples[i].tree->SetBranchAddress("MT2tree", &fMT2tree);
-      
-      if ( fVerbose>2 && jentry % 50000 == 0 )  cout << "+++ Proccessing event " << jentry << endl;
-      
-      Double_t weight = sample_weight;
-      if (!fMT2tree->misc.isData ) weight = weight * fMT2tree->pileUp.Weight; // pile-up reweighting for MC 
-
-	counters[i].fill("All events",weight); // fill all events that pass selection, without MT2 cut
-	float MT2cut =minMT2cut; // initial cut on MT2
-	while(MT2cut <=maxMT2cut ){
-		if(fMT2tree->misc.MT2 >MT2cut){
-			TString cutname = TString::Format("MT2 > %.0f GeV",MT2cut);
-			counters[i].fill(cutname.Data(),weight);
-			for(int HTbin=0; HTbin< numHTbins; ++HTbin){
-				float HTcut = minHT + HTbin*HTgridsize;
-				if( fMT2tree->misc.HT > HTcut)   FillMonitor(Monitors[HTbin], fSamples[i].sname, fSamples[i].type,cutname.Data() , weight);
-			
-			}
-		}
-		MT2cut+=MT2gridsize;
-	}
-    }
-    delete fMT2tree;
-  }
-
-  std::ostringstream logStream;
-  // by sample, no HT cuts
-  logStream << setfill('=') << std::setw(70) << "" << std::endl;
-  logStream << "Statistics - by sample, no HT cut" << std::endl;
-  logStream << setfill('_') << std::setw(70) << "" << setfill(' ') << std::endl;
-  for ( size_t i = 0; i < fSamples.size(); ++i){
-    logStream << "++++  " << fSamples[i].name << std::endl;  
-    logStream << setfill('-') << std::setw(70) << "" << setfill(' ') << std::endl;    
-    logStream << counters[i];
-    logStream << setfill('_') << std::setw(70) << "" << setfill(' ') << std::endl;    
-  }  
-  ofstream f_log ("Cutflow_bySample_defaultcuts.log", ios::app);
-  f_log << logStream.str();
-  logStream.str(""); // clear the ostringstream
-
-  for ( int HTbin =0; HTbin < numHTbins; ++HTbin){
-	  logStream << setfill('=') << std::setw(70) << "" << std::endl;
-	  TString HTcut= TString::Format("%.0f", minHT+HTbin*HTgridsize);
-	  logStream << setfill('_') << std::setw(70) << "" << setfill(' ') << std::endl;
-	  logStream << "the following cuts were applied: " << std::endl;
-	  logStream << cuts                                << std::endl;
- 	  logStream << "with pfHT > " << HTcut	<< " GeV " << std::endl;  
-	  logStream << setfill('_') << std::setw(70) << "" << setfill(' ') << std::endl;
-	  logStream << "Statistics - by process (HT > " << HTcut << " GeV)" << std::endl;
-	  logStream << setfill('_') << std::setw(70) << "" << setfill(' ') << std::endl;
-	  for ( size_t i = 0; i < nProc; ++i){
-	    logStream << "++++  " << cnames[i] << std::endl;  
-	    logStream << setfill('-') << std::setw(70) << "" << setfill(' ') << std::endl;    
-	    logStream << Monitors[HTbin][i];
-	    logStream << setfill('_') << std::setw(70) << "" << setfill(' ') << std::endl;    
-	  }  
-
-	TString cutflowlog = "Cutflow_HT" +HTcut + "_byProcess.log";
-	ofstream f_log2 (cutflowlog.Data(), ios::app);
-	f_log2 << logStream.str();
-	logStream.str(""); // clear the ostringstream
-  }
-
-}
-
-//________________________________________________________________________
-
-void MassPlotter::FillMonitor(Monitor *count, TString sname, TString type, TString cut, double weight){
-  if     (sname == "QCD"    ) 	count[ 0].fill(cut.Data(),weight);
-  else if(sname == "Wtolnu" ) 	count[ 1].fill(cut.Data(),weight);
-  else if(sname == "DY"     ) 	count[ 2].fill(cut.Data(),weight);
-  else if(sname == "Top"    )	count[ 3].fill(cut.Data(),weight);
-  else if(sname == "VV" || sname == "VGamma" || sname == "Photons") 	
-                                count[ 4].fill(cut.Data(),weight);
-  if     (type  == "mc"     )   count[ 5].fill(cut.Data(),weight);
-  else if(type  == "data"   )	count[ 6].fill(cut.Data(),weight);
-  else if(sname == "LM1"    )	count[ 7].fill(cut.Data(),weight);
-  else if(sname == "LM2"    )	count[ 8].fill(cut.Data(),weight);
-  else if(sname == "LM3"    )	count[ 9].fill(cut.Data(),weight);
-  else if(sname == "LM4"    )	count[10].fill(cut.Data(),weight);
-  else if(sname == "LM5"    )	count[11].fill(cut.Data(),weight);
-  else if(sname == "LM8"    )	count[12].fill(cut.Data(),weight);
-  else if(sname == "LM9"    )	count[13].fill(cut.Data(),weight);
-  else if(sname == "LM11"    )	count[14].fill(cut.Data(),weight);
-  else if(sname == "LM12"    )	count[15].fill(cut.Data(),weight);
-  else if(sname == "LM13"    )	count[16].fill(cut.Data(),weight);
-}
 
 //________________________________________________________________________
 
 void MassPlotter::plotSig(TString var, TString theCuts, TString xtitle, int nbins, double min, double max, bool flip_order, int type , int LowerCut){
 
-       TString varname = Util::removeFunnyChar(var.Data());
+        cout<<" flip_order "<<flip_order<<" LowerCut "<<LowerCut<<endl;
+
+        TString varname = Util::removeFunnyChar(var.Data());
 
 	TH1D*    h_mc_sum    = new TH1D   (varname+"mc_sum", "", nbins, min, max );
 	TH1D*    h_susy      = new TH1D   (varname+"susy"  , "", nbins, min, max );	
@@ -1129,7 +742,7 @@ void MassPlotter::plotSig(TString var, TString theCuts, TString xtitle, int nbin
   }
   TGraph *sig1 = new TGraph(nbins+1,x,y1);
   sig1->SetTitle("");
-  sig1->GetXaxis()->SetTitle("LowerCut");
+  sig1->GetXaxis()->SetTitle(xtitle + " LowerCut");
   sig1->SetMarkerStyle(20);
   if (type==0){
     sig1->GetYaxis()->SetTitle("S/#sqrt{B}");
@@ -1146,7 +759,7 @@ void MassPlotter::plotSig(TString var, TString theCuts, TString xtitle, int nbin
 
   TGraph *sig2 = new TGraph(nbins+1,x,y2);
   sig2->SetTitle("");
-  sig2->GetXaxis()->SetTitle("UpperCut");
+  sig2->GetXaxis()->SetTitle(xtitle + " UpperCut");
   sig2->SetMarkerStyle(20);
   if (type==0){
     sig2->GetYaxis()->SetTitle("S/#sqrt{B}");
@@ -1685,7 +1298,7 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 				<< "TOTAL BG:          " << h_composited[0]->Integral()+h_composited[1]->Integral()+h_composited[2]->Integral()+h_composited[3]->Integral()+h_composited[4]->Integral() <<endl
 			        << "SUSY:              " << h_composited[5]->Integral()  << endl
 			        << "Data:              " << h_composited[6]->Integral()  << endl;
-
+	  
 			   //Same, but with errors
 			   string OverallSamples[8] = {"QCD","W+jets","Z+Jets","Top","WW+jets","SUSY","Data","TOTAL BG"};
 			   for(int os=0; os<8; os++){
@@ -1722,7 +1335,7 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 	  }
 	}
 	else{
-	  for(int i=0; i<Samples.size(); ++i){
+	  for(unsigned int i=0; i<Samples.size(); ++i){
 	    if (!stacked) {
 	      h_samples[i]->Scale(1./h_samples[i]->Integral());
 	      h_samples[i] -> SetMinimum(0.0001);
@@ -1895,7 +1508,7 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
   }
   TGraph *sig1 = new TGraph(nbins+1,x,y1);
   sig1->SetTitle("");
-  sig1->GetXaxis()->SetTitle("LowerCut");
+  sig1->GetXaxis()->SetTitle(xtitle + " LowerCut");
   sig1->SetMarkerStyle(20);
   if (type==0){
     sig1->GetYaxis()->SetTitle("S/#sqrt{B}");
@@ -1912,7 +1525,7 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 
   TGraph *sig2 = new TGraph(nbins+1,x,y2);
   sig2->SetTitle("");
-  sig2->GetXaxis()->SetTitle("UpperCut");
+  sig2->GetXaxis()->SetTitle(xtitle + " UpperCut");
   sig2->SetMarkerStyle(20);
   if (type==0){
     sig2->GetYaxis()->SetTitle("S/#sqrt{B}");
@@ -1940,9 +1553,9 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
   h_PN_Data->SetName("h_PN_Data");
   h_PN_Data->Rebin(h_PN_Data->GetNbinsX());
 
-  TH2D *h_SMSEvents = (TH2D*) fSamples[SusySampleInd].file->Get("h_SMSEvents");
-  h_SMSEvents->Rebin2D(4, 4);
-  h_PN_MLSP_MChi->Divide(h_SMSEvents);
+  TH2D *h_SMSEvent = (TH2D*) fSamples[SusySampleInd].file->Get("h_SMSEvents");
+  h_SMSEvent->Rebin2D(4, 4);
+  h_PN_MLSP_MChi->Divide(h_SMSEvent);
   TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
   h_PN_MLSP_MChi->Multiply(hXsec);
 
@@ -1965,463 +1578,6 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
   std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
 }
  
-
-//__________________________________________________________________________
-void MassPlotter::abcd_MT2(TString var, TString basecut, TString upper_cut, TString lower_cut, const int nbins,const double min, const double max, double fit_min, double fit_max){
-
-  double bins[nbins];
-  bins[0] = min;
-  for(int i=1; i<=nbins; i++)
-    bins[i] = min+i*(max-min)/nbins;
-  ABCD_MT2(var, basecut, upper_cut, lower_cut, nbins, bins, fit_min, fit_max);
-  
-}
-
-//__________________________________________________________________________
-void MassPlotter::ABCD_MT2(TString var, TString basecut, TString upper_cut, TString lower_cut, const int nbins, const double *bins, double fit_min, double fit_max){
-  TH2D *h_ABCD_MT2_qcd           = new TH2D("ABCD_MT2__qcd"           , "",  100, 0, 600, 180, 0, TMath::Pi());  h_ABCD_MT2_qcd          ->Sumw2();
-  TH2D *h_ABCD_MT2_susy          = new TH2D("ABCD_MT2__susy"          , "",  100, 0, 600, 180, 0, TMath::Pi());  h_ABCD_MT2_susy         ->Sumw2();
-  TH1D *h_ABCD_lower_y_band_susy = new TH1D("ABCD_lower_y_band__susy" , "",  nbins, bins);		        h_ABCD_lower_y_band_susy->Sumw2();
-  TH1D *h_ABCD_upper_y_band_susy = new TH1D("ABCD_upper_y_band__susy" , "",  nbins, bins);		        h_ABCD_upper_y_band_susy->Sumw2();
-  TH1D *h_ABCD_lower_y_band_data = new TH1D("ABCD_lower_y_band__data" , "",  nbins, bins);		        h_ABCD_lower_y_band_data->Sumw2();
-  TH1D *h_ABCD_upper_y_band_data = new TH1D("ABCD_upper_y_band__data" , "",  nbins, bins);		        h_ABCD_upper_y_band_data->Sumw2();
-  TH1D *h_ABCD_lower_y_band_qcd  = new TH1D("ABCD_lower_y_band__qcd"  , "",  nbins, bins);		        h_ABCD_lower_y_band_qcd ->Sumw2();
-  TH1D *h_ABCD_upper_y_band_qcd  = new TH1D("ABCD_upper_y_band__qcd"  , "",  nbins, bins);		        h_ABCD_upper_y_band_qcd ->Sumw2();
-  TH1D *h_ABCD_lower_y_band_mc   = new TH1D("ABCD_lower_y_band__mc"   , "",  nbins, bins);		        h_ABCD_lower_y_band_mc  ->Sumw2();
-  TH1D *h_ABCD_upper_y_band_mc   = new TH1D("ABCD_upper_y_band__mc"   , "",  nbins, bins);		        h_ABCD_upper_y_band_mc  ->Sumw2();
-  TH1D *h_ABCD_lower_y_band_sub  = new TH1D("ABCD_lower_y_band__sub"  , "",  nbins, bins);		        h_ABCD_lower_y_band_sub ->Sumw2();
-  TH1D *h_ABCD_upper_y_band_sub  = new TH1D("ABCD_upper_y_band__sub"  , "",  nbins, bins);		        h_ABCD_upper_y_band_sub ->Sumw2();
-  TH1D *ratio_data               = new TH1D("ratio__data"             , "",  nbins, bins);		        ratio_data              ->Sumw2();
-  TH1D *ratio_qcd                = new TH1D("ratio__qcd"              , "",  nbins, bins);		        ratio_qcd               ->Sumw2();
-  TH1D *ratio_sub                = new TH1D("ratio__sub"              , "",  nbins, bins);		        ratio_sub               ->Sumw2();
-  
-  for(size_t i = 0; i < fSamples.size(); ++i){
-    
-    Long64_t nentries =  fSamples[i].tree->GetEntries();
-    Long64_t nbytes = 0, nb = 0;
-    
-    Double_t weight = fSamples[i].xsection * fSamples[i].kfact * fSamples[i].lumi / (fSamples[i].nevents);
-    if(fVerbose>2) cout << "ABCD: looping over " << fSamples[i].name << endl;
-    if(fVerbose>2) cout << "      sample has weight " << weight << endl; 
-    
-//     TEntryList *elist = new TEntryList("elist","elist");
-//     int nev = fSamples[i].tree->Draw(">>elist",basecut.Data(),"entrylist");
-//     fSamples[i].tree->SetEntryList(elist);
-    
-    TString  weights   = (fSamples[i].type!="data" ?  TString::Format("(%.15f*pileUp.Weight)",weight) : TString::Format("(%.15f)",weight));
-    TString selection = TString::Format("(%s) * (%s)"      ,weights.Data(),basecut.Data());
-    TString sel_up    = TString::Format("(%s) * (%s && %s)",weights.Data(),basecut.Data(),upper_cut.Data());
-    TString sel_lo    = TString::Format("(%s) * (%s && %s)",weights.Data(),basecut.Data(),lower_cut.Data());
-
-    // Remove jets intentionaly!!!
-    // RemoveAndRecalcMT2() has to be called before any selection to make the internal changes effective!
-    TString removeJet = "1";
-    //TString removeJet = "SmearAndRecalcMT2()>-5.";
-    //TString removeJet = "RemoveAndRecalcMT2(0,0.000001)>-5.";
-    //TString removeJet = "RemoveAndRecalcMT2(1,0.005)>-5.";
-    TString selection_QCD = TString::Format("(%s) * (%s && %s)"      ,weights.Data(),removeJet.Data(),basecut.Data());
-    TString sel_up_QCD    = TString::Format("(%s) * (%s && %s && %s)",weights.Data(),removeJet.Data(),basecut.Data(),upper_cut.Data());
-    TString sel_lo_QCD    = TString::Format("(%s) * (%s && %s && %s)",weights.Data(),removeJet.Data(),basecut.Data(),lower_cut.Data());
-
-    TString variable;
-    TString var2 = "misc.MT2";
-    if (fSamples[i].type == "data"){
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_ABCD_lower_y_band_data->GetName());
-      int nevL = fSamples[i].tree->Draw(variable,sel_lo,"goff");
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_ABCD_upper_y_band_data->GetName());
-      int nevU = fSamples[i].tree->Draw(variable,sel_up,"goff");
-      if(fVerbose>2) cout << "\tData lower, events found : "  <<  nevL << endl
-			  << "\t->Integral() : "  <<  h_ABCD_lower_y_band_data->Integral() + h_ABCD_lower_y_band_data->GetBinContent(nbins+1) << endl;
-      if(fVerbose>2) cout << "\tData upper, events found : "  <<  nevU << endl
-			  << "\t->Integral() : "  <<  h_ABCD_upper_y_band_data->Integral() + h_ABCD_upper_y_band_data->GetBinContent(nbins+1) << endl;
-    }
-    else if (fSamples[i].type == "mc" && fSamples[i].name == "QCD_Pt_120to170"){   // WARNING: checking statistical fluctuation in this pt bin!!!
-      variable  = TString::Format("%s:misc.MT2>>+%s",var.Data(),h_ABCD_MT2_qcd->GetName());
-      TString sel_u    = /*sel_up_QCD; /*/TString::Format("(%s) * (%s && misc.MT2<80&& %s)",weights.Data(),basecut.Data(),upper_cut.Data());
-      TString sel_l    = /*sel_lo_QCD; /*/TString::Format("(%s) * (%s && misc.MT2<80&& %s)",weights.Data(),basecut.Data(),lower_cut.Data());
-      int nev2d= fSamples[i].tree->Draw(variable,selection_QCD,"goff");
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_ABCD_lower_y_band_qcd->GetName());
-      int nevL = fSamples[i].tree->Draw(variable,sel_l,"goff");
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_ABCD_upper_y_band_qcd->GetName());
-      int nevU = fSamples[i].tree->Draw(variable,sel_u,"goff");
-      if(fVerbose>2) cout << "\t" << fSamples[i].name << " lower, events found : "  <<  nevL << endl
-			  << "\t->Integral() : "  <<  h_ABCD_lower_y_band_qcd->Integral() + h_ABCD_lower_y_band_qcd->GetBinContent(nbins+1) << endl;
-      if(fVerbose>2) cout << "\t" << fSamples[i].name << " upper, events found : "  <<  nevU << endl
-			  << "\t->Integral() : "  <<  h_ABCD_upper_y_band_qcd->Integral() + h_ABCD_upper_y_band_qcd->GetBinContent(nbins+1) << endl;
-    }
-    else if (fSamples[i].type == "mc" && fSamples[i].name == "QCD_Pt_170to300"){   // WARNING: checking statistical fluctuation in this pt bin!!!
-      variable  = TString::Format("%s:misc.MT2>>+%s",var.Data(),h_ABCD_MT2_qcd->GetName());
-      TString sel_u    = /*sel_up_QCD; /*/TString::Format("(%s) * (%s && misc.MT2<140&& %s)",weights.Data(),basecut.Data(),upper_cut.Data());
-      TString sel_l    = /*sel_lo_QCD; /*/TString::Format("(%s) * (%s && misc.MT2<170&& %s)",weights.Data(),basecut.Data(),lower_cut.Data());
-      int nev2d= fSamples[i].tree->Draw(variable,selection_QCD,"goff");
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_ABCD_lower_y_band_qcd->GetName());
-      int nevL = fSamples[i].tree->Draw(variable,sel_l,"goff");
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_ABCD_upper_y_band_qcd->GetName());
-      int nevU = fSamples[i].tree->Draw(variable,sel_u,"goff");
-      if(fVerbose>2) cout << "\t" << fSamples[i].name << " lower, events found : "  <<  nevL << endl
-			  << "\t->Integral() : "  <<  h_ABCD_lower_y_band_qcd->Integral() + h_ABCD_lower_y_band_qcd->GetBinContent(nbins+1) << endl;
-      if(fVerbose>2) cout << "\t" << fSamples[i].name << " upper, events found : "  <<  nevU << endl
-			  << "\t->Integral() : "  <<  h_ABCD_upper_y_band_qcd->Integral() + h_ABCD_upper_y_band_qcd->GetBinContent(nbins+1) << endl;
-    }
-    else if (fSamples[i].type == "mc" && fSamples[i].name == "QCD_Pt_300to470"){   // WARNING: checking statistical fluctuation in this pt bin!!!
-      variable  = TString::Format("%s:misc.MT2>>+%s",var.Data(),h_ABCD_MT2_qcd->GetName());
-      TString sel_u    = /*sel_up_QCD; /*/TString::Format("(%s) * (%s && misc.MT2<200&& %s)",weights.Data(),basecut.Data(),upper_cut.Data());
-      TString sel_l    = /*sel_lo_QCD; /*/TString::Format("(%s) * (%s && %s)",weights.Data(),basecut.Data(),lower_cut.Data());
-      int nev2d= fSamples[i].tree->Draw(variable,selection_QCD,"goff");
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_ABCD_lower_y_band_qcd->GetName());
-      int nevL = fSamples[i].tree->Draw(variable,sel_l,"goff");
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_ABCD_upper_y_band_qcd->GetName());
-      int nevU = fSamples[i].tree->Draw(variable,sel_u,"goff");
-      if(fVerbose>2) cout << "\t" << fSamples[i].name << " lower, events found : "  <<  nevL << endl
-			  << "\t->Integral() : "  <<  h_ABCD_lower_y_band_qcd->Integral() + h_ABCD_lower_y_band_qcd->GetBinContent(nbins+1) << endl;
-      if(fVerbose>2) cout << "\t" << fSamples[i].name << " upper, events found : "  <<  nevU << endl
-			  << "\t->Integral() : "  <<  h_ABCD_upper_y_band_qcd->Integral() + h_ABCD_upper_y_band_qcd->GetBinContent(nbins+1) << endl;
-    }
-    else if (fSamples[i].type == "mc" && fSamples[i].sname == "QCD"){
-      variable  = TString::Format("%s:misc.MT2>>+%s",var.Data(),h_ABCD_MT2_qcd->GetName());
-      int nev2d= fSamples[i].tree->Draw(variable,selection_QCD,"goff");
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_ABCD_lower_y_band_qcd->GetName());
-      int nevL = fSamples[i].tree->Draw(variable,sel_lo_QCD,"goff");
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_ABCD_upper_y_band_qcd->GetName());
-      int nevU = fSamples[i].tree->Draw(variable,sel_up_QCD,"goff");
-      if(fVerbose>2) cout << "\t" << fSamples[i].name << " lower, events found : "  <<  nevL << endl
-			  << "\t->Integral() : "  <<  h_ABCD_lower_y_band_qcd->Integral() + h_ABCD_lower_y_band_qcd->GetBinContent(nbins+1) << endl;
-      if(fVerbose>2) cout << "\t" << fSamples[i].name << " upper, events found : "  <<  nevU << endl
-			  << "\t->Integral() : "  <<  h_ABCD_upper_y_band_qcd->Integral() + h_ABCD_upper_y_band_qcd->GetBinContent(nbins+1) << endl;
-    }
-    else if (fSamples[i].type == "mc"){
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_ABCD_lower_y_band_mc->GetName());
-      int nevL = fSamples[i].tree->Draw(variable,sel_lo,"goff");
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_ABCD_upper_y_band_mc->GetName());
-      int nevU = fSamples[i].tree->Draw(variable,sel_up,"goff");
-      if(fVerbose>2) cout << "\t" << fSamples[i].name << " lower, events found : "  <<  nevL << endl
-			  << "\t->Integral() : "  <<  h_ABCD_lower_y_band_mc->Integral() + h_ABCD_lower_y_band_mc->GetBinContent(nbins+1) << endl;
-      if(fVerbose>2) cout << "\t" << fSamples[i].name << " upper, events found : "  <<  nevU << endl
-			  << "\t->Integral() : "  <<  h_ABCD_upper_y_band_mc->Integral() + h_ABCD_upper_y_band_mc->GetBinContent(nbins+1) << endl;
-    }
-    else if (fSamples[i].type == "susy"){
-      variable  = TString::Format("%s:misc.MT2>>+%s",var.Data(),h_ABCD_MT2_susy->GetName());
-      int nev2d= fSamples[i].tree->Draw(variable,selection,"goff");
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_ABCD_lower_y_band_susy->GetName());
-      int nevL = fSamples[i].tree->Draw(variable,sel_lo,"goff");
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_ABCD_upper_y_band_susy->GetName());
-      int nevU = fSamples[i].tree->Draw(variable,sel_up,"goff");
-      if(fVerbose>2) cout << "\t" << fSamples[i].name << " lower, events found : "  <<  nevL << endl
-			  << "\t->Integral() : "  <<  h_ABCD_lower_y_band_susy->Integral() + h_ABCD_lower_y_band_susy->GetBinContent(nbins+1) << endl;
-      if(fVerbose>2) cout << "\t" << fSamples[i].name << " upper, events found : "  <<  nevU << endl
-			  << "\t->Integral() : "  <<  h_ABCD_upper_y_band_susy->Integral() + h_ABCD_upper_y_band_susy->GetBinContent(nbins+1) << endl;
-    }
-  }
-  
-  
-  h_ABCD_lower_y_band_sub->Add(h_ABCD_lower_y_band_data,h_ABCD_lower_y_band_mc,1,-1);
-  h_ABCD_upper_y_band_sub->Add(h_ABCD_upper_y_band_data,h_ABCD_upper_y_band_mc,1,-1);
-
-  for (int i= 0; i<=nbins; i++){
-    if (h_ABCD_lower_y_band_sub->GetBinContent(i)<0)  h_ABCD_lower_y_band_sub->SetBinContent(i, 0.);
-    if (h_ABCD_upper_y_band_sub->GetBinContent(i)<0)  h_ABCD_upper_y_band_sub->SetBinContent(i, 0.);
-  }
-
-  ratio_qcd ->Divide(h_ABCD_upper_y_band_qcd ,h_ABCD_lower_y_band_qcd );
-  ratio_data->Divide(h_ABCD_upper_y_band_data,h_ABCD_lower_y_band_data);
-  ratio_sub ->Divide(h_ABCD_upper_y_band_sub ,h_ABCD_lower_y_band_sub );
-  
-  h_ABCD_lower_y_band_data->SetLineColor(1);  h_ABCD_upper_y_band_data->SetLineColor(2);
-  h_ABCD_lower_y_band_qcd ->SetLineColor(1);  h_ABCD_upper_y_band_qcd ->SetLineColor(2);
-  h_ABCD_lower_y_band_sub ->SetLineColor(1);  h_ABCD_upper_y_band_sub ->SetLineColor(2);
-  h_ABCD_lower_y_band_sub ->SetLineStyle(3);  h_ABCD_upper_y_band_sub ->SetLineStyle(3);   ratio_sub->SetLineStyle(3);
-  ratio_qcd ->SetMarkerStyle(24);   ratio_qcd ->SetMarkerSize(0.8);
-  ratio_data->SetMarkerStyle(24);   ratio_data->SetMarkerSize(0.8);
-  ratio_sub ->SetMarkerStyle(24);   ratio_sub ->SetMarkerSize(0.8);
-  ratio_qcd ->SetXTitle("M_{T2}");   ratio_qcd ->SetYTitle("ratio");
-  ratio_sub ->SetXTitle("M_{T2}");   ratio_sub ->SetYTitle("ratio");
-
-  //TF1 *f_qcd = new TF1("f_qcd","pol0(0)+expo(1)",bins[0], bins[nbins]);   f_qcd->SetLineColor(8);
-  //TF1 *f_sub = new TF1("f_sub","pol0(0)+expo(1)",bins[0], bins[nbins]);   f_sub->SetLineColor(8);
-  //TF1 *f_qcd = new TF1("f_qcd","exp([0]+300.*[1])+expo(0)",bins[0], bins[nbins]);   f_qcd->SetLineColor(8);
-  //TF1 *f_sub = new TF1("f_sub","exp([0]+300.*[1])+expo(0)",bins[0], bins[nbins]);   f_sub->SetLineColor(8);
-  TF1 *f_qcd1 = new TF1("f_qcd1","expo(0)",bins[0], bins[nbins]);   f_qcd1->SetLineColor(8);
-  TF1 *f_sub1 = new TF1("f_sub1","expo(0)",bins[0], bins[nbins]);   f_sub1->SetLineColor(8);
-  TF1 *f_qcd2 = new TF1("f_qcd2","exp([0]+200.*[1])+expo(0)",bins[0], bins[nbins]);   f_qcd2->SetLineColor(9);
-  TF1 *f_sub2 = new TF1("f_sub2","exp([0]+200.*[1])+expo(0)",bins[0], bins[nbins]);   f_sub2->SetLineColor(8);
-  TF1 *f_qcd3 = new TF1("f_qcd3","expo(0)+[2]"              ,bins[0], bins[nbins]);   f_qcd3->SetLineColor(50);
-
-  gStyle->SetPalette(1);
-  gStyle->SetOptFit (0);
-  gStyle->SetOptStat(0);
-
-  TCanvas *can = new TCanvas("can", "2d qcd", 0, 0, 900, 700);
-  can->SetLogz(1);
-  h_ABCD_MT2_qcd->SetMinimum(0.0001);
-  h_ABCD_MT2_qcd->Draw("colz");
-  TCanvas *ccan = new TCanvas("ccan", "2d susy", 0, 0, 900, 700);
-  ccan->SetLogz(1);
-  h_ABCD_MT2_susy->SetMinimum(0.0001);
-  h_ABCD_MT2_susy->Draw("colz");
-  TCanvas *can2 = new TCanvas("can2", "qcd", 0, 0, 900, 700);
-  can2->SetLogy(1);
-  h_ABCD_lower_y_band_qcd ->Draw();  
-  h_ABCD_upper_y_band_qcd ->Draw("same");
-  TCanvas *can3 = new TCanvas("can3", "data w/ and w/o substraction", 0, 0, 900, 700);
-  can3->SetLogy(1);
-  h_ABCD_lower_y_band_data->Draw();  
-  h_ABCD_upper_y_band_data->Draw("same");
-  h_ABCD_lower_y_band_sub ->Draw("same");  
-  h_ABCD_upper_y_band_sub ->Draw("same");
-  TCanvas *can4 = new TCanvas("can4", "ratio qcd", 0, 0, 900, 700);
-  can4->SetLogy(1);
-  ratio_qcd->Draw("E1");
-  //f_qcd->FixParameter(0,0.006);
-  ratio_qcd->SetTitle("QCD");
-  ratio_qcd->Fit("f_qcd1","0","",fit_min,fit_max);
-  f_qcd1->Draw("same");
-  f_qcd2->SetParameter(0,f_qcd1->GetParameter(0));
-  f_qcd2->SetParameter(1,f_qcd1->GetParameter(1));
-  f_qcd2->Draw("same");
-  f_qcd3->SetParameter(0,f_qcd1->GetParameter(0));
-  f_qcd3->SetParameter(1,f_qcd1->GetParameter(1));
-  f_qcd3->SetParameter(2,0.002);
-  ratio_qcd->Fit("f_qcd3","0","",fit_min,bins[nbins]);
-  f_qcd3->Draw("same");
-  TLine *l_qcd_min = new TLine(fit_min,f_qcd1->GetYaxis()->GetXmin(),fit_min,f_qcd1->GetMaximum()); l_qcd_min->SetLineStyle(2); l_qcd_min->Draw("same");
-  TLine *l_qcd_max = new TLine(fit_max,f_qcd1->GetYaxis()->GetXmin(),fit_max,f_qcd1->GetMaximum()); l_qcd_max->SetLineStyle(2); l_qcd_max->Draw("same");
-
-  TCanvas *can5 = new TCanvas("can5", "ratio data", 0, 0, 900, 700);
-  can5->SetLogy(1);
-  ratio_sub ->Draw("PE1");
-  ratio_data->Draw("sameE1");
-  //float p0 = f_qcd->GetParameter(0);
-  //f_sub->FixParameter(0,0.006);
-  //ratio_data->Fit("f_sub1","0","",fit_min,fit_max);  // fit w/o subtracting background
-  ratio_sub->Fit("f_sub1","0","",fit_min,fit_max);   // background subtracted fit
-  f_sub1->Draw("same");
-  f_sub2->SetParameter(0,f_sub1->GetParameter(0));
-  f_sub2->SetParameter(1,f_sub1->GetParameter(1));
-  f_sub2->Draw("same");
-  TLine *l_sub_min = new TLine(fit_min,f_sub1->GetYaxis()->GetXmin(),fit_min,f_sub1->GetMaximum()); l_sub_min->SetLineStyle(2); l_sub_min->Draw("same");
-  TLine *l_sub_max = new TLine(fit_max,f_sub1->GetYaxis()->GetXmin(),fit_max,f_sub1->GetMaximum()); l_sub_max->SetLineStyle(2); l_sub_max->Draw("same");
-  TLegend *leg = new TLegend(.55,.5,.85,.75);
-  leg->SetFillColor(0);
-  leg->AddEntry(ratio_data,"data","le");
-  leg->AddEntry(ratio_sub ,"data (EWK subtracted)","le");
-  leg->Draw("same");
-
-  PrintABCDPredictions(var, basecut, upper_cut, lower_cut, f_qcd1,f_sub1,f_qcd3);
-  
-}
-
-//_________________________________________________________________________________
-void MassPlotter::PrintABCDPredictions(TString var, TString basecut, TString upper_cut, TString lower_cut, TF1* func_qcd, TF1* func_sub, TF1* func_qcd_model){  
-  int nbins=180;
-  float min=100., max=1000.;
-  TH1D *h_pred_lower_y_band_data = new TH1D("pred_lower_y_band__data" , "", nbins,min,max);		        h_pred_lower_y_band_data->Sumw2();
-  TH1D *h_pred_upper_y_band_data = new TH1D("pred_upper_y_band__data" , "", nbins,min,max);		        h_pred_upper_y_band_data->Sumw2();
-  TH1D *h_pred_lower_y_band_qcd  = new TH1D("pred_lower_y_band__qcd"  , "", nbins,min,max);		        h_pred_lower_y_band_qcd ->Sumw2();
-  TH1D *h_pred_upper_y_band_qcd  = new TH1D("pred_upper_y_band__qcd"  , "", nbins,min,max);		        h_pred_upper_y_band_qcd ->Sumw2();
-  TH1D *h_pred_lower_y_band_mc   = new TH1D("pred_lower_y_band__mc"   , "", nbins,min,max);		        h_pred_lower_y_band_mc  ->Sumw2();
-  TH1D *h_pred_upper_y_band_mc   = new TH1D("pred_upper_y_band__mc"   , "", nbins,min,max);		        h_pred_upper_y_band_mc  ->Sumw2();
-  TH1D *h_pred_lower_y_band_sub  = new TH1D("pred_lower_y_band__sub"  , "", nbins,min,max);		        h_pred_lower_y_band_sub ->Sumw2();
-  TH1D *h_pred_upper_y_band_sub  = new TH1D("pred_upper_y_band__sub"  , "", nbins,min,max);		        h_pred_upper_y_band_sub ->Sumw2();
-  TH1D *h_pred_lower_y_band_susy = new TH1D("pred_lower_y_band__susy" , "", nbins,min,max);		        h_pred_lower_y_band_susy->Sumw2();
-  TH1D *h_pred_upper_y_band_susy = new TH1D("pred_upper_y_band__susy" , "", nbins,min,max);		        h_pred_upper_y_band_susy->Sumw2();
-  //TF1 *f_qcd = new TF1("f_qcd","pol0(0)+expo(1)",100,1000);
-  //TF1 *f_sub = new TF1("f_sub","pol0(0)+expo(1)",100,1000);
-//   TF1 *f_qcd = new TF1("f_qcd","exp([0]+300.*[1])+expo(0)",100,1000);
-//   TF1 *f_sub = new TF1("f_sub","exp([0]+300.*[1])+expo(0)",100,1000);
-  TF1 *f_qcd = new TF1("f_qcd","expo(0)",min,max);
-  TF1 *f_sub = new TF1("f_sub","expo(0)",min,max);
-  f_qcd->SetParameters(func_qcd->GetParameter(0),func_qcd->GetParameter(1));//,func_qcd->GetParameter(2));
-  f_sub->SetParameters(func_sub->GetParameter(0),func_sub->GetParameter(1));//,func_sub->GetParameter(2));
-  TF1 *f_qcd2 = new TF1("f_qcd2","exp([0]+200.*[1])+expo(0)",min,max);
-  TF1 *f_sub2 = new TF1("f_sub2","exp([0]+200.*[1])+expo(0)",min,max);
-  f_qcd2->SetParameters(func_qcd->GetParameter(0),func_qcd->GetParameter(1));//,func_qcd->GetParameter(2));
-  f_sub2->SetParameters(func_sub->GetParameter(0),func_sub->GetParameter(1));//,func_sub->GetParameter(2));
-  TF1 *f_qcd_model = new TF1("f_qcd_model","expo(0)+[2]",min,max);
-  f_qcd_model->SetParameters(func_qcd_model->GetParameter(0),func_qcd_model->GetParameter(1),func_qcd_model->GetParameter(2));
-
-  for(size_t i = 0; i < fSamples.size(); ++i){
-   
-    Long64_t nentries =  fSamples[i].tree->GetEntries();
-    Long64_t nbytes = 0, nb = 0;
-    
-    Double_t weight = fSamples[i].xsection * fSamples[i].kfact * fSamples[i].lumi / (fSamples[i].nevents);
-    if(fVerbose>2) cout << "ABCD: looping over " << fSamples[i].name << endl;
-    if(fVerbose>2) cout << "      sample has weight " << weight << endl; 
-
-    TString weights   = fSamples[i].type!="data" ?  TString::Format("(%.15f*pileUp.Weight)",weight) : TString::Format("(%.15f)",weight);
-    TString selection = TString::Format("(%s) * (%s)"      ,weights.Data(),basecut.Data());
-    TString sel_up    = TString::Format("(%s) * (%s && %s)",weights.Data(),basecut.Data(),upper_cut.Data());
-    TString sel_lo    = TString::Format("(%s) * (%s && %s)",weights.Data(),basecut.Data(),lower_cut.Data());
-    if(fVerbose>2) cout << "      sel_lo = " << weights << endl; 
-//     TString selection = TString::Format("(%f) * (%s)"      ,weight,basecut.Data());
-//     TString sel_up    = TString::Format("(%f) * (%s && %s)",weight,basecut.Data(),upper_cut.Data());
-//     TString sel_lo    = TString::Format("(%f) * (%s && %s)",weight,basecut.Data(),lower_cut.Data());
-
-    TString variable;
-    TString var2 = "misc.MT2";
-    if (fSamples[i].type == "data"){
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_pred_lower_y_band_data->GetName());
-      int nevL = fSamples[i].tree->Draw(variable,sel_lo,"goff");
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_pred_upper_y_band_data->GetName());
-      int nevU = fSamples[i].tree->Draw(variable,sel_up,"goff");
-    }
-    else if (fSamples[i].type == "mc" && fSamples[i].name == "QCD_Pt_120to170"){   // WARNING: checking statistical fluctuation in this pt bin!!!
-      TString sel_u    = TString::Format("(%s) * (%s && misc.MT2<80&& %s)",weights.Data(),basecut.Data(),upper_cut.Data());
-      TString sel_l    = TString::Format("(%s) * (%s && misc.MT2<80&& %s)",weights.Data(),basecut.Data(),lower_cut.Data());
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_pred_lower_y_band_qcd->GetName());
-      int nevL = fSamples[i].tree->Draw(variable,sel_l,"goff");
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_pred_upper_y_band_qcd->GetName());
-      int nevU = fSamples[i].tree->Draw(variable,sel_u,"goff");
-    }
-    else if (fSamples[i].type == "mc" && fSamples[i].name == "QCD_Pt_170to300"){   // WARNING: checking statistical fluctuation in this pt bin!!!
-      TString sel_u    = TString::Format("(%s) * (%s && misc.MT2<140&& %s)",weights.Data(),basecut.Data(),upper_cut.Data());
-      TString sel_l    = TString::Format("(%s) * (%s && misc.MT2<170&& %s)",weights.Data(),basecut.Data(),lower_cut.Data());
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_pred_lower_y_band_qcd->GetName());
-      int nevL = fSamples[i].tree->Draw(variable,sel_l,"goff");
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_pred_upper_y_band_qcd->GetName());
-      int nevU = fSamples[i].tree->Draw(variable,sel_u,"goff");
-    }
-    else if (fSamples[i].type == "mc" && fSamples[i].name == "QCD_Pt_300to470"){   // WARNING: checking statistical fluctuation in this pt bin!!!
-      TString sel_u    = TString::Format("(%s) * (%s && misc.MT2<200&& %s)",weights.Data(),basecut.Data(),upper_cut.Data());
-      TString sel_l    = TString::Format("(%s) * (%s && %s)",weights.Data(),basecut.Data(),lower_cut.Data());
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_pred_lower_y_band_qcd->GetName());
-      int nevL = fSamples[i].tree->Draw(variable,sel_l,"goff");
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_pred_upper_y_band_qcd->GetName());
-      int nevU = fSamples[i].tree->Draw(variable,sel_u,"goff");
-    }
-    else if (fSamples[i].type == "mc" && fSamples[i].sname == "QCD"){
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_pred_lower_y_band_qcd->GetName());
-      int nevL = fSamples[i].tree->Draw(variable,sel_lo,"goff");
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_pred_upper_y_band_qcd->GetName());
-      int nevU = fSamples[i].tree->Draw(variable,sel_up,"goff");
-    }
-    else if (fSamples[i].type == "mc"){
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_pred_lower_y_band_mc->GetName());
-      int nevL = fSamples[i].tree->Draw(variable,sel_lo,"goff");
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_pred_upper_y_band_mc->GetName());
-      int nevU = fSamples[i].tree->Draw(variable,sel_up,"goff");
-    }
-    else if (fSamples[i].type == "susy"){
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_pred_lower_y_band_susy->GetName());
-      int nevL = fSamples[i].tree->Draw(variable,sel_lo,"goff");
-      variable  = TString::Format("%s>>+%s",var2.Data(),h_pred_upper_y_band_susy->GetName());
-      int nevU = fSamples[i].tree->Draw(variable,sel_up,"goff");
-    }
-  }
-  
-  
-  h_pred_lower_y_band_sub ->Add(h_pred_lower_y_band_data,h_pred_lower_y_band_mc,1,-1);
-  h_pred_upper_y_band_sub ->Add(h_pred_upper_y_band_data,h_pred_upper_y_band_mc,1,-1);
-  h_pred_lower_y_band_susy->Add(h_pred_lower_y_band_sub); // adding susy contamination to subtracted data
-
-  for (int i= 0; i<=nbins+1; i++){
-    if (h_pred_lower_y_band_sub->GetBinContent(i)<0)  h_pred_lower_y_band_sub->SetBinContent(i, 0.);
-    if (h_pred_upper_y_band_sub->GetBinContent(i)<0)  h_pred_upper_y_band_sub->SetBinContent(i, 0.);
-  }
-
-  TH1D *h_pred_lower_y_band_data_2   = (TH1D*)h_pred_lower_y_band_data->Clone("h_pred_lower_y_band_data_2");         h_pred_lower_y_band_data_2   ->Sumw2();
-  TH1D *h_pred_lower_y_band_qcd_2    = (TH1D*)h_pred_lower_y_band_qcd ->Clone("h_pred_lower_y_band_qcd_2" );         h_pred_lower_y_band_qcd_2    ->Sumw2();
-  TH1D *h_pred_lower_y_band_sub_2    = (TH1D*)h_pred_lower_y_band_sub ->Clone("h_pred_lower_y_band_sub_2" );         h_pred_lower_y_band_sub_2    ->Sumw2();
-  TH1D *h_pred_lower_y_band_data_c   = (TH1D*)h_pred_lower_y_band_data->Clone("h_pred_lower_y_band_data_c");         h_pred_lower_y_band_data_c   ->Sumw2();
-  TH1D *h_pred_lower_y_band_qcd_c    = (TH1D*)h_pred_lower_y_band_qcd ->Clone("h_pred_lower_y_band_qcd_c" );         h_pred_lower_y_band_qcd_c    ->Sumw2();
-  TH1D *h_pred_lower_y_band_sub_c    = (TH1D*)h_pred_lower_y_band_sub ->Clone("h_pred_lower_y_band_sub_c" );         h_pred_lower_y_band_sub_c    ->Sumw2();
-  TH1D *h_pred_lower_y_band_susy_c   = (TH1D*)h_pred_lower_y_band_susy->Clone("h_pred_lower_y_band_susy_c" );        h_pred_lower_y_band_susy_c  ->Sumw2();
-  TH1D *h_pred_lower_y_band_data_2_c = (TH1D*)h_pred_lower_y_band_data->Clone("h_pred_lower_y_band_data_2_c");       h_pred_lower_y_band_data_2_c ->Sumw2();
-  TH1D *h_pred_lower_y_band_qcd_2_c  = (TH1D*)h_pred_lower_y_band_qcd ->Clone("h_pred_lower_y_band_qcd_2_c" );       h_pred_lower_y_band_qcd_2_c  ->Sumw2();
-  TH1D *h_pred_lower_y_band_sub_2_c  = (TH1D*)h_pred_lower_y_band_sub ->Clone("h_pred_lower_y_band_sub_2_c" );       h_pred_lower_y_band_sub_2_c  ->Sumw2();
-  TH1D *h_pred_lower_y_band_qcd_model= (TH1D*)h_pred_lower_y_band_qcd ->Clone("h_pred_lower_y_band_qcd_model");      h_pred_lower_y_band_qcd_model->Sumw2();
-
-  // from qcd fit (exp+const) in whole range (50-500)
-  h_pred_lower_y_band_qcd_model->Multiply(f_qcd_model);
-  // from qcd fit
-
-  h_pred_lower_y_band_data  ->Multiply(f_qcd);
-  h_pred_lower_y_band_qcd   ->Multiply(f_qcd);
-  h_pred_lower_y_band_sub   ->Multiply(f_qcd);
-  // from data fit
-  h_pred_lower_y_band_data_2->Multiply(f_sub);
-  h_pred_lower_y_band_qcd_2 ->Multiply(f_sub);
-  h_pred_lower_y_band_sub_2 ->Multiply(f_sub);
-  // from qcd fit (exp+const)
-  h_pred_lower_y_band_data_c  ->Multiply(f_qcd2);
-  h_pred_lower_y_band_qcd_c   ->Multiply(f_qcd2);
-  h_pred_lower_y_band_sub_c   ->Multiply(f_qcd2);
-  // from data fit (exp+const)
-  h_pred_lower_y_band_data_2_c->Multiply(f_sub2);
-  h_pred_lower_y_band_qcd_2_c ->Multiply(f_sub2);
-  h_pred_lower_y_band_sub_2_c ->Multiply(f_sub2);
-  // with susy contamination from data fit (exp+const)
-  h_pred_lower_y_band_susy  ->Multiply(f_sub);
-  h_pred_lower_y_band_susy_c->Multiply(f_sub2);
-
-  cout << "SUSY prediction:" << endl;
-  printEstimation(h_pred_upper_y_band_susy,h_pred_upper_y_band_susy, nbins, min, max);
-  cout << "QCD prediction:" << endl;
-  printEstimation(h_pred_upper_y_band_qcd,h_pred_upper_y_band_qcd, nbins, min, max);
-  cout << "------------------------------------" << endl;
-  cout << "QCD estimation from QCD model (exp+const):" << endl;
-  printEstimation(h_pred_lower_y_band_qcd_model,h_pred_lower_y_band_qcd_model, nbins, min, max);
-  cout << "------------------------------------" << endl;
-  cout << "QCD estimation from QCD (fit to QCD):" << endl;
-  printEstimation(h_pred_lower_y_band_qcd,h_pred_lower_y_band_qcd_c, nbins, min, max);
-  cout << "------------------------------------" << endl;
-  cout << "QCD estimation from QCD (fit to data):" << endl;
-  printEstimation(h_pred_lower_y_band_qcd_2,h_pred_lower_y_band_qcd_2_c, nbins, min, max);
-  cout << "------------------------------------" << endl;
-  cout << "QCD estimation from data (fit to QCD):" << endl;
-  printEstimation(h_pred_lower_y_band_data,h_pred_lower_y_band_data_c, nbins, min, max);
-  cout << "------------------------------------" << endl;
-  cout << "QCD estimation from data (fit to data):" << endl;
-  printEstimation(h_pred_lower_y_band_data_2,h_pred_lower_y_band_data_2_c, nbins, min, max);
-  cout << "------------------------------------" << endl;
-  cout << "QCD estimation from EWK subtracted data (fit to QCD):" << endl;
-  printEstimation(h_pred_lower_y_band_sub,h_pred_lower_y_band_sub_c, nbins, min, max);
-  cout << "------------------------------------" << endl;
-  cout << "QCD estimation from EWK subtracted data (fit to data):" << endl;
-  printEstimation(h_pred_lower_y_band_sub_2,h_pred_lower_y_band_sub_2_c, nbins, min, max);
-  cout << "------------------------------------" << endl;
-  cout << "QCD estimation from QCD with susy contamination (fit to data):" << endl;
-  printEstimation(h_pred_lower_y_band_susy,h_pred_lower_y_band_susy_c, nbins, min, max);
-  cout << "------------------------------------" << endl;
-
-}
-
-void MassPlotter::printEstimation(TH1D* h_pred, TH1D* h_pred_c, int nbins, float min, float max){
-  float delta = (max-min)/((float)nbins);
-  double yield[5][2], error[5][2];
-  yield[0][0] = Util::IntegralAndError(h_pred,  (int)((100.-min)/delta)+1, nbins+1, error[0][0]);
-  cout << "\tMT2>100 = " << yield[0][0]  << " +/- " << error[0][0];
-  yield[0][1] = Util::IntegralAndError(h_pred_c,(int)((100.-min)/delta)+1, nbins+1, error[0][1]);
-  cout << "\tMT2>100 = " << yield[0][1]  << " +/- " << error[0][1] << endl;
-  yield[1][0] = Util::IntegralAndError(h_pred,  (int)((150.-min)/delta)+1, nbins+1, error[1][0]);
-  cout << "\tMT2>150 = " << yield[1][0]  << " +/- " << error[1][0];
-  yield[1][1] = Util::IntegralAndError(h_pred_c,(int)((150.-min)/delta)+1, nbins+1, error[1][1]);
-  cout << "\tMT2>150 = " << yield[1][1]  << " +/- " << error[1][1] << endl;
-  yield[2][0] = Util::IntegralAndError(h_pred,  (int)((200.-min)/delta)+1, nbins+1, error[2][0]);
-  cout << "\tMT2>200 = " << yield[2][0]  << " +/- " << error[2][0];
-  yield[2][1] = Util::IntegralAndError(h_pred_c,(int)((200.-min)/delta)+1, nbins+1, error[2][1]);
-  cout << "\tMT2>200 = " << yield[2][1]  << " +/- " << error[2][1] << endl;
-  yield[3][0] = Util::IntegralAndError(h_pred,  (int)((250.-min)/delta)+1, nbins+1, error[3][0]);
-  cout << "\tMT2>250 = " << yield[3][0]  << " +/- " << error[3][0];
-  yield[3][1] = Util::IntegralAndError(h_pred_c,(int)((250.-min)/delta)+1, nbins+1, error[3][1]);
-  cout << "\tMT2>250 = " << yield[3][1]  << " +/- " << error[3][1] << endl;
-  yield[4][0] = Util::IntegralAndError(h_pred,  (int)((300.-min)/delta)+1, nbins+1, error[4][0]);
-  cout << "\tMT2>300 = " << yield[4][0]  << " +/- " << error[4][0];
-  yield[4][1] = Util::IntegralAndError(h_pred_c,(int)((300.-min)/delta)+1, nbins+1, error[4][1]);
-  cout << "\tMT2>300 = " << yield[4][1]  << " +/- " << error[4][1] << endl;
-
-  for (int i=0; i<2; i++){
-    cout << "yield_" << (i==0 ? "opt" : "pes") << " = {" << endl;
-    for (int j=0; j<5; j++){
-      cout << yield[j][i] << (j<4 ? ", " : "\n}\n");
-    }
-    cout << "error_" << (i==0 ? "opt" : "pes") << " = {" << endl;
-    for (int j=0; j<5; j++){
-      cout << error[j][i] << (j<4 ? ", " : "\n}\n");
-    }
-  }
-
-}
 
 //_________________________________________________________________________________
 void MassPlotter::plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle,int njets, int nleps, TString saveMacro){
@@ -2586,8 +1742,8 @@ void MassPlotter::plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, TH
 	c1->SetFrameLineWidth(1);
 	c1 -> cd();
 	
-	float border = 0.2;
- 	float scale = (1-border)/border;
+// 	float border = 0.2;
+	// 	float scale = (1-border)/border;
  
  	TPad *p_plot  = new TPad(name+"_plotpad",  "Pad containing the overlay plot", 0,0.211838,1,1 /*0.00, border, 1.00, 1.00, 0, 0*/);
  	//p_plot->SetBottomMargin(0.05);
@@ -3288,7 +2444,7 @@ void MassPlotter::loadSamples(const char* filename){
 	char buffer[200];
 	ifstream IN(filename);
 
-	char ParName[100], StringValue[1000];
+	char StringValue[1000];
 	float ParValue;
 
 	if(fVerbose > 0) cout << "------------------------------------" << endl;
@@ -3382,20 +2538,20 @@ void MassPlotter::loadSamples(const char* filename){
 			// DON'T DO THAT AT HOME !!!!
 
 			if ( s.type == "susy" && s.name.Contains("Tau")){
-			  TH2F * h_SMSEvents = (TH2F*) s.file->Get("h_SMSEvents");
-			  int binNumber = h_SMSEvents->FindBin(150.0, 150.0);//350,50//saeid
+			  TH2F * h_SMSEvent = (TH2F*) s.file->Get("h_SMSEvents");
+			  int binNumber = h_SMSEvent->FindBin(150.0, 150.0);//350,50//saeid
 			  
-			  s.nevents = h_SMSEvents->GetBinContent(binNumber); //saeid
+			  s.nevents = h_SMSEvent->GetBinContent(binNumber); //saeid
 			  s.nevents = 1000;//350,50//saeid
 			  s.PU_avg_weight =1;		//saeid	  
 			}//saeid
 			else{
 
 			if ( s.type == "susy" && !s.name.Contains("TStau")){//saeid
-			  TH2F * h_SMSEvents = (TH2F*) s.file->Get("h_SMSEvents");
-			  int binNumber = h_SMSEvents->FindBin(350.0, 50.0);//350,50//saeid
+			  TH2F * h_SMSEvent = (TH2F*) s.file->Get("h_SMSEvents");
+			  int binNumber = h_SMSEvent->FindBin(350.0, 50.0);//350,50//saeid
 			  
-			  s.nevents = h_SMSEvents->GetBinContent(binNumber); //saeid
+			  s.nevents = h_SMSEvent->GetBinContent(binNumber); //saeid
 			  //			  s.nevents = 128333;//350,50//saeid
 			  s.PU_avg_weight =1;		//saeid	  
 			}//saeid
@@ -3427,507 +2583,11 @@ void MassPlotter::loadSamples(const char* filename){
 	if(fVerbose > 0) cout << "------------------------------------" << endl;
 }
 
-/*
-//_________________________________________________________________________
-void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag){
-  float sys = 0.05; //systematic uncertanty on the fake rate and efficiency
-  float IsoCut = 0.5;//cut on the isolation 0.5:VLoose, 1.5:Loose...
-  float maxDPhiTauMET = 11.5;//To cut on the DeltaPhi between the tau and MET
 
-  setFlags(flag); 
-
-  TH1::SetDefaultSumw2();
-  TString  cnames[NumberOfSamples] = {"QCD", "Wjets", "Zjets", "Top", "MC", "data"};
-  int      ccolor[NumberOfSamples] = {  401,     417,     419,   600,  500,  632};
-  TString varname = "MT2";
-  for (int i=0; i<NumberOfSamples; i++){
-    MT2[i] = new TH1F(varname+"_"+cnames[i], "", 150, 0, 750);
-    MT2[i] -> SetFillColor  (ccolor[i]);
-    MT2[i] -> SetLineColor  (ccolor[i]);
-    MT2[i] -> SetLineWidth  (2);
-    MT2[i] -> SetMarkerColor(ccolor[i]);
-    MT2[i] -> SetStats(false);
-  }
-
-  MT2[5] -> SetMarkerStyle(20);
-  MT2[5] -> SetMarkerColor(kBlack);
-  MT2[5] -> SetLineColor(kBlack);
-  
-  MT2[4] -> SetFillStyle(3004);
-  MT2[4] -> SetFillColor(kBlack);
-
-  TH2F* hEtaPtJet           = new TH2F("hEtaPtJet",           "hEtaPtJet",          1,0,1000.0,1,0,2.5);//tauable jets in MC in QCD dominated region (MT2 < 70)
-  TH2F* hEtaPtTauFake       = new TH2F("hEtaPtTauFake",       "hEtaPtTauFake",      1,0,1000.0,1,0,2.5);//taus in MC in QCD dominated region  (MT2 < 70)
-  TH2F* hEtaPtJetData       = new TH2F("hEtaPtJetData",       "hEtaPtJetData",      1,0,1000.0,1,0,2.5);//tauable jets in data in QCD dominated region (MT2 < 70)
-  TH2F* hEtaPtTauFakeData   = new TH2F("hEtaPtTauFakeData",   "hEtaPtTauFakeData",  1,0,1000.0,1,0,2.5);//taus in data in QCD dominated region  (MT2 < 70)
-
-  TH1F* hMT2TauFound        = new TH1F("hMT2TauFound",   "hMT2TauFound",   NumberOfMT2Bins - 1, xMT2bin);//Rec/Id taus
-  TH1F* hMT2JetSig          = new TH1F("hMT2JetSig",     "hMT2JetSig",     NumberOfMT2Bins - 1, xMT2bin);//tauable jets in signal region (MC)
-  TH1F* hMT2TauSig          = new TH1F("hMT2TauSig",     "hMT2TauSig",     NumberOfMT2Bins - 1, xMT2bin);//taus in the signal region (MC)
-  TH1F* hMT2JetSigData      = new TH1F("hMT2JetSigData", "hMT2JetSigData", NumberOfMT2Bins - 1, xMT2bin);//tauable jets in signal region (data)
-  TH1F* hMT2TauSigData      = new TH1F("hMT2TauSigData", "hMT2TauSigData", NumberOfMT2Bins - 1, xMT2bin);//taus in the signal region (data)
-  TH1F* hRatioTight         = new TH1F("hRatioTight",       "hRatioTight",       NumberOfMT2Bins - 1, xMT2bin);//Used for the final rescaling the estimation from relaxed to appplied cut
-  TH1F* hRatioRelaxed       = new TH1F("hRatioRelaxed",       "hRatioRelaxed",       NumberOfMT2Bins - 1, xMT2bin);//Used for the final rescaling the estimation from relaxed to appplied cut
-
-  TH1F* hNAllTaus           = new TH1F("hNAllTaus",      "hNAllTaus",      NumberOfMT2Bins - 1, xMT2bin);//All of the generated hadronic taus
-  TH1F* hNAllTauJets        = new TH1F("hNAllTauJets",   "hNAllTauJets",   NumberOfMT2Bins - 1, xMT2bin);//All of the generated hadronic taus matched with a rec jet
-
-
-  for(unsigned int i = 0; i < fSamples.size(); i++){
-
-    if(sample_index != -1 && i != sample_index)
-      continue;
-
-    int data = 0;
-    sample Sample = fSamples[i];
-    
-    if(Sample.type == "data")
-      data = 1;
-
-    if(Sample.type == "susy") 
-      continue;
-     
-    fMT2tree = new MT2tree();
-    Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
-    Long64_t nentries =  Sample.tree->GetEntries();
-
-    float Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents * Sample.PU_avg_weight );
-
-    std::cout << setfill('=') << std::setw(70) << "" << std::endl;
-    cout << "looping over :     " <<endl;	
-    cout << "   Name:           " << Sample.name << endl;
-    cout << "   File:           " << (Sample.file)->GetName() << endl;
-    cout << "   Events:         " << Sample.nevents  << endl;
-    cout << "   Events in tree: " << Sample.tree->GetEntries() << endl; 
-    cout << "   Xsection:       " << Sample.xsection << endl;
-    cout << "   kfactor:        " << Sample.kfact << endl;
-    cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
-    cout << "   Weight:         " << Weight <<endl;
-    std::cout << setfill('-') << std::setw(70) << "" << std::endl;
-   
-    for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
-      Sample.tree->GetEntry(jentry); 
-      if ( fVerbose>2 && jentry % 100000 == 0 ){  cout << "+++ Proccessing event " << jentry << endl;}
- 
-      float weight = Weight;
-      if(data == 0)
-	weight *= fMT2tree->pileUp.Weight;
-      else
-	weight = 1.0;
-
-      //For 2011 needs to be updated for 2012
-// 	  if (data == 1){
-// 	    if(!((fMT2tree->trigger.HLT_HT440_v2 ==1 && fMT2tree->misc.Run<161216)                                                               ||
-// 		 (fMT2tree->trigger.HLT_HT450_v2 ==1 && fMT2tree->misc.Run>=161216 && fMT2tree->misc.Run< 163269)                                ||
-// 		 (fMT2tree->trigger.HLT_HT500_v3 ==1 && fMT2tree->misc.Run>=163269 && fMT2tree->misc.Run<=163869)                                ||
-// 		 (fMT2tree->trigger.HLT_HT500_v4 ==1 && fMT2tree->misc.Run>=165088 && fMT2tree->misc.Run< 165970)                                ||
-// 		 (fMT2tree->trigger.HLT_HT550_v5 ==1 && fMT2tree->misc.Run>=165970 && fMT2tree->misc.Run<=167043 && fMT2tree->misc.Run!=166346)  ||
-// 		 (fMT2tree->trigger.HLT_HT550_v6 ==1 && fMT2tree->misc.Run==166346)                                                              ||
-// 		 (fMT2tree->trigger.HLT_HT550_v7 ==1 && fMT2tree->misc.Run>=167078 && fMT2tree->misc.Run< 170249)                                ||
-// 		 (fMT2tree->trigger.HLT_HT550_v8 ==1 && fMT2tree->misc.Run>=170249 && fMT2tree->misc.Run< 173236)                                ||
-// 		 (fMT2tree->trigger.HLT_HT600_v1 ==1 && fMT2tree->misc.Run>=173236 && fMT2tree->misc.Run< 178420)                                || 
-// 		 (fMT2tree->trigger.HLT_HT650_v4 ==1 && fMT2tree->misc.Run>=178420 && fMT2tree->misc.Run< 179959)))
-// 	      continue;
-// 	  }
-
-
-      if (!(fMT2tree->misc.MET             >  30                                   &&
-	    fMT2tree->misc.HT              >  750                                  &&
-	    (fMT2tree->NEles==0  ||  fMT2tree->ele[0].lv.Pt()<10)                  &&
-	    (fMT2tree->NMuons==0 ||  fMT2tree->muo[0].lv.Pt()<10)                  &&
-	    fMT2tree->misc.Jet0Pass        == 1                                    &&
-	    fMT2tree->misc.Jet1Pass        == 1                                    &&
-	    fMT2tree->misc.SecondJPt       >  100                                  &&
-	    fMT2tree->misc.PassJetID       == 1                                    &&
-	    fMT2tree->misc.Vectorsumpt     <  70                                   &&
-//            fMT2tree->misc.HBHENoiseFlagIso == 0                                   &&
-//	    fMT2tree->misc.CSCTightHaloID   == 0                                   &&
-            fMT2tree->misc.CrazyHCAL        == 0))
-	  continue;
-
- 	  if(High && fMT2tree->misc.HT             <  950)
- 	    continue;
-
- 	  if(Low && fMT2tree->misc.HT              >  950)
-	    continue;
-
-	  if(mT2){
-	    if(!( fMT2tree->misc.LeadingJPt      >  100                                  &&
-//  		  fMT2tree->misc.MinMetJetDPhi   >  0.3                                  &&
-		  fMT2tree->NJetsIDLoose40       >= 3 
-		  ))
-	      continue;
-	  }else{
-	    if(!( fMT2tree->NJetsIDLoose40       >= 4                                    &&
-// 		  fMT2tree->NBJets               >  0                                    &&
-//  		  fMT2tree->NBJetsHE             >  0                                    &&
-//  		  fMT2tree->misc.MinMetJetDPhi4  >  0.3                                  &&
-		  fMT2tree->misc.LeadingJPt      >  150                                  
- 		  ))
- 	    continue;
-	    
-	    if(!((BTagRelaxed == 0 && fMT2tree->NBJets40CSVM > 0) || (BTagRelaxed == 1 && fMT2tree->NBJets40CSVM > 0)))
-	      continue;	
-	  }
-
-	
-	   
-	  float METPhi = fMT2tree->misc.METPhi; //To be used if a cone close to met is used to look for taus
-	  
-   for(int t = 0; t < fMT2tree->NTaus; t++){
- 	if(fMT2tree->tau[t].MT > 100 || fMT2tree->tau[t].Isolation < IsoCut)
- 	  continue;
-
-	float minDeltaR = 100.0;
-
- 	float DeltaPhi = Util::DeltaPhi(fMT2tree->tau[t].lv.Phi(), fMT2tree->misc.METPhi);
-
-	if(DeltaPhi > maxDPhiTauMET)
-	  continue;
-
-	  if(data == 1){
-	    
-	    MT2[5]->Fill(fMT2tree->misc.MT2, weight);//data
-	    
-	  }else{
-	    MT2[4]->Fill(fMT2tree->misc.MT2, weight);
-	    
-	    if(Sample.sname == "Top")  
-	      MT2[3]->Fill(fMT2tree->misc.MT2, weight);
-	    else
-	      if(Sample.sname == "DY")	
-		MT2[2]->Fill(fMT2tree->misc.MT2, weight);
-	      else
-		if(Sample.name == "WJetsToLNu")
-		  MT2[1]->Fill(fMT2tree->misc.MT2, weight);
-		else
-		  if(Sample.sname == "QCD")
-		    MT2[0]->Fill(fMT2tree->misc.MT2, weight);
-	  }}
-
-   for(int j = 0; j < fMT2tree->NGenLepts; j++){
-     if(abs(fMT2tree->genlept[j].ID) != 15)
-       continue;
-	
-	    int HadTau = 1;
-	    
-	    for(int iii = 0; iii < fMT2tree->NGenLepts; iii++){
-	      if((abs(fMT2tree->genlept[iii].ID) == 11 && fMT2tree->genlept[iii].MID == fMT2tree->genlept[j].ID) || 
-		 (abs(fMT2tree->genlept[iii].ID) == 13 && fMT2tree->genlept[iii].MID == fMT2tree->genlept[j].ID)){
-		HadTau = 0;
-	      }
-	    }
-
-	    if(HadTau == 0)
-	      continue;
-        
-	if((mT2 && fMT2tree->misc.MinMetJetDPhi   >  0.3) || (mT2b && fMT2tree->NBJets40CSVM >  0) || (mT2b && fMT2tree->misc.MinMetJetDPhi4   >  0.3 && fMT2tree->NBJets40CSVM >  0))
-	  hRatioTight->Fill(fMT2tree->misc.MT2, weight);
-	else
-	  hRatioRelaxed->Fill(fMT2tree->misc.MT2, weight);	  
-	
-	hNAllTaus->Fill(fMT2tree->misc.MT2, weight);
-	
-
-	//To find the jet matched to this gen had tau
-	int jetIndex = -1;
-	float minDR = 100.0;
-
-	float genleptEta = fMT2tree->genlept[j].lv.Eta();
-
-	float genleptPhi = fMT2tree->genlept[j].lv.Phi();
-
-	for(int k = 0; k < fMT2tree->NJets; k++){
-	  float deltaR = Util::GetDeltaR(genleptEta, fMT2tree->jet[k].lv.Eta(), genleptPhi, fMT2tree->jet[k].lv.Phi());
-	  if(deltaR < minDR){
-	    minDR = deltaR;
-	    jetIndex = k;
-	  }
-	}	
-
-	if(minDR < 0.1){
-	  hNAllTauJets->Fill(fMT2tree->misc.MT2, weight);
-	}
-
-	jetIndex = -1;
-	minDR = 100.0;
-
-	//To find the rec/id tau matched to this gen had tau
-	for(int k = 0; k < fMT2tree->NTaus; k++){
-	  float deltaR = Util::GetDeltaR(genleptEta, fMT2tree->tau[k].lv.Eta(), genleptPhi, fMT2tree->tau[k].lv.Phi());
-	  if(deltaR < minDR){
-	    minDR = deltaR;
-	    jetIndex = k;
-	  }
-	}
-
-	float DeltaPhi = Util::DeltaPhi(fMT2tree->tau[jetIndex].lv.Phi(), METPhi);
-
-	if(DeltaPhi > maxDPhiTauMET)
-	  continue;
-	
-	if(minDR < 0.1){
-	  if(fMT2tree->tau[jetIndex].Isolation > IsoCut && fMT2tree->tau[jetIndex].MT < 100)
-	    hMT2TauFound->Fill(fMT2tree->misc.MT2, weight);
-	}
-      }
-      
-      //QCD dominated region, use these events to find the fake rate
-      if(fMT2tree->misc.MT2 < 70){
-	if(data == 1){
-	  for(int j = 0; j < fMT2tree->NJets; j++){
-	    
-	    if(fMT2tree->jet[j].isTauMatch < 0 )// || fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT > 100)
-	      continue;
-
-	    float DeltaPhi = Util::DeltaPhi(fMT2tree->jet[j].lv.Phi(), METPhi);
-
-	    if(DeltaPhi > maxDPhiTauMET)
-	      continue;
-	
-	    hEtaPtJetData->Fill(fMT2tree->jet[j].lv.Pt(), fabs(fMT2tree->jet[j].lv.Eta()), weight);
-
-	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].Isolation > IsoCut && fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT < 100){  
-	      hEtaPtTauFakeData->Fill(fMT2tree->jet[j].lv.Pt(), fabs(fMT2tree->jet[j].lv.Eta()), weight);
-	    }
-	  }
-	}else{
-	  for(int j = 0; j < fMT2tree->NJets; j++){
-
-	    if(fMT2tree->jet[j].isTauMatch < 0 )// || fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT > 100)
-	      continue;	    
-
-	    float DeltaPhi = Util::DeltaPhi(fMT2tree->jet[j].lv.Phi(), METPhi);
-
-	    if(DeltaPhi > maxDPhiTauMET)
-	      continue;
-
-	    hEtaPtJet->Fill(fMT2tree->jet[j].lv.Pt(), fabs(fMT2tree->jet[j].lv.Eta()), weight);
-	    
-	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].Isolation > IsoCut && fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT < 100){ 
-	      
-	      hEtaPtTauFake->Fill(fMT2tree->jet[j].lv.Pt(), fabs(fMT2tree->jet[j].lv.Eta()), weight);
-	    }
-	  }
-	}
-      }
-      //Fill The number of Rec/Id taus and tauable jets in the signal region
-      if(fMT2tree->misc.MT2 >= MT2Min){
-	if(data == 1){
-	  for(int j = 0; j < fMT2tree->NJets; j++){
-	    if(fMT2tree->jet[j].isTauMatch < 0)// || fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT > 100)
-	      continue;
-
-	    float DeltaPhi = Util::DeltaPhi(fMT2tree->jet[j].lv.Phi(), METPhi);
-
-	    if(DeltaPhi > maxDPhiTauMET)
-	      continue;
-	    hMT2JetSigData->Fill(fMT2tree->misc.MT2, weight);
-	  }
-	
-	  for(int j = 0; j < fMT2tree->NTaus; j++){
-
-	    float DeltaPhi = Util::DeltaPhi(fMT2tree->tau[j].lv.Phi(), METPhi);
-
-	    if(DeltaPhi > maxDPhiTauMET)
-	      continue;
-	    
-	    if(fMT2tree->tau[j].MT < 100 && fMT2tree->tau[j].Isolation > IsoCut){
-
-	      hMT2TauSigData->Fill(fMT2tree->misc.MT2, weight);
-	    }
-	  }
-	}else{
-	  
-	  for(int j = 0; j < fMT2tree->NJets; j++){
-	    if(fMT2tree->jet[j].isTauMatch < 0)// || fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT > 100) 
-	      continue;
-
-	    float DeltaPhi = Util::DeltaPhi(fMT2tree->jet[j].lv.Phi(), METPhi);
-
-	    if(DeltaPhi > maxDPhiTauMET)
-	      continue;
-	
-	    hMT2JetSig->Fill(fMT2tree->misc.MT2, weight);
-	  }
-	
-	  for(int j = 0; j < fMT2tree->NTaus; j++){
-
-	    float DeltaPhi = Util::DeltaPhi(fMT2tree->tau[j].lv.Phi(), METPhi);
-
-	    if(DeltaPhi > maxDPhiTauMET)
-	      continue;
-	
-	    if(fMT2tree->tau[j].MT < 100 && fMT2tree->tau[j].Isolation > IsoCut){
-	      hMT2TauSig->Fill(fMT2tree->misc.MT2, weight);
-
-	      float minDR = 100.0;
-	      
-	      float tauEta = fMT2tree->tau[j].lv.Eta();
-
-	      float tauPhi = fMT2tree->tau[j].lv.Phi();
-	    }
-	  }
-	}
-      }
-    }//for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) 
-  }// for(int i = 0; i < fSamples.size(); i++){
-
-
- for(int j = 1; j < NumberOfMT2Bins; j++){
-   float id = hMT2TauFound  ->GetBinContent(j);
-   float jet= hNAllTauJets->GetBinContent(j);
-   float gen= hNAllTaus   ->GetBinContent(j);
-   float EffTotal = -1.0;
-   if(gen != 0) EffTotal = id/gen;
-   float Eff = -1.0;
-   if(jet != 0) Eff = id/jet;
-   float Acc = -1.0;
-   if(gen != 0) Acc = jet/gen;
-
-   cout<<"$"<<xMT2bin[j-1]<<"-"<<xMT2bin[j]<<" Eff = "<<EffTotal<<", Eff * Acc = "<<Eff<<" * "<<Acc<<endl;
- }
-
- int p = 0;
- hMT2TauFound->Divide(hNAllTaus);
- Cout(p++, hMT2TauFound);
-
- //To add the syatematic uncertainty
- for(int j = 1; j < NumberOfMT2Bins; j++){
-   float val = hMT2TauFound->GetBinContent(j);
-   float Err = hMT2TauFound->GetBinError(j);
-   hMT2TauFound->SetBinError(j, sqrt(Err * Err + sys * sys * val * val));
- }
-
- Cout(p++, hEtaPtTauFake);
- Cout(p++, hEtaPtJet);
- float TauFake  = hEtaPtTauFake->Integral();
-  float Jet      = hEtaPtJet    ->Integral();
-  float Fake     = TauFake/Jet;
-  cout<<" Fake "<<Fake<<endl;
-  hEtaPtTauFake->Divide(hEtaPtJet);
-  Cout(p++, hEtaPtTauFake);
-
-  Cout(p++, hMT2JetSig);
-
-  hMT2JetSig->Scale(Fake);
-
-  Cout(p++, hMT2JetSig);
-  Cout(p++, hMT2TauSig);
-  hMT2JetSig->Add(hMT2TauSig, -1);
-  hMT2JetSig->Scale(-1.0);
-  Cout(p++, hMT2JetSig);
-
-  hMT2JetSig->Divide(hMT2TauFound);
-  Cout(p++, hMT2JetSig);
-
-  float TauFakeData  = hEtaPtTauFakeData->Integral();
-  float JetData      = hEtaPtJetData    ->Integral();
-  float FakeData     = TauFakeData/JetData;
-  cout<<" FakeData "<<FakeData<<endl;
-  hEtaPtTauFakeData->Divide(hEtaPtJetData);
-  
-  Cout(p++, hMT2JetSigData);
-  hMT2JetSigData->Scale(FakeData);
-  
-  Cout(p++, hMT2JetSigData);
-  Cout(p++, hMT2TauSigData);
-  hMT2JetSigData->Add(hMT2TauSigData, -1);
-  hMT2JetSigData->Scale(-1.0);
-  Cout(p++, hMT2JetSigData);
-    
-
-  hMT2JetSigData->Divide(hMT2TauFound);
-  
-  Cout(p++, hMT2JetSigData);
-  
-  int k = 1;
-
-  int Chi2  = 0;
-
-  float Sim = 0;
-
-  float Pre = 0;
-
-  float PreData    = 0;
-
-  float SimErr     = 0;
-
-  float PreErr     = 0;
-
-  float PreErrData = 0;
-
-  Cout(p++, hRatioRelaxed);
-  Cout(p++, hRatioTight);
-
-  hRatioRelaxed->Add(hRatioTight);
-  
-  hRatioTight->Divide(hRatioRelaxed);
-
-  Cout(p++, hRatioTight);
-
-  hMT2JetSig->Multiply(hRatioTight);
-
-  hMT2JetSigData->Multiply(hRatioTight);
-
-  hNAllTaus->Multiply(hRatioTight);
- 
-  for(int j = 1; j < NumberOfMT2Bins; j++){
-    
-    float TotalErrSim = hMT2JetSig    ->GetBinError(j);
-    float StatErrSim  = (hMT2TauSig    ->GetBinError(j)/hMT2TauFound->GetBinContent(j))*hRatioTight->GetBinContent(j);
-    float SysErrSim   = sqrt(fabs(TotalErrSim * TotalErrSim - StatErrSim * StatErrSim));
-
-    float TotalErrData = hMT2JetSigData    ->GetBinError(j);
-    float StatErrData  = (hMT2TauSigData    ->GetBinError(j)/hMT2TauFound->GetBinContent(j))*hRatioTight->GetBinContent(j);
-    float SysErrData   = sqrt(fabs(TotalErrData * TotalErrData - StatErrData * StatErrData));
-    
-    cout<<"$"<<xMT2bin[j-1]<<"-"<<xMT2bin[j]<<"$: Sim  "<<hNAllTaus     ->GetBinContent(j)<<" +/- "<<hNAllTaus        ->GetBinError(j)*hRatioTight->GetBinContent(j)<<
-                                                 " Pre  "<<hMT2JetSig    ->GetBinContent(j)<<" +/- "<<StatErrSim <<" +/- "<< SysErrSim <<                              
-                                                 " Data "<<hMT2JetSigData->GetBinContent(j)<<" +/- "<<StatErrData<<" +/- "<< SysErrData<<endl;
-  }
-
-  for(int j = 0; j < NumberOfSamples; j++){
-     AddOverAndUnderFlow(MT2[j], true, true);
-  }
-  printYield();
-
-THStack* h_stack     = new THStack(varname, "");
-  for(int j = 0; j < NumberOfSamples; j++){
-    MT2[j]->Rebin(3);
-    TH1F* mt2 = (TH1F*)MT2[j]->Clone();
-    mt2->SetName("mt2");
-    if(j < (NumberOfSamples - 2))
-      h_stack  -> Add(MT2[j]);
-    delete mt2;
-  }  
-
-  TLegend* Legend1 = new TLegend(.71,.54,.91,.92);
-  Legend1->AddEntry(MT2[0], "QCD", "f");
-  Legend1->AddEntry(MT2[1], "W+jets", "f");
-  Legend1->AddEntry(MT2[2], "Z+jets", "f");
-  Legend1->AddEntry(MT2[3], "Top", "f");
-  Legend1->AddEntry(MT2[5], "data", "l");
-  
-  //  TLegend *Legend1;
-  printHisto(h_stack, MT2[5], MT2[4], Legend1 , "MTC", "hist", true, "MT2", "Events", -4, 0);
-
-  plotRatioStack(h_stack,  MT2[4], MT2[5], true, false, "MT2_ratio", Legend1, "MT2", "Events", -4, 0);
-
-  TCanvas *CanvasMT2 = new TCanvas("myMT2", "myMT2");
-  hNAllTaus      ->SetLineColor(kBlue);
-  hMT2JetSig     ->SetLineColor(kRed);
-  hMT2JetSigData ->SetLineColor(kGreen);
-  hNAllTaus      ->Draw();
-  hMT2JetSig     ->Draw("sames");
-  hMT2JetSigData ->Draw("sames");
-}*/
-
-
-void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag, TString cuts, TString trigger, int signalContamination){
+void MassPlotter::TauContamination(int sample_index, unsigned int nevents, int flag, TString cuts, TString trigger, int signalContamination){
   float sys = 0.05; //systematic uncertanty on the fake rate and efficiency
   float IsoCut = 1.5;//cut on the isolation 0.5:VLoose, 1.5:Loose...
-  float IsoCutLoose = IsoCut - 1.0;
+//   float IsoCutLoose = IsoCut - 1.0;
   float maxDPhiTauMET = 11.5;//To cut on the DeltaPhi between the tau and MET
 
   setFlags(flag); 
@@ -3971,7 +2631,7 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag,
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
 
-  for(int ii = 0; ii < fSamples.size(); ii++){
+  for(int ii = 0; ii < (int) fSamples.size(); ii++){
     float nAllTausBeforeThisSample = hNAllTaus->Integral();
     if(sample_index != -1 && ii != sample_index)
       continue;
@@ -4011,10 +2671,9 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag,
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
     Sample.tree->SetEventList(myEvtList);
 
-    Long64_t nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
+    unsigned int nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
 
-
-    for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
+    for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
       //Sample.tree->GetEntry(jentry); 
       Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
 
@@ -4041,11 +2700,9 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag,
 
 	Filled = 1;
 
-	float minDeltaR = 100.0;
+ 	float DeltaPhi_ = Util::DeltaPhi(fMT2tree->tau[t].lv.Phi(), fMT2tree->misc.METPhi);
 
- 	float DeltaPhi = Util::DeltaPhi(fMT2tree->tau[t].lv.Phi(), fMT2tree->misc.METPhi);
-
-	if(DeltaPhi > maxDPhiTauMET)
+	if(DeltaPhi_ > maxDPhiTauMET)
 	  continue;
 
 	if(data == 1){
@@ -4138,9 +2795,9 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag,
 	  }
 	}
 
-	float DeltaPhi = Util::DeltaPhi(fMT2tree->tau[jetIndex].lv.Phi(), METPhi);
+	float DeltaPhi_ = Util::DeltaPhi(fMT2tree->tau[jetIndex].lv.Phi(), METPhi);
 
-	if(DeltaPhi > maxDPhiTauMET)
+	if(DeltaPhi_ > maxDPhiTauMET)
 	  continue;
 	
 	if(minDR < 0.1){
@@ -4168,9 +2825,9 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag,
 	    if(fMT2tree->jet[j].isTauMatch < 0  || fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT > 100)
 	      continue;
 
-	    float DeltaPhi = Util::DeltaPhi(fMT2tree->jet[j].lv.Phi(), METPhi);
+	    float DeltaPhi_ = Util::DeltaPhi(fMT2tree->jet[j].lv.Phi(), METPhi);
 
-	    if(DeltaPhi > maxDPhiTauMET)
+	    if(DeltaPhi_ > maxDPhiTauMET)
 	      continue;
 	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].Isolation3Hits > IsoCutLoose)
 	      hEtaPtJetData->Fill(fMT2tree->jet[j].lv.Pt(), fabs(fMT2tree->jet[j].lv.Eta()), weight);
@@ -4185,9 +2842,9 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag,
 	    if(fMT2tree->jet[j].isTauMatch < 0  || fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT > 100)
 	      continue;	    
 
-	    float DeltaPhi = Util::DeltaPhi(fMT2tree->jet[j].lv.Phi(), METPhi);
+	    float DeltaPhi_ = Util::DeltaPhi(fMT2tree->jet[j].lv.Phi(), METPhi);
 
-	    if(DeltaPhi > maxDPhiTauMET)
+	    if(DeltaPhi_ > maxDPhiTauMET)
 	      continue;
 
 	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].Isolation3Hits > IsoCutLoose)
@@ -4210,9 +2867,9 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag,
 	    if(fMT2tree->jet[j].isTauMatch < 0 || fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT > 100)
 	      continue;
 
-	    float DeltaPhi = Util::DeltaPhi(fMT2tree->jet[j].lv.Phi(), METPhi);
+	    float DeltaPhi_ = Util::DeltaPhi(fMT2tree->jet[j].lv.Phi(), METPhi);
 
-	    if(DeltaPhi > maxDPhiTauMET)
+	    if(DeltaPhi_ > maxDPhiTauMET)
 	      continue;
  
 	    
@@ -4224,9 +2881,9 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag,
 	
 	  for(int j = 0; j < fMT2tree->NTaus; j++){
 
-	    float DeltaPhi = Util::DeltaPhi(fMT2tree->tau[j].lv.Phi(), METPhi);
+	    float DeltaPhi_ = Util::DeltaPhi(fMT2tree->tau[j].lv.Phi(), METPhi);
 
-	    if(DeltaPhi > maxDPhiTauMET)
+	    if(DeltaPhi_ > maxDPhiTauMET)
 	      continue;
 	    
 	    if(fMT2tree->tau[j].MT < 100 && fMT2tree->tau[j].Isolation3Hits > IsoCut &&  Filled == 0){
@@ -4241,9 +2898,9 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag,
 	    if(fMT2tree->jet[j].isTauMatch < 0 || fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT > 100) 
 	      continue;
 
-	    float DeltaPhi = Util::DeltaPhi(fMT2tree->jet[j].lv.Phi(), METPhi);
+	    float DeltaPhi_ = Util::DeltaPhi(fMT2tree->jet[j].lv.Phi(), METPhi);
 
-	    if(DeltaPhi > maxDPhiTauMET)
+	    if(DeltaPhi_ > maxDPhiTauMET)
 	      continue;
 // 	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].Isolation3Hits > IsoCutLoose){
 // 	      hMT2JetSig->Fill(fMT2tree->misc.MT2, weight);
@@ -4253,25 +2910,21 @@ void MassPlotter::TauContamination(int sample_index, Long64_t nevents, int flag,
 	
 	  for(int j = 0; j < fMT2tree->NTaus; j++){
 
-	    float DeltaPhi = Util::DeltaPhi(fMT2tree->tau[j].lv.Phi(), METPhi);
+	    float DeltaPhi_ = Util::DeltaPhi(fMT2tree->tau[j].lv.Phi(), METPhi);
 
-	    if(DeltaPhi > maxDPhiTauMET)
+	    if(DeltaPhi_ > maxDPhiTauMET)
 	      continue;
 	
 	    if(fMT2tree->tau[j].MT < 100 && fMT2tree->tau[j].Isolation3Hits > IsoCut &&  Filled == 0){
 	      Filled = 1;
 	      hMT2TauSig->Fill(fMT2tree->misc.MT2, weight);
 	      //	      cout<<"TauSig:: "<<fMT2tree->misc.MT2<<endl;
-	      float minDR = 100.0;
-	      
-	      float tauEta = fMT2tree->tau[j].lv.Eta();
-
-	      float tauPhi = fMT2tree->tau[j].lv.Phi();
+	     
 	    }
 	  }
 	}
       }
-    }//for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) 
+    }//for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) 
     cout<<" hNAllTaus->Integral() "<<hNAllTaus->Integral()<<endl;
     cout<<" nAllTaus In ThisSample "<<(hNAllTaus->Integral() - nAllTausBeforeThisSample)<<endl;
   }// for(int i = 0; i < fSamples.size(); i++){
@@ -4414,7 +3067,7 @@ THStack* h_stack     = new THStack(varname, "");
 }
 
 
-void MassPlotter::NewTauContamination(int sample_index, Long64_t nevents, int flag){
+void MassPlotter::NewTauContamination(int sample_index, unsigned int nevents, int flag){
   float sys = 0.00; //systematic uncertanty on the fake rate and efficiency
   float IsoCut = 1.5;//cut on the isolation 0.5:VLoose, 1.5:Loose...
   float IsoCutLoose = IsoCut - 1.0;
@@ -4464,7 +3117,7 @@ void MassPlotter::NewTauContamination(int sample_index, Long64_t nevents, int fl
   TH1F* hMT2TauFakeData     = new TH1F("hMT2TauFakeData", "hMT2TauFakeData",   NumberOfMT2Bins - 1, xMT2bin);//Fake rate (data)
   TH1F* hMT2Unit            = new TH1F("hMT2Unit",      "hMT2Unit",   NumberOfMT2Bins - 1, xMT2bin);//Fake rate (MC)
  
-  for(int ii = 0; ii < fSamples.size(); ii++){
+  for(int ii = 0; ii < (int) fSamples.size(); ii++){
 
     if(sample_index != -1 && ii != sample_index)
       continue;
@@ -4480,7 +3133,7 @@ void MassPlotter::NewTauContamination(int sample_index, Long64_t nevents, int fl
 
     fMT2tree = new MT2tree();
     Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
-    Long64_t nentries =  Sample.tree->GetEntries();
+    unsigned int nentries =  Sample.tree->GetEntries();
 
     float Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents * Sample.PU_avg_weight );
 
@@ -4496,7 +3149,7 @@ void MassPlotter::NewTauContamination(int sample_index, Long64_t nevents, int fl
     cout << "   Weight:         " << Weight <<endl;
     std::cout << setfill('-') << std::setw(70) << "" << std::endl;
    
-    for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
+    for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
       Sample.tree->GetEntry(jentry); 
       if ( fVerbose>2 && jentry % 100000 == 0 ){  
 	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
@@ -4550,11 +3203,9 @@ void MassPlotter::NewTauContamination(int sample_index, Long64_t nevents, int fl
  	if(fMT2tree->tau[t].MT > 100 || fMT2tree->tau[t].Isolation < IsoCut)
  	  continue;
 
-	float minDeltaR = 100.0;
+ 	float DeltaPhi_ = Util::DeltaPhi(fMT2tree->tau[t].lv.Phi(), fMT2tree->misc.METPhi);
 
- 	float DeltaPhi = Util::DeltaPhi(fMT2tree->tau[t].lv.Phi(), fMT2tree->misc.METPhi);
-
-	if(DeltaPhi > maxDPhiTauMET)
+	if(DeltaPhi_ > maxDPhiTauMET)
 	  continue;
 
 	if(data == 1){
@@ -4640,9 +3291,9 @@ void MassPlotter::NewTauContamination(int sample_index, Long64_t nevents, int fl
 	  }
 	}
 
-	float DeltaPhi = Util::DeltaPhi(fMT2tree->tau[jetIndex].lv.Phi(), METPhi);
+	float DeltaPhi_ = Util::DeltaPhi(fMT2tree->tau[jetIndex].lv.Phi(), METPhi);
 
-	if(DeltaPhi > maxDPhiTauMET)
+	if(DeltaPhi_ > maxDPhiTauMET)
 	  continue;
 	
 	if(minDR < 0.1){
@@ -4662,9 +3313,9 @@ void MassPlotter::NewTauContamination(int sample_index, Long64_t nevents, int fl
 	    if(fMT2tree->jet[j].isTauMatch < 0  || fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT > 100)
 	      continue;
 
-	    float DeltaPhi = Util::DeltaPhi(fMT2tree->jet[j].lv.Phi(), METPhi);
+	    float DeltaPhi_ = Util::DeltaPhi(fMT2tree->jet[j].lv.Phi(), METPhi);
 
-	    if(DeltaPhi > maxDPhiTauMET)
+	    if(DeltaPhi_ > maxDPhiTauMET)
 	      continue;
 	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].Isolation > IsoCutLoose){
 	      hEtaPtJetData->Fill(fMT2tree->jet[j].lv.Pt(), fabs(fMT2tree->jet[j].lv.Eta()), weight);
@@ -4677,9 +3328,9 @@ void MassPlotter::NewTauContamination(int sample_index, Long64_t nevents, int fl
 	    if(fMT2tree->jet[j].isTauMatch < 0  || fMT2tree->tau[fMT2tree->jet[j].isTauMatch].MT > 100)
 	      continue;	    
 
-	    float DeltaPhi = Util::DeltaPhi(fMT2tree->jet[j].lv.Phi(), METPhi);
+	    float DeltaPhi_ = Util::DeltaPhi(fMT2tree->jet[j].lv.Phi(), METPhi);
 
-	    if(DeltaPhi > maxDPhiTauMET)
+	    if(DeltaPhi_ > maxDPhiTauMET)
 	      continue;
 
 	    if(fMT2tree->tau[fMT2tree->jet[j].isTauMatch].Isolation > IsoCutLoose){
@@ -4697,9 +3348,9 @@ void MassPlotter::NewTauContamination(int sample_index, Long64_t nevents, int fl
 	  int nTaus = 0;
 	  for(int j = 0; j < fMT2tree->NTaus; j++){
 
-	    float DeltaPhi = Util::DeltaPhi(fMT2tree->tau[j].lv.Phi(), METPhi);
+	    float DeltaPhi_ = Util::DeltaPhi(fMT2tree->tau[j].lv.Phi(), METPhi);
 
-	    if(DeltaPhi > maxDPhiTauMET)
+	    if(DeltaPhi_ > maxDPhiTauMET)
 	      continue;
 	    
 	    if(fMT2tree->tau[j].MT < 100){
@@ -4722,9 +3373,9 @@ void MassPlotter::NewTauContamination(int sample_index, Long64_t nevents, int fl
 	  
 	  for(int j = 0; j < fMT2tree->NTaus; j++){
 
-	    float DeltaPhi = Util::DeltaPhi(fMT2tree->tau[j].lv.Phi(), METPhi);
+	    float DeltaPhi_ = Util::DeltaPhi(fMT2tree->tau[j].lv.Phi(), METPhi);
 
-	    if(DeltaPhi > maxDPhiTauMET)
+	    if(DeltaPhi_ > maxDPhiTauMET)
 	      continue;
 	
 	    if(fMT2tree->tau[j].MT < 100){
@@ -4740,7 +3391,7 @@ void MassPlotter::NewTauContamination(int sample_index, Long64_t nevents, int fl
 	      hMT2Tau0Sig->Fill(fMT2tree->misc.MT2, weight);}
 	    else
 	      hMT2Tau1Sig->Fill(fMT2tree->misc.MT2, weight);}}}
-    }//for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) 
+    }//for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) 
   }// for(int i = 0; i < fSamples.size(); i++){
 
 
@@ -5141,956 +3792,6 @@ void MassPlotter::printYield(){
 }
 
 
-
-
-void MassPlotter::TriggerEfficiency(int sixjet, int quadjet, int plusNJets, Long64_t nevents){
-
-  int SixJet = sixjet;
-  int QuadJet = quadjet;
-    
- TH1F *hQuadJet50_v5 = new TH1F("HLT_QuadJet50_v5", "HLT_QuadJet50_v5", 500,0,250);
-  TH1F *hQuadJet50_v5_PFHT350_v4567 = new TH1F("HLT_QuadJet50_v5_PFHT350_v4567", "HLT_QuadJet50_v5_PFHT350_v4567", 500,0,250);
-
-
-  TH1F *hSixJet35_v1 = new TH1F("HLT_SixJet35_v1", "HLT_SixJet35_v1", 250,0,250);
-  TH1F *hSixJet45_v1 = new TH1F("HLT_SixJet45_v1", "HLT_SixJet45_v1", 250,0,250);
-
-  TH1F *hSixJet35_v2 = new TH1F("HLT_SixJet35_v2", "HLT_SixJet35_v2", 250,0,250);
-  TH1F *hSixJet45_v2 = new TH1F("HLT_SixJet45_v2", "HLT_SixJet45_v2", 250,0,250);
-
-  TH1F *hSixJet35_v3 = new TH1F("HLT_SixJet35_v3", "HLT_SixJet35_v3", 250,0,250);
-  TH1F *hSixJet45_v3 = new TH1F("HLT_SixJet45_v3", "HLT_SixJet45_v3", 250,0,250);
-
-  TH1F *hQuadJet70_v1 = new TH1F("HLT_QuadJet70_v1", "HLT_QuadJet70_v1", 250,0,250);
-  TH1F *hQuadJet80_v1 = new TH1F("HLT_QuadJet80_v1", "HLT_QuadJet80_v1", 250,0,250);
-
-  TH1F *hQuadJet70_v2 = new TH1F("HLT_QuadJet70_v2", "HLT_QuadJet70_v2", 250,0,250);
-  TH1F *hQuadJet80_v2 = new TH1F("HLT_QuadJet80_v2", "HLT_QuadJet80_v2", 250,0,250);
-
-  TH1F *hQuadJet70_v3 = new TH1F("HLT_QuadJet70_v3", "HLT_QuadJet70_v3", 250,0,250);
-  TH1F *hQuadJet80_v3 = new TH1F("HLT_QuadJet80_v3", "HLT_QuadJet80_v3", 250,0,250);
-
-  TH1F *hHT350V3 = new TH1F("HLT_PFHT350_v3", "HLT_PFHT350_v3", 1000,0,1000);
-  TH1F *hHT650V5 = new TH1F("HLT_PFHT650_v5", "HLT_PFHT650_v5", 1000,0,1000);
- 
-  TH1F *hHT350V4 = new TH1F("HLT_PFHT350_v4", "HLT_PFHT350_v4", 1000,0,1000);
-  TH1F *hHT650V6 = new TH1F("HLT_PFHT650_v6", "HLT_PFHT650_v6", 1000,0,1000);
- 
-  TH1F *hHT350V5 = new TH1F("HLT_PFHT350_v5", "HLT_PFHT350_v5", 1000,0,1000);
-  TH1F *hHT650V7 = new TH1F("HLT_PFHT650_v7", "HLT_PFHT650_v7", 1000,0,1000);
- 
-  TH1F *hHT350V6 = new TH1F("HLT_PFHT350_v6", "HLT_PFHT350_v6", 1000,0,1000);
-  TH1F *hHT650V8 = new TH1F("HLT_PFHT650_v8", "HLT_PFHT650_v8", 1000,0,1000);
-
-  TH1F *hHT350V7 = new TH1F("HLT_PFHT350_v7", "HLT_PFHT350_v7", 1000,0,1000);
-  TH1F *hHT650V9 = new TH1F("HLT_PFHT650_v9", "HLT_PFHT650_v9", 1000,0,1000);
-
-  TH1F *hSixJet45V1_35V1 = new TH1F("hSixJet45V1_35V1","", 250,0,250);
-  TH1F *hSixJet45V1_35V2 = new TH1F("hSixJet45V1_35V2","", 250,0,250);
-  TH1F *hSixJet45V1_35V3 = new TH1F("hSixJet45V1_35V3","", 250,0,250);
-
-  TH1F *hSixJet45V2_35V1 = new TH1F("hSixJet45V2_35V1","", 250,0,250);
-  TH1F *hSixJet45V2_35V2 = new TH1F("hSixJet45V2_35V2","", 250,0,250);
-  TH1F *hSixJet45V2_35V3 = new TH1F("hSixJet45V2_35V3","", 250,0,250);
-
-  TH1F *hSixJet45V3_35V1 = new TH1F("hSixJet45V3_35V1","", 250,0,250);
-  TH1F *hSixJet45V3_35V2 = new TH1F("hSixJet45V3_35V2","", 250,0,250);
-  TH1F *hSixJet45V3_35V3 = new TH1F("hSixJet45V3_35V3","", 250,0,250);
-
-  TH1F *hQuadJet80V1_70V1 = new TH1F("hQuadJet80V1_70V1","", 250,0,250);
-  TH1F *hQuadJet80V1_70V2 = new TH1F("hQuadJet80V1_70V2","", 250,0,250);
-  TH1F *hQuadJet80V1_70V3 = new TH1F("hQuadJet80V1_70V3","", 250,0,250);
-
-  TH1F *hQuadJet80V2_70V1 = new TH1F("hQuadJet80V2_70V1","", 250,0,250);
-  TH1F *hQuadJet80V2_70V2 = new TH1F("hQuadJet80V2_70V2","", 250,0,250);
-  TH1F *hQuadJet80V2_70V3 = new TH1F("hQuadJet80V2_70V3","", 250,0,250);
-
-  TH1F *hQuadJet80V3_70V1 = new TH1F("hQuadJet80V3_70V1","", 250,0,250);
-  TH1F *hQuadJet80V3_70V2 = new TH1F("hQuadJet80V3_70V2","", 250,0,250);
-  TH1F *hQuadJet80V3_70V3 = new TH1F("hQuadJet80V3_70V3","", 250,0,250);
-
-  TH1F *h650V5_350V3 = new TH1F("HLT_PFHT650_v5_HLT_PFHT350_v3","", 1000,0,1000);
-  TH1F *h650V5_350V4 = new TH1F("HLT_PFHT650_v5_HLT_PFHT350_v4","", 1000,0,1000);
-  TH1F *h650V5_350V5 = new TH1F("HLT_PFHT650_v5_HLT_PFHT350_v5","", 1000,0,1000);
-  TH1F *h650V5_350V6 = new TH1F("HLT_PFHT650_v5_HLT_PFHT350_v6","", 1000,0,1000);
-  TH1F *h650V5_350V7 = new TH1F("HLT_PFHT650_v5_HLT_PFHT350_v7","", 1000,0,1000);
-  TH1F *h650V6_350V3 = new TH1F("HLT_PFHT650_v6_HLT_PFHT350_v3","", 1000,0,1000);
-  TH1F *h650V6_350V4 = new TH1F("HLT_PFHT650_v6_HLT_PFHT350_v4","", 1000,0,1000);
-  TH1F *h650V6_350V5 = new TH1F("HLT_PFHT650_v6_HLT_PFHT350_v5","", 1000,0,1000);
-  TH1F *h650V6_350V6 = new TH1F("HLT_PFHT650_v6_HLT_PFHT350_v6","", 1000,0,1000);
-  TH1F *h650V6_350V7 = new TH1F("HLT_PFHT650_v6_HLT_PFHT350_v7","", 1000,0,1000);
-  TH1F *h650V7_350V3 = new TH1F("HLT_PFHT650_v7_HLT_PFHT350_v3","", 1000,0,1000);
-  TH1F *h650V7_350V4 = new TH1F("HLT_PFHT650_v7_HLT_PFHT350_v4","", 1000,0,1000);
-  TH1F *h650V7_350V5 = new TH1F("HLT_PFHT650_v7_HLT_PFHT350_v5","", 1000,0,1000);
-  TH1F *h650V7_350V6 = new TH1F("HLT_PFHT650_v7_HLT_PFHT350_v6","", 1000,0,1000);
-  TH1F *h650V7_350V7 = new TH1F("HLT_PFHT650_v7_HLT_PFHT350_v7","", 1000,0,1000);
-  TH1F *h650V8_350V3 = new TH1F("HLT_PFHT650_v8_HLT_PFHT350_v3","", 1000,0,1000);
-  TH1F *h650V8_350V4 = new TH1F("HLT_PFHT650_v8_HLT_PFHT350_v4","", 1000,0,1000);
-  TH1F *h650V8_350V5 = new TH1F("HLT_PFHT650_v8_HLT_PFHT350_v5","", 1000,0,1000);
-  TH1F *h650V8_350V6 = new TH1F("HLT_PFHT650_v8_HLT_PFHT350_v6","", 1000,0,1000);
-  TH1F *h650V8_350V7 = new TH1F("HLT_PFHT650_v8_HLT_PFHT350_v7","", 1000,0,1000);
-  TH1F *h650V9_350V3 = new TH1F("HLT_PFHT650_v9_HLT_PFHT350_v3","", 1000,0,1000);
-  TH1F *h650V9_350V4 = new TH1F("HLT_PFHT650_v9_HLT_PFHT350_v4","", 1000,0,1000);
-  TH1F *h650V9_350V5 = new TH1F("HLT_PFHT650_v9_HLT_PFHT350_v5","", 1000,0,1000);
-  TH1F *h650V9_350V6 = new TH1F("HLT_PFHT650_v9_HLT_PFHT350_v6","", 1000,0,1000);
-  TH1F *h650V9_350V7 = new TH1F("HLT_PFHT650_v9_HLT_PFHT350_v7","", 1000,0,1000);
-
-  TH1F *hRunSixJet45V1_35V1 = new TH1F("RunHLT_SixJet45_v1_HLT_SixJet35_v1","", 10000,190000,200000);
-  TH1F *hRunSixJet45V2_35V2 = new TH1F("RunHLT_SixJet45_v2_HLT_SixJet35_v2","", 10000,190000,200000);
-  TH1F *hRunSixJet45V3_35V3 = new TH1F("RunHLT_SixJet45_v3_HLT_SixJet35_v3","", 10000,190000,200000);
-
-  TH1F *hRunQuadJet80V1_70V1 = new TH1F("RunHLT_QuadJet80_v1_HLT_QuadJet70_v1","", 10000,190000,200000);
-  TH1F *hRunQuadJet80V2_70V2 = new TH1F("RunHLT_QuadJet80_v2_HLT_QuadJet70_v2","", 10000,190000,200000);
-  TH1F *hRunQuadJet80V3_70V3 = new TH1F("RunHLT_QuadJet80_v3_HLT_QuadJet70_v3","", 10000,190000,200000);
-
-  TH1F *hRun650V5_350V3 = new TH1F("RunHLT_PFHT650_v5_HLT_PFHT350_v3","", 10000,190000,200000);
-  TH1F *hRun650V6_350V4 = new TH1F("RunHLT_PFHT650_v6_HLT_PFHT350_v4","", 10000,190000,200000);
-  TH1F *hRun650V7_350V5 = new TH1F("RunHLT_PFHT650_v7_HLT_PFHT350_v5","", 10000,190000,200000);
-  TH1F *hRun650V8_350V6 = new TH1F("RunHLT_PFHT650_v8_HLT_PFHT350_v6","", 10000,190000,200000);
-  TH1F *hRun650V9_350V7 = new TH1F("RunHLT_PFHT650_v9_HLT_PFHT350_v7","", 10000,190000,200000);
-
-  TH1F *hQuadJetPt80 = new TH1F("QuadJetPt80","", 75, 0.0, 1.5);
-  TH1F *hQuadJetPt85 = new TH1F("QuadJetPt85","", 75, 0.0, 1.5);
-  TH1F *hQuadJetPt90 = new TH1F("QuadJetPt90","", 75, 0.0, 1.5);
-  TH1F *hQuadJetPt95 = new TH1F("QuadJetPt95","", 75, 0.0, 1.5);
-  TH1F *hQuadJetPt100 = new TH1F("QuadJetPt100","", 75, 0.0, 1.5);
-  TH1F *hQuadJetPt105 = new TH1F("QuadJetPt105","", 75, 0.0, 1.5);
-  TH1F *hQuadJetPt110 = new TH1F("QuadJetPt110","", 75, 0.0, 1.5);
-  TH1F *hQuadJetPt115 = new TH1F("QuadJetPt115","", 75, 0.0, 1.5);
-    
-  TH1F *hSixJetPt50 = new TH1F("SixJetPt50","", 75, 0.0, 1.5);
-  TH1F *hSixJetPt55 = new TH1F("SixJetPt55","", 75, 0.0, 1.5);
-  TH1F *hSixJetPt60 = new TH1F("SixJetPt60","", 75, 0.0, 1.5);
-  TH1F *hSixJetPt65 = new TH1F("SixJetPt65","", 75, 0.0, 1.5);
-  TH1F *hSixJetPt70 = new TH1F("SixJetPt70","", 75, 0.0, 1.5);
-  TH1F *hSixJetPt75 = new TH1F("SixJetPt75","", 75, 0.0, 1.5);
-  TH1F *hSixJetPt80 = new TH1F("SixJetPt80","", 75, 0.0, 1.5);
-  TH1F *hSixJetPt85 = new TH1F("SixJetPt85","", 75, 0.0, 1.5);
- 
-  TH1F *hHT650 = new TH1F("HT650","", 75, 0.0, 1.5);
-  TH1F *hHT675 = new TH1F("HT675","", 75, 0.0, 1.5);
-  TH1F *hHT700 = new TH1F("HT700","", 75, 0.0, 1.5);
-  TH1F *hHT725 = new TH1F("HT725","", 75, 0.0, 1.5);
-  TH1F *hHT750 = new TH1F("HT750","", 75, 0.0, 1.5);
-  TH1F *hHT775 = new TH1F("HT775","", 75, 0.0, 1.5);
-  TH1F *hHT800 = new TH1F("HT800","", 75, 0.0, 1.5);
-  TH1F *hHT825 = new TH1F("HT825","", 75, 0.0, 1.5);
-
-  for(int i = 0; i < fSamples.size(); i++){
-    sample Sample = fSamples[i];
-    // if(Sample.name != "Run2012A")
-    if(Sample.type != "data" || Sample.name != "Run2012D1F")
-      continue;
- 
-    fMT2tree = new MT2tree();
-
-    Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
-    Long64_t nentries =  Sample.tree->GetEntries();
-
-    std::cout << setfill('=') << std::setw(70) << "" << std::endl;
-    cout << "looping over :     " <<endl;	
-    cout << "   Name:           " << Sample.name << endl;
-    cout << "   File:           " << (Sample.file)->GetName() << endl;
-    cout << "   Events:         " << Sample.nevents  << endl;
-    cout << "   Events in tree: " << Sample.tree->GetEntries() << endl; 
-    cout << "   Xsection:       " << Sample.xsection << endl;
-    cout << "   kfactor:        " << Sample.kfact << endl;
-    cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
-    std::cout << setfill('-') << std::setw(70) << "" << std::endl;
-
- 
-    for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
-      Sample.tree->GetEntry(jentry); 
-      
-      if ( fVerbose>2 && jentry % 100000 == 0 ){  
-	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
-	fflush(stdout);}
-
-      if(fMT2tree->NJets > (SixJet+plusNJets)){
-	if(fMT2tree->trigger.HLT_SixJet35_v1 && fMT2tree->trigger.HLT_SixJet45_v1)
-	  hSixJet45V1_35V1->Fill(fMT2tree->jet[SixJet].lv.Pt());
-	if(fMT2tree->trigger.HLT_SixJet35_v2 && fMT2tree->trigger.HLT_SixJet45_v1)
-	  hSixJet45V1_35V2->Fill(fMT2tree->jet[SixJet].lv.Pt());
-	if(fMT2tree->trigger.HLT_SixJet35_v3 && fMT2tree->trigger.HLT_SixJet45_v1)
-	  hSixJet45V1_35V3->Fill(fMT2tree->jet[SixJet].lv.Pt());
-	if(fMT2tree->trigger.HLT_SixJet35_v1 && fMT2tree->trigger.HLT_SixJet45_v2)
-	  hSixJet45V2_35V1->Fill(fMT2tree->jet[SixJet].lv.Pt());
-	if(fMT2tree->trigger.HLT_SixJet35_v2 && fMT2tree->trigger.HLT_SixJet45_v2)
-	  hSixJet45V2_35V2->Fill(fMT2tree->jet[SixJet].lv.Pt());
-	if(fMT2tree->trigger.HLT_SixJet35_v3 && fMT2tree->trigger.HLT_SixJet45_v2)
-	  hSixJet45V2_35V3->Fill(fMT2tree->jet[SixJet].lv.Pt());
-	if(fMT2tree->trigger.HLT_SixJet35_v1 && fMT2tree->trigger.HLT_SixJet45_v3)
-	  hSixJet45V3_35V1->Fill(fMT2tree->jet[SixJet].lv.Pt());
-	if(fMT2tree->trigger.HLT_SixJet35_v2 && fMT2tree->trigger.HLT_SixJet45_v3)
-	  hSixJet45V3_35V2->Fill(fMT2tree->jet[SixJet].lv.Pt());
-	if(fMT2tree->trigger.HLT_SixJet35_v3 && fMT2tree->trigger.HLT_SixJet45_v3)
-	  hSixJet45V3_35V3->Fill(fMT2tree->jet[SixJet].lv.Pt());
-      }
-
-      if(fMT2tree->NJets > (QuadJet+plusNJets)){
-	if(fMT2tree->trigger.HLT_QuadJet70_v1 && fMT2tree->trigger.HLT_QuadJet80_v1)
-	  hQuadJet80V1_70V1->Fill(fMT2tree->jet[QuadJet].lv.Pt());
-	if(fMT2tree->trigger.HLT_QuadJet70_v2 && fMT2tree->trigger.HLT_QuadJet80_v1)
-	  hQuadJet80V1_70V2->Fill(fMT2tree->jet[QuadJet].lv.Pt());
-	if(fMT2tree->trigger.HLT_QuadJet70_v3 && fMT2tree->trigger.HLT_QuadJet80_v1)
-	  hQuadJet80V1_70V3->Fill(fMT2tree->jet[QuadJet].lv.Pt());
-	if(fMT2tree->trigger.HLT_QuadJet70_v1 && fMT2tree->trigger.HLT_QuadJet80_v2)
-	  hQuadJet80V2_70V1->Fill(fMT2tree->jet[QuadJet].lv.Pt());
-	if(fMT2tree->trigger.HLT_QuadJet70_v2 && fMT2tree->trigger.HLT_QuadJet80_v2)
-	  hQuadJet80V2_70V2->Fill(fMT2tree->jet[QuadJet].lv.Pt());
-	if(fMT2tree->trigger.HLT_QuadJet70_v3 && fMT2tree->trigger.HLT_QuadJet80_v2)
-	  hQuadJet80V2_70V3->Fill(fMT2tree->jet[QuadJet].lv.Pt());
-	if(fMT2tree->trigger.HLT_QuadJet70_v1 && fMT2tree->trigger.HLT_QuadJet80_v3)
-	  hQuadJet80V3_70V1->Fill(fMT2tree->jet[QuadJet].lv.Pt());
-	if(fMT2tree->trigger.HLT_QuadJet70_v2 && fMT2tree->trigger.HLT_QuadJet80_v3)
-	  hQuadJet80V3_70V2->Fill(fMT2tree->jet[QuadJet].lv.Pt());
-	if(fMT2tree->trigger.HLT_QuadJet70_v3 && fMT2tree->trigger.HLT_QuadJet80_v3)
-	  hQuadJet80V3_70V3->Fill(fMT2tree->jet[QuadJet].lv.Pt());
-      }
-
-
-      if(fMT2tree->trigger.HLT_PFHT350_v3 && fMT2tree->trigger.HLT_PFHT650_v5)
-     	h650V5_350V3->Fill(fMT2tree->misc.HT);
-      if(fMT2tree->trigger.HLT_PFHT350_v4 && fMT2tree->trigger.HLT_PFHT650_v5)
-     	h650V5_350V4->Fill(fMT2tree->misc.HT);
-      if(fMT2tree->trigger.HLT_PFHT350_v5 && fMT2tree->trigger.HLT_PFHT650_v5)
-     	h650V5_350V5->Fill(fMT2tree->misc.HT);
-      if(fMT2tree->trigger.HLT_PFHT350_v6 && fMT2tree->trigger.HLT_PFHT650_v5)
-     	h650V5_350V6->Fill(fMT2tree->misc.HT);
-      if(fMT2tree->trigger.HLT_PFHT350_v7 && fMT2tree->trigger.HLT_PFHT650_v5)
-     	h650V5_350V7->Fill(fMT2tree->misc.HT);
-   
-      if(fMT2tree->trigger.HLT_PFHT350_v3 && fMT2tree->trigger.HLT_PFHT650_v6)
-     	h650V6_350V3->Fill(fMT2tree->misc.HT);
-      if(fMT2tree->trigger.HLT_PFHT350_v4 && fMT2tree->trigger.HLT_PFHT650_v6)
-     	h650V6_350V4->Fill(fMT2tree->misc.HT);
-      if(fMT2tree->trigger.HLT_PFHT350_v5 && fMT2tree->trigger.HLT_PFHT650_v6)
-     	h650V6_350V5->Fill(fMT2tree->misc.HT);
-      if(fMT2tree->trigger.HLT_PFHT350_v6 && fMT2tree->trigger.HLT_PFHT650_v6)
-     	h650V6_350V6->Fill(fMT2tree->misc.HT);
-      if(fMT2tree->trigger.HLT_PFHT350_v7 && fMT2tree->trigger.HLT_PFHT650_v6)
-     	h650V6_350V7->Fill(fMT2tree->misc.HT);
-   
-     if(fMT2tree->trigger.HLT_PFHT350_v3 && fMT2tree->trigger.HLT_PFHT650_v7)
-     	h650V7_350V3->Fill(fMT2tree->misc.HT);
-      if(fMT2tree->trigger.HLT_PFHT350_v4 && fMT2tree->trigger.HLT_PFHT650_v7)
-     	h650V7_350V4->Fill(fMT2tree->misc.HT);
-      if(fMT2tree->trigger.HLT_PFHT350_v5 && fMT2tree->trigger.HLT_PFHT650_v7)
-     	h650V7_350V5->Fill(fMT2tree->misc.HT);
-      if(fMT2tree->trigger.HLT_PFHT350_v6 && fMT2tree->trigger.HLT_PFHT650_v7)
-     	h650V7_350V6->Fill(fMT2tree->misc.HT);
-      if(fMT2tree->trigger.HLT_PFHT350_v7 && fMT2tree->trigger.HLT_PFHT650_v7)
-     	h650V7_350V7->Fill(fMT2tree->misc.HT);
- 
-      if(fMT2tree->trigger.HLT_PFHT350_v3 && fMT2tree->trigger.HLT_PFHT650_v8)
-     	h650V8_350V3->Fill(fMT2tree->misc.HT);
-      if(fMT2tree->trigger.HLT_PFHT350_v4 && fMT2tree->trigger.HLT_PFHT650_v8)
-     	h650V8_350V4->Fill(fMT2tree->misc.HT);
-      if(fMT2tree->trigger.HLT_PFHT350_v5 && fMT2tree->trigger.HLT_PFHT650_v8)
-     	h650V8_350V5->Fill(fMT2tree->misc.HT);
-      if(fMT2tree->trigger.HLT_PFHT350_v6 && fMT2tree->trigger.HLT_PFHT650_v8)
-      	h650V8_350V6->Fill(fMT2tree->misc.HT);
-      if(fMT2tree->trigger.HLT_PFHT350_v7 && fMT2tree->trigger.HLT_PFHT650_v8)
-      	h650V8_350V7->Fill(fMT2tree->misc.HT);
-    
-      if(fMT2tree->trigger.HLT_PFHT350_v3 && fMT2tree->trigger.HLT_PFHT650_v9)
-     	h650V9_350V3->Fill(fMT2tree->misc.HT);
-      if(fMT2tree->trigger.HLT_PFHT350_v4 && fMT2tree->trigger.HLT_PFHT650_v9)
-     	h650V9_350V4->Fill(fMT2tree->misc.HT);
-      if(fMT2tree->trigger.HLT_PFHT350_v5 && fMT2tree->trigger.HLT_PFHT650_v9)
-     	h650V9_350V5->Fill(fMT2tree->misc.HT);
-      if(fMT2tree->trigger.HLT_PFHT350_v6 && fMT2tree->trigger.HLT_PFHT650_v9)
-      	h650V9_350V6->Fill(fMT2tree->misc.HT);
-      if(fMT2tree->trigger.HLT_PFHT350_v7 && fMT2tree->trigger.HLT_PFHT650_v9)
-      	h650V9_350V7->Fill(fMT2tree->misc.HT);
-    
-  
-      if(fMT2tree->NJets > (QuadJet+plusNJets)){
-        //if(fMT2tree->trigger.HLT_PFHT350_v4 || fMT2tree->trigger.HLT_PFHT350_v5 || fMT2tree->trigger.HLT_PFHT350_v6 || fMT2tree->trigger.HLT_PFHT350_v7){
-        //if(fMT2tree->trigger.HLT_PFHT650_v6 || fMT2tree->trigger.HLT_PFHT650_v7 || fMT2tree->trigger.HLT_PFHT650_v8 || fMT2tree->trigger.HLT_PFHT650_v9){
-	//if(fMT2tree->trigger.HLT_Mu40_HT200_v1 || fMT2tree->trigger.HLT_Mu40_HT200_v2){
-	//if(fMT2tree->trigger.HLT_QuadJet45_v1 && fMT2tree->misc.Run > 203777){
-	//if(fMT2tree->trigger.HLT_DiPFJetAve40_v6 && fMT2tree->misc.Run > 194270){
-	//if(fMT2tree->trigger.HLT_IsoMu24_v17){
-	//if(fMT2tree->trigger.HLT_IsoMu24_eta2p1_v15){
-
-	    hQuadJet50_v5_PFHT350_v4567->Fill(fMT2tree->jet[QuadJet].lv.Pt());
-	    
-	    if(fMT2tree->trigger.HLT_QuadJet50_v1 || fMT2tree->trigger.HLT_QuadJet50_v2  || fMT2tree->trigger.HLT_QuadJet50_v3|| fMT2tree->trigger.HLT_QuadJet50_v5)
-	      hQuadJet50_v5->Fill(fMT2tree->jet[QuadJet].lv.Pt());
-      }//}
-
-      int Ref = 0;
-      int Tri = 0;
- 
-      if(fMT2tree->trigger.HLT_PFHT350_v3){
-  	Ref = 1;
- 	if(fMT2tree->trigger.HLT_PFHT650_v5){
-  	  Tri = 1;
-	  hRun650V5_350V3->Fill(fMT2tree->misc.Run);
-	}
-      }
-      hHT350V3->Fill(fMT2tree->misc.HT, Ref);
-      hHT650V5->Fill(fMT2tree->misc.HT, Tri);
-      
-      Ref = 0;
-      Tri = 0;
-      
-      if((fMT2tree->trigger.HLT_PFHT350_v4)){
-  	Ref = 1;
- 	if((fMT2tree->trigger.HLT_PFHT650_v6)){
-  	  Tri = 1;
-	  hRun650V6_350V4->Fill(fMT2tree->misc.Run);
-	}
-      }
-      hHT350V4->Fill(fMT2tree->misc.HT, Ref);
-      hHT650V6->Fill(fMT2tree->misc.HT, Tri);
-
-      Ref = 0;
-      Tri = 0;
-      
-      if((fMT2tree->trigger.HLT_PFHT350_v5)){
-  	Ref = 1;
- 	if((fMT2tree->trigger.HLT_PFHT650_v7)){
-  	  Tri = 1;
-	  hRun650V7_350V5->Fill(fMT2tree->misc.Run);
-	}
-      }
-      
-      hHT350V5->Fill(fMT2tree->misc.HT, Ref);
-      hHT650V7->Fill(fMT2tree->misc.HT, Tri);
-
-      Ref = 0;
-      Tri = 0;
-
-      if((fMT2tree->trigger.HLT_PFHT350_v6)){
-  	Ref = 1;
- 	if((fMT2tree->trigger.HLT_PFHT650_v8)){
-  	  Tri = 1;
-	  hRun650V8_350V6->Fill(fMT2tree->misc.Run);
-	}
-      }
-      hHT350V6->Fill(fMT2tree->misc.HT, Ref);
-      hHT650V8->Fill(fMT2tree->misc.HT, Tri);
-
-      Ref = 0;
-      Tri = 0;
-
-      if((fMT2tree->trigger.HLT_PFHT350_v7)){
-  	Ref = 1;
- 	if((fMT2tree->trigger.HLT_PFHT650_v9)){
-  	  Tri = 1;
-	  hRun650V9_350V7->Fill(fMT2tree->misc.Run);
-	}
-      }
-      hHT350V7->Fill(fMT2tree->misc.HT, Ref);
-      hHT650V9->Fill(fMT2tree->misc.HT, Tri);
-
-      if(fMT2tree->NJets > (SixJet+plusNJets)){
-	Ref = 0;
-	Tri = 0;
-	
-	if((fMT2tree->trigger.HLT_SixJet35_v1)){
-	  Ref = 1;
-	  if((fMT2tree->trigger.HLT_SixJet45_v1)){
-	    Tri = 1;
-	    hRunSixJet45V1_35V1->Fill(fMT2tree->misc.Run);
-	  }
-	}
-	hSixJet35_v1->Fill(fMT2tree->jet[SixJet].lv.Pt(), Ref);
-	hSixJet45_v1->Fill(fMT2tree->jet[SixJet].lv.Pt(), Tri);
-
-	Ref = 0;
-	Tri = 0;
-	
-	if((fMT2tree->trigger.HLT_SixJet35_v2)){
-	  Ref = 1;
-	  if((fMT2tree->trigger.HLT_SixJet45_v2)){
-	    Tri = 1;
-	    hRunSixJet45V2_35V2->Fill(fMT2tree->misc.Run);
-	  }
-	}
-	hSixJet35_v2->Fill(fMT2tree->jet[SixJet].lv.Pt(), Ref);
-	hSixJet45_v2->Fill(fMT2tree->jet[SixJet].lv.Pt(), Tri);
-
-	Ref = 0;
-	Tri = 0;
-	
-	if((fMT2tree->trigger.HLT_SixJet35_v3)){
-	  Ref = 1;
-	  if((fMT2tree->trigger.HLT_SixJet45_v3)){
-	    Tri = 1;
-	    hRunSixJet45V3_35V3->Fill(fMT2tree->misc.Run);
-	  }
-	}
-	hSixJet35_v3->Fill(fMT2tree->jet[SixJet].lv.Pt(), Ref);
-	hSixJet45_v3->Fill(fMT2tree->jet[SixJet].lv.Pt(), Tri);
-      }
-
-      if(fMT2tree->NJets > (QuadJet+plusNJets)){
-	Ref = 0;
-	Tri = 0;
-	
-	if((fMT2tree->trigger.HLT_QuadJet70_v1)){
-	  Ref = 1;
-	  if((fMT2tree->trigger.HLT_QuadJet80_v1)){
-	    Tri = 1;
-	    hRunQuadJet80V1_70V1->Fill(fMT2tree->misc.Run);
-	  }
-	}
-	hQuadJet70_v1->Fill(fMT2tree->jet[QuadJet].lv.Pt(), Ref);
-	hQuadJet80_v1->Fill(fMT2tree->jet[QuadJet].lv.Pt(), Tri);
-
-	Ref = 0;
-	Tri = 0;
-	
-	if((fMT2tree->trigger.HLT_QuadJet70_v2)){
-	  Ref = 1;
-	  if((fMT2tree->trigger.HLT_QuadJet80_v2)){
-	    Tri = 1;
-	    hRunQuadJet80V2_70V2->Fill(fMT2tree->misc.Run);
-	  }
-	}
-	hQuadJet70_v2->Fill(fMT2tree->jet[QuadJet].lv.Pt(), Ref);
-	hQuadJet80_v2->Fill(fMT2tree->jet[QuadJet].lv.Pt(), Tri);
-
-	Ref = 0;
-	Tri = 0;
-	
-	if((fMT2tree->trigger.HLT_QuadJet70_v3)){
-	  Ref = 1;
-	  if((fMT2tree->trigger.HLT_QuadJet80_v3)){
-	    Tri = 1;
-	    hRunQuadJet80V3_70V3->Fill(fMT2tree->misc.Run);
-	  }
-	}
-	hQuadJet70_v3->Fill(fMT2tree->jet[QuadJet].lv.Pt(), Ref);
-	hQuadJet80_v3->Fill(fMT2tree->jet[QuadJet].lv.Pt(), Tri);
-      }
-    }
-  }  
-     TCanvas *MyHT = new TCanvas("MyHT","MyHT");
-     MyHT->Divide(5,5);
-     MyHT->cd(1);
-     h650V5_350V3->Draw();
-     MyHT->cd(2);
-     h650V5_350V4->Draw();
-     MyHT->cd(3);
-     h650V5_350V5->Draw();
-     MyHT->cd(4);
-     h650V5_350V6->Draw();
-     MyHT->cd(5);
-     h650V5_350V7->Draw();
-     MyHT->cd(6);
-     h650V6_350V3->Draw();
-     MyHT->cd(7);
-     h650V6_350V4->Draw();
-     MyHT->cd(8);
-     h650V6_350V5->Draw();
-     MyHT->cd(9);
-     h650V6_350V6->Draw();
-     MyHT->cd(10);
-     h650V6_350V7->Draw();
-     MyHT->cd(11);
-     h650V7_350V3->Draw();
-     MyHT->cd(12);
-     h650V7_350V4->Draw();
-     MyHT->cd(13);
-     h650V7_350V5->Draw();
-     MyHT->cd(14);
-     h650V7_350V6->Draw();
-     MyHT->cd(15);
-     h650V7_350V7->Draw();
-     MyHT->cd(16);
-     h650V8_350V3->Draw();
-     MyHT->cd(17);
-     h650V8_350V4->Draw();
-     MyHT->cd(18);
-     h650V8_350V5->Draw();
-     MyHT->cd(19);
-     h650V8_350V6->Draw();
-     MyHT->cd(20);
-     h650V8_350V7->Draw();
-     MyHT->cd(21);
-     h650V9_350V3->Draw();
-     MyHT->cd(22);
-     h650V9_350V4->Draw();
-     MyHT->cd(23);
-     h650V9_350V5->Draw();
-     MyHT->cd(24);
-     h650V9_350V6->Draw();
-     MyHT->cd(25);
-     h650V9_350V7->Draw();
-
-
-     TCanvas *MyQuadJet = new TCanvas("MyQuadJet","MyQuadJet");
-     MyQuadJet->Divide(3,3);
-     MyQuadJet->cd(1);
-     hQuadJet80V1_70V1->Draw();
-     MyQuadJet->cd(2);
-     hQuadJet80V1_70V2->Draw();
-     MyQuadJet->cd(3);
-     hQuadJet80V1_70V3->Draw();
-     MyQuadJet->cd(4);
-     hQuadJet80V2_70V1->Draw();
-     MyQuadJet->cd(5);
-     hQuadJet80V2_70V2->Draw();
-     MyQuadJet->cd(6);
-     hQuadJet80V2_70V3->Draw();
-     MyQuadJet->cd(7);
-     hQuadJet80V3_70V1->Draw();
-     MyQuadJet->cd(8);
-     hQuadJet80V3_70V2->Draw();
-     MyQuadJet->cd(9);
-     hQuadJet80V3_70V3->Draw();
-
-     TCanvas *MySixJet = new TCanvas("MySixJet","MySixJet");
-     MySixJet->Divide(3,3);
-     MySixJet->cd(1);
-     hSixJet45V1_35V1->Draw();
-     MySixJet->cd(2);
-     hSixJet45V1_35V2->Draw();
-     MySixJet->cd(3);
-     hSixJet45V1_35V3->Draw();
-     MySixJet->cd(4);
-     hSixJet45V2_35V1->Draw();
-     MySixJet->cd(5);
-     hSixJet45V2_35V2->Draw();
-     MySixJet->cd(6);
-     hSixJet45V2_35V3->Draw();
-     MySixJet->cd(7);
-     hSixJet45V3_35V1->Draw();
-     MySixJet->cd(8);
-     hSixJet45V3_35V2->Draw();
-     MySixJet->cd(9);
-     hSixJet45V3_35V3->Draw();
-
-
-     TCanvas *MyEff = new TCanvas("MyEff","MyEff");
-     MyEff->Divide(3,5);
-     MyEff->cd(1);
-     hHT350V3->Draw();
-     MyEff->cd(2);
-     hHT650V5->Draw();
-     MyEff->cd(3);
-     TGraphAsymmErrors *gEff650V5_350V3 = new TGraphAsymmErrors(hHT650V5, hHT350V3);
-     gEff650V5_350V3->Draw("AP");
-
-     MyEff->cd(4);
-     hHT350V4->Draw();
-     MyEff->cd(5);
-     hHT650V6->Draw();
-     MyEff->cd(6);
-     TGraphAsymmErrors *gEff650V6_350V4 = new TGraphAsymmErrors(hHT650V6, hHT350V4);
-     gEff650V6_350V4->Draw("AP");
-
-     MyEff->cd(7);
-     hHT350V5->Draw();
-     MyEff->cd(8);
-     hHT650V7->Draw();
-     MyEff->cd(9);
-     TGraphAsymmErrors *gEff650V7_350V5 = new TGraphAsymmErrors(hHT650V7, hHT350V5);
-     gEff650V7_350V5->Draw("AP");
-
-     MyEff->cd(10);
-     hHT350V6->Draw();
-     MyEff->cd(11);
-     hHT650V8->Draw();
-     MyEff->cd(12);
-     TGraphAsymmErrors *gEff650V8_350V6 = new TGraphAsymmErrors(hHT650V8, hHT350V6);
-     gEff650V8_350V6->Draw("AP");
-
-     MyEff->cd(13);
-     hHT350V7->Draw();
-     MyEff->cd(14);
-     hHT650V9->Draw();
-     MyEff->cd(15);
-     TGraphAsymmErrors *gEff650V9_350V7 = new TGraphAsymmErrors(hHT650V9, hHT350V7);
-     gEff650V9_350V7->Draw("AP");
-
-     for(int i = 651; i < 1001; i++){
-       float V5_V3 = hHT650V5->GetBinContent(i)/hHT350V3->GetBinContent(i);
-       float V5_V3W = hHT650V5->GetBinContent(i);
-
-       float V6_V4 = hHT650V6->GetBinContent(i)/hHT350V4->GetBinContent(i);
-       float V6_V4W = hHT650V6->GetBinContent(i);
-
-       float V7_V5 = hHT650V7->GetBinContent(i)/hHT350V5->GetBinContent(i);
-       float V7_V5W = hHT650V7->GetBinContent(i);
-
-       float V8_V6 = hHT650V8->GetBinContent(i)/hHT350V6->GetBinContent(i);
-       float V8_V6W = hHT650V8->GetBinContent(i);
-
-       float V9_V7 = hHT650V9->GetBinContent(i)/hHT350V7->GetBinContent(i);
-       float V9_V7W = hHT650V9->GetBinContent(i);
-
-       hHT650->Fill(V5_V3, V5_V3W);
-       hHT650->Fill(V6_V4, V6_V4W);
-       hHT650->Fill(V7_V5, V7_V5W);
-       hHT650->Fill(V8_V6, V8_V6W);
-       hHT650->Fill(V9_V7, V9_V7W);
-       
-       if(i > 675){
-	 hHT675->Fill(V5_V3, V5_V3W);
-	 hHT675->Fill(V6_V4, V6_V4W);
-	 hHT675->Fill(V7_V5, V7_V5W);
-	 hHT675->Fill(V8_V6, V8_V6W);
-	 hHT675->Fill(V9_V7, V9_V7W);
-       }
-
-       if(i > 700){
-	 hHT700->Fill(V5_V3, V5_V3W);
-	 hHT700->Fill(V6_V4, V6_V4W);
-	 hHT700->Fill(V7_V5, V7_V5W);
-	 hHT700->Fill(V8_V6, V8_V6W);
-	 hHT700->Fill(V9_V7, V9_V7W);
-       }
-       
-       if(i > 725){
-	 hHT725->Fill(V5_V3, V5_V3W);
-	 hHT725->Fill(V6_V4, V6_V4W);
-	 hHT725->Fill(V7_V5, V7_V5W);
-	 hHT725->Fill(V8_V6, V8_V6W);
-	 hHT725->Fill(V9_V7, V9_V7W);
-       }
-       
-       if(i > 750){
-	 hHT750->Fill(V5_V3, V5_V3W);
-	 hHT750->Fill(V6_V4, V6_V4W);
-	 hHT750->Fill(V7_V5, V7_V5W);
-	 hHT750->Fill(V8_V6, V8_V6W);
-	 hHT750->Fill(V9_V7, V9_V7W);
-       }
-       
-       if(i > 775){
-	 hHT775->Fill(V5_V3, V5_V3W);
-	 hHT775->Fill(V6_V4, V6_V4W);
-	 hHT775->Fill(V7_V5, V7_V5W);
-	 hHT775->Fill(V8_V6, V8_V6W);
-	 hHT775->Fill(V9_V7, V9_V7W);
-       }
-       
-       if(i > 800){
-	 hHT800->Fill(V5_V3, V5_V3W);
-	 hHT800->Fill(V6_V4, V6_V4W);
-	 hHT800->Fill(V7_V5, V7_V5W);
-	 hHT800->Fill(V8_V6, V8_V6W);
-	 hHT800->Fill(V9_V7, V9_V7W);
-       }
-       
-       if(i > 825){
-	 hHT825->Fill(V5_V3, V5_V3W);
-	 hHT825->Fill(V6_V4, V6_V4W);
-	 hHT825->Fill(V7_V5, V7_V5W);
-	 hHT825->Fill(V8_V6, V8_V6W);
-	 hHT825->Fill(V9_V7, V9_V7W);
-       }
-     }
-       
-     TCanvas *MyEffHT = new TCanvas("MyEffHT","MyEffHT");
-     MyEffHT->Divide(4,2);
-     MyEffHT->cd(1);
-     hHT650->Draw();
-     MyEffHT->cd(2);
-     hHT675->Draw();
-     MyEffHT->cd(3);
-     hHT700->Draw();
-     MyEffHT->cd(4);
-     hHT725->Draw();
-     MyEffHT->cd(5);
-     hHT750->Draw();
-     MyEffHT->cd(6);
-     hHT775->Draw();
-     MyEffHT->cd(7);
-     hHT800->Draw();
-     MyEffHT->cd(8);
-     hHT825->Draw();
-
-     TCanvas *MyEff2 = new TCanvas("MyEff2","MyEff2");
-     MyEff2->Divide(3,3);
-     MyEff2->cd(1);
-     hQuadJet70_v1->Draw();
-     MyEff2->cd(2);
-     hQuadJet80_v1->Draw();
-     MyEff2->cd(3);
-     TGraphAsymmErrors *gEffQuadJet80V1_70V1 = new TGraphAsymmErrors(hQuadJet80_v1, hQuadJet70_v1);
-     gEffQuadJet80V1_70V1->Draw("AP");
-
-
-     MyEff2->cd(4);
-     hQuadJet70_v2->Draw();
-     MyEff2->cd(5);
-     hQuadJet80_v2->Draw();
-     MyEff2->cd(6);
-     TGraphAsymmErrors *gEffQuadJet80V2_70V2 = new TGraphAsymmErrors(hQuadJet80_v2, hQuadJet70_v2);
-     gEffQuadJet80V2_70V2->Draw("AP");
-
-     MyEff2->cd(7);
-     hQuadJet70_v3->Draw();
-     MyEff2->cd(8);
-     hQuadJet80_v3->Draw();
-     MyEff2->cd(9);
-     TGraphAsymmErrors *gEffQuadJet80V3_70V3 = new TGraphAsymmErrors(hQuadJet80_v3, hQuadJet70_v3);
-     gEffQuadJet80V3_70V3->Draw("AP");
-
-     for(int i = 81; i < 251; i++){
-       float V1_V1 = hQuadJet80_v1->GetBinContent(i)/hQuadJet70_v1->GetBinContent(i);
-       float V1_V1W = hQuadJet80_v1->GetBinContent(i);
-
-       float V2_V2 = hQuadJet80_v2->GetBinContent(i)/hQuadJet70_v2->GetBinContent(i);
-       float V2_V2W = hQuadJet80_v2->GetBinContent(i);
-
-       float V3_V3 = hQuadJet80_v3->GetBinContent(i)/hQuadJet70_v3->GetBinContent(i);
-       float V3_V3W = hQuadJet80_v3->GetBinContent(i);
-
-       hQuadJetPt80->Fill(V1_V1, V1_V1W);
-       hQuadJetPt80->Fill(V2_V2, V2_V2W);
-       hQuadJetPt80->Fill(V3_V3, V3_V3W);
-
-       if(i > 85){
-	 hQuadJetPt85->Fill(V1_V1, V1_V1W);
-	 hQuadJetPt85->Fill(V2_V2, V2_V2W);
-	 hQuadJetPt85->Fill(V3_V3, V3_V3W);
-       }
-
-       if(i > 90){
-	 hQuadJetPt90->Fill(V1_V1, V1_V1W);
-	 hQuadJetPt90->Fill(V2_V2, V2_V2W);
-	 hQuadJetPt90->Fill(V3_V3, V3_V3W);
-       }
-
-       if(i > 95){
-	 hQuadJetPt95->Fill(V1_V1, V1_V1W);
-	 hQuadJetPt95->Fill(V2_V2, V2_V2W);
-	 hQuadJetPt95->Fill(V3_V3, V3_V3W);
-       }
-       
-       if(i > 100){
-	 hQuadJetPt100->Fill(V1_V1, V1_V1W);
-	 hQuadJetPt100->Fill(V2_V2, V2_V2W);
-	 hQuadJetPt100->Fill(V3_V3, V3_V3W);
-       }
-
-       if(i > 105){
-	 hQuadJetPt105->Fill(V1_V1, V1_V1W);
-	 hQuadJetPt105->Fill(V2_V2, V2_V2W);
-	 hQuadJetPt105->Fill(V3_V3, V3_V3W);
-       }
-      
-       if(i > 110){
-	 hQuadJetPt110->Fill(V1_V1, V1_V1W);
-	 hQuadJetPt110->Fill(V2_V2, V2_V2W);
-	 hQuadJetPt110->Fill(V3_V3, V3_V3W);
-       }
-
-       if(i > 115){
-	 hQuadJetPt115->Fill(V1_V1, V1_V1W);
-	 hQuadJetPt115->Fill(V2_V2, V2_V2W);
-	 hQuadJetPt115->Fill(V3_V3, V3_V3W);
-       }
-     }
-
-     TCanvas *MyEffQuad = new TCanvas("MyEffQuad","MyEffQuad");
-     MyEffQuad->Divide(4,2);
-     MyEffQuad->cd(1);
-     hQuadJetPt80->Draw();
-     MyEffQuad->cd(2);
-     hQuadJetPt85->Draw();
-     MyEffQuad->cd(3);
-     hQuadJetPt90->Draw();
-     MyEffQuad->cd(4);
-     hQuadJetPt95->Draw();
-     MyEffQuad->cd(5);
-     hQuadJetPt100->Draw();
-     MyEffQuad->cd(6);
-     hQuadJetPt105->Draw();
-     MyEffQuad->cd(7);
-     hQuadJetPt110->Draw();
-     MyEffQuad->cd(8);
-     hQuadJetPt115->Draw();
-
-     TCanvas *MyEff3 = new TCanvas("MyEff3","MyEff3");
-     MyEff3->Divide(3,3);
-     MyEff3->cd(1);
-     hSixJet35_v1->Draw();
-     MyEff3->cd(2);
-     hSixJet45_v1->Draw();
-     MyEff3->cd(3);
-     TGraphAsymmErrors *gEffSixJet45V1_35V1 = new TGraphAsymmErrors(hSixJet45_v1, hSixJet35_v1);
-     gEffSixJet45V1_35V1->Draw("AP");
-   
-     MyEff3->cd(4);
-     hSixJet35_v2->Draw();
-     MyEff3->cd(5);
-     hSixJet45_v2->Draw();
-     MyEff3->cd(6);
-     TGraphAsymmErrors *gEffSixJet45V2_35V2 = new TGraphAsymmErrors(hSixJet45_v2, hSixJet35_v2);
-     gEffSixJet45V2_35V2->Draw("AP");
-
-     MyEff3->cd(7);
-     hSixJet35_v3->Draw();
-     MyEff3->cd(8);
-     hSixJet45_v3->Draw();
-     MyEff3->cd(9);
-     TGraphAsymmErrors *gEffSixJet45V3_35V3 = new TGraphAsymmErrors(hSixJet45_v3, hSixJet35_v3);
-     gEffSixJet45V3_35V3->Draw("AP");
-
-
-
-     for(int i = 51; i < 251; i++){
-       float V1_V1 = hSixJet45_v1->GetBinContent(i)/hSixJet35_v1->GetBinContent(i);
-       float V1_V1W = hSixJet45_v1->GetBinContent(i);
-
-       float V2_V2 = hSixJet45_v2->GetBinContent(i)/hSixJet35_v2->GetBinContent(i);
-       float V2_V2W = hSixJet45_v2->GetBinContent(i);
-
-       float V3_V3 = hSixJet45_v3->GetBinContent(i)/hSixJet35_v3->GetBinContent(i);
-       float V3_V3W = hSixJet45_v3->GetBinContent(i);
-
-       hSixJetPt50->Fill(V1_V1, V1_V1W);
-       hSixJetPt50->Fill(V2_V2, V2_V2W);
-       hSixJetPt50->Fill(V3_V3, V3_V3W);
-
-       if(i > 55){
-	 hSixJetPt55->Fill(V1_V1, V1_V1W);
-	 hSixJetPt55->Fill(V2_V2, V2_V2W);
-	 hSixJetPt55->Fill(V3_V3, V3_V3W);
-       }
-       
-       if(i > 60){
-	 hSixJetPt60->Fill(V1_V1, V1_V1W);
-	 hSixJetPt60->Fill(V2_V2, V2_V2W);
-	 hSixJetPt60->Fill(V3_V3, V3_V3W);
-       }
-
-       if(i > 65){
-	 hSixJetPt65->Fill(V1_V1, V1_V1W);
-	 hSixJetPt65->Fill(V2_V2, V2_V2W);
-	 hSixJetPt65->Fill(V3_V3, V3_V3W);
-       }
-       
-       if(i > 70){
-	 hSixJetPt70->Fill(V1_V1, V1_V1W);
-	 hSixJetPt70->Fill(V2_V2, V2_V2W);
-	 hSixJetPt70->Fill(V3_V3, V3_V3W);
-       }
-
-      if(i > 75){
-	 hSixJetPt75->Fill(V1_V1, V1_V1W);
-	 hSixJetPt75->Fill(V2_V2, V2_V2W);
-	 hSixJetPt75->Fill(V3_V3, V3_V3W);
-       }
-
-       if(i > 80){
-	 hSixJetPt80->Fill(V1_V1, V1_V1W);
-	 hSixJetPt80->Fill(V2_V2, V2_V2W);
-	 hSixJetPt80->Fill(V3_V3, V3_V3W);
-       }
-
-      if(i > 85){
-	 hSixJetPt85->Fill(V1_V1, V1_V1W);
-	 hSixJetPt85->Fill(V2_V2, V2_V2W);
-	 hSixJetPt85->Fill(V3_V3, V3_V3W);
-       }
-     }
-
-     TCanvas *MyEffSix = new TCanvas("MyEffSix","MyEffSix");
-     MyEffSix->Divide(4,2);
-     MyEffSix->cd(1);
-     hSixJetPt50->Draw();
-     MyEffSix->cd(2);
-     hSixJetPt55->Draw();
-     MyEffSix->cd(3);
-     hSixJetPt60->Draw();
-     MyEffSix->cd(4);
-     hSixJetPt65->Draw();
-     MyEffSix->cd(5);
-     hSixJetPt70->Draw();
-     MyEffSix->cd(6);
-     hSixJetPt75->Draw();
-     MyEffSix->cd(7);
-     hSixJetPt80->Draw();
-     MyEffSix->cd(8);
-     hSixJetPt85->Draw();
-
-     TCanvas *MyCRun = new TCanvas("MyCRun","MyCRun");
-     MyCRun->Divide(2,3);
-     MyCRun->cd(1);
-     hRun650V5_350V3->Draw();
-     MyCRun->cd(2);
-     hRun650V6_350V4->Draw();
-     MyCRun->cd(3);
-     hRun650V7_350V5->Draw();
-     MyCRun->cd(4);
-     hRun650V8_350V6->Draw();
-     MyCRun->cd(5);
-     hRun650V9_350V7->Draw();
-
-     TCanvas *MyCRun2 = new TCanvas("MyCRun2","MyCRun2");
-     MyCRun2->Divide(1,3);
-     MyCRun2->cd(1);
-     hRunQuadJet80V1_70V1->Draw();
-     MyCRun2->cd(2);
-     hRunQuadJet80V2_70V2->Draw();
-     MyCRun2->cd(3);
-     hRunQuadJet80V3_70V3->Draw();
-
-     TCanvas *MyCRun3 = new TCanvas("MyCRun3","MyCRun3");
-     MyCRun3->Divide(1,3);
-     MyCRun3->cd(1);
-     hRunSixJet45V1_35V1->Draw();
-     MyCRun3->cd(2);
-     hRunSixJet45V2_35V2->Draw();
-     MyCRun3->cd(3);
-     hRunSixJet45V3_35V3->Draw();
-
-
-    TCanvas *MyCQuadHT = new TCanvas("MyCQuadHT","MyCQuadHT");
-     MyCQuadHT->Divide(4,2);
-     MyCQuadHT->cd(1);
-     hQuadJet50_v5_PFHT350_v4567->SetLineColor(4);
-     TH1F *hQuadJet50_v5_PFHT350_v4567_2 = (TH1F*)hQuadJet50_v5_PFHT350_v4567->Rebin(2, "hQuadJet50_v5_PFHT350_v4567_2");
-     TH1F *hQuadJet50_v5_2 = (TH1F*)hQuadJet50_v5->Rebin(2, "hQuadJet50_v5_2");
-     hQuadJet50_v5_PFHT350_v4567_2->Draw();
-     hQuadJet50_v5_2->Draw("same");
-
-     MyCQuadHT->cd(5);
-     TGraphAsymmErrors *gQuadJet50_v5_PFHT350_v4567_2 = new TGraphAsymmErrors(hQuadJet50_v5_2, hQuadJet50_v5_PFHT350_v4567_2);
-     gQuadJet50_v5_PFHT350_v4567_2->Draw("AP");
-
-     MyCQuadHT->cd(2);
-     TH1F *hQuadJet50_v5_PFHT350_v4567_5 = (TH1F*)hQuadJet50_v5_PFHT350_v4567->Rebin(5, "hQuadJet50_v5_PFHT350_v4567_5");
-     TH1F *hQuadJet50_v5_5 = (TH1F*)hQuadJet50_v5->Rebin(5, "hQuadJet50_v5_5");
-     hQuadJet50_v5_PFHT350_v4567_5->Draw();
-     hQuadJet50_v5_5->Draw("same");
-
-     MyCQuadHT->cd(6);
-     TGraphAsymmErrors *gQuadJet50_v5_PFHT350_v4567_5 = new TGraphAsymmErrors(hQuadJet50_v5_5, hQuadJet50_v5_PFHT350_v4567_5);
-     gQuadJet50_v5_PFHT350_v4567_5->Draw("AP");
-
-     MyCQuadHT->cd(3);
-     TH1F *hQuadJet50_v5_PFHT350_v4567_10 = (TH1F*)hQuadJet50_v5_PFHT350_v4567->Rebin(10, "hQuadJet50_v5_PFHT350_v4567_10");
-     TH1F *hQuadJet50_v5_10 = (TH1F*)hQuadJet50_v5->Rebin(10, "hQuadJet50_v5_10");
-     hQuadJet50_v5_PFHT350_v4567_10->Draw();
-     hQuadJet50_v5_10->Draw("same");
-
-     MyCQuadHT->cd(7);
-     TGraphAsymmErrors *gQuadJet50_v5_PFHT350_v4567_10 = new TGraphAsymmErrors(hQuadJet50_v5_10, hQuadJet50_v5_PFHT350_v4567_10);
-     gQuadJet50_v5_PFHT350_v4567_10->Draw("AP");
-
-
-     MyCQuadHT->cd(4);
-     TH1F *hQuadJet50_v5_PFHT350_v4567_20 = (TH1F*)hQuadJet50_v5_PFHT350_v4567->Rebin(20, "hQuadJet50_v5_PFHT350_v4567_20");
-     TH1F *hQuadJet50_v5_20 = (TH1F*)hQuadJet50_v5->Rebin(20, "hQuadJet50_v5_20");
-     hQuadJet50_v5_PFHT350_v4567_20->Draw();
-     hQuadJet50_v5_20->Draw("same");
-
-     MyCQuadHT->cd(8);
-     TGraphAsymmErrors *gQuadJet50_v5_PFHT350_v4567_20 = new TGraphAsymmErrors(hQuadJet50_v5_20, hQuadJet50_v5_PFHT350_v4567_20);
-     gQuadJet50_v5_PFHT350_v4567_20->Draw("AP");
-     MyCQuadHT->SaveAs("MyC.C");
-}
-
 void MassPlotter::GetGenInfo(MT2GenParticle *T1, MT2GenParticle *T2, MT2GenParticle *W1, MT2GenParticle *W2, MT2GenParticle *B1, MT2GenParticle *B2, MT2GenParticle *U1, MT2GenParticle *U2, MT2GenParticle *D1, MT2GenParticle *D2){
   T1->Reset();
   T2->Reset();
@@ -6190,7 +3891,7 @@ void MassPlotter::InitializeHemisphereFinder(vector<float> &px, vector<float> &p
 	E .push_back(lv.E());
 }
 
-void MassPlotter::TopStudy(TString mySample, Long64_t nevents){
+void MassPlotter::TopStudy(TString mySample, unsigned int nevents){
 
   TH1F* hWMass = new TH1F("W","W",100,0,300);
   TH1F* hTMass = new TH1F("T","T",50,0,300);
@@ -6252,7 +3953,7 @@ void MassPlotter::TopStudy(TString mySample, Long64_t nevents){
 
   MT2GenParticle T1, T2, W1, W2, B1, B2, U1, U2, D1, D2;
 
-  for(int ii = 0; ii <(int) fSamples.size(); ii++){
+  for(unsigned int ii = 0; ii < fSamples.size(); ii++){
     sample Sample = fSamples[ii];
     // if(Sample.name != "Run2012A")
     if(Sample.name != mySample)
@@ -6282,9 +3983,9 @@ void MassPlotter::TopStudy(TString mySample, Long64_t nevents){
     fMT2tree = new MT2tree();
 
     Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
-    Long64_t nentries =  Sample.tree->GetEntries();
+    unsigned int nentries =  Sample.tree->GetEntries();
 
-    Long64_t minNentriesNevents = min(nentries, nevents);
+    unsigned int minNentriesNevents = min(nentries, nevents);
 
     std::cout << setfill('=') << std::setw(70) << "" << std::endl;
     cout << "looping over :     " <<endl;	
@@ -6298,7 +3999,7 @@ void MassPlotter::TopStudy(TString mySample, Long64_t nevents){
     cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
     std::cout << setfill('-') << std::setw(70) << "" << std::endl;
 
-    for (Long64_t jentry=0; jentry<minNentriesNevents;jentry++) {
+    for (unsigned int jentry=0; jentry<minNentriesNevents;jentry++) {
      
       Sample.tree->GetEntry(jentry); 
       together = 0;
@@ -6398,21 +4099,21 @@ void MassPlotter::TopStudy(TString mySample, Long64_t nevents){
        continue;
     
      MT2GenParticle TopSemiLep;
-     int TopSemiLepIndex = -1;
+//      int TopSemiLepIndex = -1;
      if(abs(U1.Index + D1.Index + U2.Index + D2.Index) > 100){
        if(U1.Index == D1.Index){
 	 TopSemiLep = T2;
-	 if(T1.lv.Pt() > T2.lv.Pt())
-	   TopSemiLepIndex = 1;
-	 else
-	   TopSemiLepIndex = 0;
+// 	 if(T1.lv.Pt() > T2.lv.Pt())
+// 	   TopSemiLepIndex = 1;
+// 	 else
+// 	   TopSemiLepIndex = 0;
        }
        else{
 	 TopSemiLep = T1;
-	 if(T1.lv.Pt() > T2.lv.Pt())
-	   TopSemiLepIndex = 0;
-	 else
-	   TopSemiLepIndex = 1;
+// 	 if(T1.lv.Pt() > T2.lv.Pt())
+// 	   TopSemiLepIndex = 0;
+// 	 else
+// 	   TopSemiLepIndex = 1;
 	
        }
        // cout<<" SemiLep MT2 :: "<<fMT2tree->misc.MT2<<" TopEta "<<TopSemiLep.lv.Eta()<<endl;
@@ -6953,7 +4654,7 @@ void MassPlotter::TopStudy(TString mySample, Long64_t nevents){
        if(grouping[i] == 2)
 	 hemi2++;
      }
-     if((hemi1 + hemi2) != px.size())
+     if((hemi1 + hemi2) != (int) px.size())
        cout<<" hemi1 "<<hemi1<<" hemi2 "<<hemi2<<" px.size() "<<px.size()<<endl;
       
      hHemi12->Fill(hemi1, hemi2);
@@ -7184,7 +4885,7 @@ void MassPlotter::TopStudy(TString mySample, Long64_t nevents){
 
 
 
-void MassPlotter::MyMakePlot(Long64_t nevents){
+void MassPlotter::MyMakePlot(unsigned int nevents){
   static const int NumberOfSamples = 7;
   TH1F* myHisto[NumberOfSamples];
 
@@ -7213,15 +4914,15 @@ void MassPlotter::MyMakePlot(Long64_t nevents){
   myHisto[5] -> SetLineStyle(kDotted);
 
 
-  for(int ii = 0; ii <(int) fSamples.size(); ii++){
+  for(unsigned int ii = 0; ii < fSamples.size(); ii++){
     sample Sample = fSamples[ii];
  
     fMT2tree = new MT2tree();
     int counter = 0;
     Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
-    Long64_t nentries =  Sample.tree->GetEntries();
+    unsigned int nentries =  Sample.tree->GetEntries();
     float weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents * Sample.PU_avg_weight );
-    Long64_t minNentriesNevents = min(nentries, nevents);
+    unsigned int minNentriesNevents = min(nentries, nevents);
 
     std::cout << setfill('=') << std::setw(70) << "" << std::endl;
     cout << "looping over :     " <<endl;	
@@ -7235,7 +4936,7 @@ void MassPlotter::MyMakePlot(Long64_t nevents){
     cout << "   Weight:         " << weight <<endl;
     std::cout << setfill('-') << std::setw(70) << "" << std::endl;
 
-    for (Long64_t jentry=0; jentry<minNentriesNevents;jentry++) {
+    for (unsigned int jentry=0; jentry<minNentriesNevents;jentry++) {
      
       Sample.tree->GetEntry(jentry); 
       if ( fVerbose>2 && jentry % 100000 == 0 ){
@@ -7336,193 +5037,16 @@ void MassPlotter::MyMakePlot(Long64_t nevents){
   
 
 
-void MassPlotter::MySmallMakePlot(Long64_t nevents){
-  static const int NumberOfSamples = 7;
-  TH1F* myHisto[NumberOfSamples];
 
-
-  TH1::SetDefaultSumw2();
-  TString  cnames[NumberOfSamples] = {"QCD", "Wjets", "Zjets", "Top", "MC", "susy", "data"};
-  int      ccolor[NumberOfSamples] = {  401,     417,     419,   600,  500,      0,  632};
-  TString varname = "MT2";
-  for (int i=0; i<NumberOfSamples; i++){
-    myHisto[i] = new TH1F(varname+"_"+cnames[i], "", 35, 0, 3.5);
-    myHisto[i] -> SetFillColor  (ccolor[i]);
-    myHisto[i] -> SetLineColor  (ccolor[i]);
-    myHisto[i] -> SetLineWidth  (2);
-    myHisto[i] -> SetMarkerColor(ccolor[i]);
-    myHisto[i] -> SetStats(false);
-  }
-
-  myHisto[6] -> SetMarkerStyle(20);
-  myHisto[6] -> SetMarkerColor(kBlack);
-  myHisto[6] -> SetLineColor(kBlack);
-  
-  myHisto[4] -> SetFillStyle(3004);
-  myHisto[4] -> SetFillColor(kBlack);
-  
-  myHisto[5] -> SetLineColor(kBlack);
-  myHisto[5] -> SetLineStyle(kDotted);
-
-
-  float MinMetJetDPhi4, MET, VectorSumPt, MT2, MT2Top, MT2MassiveTop, MT2MassiveOnlyTop, HemiDPhi, MinMetBCSVLJetDPhi, MinMetBCSVMJetDPhi, MinMetBCSVTJetDPhi;
-  int NJetsIDLoose40, NBJets, NBJetsHE, NBJetsCSVL, NBJetsCSVM, NBJetsCSVT, NTops;
-  bool HTTrigger, Trigger4OR6Jets;
-
-  double MET4[4];
-  double BestTop4[4];
-  double SecondTop4[4];
-  double ClosestRBtoMET4[4];
-  double LeadingJet4[4];
-  double SeconsJet4[4]; 
-
-  for(int ii = 0; ii <(int) fSamples.size(); ii++){
-    sample Sample = fSamples[ii];
-  
-    //    fMT2tree = new MT2tree();
-    //    Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
-   
-    Sample.tree->SetBranchAddress("MinMetJetDPhi4", &MinMetJetDPhi4);
-    Sample.tree->SetBranchAddress("MET", &MET);     
-    Sample.tree->SetBranchAddress("VectorSumPt", &VectorSumPt);     
-    Sample.tree->SetBranchAddress("MT2", &MT2);     
-    Sample.tree->SetBranchAddress("MT2Top", &MT2Top);     
-    Sample.tree->SetBranchAddress("MT2MassiveTop", &MT2MassiveTop);     
-    Sample.tree->SetBranchAddress("MT2MassiveOnlyTop", &MT2MassiveOnlyTop);
-    Sample.tree->SetBranchAddress("NJetsIDLoose40", &NJetsIDLoose40); 
-    Sample.tree->SetBranchAddress("NBJets", &NBJets); 
-    Sample.tree->SetBranchAddress("NBJetsHE", &NBJetsHE); 
-    Sample.tree->SetBranchAddress("NBJetsCSVL", &NBJetsCSVL); 
-    Sample.tree->SetBranchAddress("NBJetsCSVM", &NBJetsCSVM); 
-    Sample.tree->SetBranchAddress("NBJetsCSVT", &NBJetsCSVT); 
-    Sample.tree->SetBranchAddress("NTops", &NTops); 
-    Sample.tree->SetBranchAddress("HTTrigger", &HTTrigger); 
-    Sample.tree->SetBranchAddress("Trigger4OR6Jets", &Trigger4OR6Jets);
-    Sample.tree->SetBranchAddress("MET4", &MET4); 
-    Sample.tree->SetBranchAddress("BestTop4", &BestTop4);
-    Sample.tree->SetBranchAddress("SecondTop4", &SecondTop4);
-    Sample.tree->SetBranchAddress("ClosestRBtoMET4", &ClosestRBtoMET4);
-    Sample.tree->SetBranchAddress("LeadingJet4", &LeadingJet4);
-    Sample.tree->SetBranchAddress("SeconsJet4", &SeconsJet4);
-    Sample.tree->SetBranchAddress("HemiDPhi", &HemiDPhi);
-    Sample.tree->SetBranchAddress("MinMetBCSVLJetDPhi", &MinMetBCSVLJetDPhi);
-    Sample.tree->SetBranchAddress("MinMetBCSVMJetDPhi", &MinMetBCSVMJetDPhi);
-    Sample.tree->SetBranchAddress("MinMetBCSVTJetDPhi", &MinMetBCSVTJetDPhi);
-
-    Long64_t nentries =  Sample.tree->GetEntries();
-    float weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents * Sample.PU_avg_weight );
-    Long64_t minNentriesNevents = min(nentries, nevents);
-
-    std::cout << setfill('=') << std::setw(70) << "" << std::endl;
-    cout << "looping over :     " <<endl;	
-    cout << "   Name:           " << Sample.name << endl;
-    cout << "   File:           " << (Sample.file)->GetName() << endl;
-    cout << "   Events:         " << Sample.nevents  << endl;
-    cout << "   Events in tree: " << nentries << endl; 
-    cout << "   Xsection:       " << Sample.xsection << endl;
-    cout << "   kfactor:        " << Sample.kfact << endl;
-    cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
-    cout << "   Weight:         " << weight <<endl;
-    std::cout << setfill('-') << std::setw(70) << "" << std::endl;
-
-    for (Long64_t jentry=0; jentry<minNentriesNevents;jentry++) {
-     
-      Sample.tree->GetEntry(jentry); 
-      if ( fVerbose>2 && jentry % 100000 == 0 ){
-	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
-	fflush(stdout);
-     }
-
-         if (!(MET               >  30                                   &&
- 	      MT2                >  100                                  &&
-	      NBJetsCSVL         >  0                                    &&
- 	      VectorSumPt        <  70                                   &&
-// 	      //          (MinMetJetDPhi >0.3||MinMetJetDPhiIndex>3) &&
-	      MinMetJetDPhi4     >  0.3                                  &&
-	      HemiDPhi           <  2.25                                 &&
-	    //Six Or Quad
-	      Trigger4OR6Jets              
-	       ))
-	continue;
-
-	 //	 TLorentzVector Jet1(LeadingJet4[0], LeadingJet4[1], LeadingJet4[2], LeadingJet4[3]);
-	 //	 TLorentzVector Jet2(SeconsJet4[0], SeconsJet4[1], SeconsJet4[2], SeconsJet4[3]);
-	 
-	 double myVar = HemiDPhi;//Util::DeltaPhi(Jet1.Phi(), Jet2.Phi());//Jet1.DeltaPhi(Jet2);
-
-      if(Sample.type == "data"){
-	    
-	myHisto[6]->Fill(myVar, weight);//data
-	    
-      }else{
-	if(Sample.sname == "SMS")
-	  myHisto[5]->Fill(myVar, weight);
-	else{
-	  myHisto[4]->Fill(myVar, weight);
-	    
-	  if(Sample.sname == "Top")  
-	    myHisto[3]->Fill(myVar, weight);
-	  else
-	    if(Sample.sname == "DY")	
-	      myHisto[2]->Fill(myVar, weight);
-	    else
-	      if(Sample.name == "WJetsToLNu")
-		myHisto[1]->Fill(myVar, weight);
-	      else
-		if(Sample.sname == "QCD")
-		  myHisto[0]->Fill(myVar, weight);
-	}
-      }
-    }}
-  for(int j = 0; j < NumberOfSamples; j++){
-    AddOverAndUnderFlow(myHisto[j]);
-  }
-  THStack* h_stack     = new THStack(varname, "");
-  for(int j = 0; j < NumberOfSamples; j++){
-
-    TH1F* mt2 = (TH1F*)myHisto[j]->Clone();
-    mt2->SetName("mt2");
-    if(j < (NumberOfSamples - 3))
-      h_stack  -> Add(myHisto[j]);
-    delete mt2;
-  }
-      cout << "------------------------------------"                << endl
-	   << "QCD Integral:      " << myHisto[0]->Integral()  << endl
-	   << "W+jets Integral:   " << myHisto[1]->Integral()  << endl
-	   << "Z+jets Integral:   " << myHisto[2]->Integral()  << endl
-	   << "Top Integral:      " << myHisto[3]->Integral()  << endl
-	   << "TOTAL BG:          " << myHisto[4]->Integral() <<endl
-	   << "SUSY:              " << myHisto[5]->Integral()  << endl
-	   << "Data:              " << myHisto[6]->Integral()  << endl;
-		
-  TLegend* Legend1 = new TLegend(.71,.54,.91,.92);
-  Legend1->AddEntry(myHisto[0], "QCD", "f");
-  Legend1->AddEntry(myHisto[1], "W+jets", "f");
-  Legend1->AddEntry(myHisto[2], "Z+jets", "f");
-  Legend1->AddEntry(myHisto[3], "Top", "f");
-  Legend1->AddEntry(myHisto[5], "SUSY", "l");
-  Legend1->AddEntry(myHisto[6], "data", "l");
-  
-  printHisto(h_stack, myHisto[6], myHisto[4], myHisto[5], Legend1 , "MTC", "hist", true, "MT2", "Events", -4, 0);
-
-  plotRatioStack(h_stack,  myHisto[4], myHisto[5], true, false, "_ratio", Legend1, "MT2", "Events", -4, 0);
-}
-  
-
-
-
-
-
-
-void MassPlotter::SortHighMT2(float MT2cut, Long64_t nevents){
+void MassPlotter::SortHighMT2(float MT2cut, unsigned int nevents){
 
   vector<int> RunNo;
   vector<int> LSNo;
   vector<int> EventNo;
   vector<int> counterNo;
-  vector<float> MT2;
+  vector<float> vecMT2;
   int counter = 0;
-  for(int ii = 0; ii <(int) fSamples.size(); ii++){
+  for(unsigned int ii = 0; ii < fSamples.size(); ii++){
     sample Sample = fSamples[ii];
     if(Sample.type != "data")
       continue;
@@ -7530,9 +5054,9 @@ void MassPlotter::SortHighMT2(float MT2cut, Long64_t nevents){
     fMT2tree = new MT2tree();
 
     Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
-    Long64_t nentries =  Sample.tree->GetEntries();
+    unsigned int nentries =  Sample.tree->GetEntries();
 
-    Long64_t minNentriesNevents = min(nentries, nevents);
+    unsigned int minNentriesNevents = min(nentries, nevents);
  
     std::cout << setfill('=') << std::setw(70) << "" << std::endl;
     cout << "looping over :     " <<endl;	
@@ -7546,7 +5070,7 @@ void MassPlotter::SortHighMT2(float MT2cut, Long64_t nevents){
     cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
     std::cout << setfill('-') << std::setw(70) << "" << std::endl;
 
-    for (Long64_t jentry=0; jentry<minNentriesNevents;jentry++) {
+    for (unsigned int jentry=0; jentry<minNentriesNevents;jentry++) {
      
       Sample.tree->GetEntry(jentry); 
       if ( fVerbose>2 && jentry % 100000 == 0 ){ 
@@ -7586,7 +5110,7 @@ void MassPlotter::SortHighMT2(float MT2cut, Long64_t nevents){
 	LSNo.push_back(fMT2tree->misc.LumiSection);
 	EventNo.push_back(fMT2tree->misc.Event);
 	counterNo.push_back(counter);
-	MT2.push_back(fMT2tree->misc.MT2);
+	vecMT2.push_back(fMT2tree->misc.MT2);
 	counter++;
       }
     }}
@@ -7596,10 +5120,10 @@ void MassPlotter::SortHighMT2(float MT2cut, Long64_t nevents){
   //   cout<<counterNo[i]<<" MT2 = "<< MT2[counterNo[i]]<<" Run::LS::Event "<<RunNo[counterNo[i]]<<"::"<<LSNo[counterNo[i]]<<"::"<<EventNo[counterNo[i]]<<endl;
   // }
     
-  counterNo = Util::VSort(counterNo, MT2, true);
+  counterNo = Util::VSort(counterNo, vecMT2, true);
   cout<<" MT2 > "<< MT2cut<<endl;
   for(int i = 0; i < counter; i++){
-    cout<<counterNo[i]<<" MT2 = "<< MT2[counterNo[i]]<<" Run::LS::Event "<<RunNo[counterNo[i]]<<"::"<<LSNo[counterNo[i]]<<"::"<<EventNo[counterNo[i]]<<endl;
+    cout<<counterNo[i]<<" MT2 = "<< vecMT2[counterNo[i]]<<" Run::LS::Event "<<RunNo[counterNo[i]]<<"::"<<LSNo[counterNo[i]]<<"::"<<EventNo[counterNo[i]]<<endl;
   }
 }
 
@@ -7639,14 +5163,14 @@ void MassPlotter::Efficiency(TString mySample){
   TH1F *hDeltaPhiMetTop = new TH1F("DeltaPhiMetTop", "DeltaPhiMetTop", 32, 0, 3.14);
   TH1F *hDeltaPhiMetTopTTBar = new TH1F("DeltaPhiMetTopTTBar", "DeltaPhiMetTopTTBar", 32, 0, 3.14);
 
-  TH2F *h_SMSEvents;
-  for(int ii = 0; ii <(int) fSamples.size(); ii++){
+  TH2F *h_SMSEvent;
+  for(unsigned int ii = 0; ii < fSamples.size(); ii++){
     sample Sample = fSamples[ii];
 
     if(Sample.name != mySample && Sample.sname != "Top")
       continue;
 
-    Long64_t nentries = Sample.tree->GetEntries();
+    unsigned int nentries = Sample.tree->GetEntries();
  
     std::cout << setfill('=') << std::setw(70) << "" << std::endl;
     cout << "looping over :     " <<endl;	
@@ -7664,7 +5188,7 @@ void MassPlotter::Efficiency(TString mySample){
     Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
 
     if(Sample.sname == "Top"){
-      for (Long64_t jentry=0; jentry<nentries;jentry++) {
+      for (unsigned int jentry=0; jentry<nentries;jentry++) {
 	Sample.tree->GetEntry(jentry); 
 	if ( jentry % 100000 == 0 ){ 
 	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
@@ -7692,9 +5216,9 @@ void MassPlotter::Efficiency(TString mySample){
 	}}
       continue;
     }
-    h_SMSEvents    = (TH2F*) Sample.file->Get("h_SMSEvents");
+    h_SMSEvent    = (TH2F*) Sample.file->Get("h_SMSEvents");
 	
-    for (Long64_t jentry=0; jentry<nentries;jentry++) {
+    for (unsigned int jentry=0; jentry<nentries;jentry++) {
       Sample.tree->GetEntry(jentry); 
 
       if ( jentry % 100000 == 0 ){ 
@@ -7804,9 +5328,9 @@ void MassPlotter::Efficiency(TString mySample){
     }}
   
   if(mySample == "SMST2")
-    h_SMSEvents->Rebin2D(5,5);
+    h_SMSEvent->Rebin2D(5,5);
   else
-    h_SMSEvents->Rebin2D(10,10);
+    h_SMSEvent->Rebin2D(10,10);
 
   TH2F* PreSelected = (TH2F*)SMSEvents->Clone();
   PreSelected->SetName("PreSelected");
@@ -7814,7 +5338,7 @@ void MassPlotter::Efficiency(TString mySample){
   TCanvas *MyC = new TCanvas("MyC","MyC");
   MyC->Divide(4,3);
   MyC->cd(1);
-  SMSEvents->Divide(h_SMSEvents);
+  SMSEvents->Divide(h_SMSEvent);
   SMSEvents->Draw("COLZ");
   MyC->cd(2);
   SMSEventsHT->Divide(PreSelected);
@@ -7867,31 +5391,31 @@ void MassPlotter::Efficiency(TString mySample){
   MyC2->Divide(2,2);
 
   MyC2->cd(1);
-  SMSEventsAllCuts4or6->Divide(h_SMSEvents);
+  SMSEventsAllCuts4or6->Divide(h_SMSEvent);
   SMSEventsAllCuts4or6->Draw("COLZ");
 
   MyC2->cd(2);
-  SMSEventsAllCuts4or6MT2_100DelPhi->Divide(h_SMSEvents);
+  SMSEventsAllCuts4or6MT2_100DelPhi->Divide(h_SMSEvent);
   SMSEventsAllCuts4or6MT2_100DelPhi->Draw("COLZ");
 
   MyC2->cd(3);
-  SMSEventsAllCutsHT->Divide(h_SMSEvents);
+  SMSEventsAllCutsHT->Divide(h_SMSEvent);
   SMSEventsAllCutsHT->Draw("COLZ");
 
   MyC2->cd(4);
-  SMSEventsAllCutsHTMT2_100DelPhi->Divide(h_SMSEvents);
+  SMSEventsAllCutsHTMT2_100DelPhi->Divide(h_SMSEvent);
   SMSEventsAllCutsHTMT2_100DelPhi->Draw("COLZ");
 }
 
 
-void MassPlotter::TopStudy2(TString mySample, Long64_t nevents){
+void MassPlotter::TopStudy2(TString mySample, unsigned int nevents){
   double x[11] = {0.0, 30.0, 60.0, 90.0, 130.0, 170.0, 250.0, 350.0, 450.0, 1000.0, 1300.0}; 
   TH1F* hPtTop = new TH1F("PtTop","PtTop", 10, x);
   TH1F* hPtTopEff = new TH1F("PtTopEff","PtTopEff", 10, x);
 
   MT2GenParticle T1, T2, W1, W2, B1, B2, U1, U2, D1, D2;
 
-  for(int ii = 0; ii <(int) fSamples.size(); ii++){
+  for(unsigned int ii = 0; ii < fSamples.size(); ii++){
     sample Sample = fSamples[ii];
     if(Sample.name != mySample)
       //   //  if(Sample.sname != mySample)
@@ -7917,9 +5441,9 @@ void MassPlotter::TopStudy2(TString mySample, Long64_t nevents){
     fMT2tree = new MT2tree();
 
     Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
-    Long64_t nentries =  Sample.tree->GetEntries();
+    unsigned int nentries =  Sample.tree->GetEntries();
 
-    Long64_t minNentriesNevents = min(nentries, nevents);
+    unsigned int minNentriesNevents = min(nentries, nevents);
 
     std::cout << setfill('=') << std::setw(70) << "" << std::endl;
     cout << "looping over :     " <<endl;	
@@ -7933,7 +5457,7 @@ void MassPlotter::TopStudy2(TString mySample, Long64_t nevents){
     cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
     std::cout << setfill('-') << std::setw(70) << "" << std::endl;
 
-    for (Long64_t jentry=0; jentry<minNentriesNevents;jentry++) {
+    for (unsigned int jentry=0; jentry<minNentriesNevents;jentry++) {
      
       Sample.tree->GetEntry(jentry); 
 
@@ -7989,14 +5513,12 @@ void MassPlotter::TopStudy2(TString mySample, Long64_t nevents){
 	myTopSearch->GoSearch();
        
 	float minDR = 100.0;
-	int MatchedRecTopIndex = -1;
   
 	for(int i = 0; i < myTopSearch->NpT(); i++){
 	  TLorentzVector Top = myTopSearch->PT(i);
 	 
 	  if(TopSemiLep.lv.DeltaR(Top) < minDR){
 	    minDR = TopSemiLep.lv.DeltaR(Top);
-	    MatchedRecTopIndex = i;
 	  }
 	}
 
@@ -8016,91 +5538,22 @@ void MassPlotter::TopStudy2(TString mySample, Long64_t nevents){
 }
 
 
-void MassPlotter::QCD(){
-  
-  TH1::SetDefaultSumw2();
-  double x[14] = {0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0, 125.0, 500.0, 2000.0}; 
-  TH1F *MT2HighDPhi = new TH1F("MT2HighDPhi", "MT2HighDPhi", 13, x);//40,   0, 1000);//
-  TH1F *MT2LowDPhi = new TH1F("MT2LowDPhi", "MT2LowDPhi", 13, x);//40,   0, 1000);//
-
-
-    for(int ii = 0; ii <(int) fSamples.size(); ii++){
-    sample Sample = fSamples[ii];
-//    if(Sample.sname == "QCD" || Sample.sname == "SMS")
-//       continue;
-    if(Sample.type != "data")
-      continue;
-
-    fMT2tree = new MT2tree();
-
-    Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
-    Long64_t nentries =  Sample.tree->GetEntries();
-    float Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents * Sample.PU_avg_weight );
- 
-    if(Sample.type == "mc")
-      Weight *= -1.0;
-    
-    std::cout << setfill('=') << std::setw(70) << "" << std::endl;
-    cout << "looping over :     " <<endl;	
-    cout << "   Name:           " << Sample.name << endl;
-    cout << "   File:           " << (Sample.file)->GetName() << endl;
-    cout << "   Events:         " << Sample.nevents  << endl;
-    cout << "   Events in tree: " << nentries << endl; 
-    cout << "   Xsection:       " << Sample.xsection << endl;
-    cout << "   kfactor:        " << Sample.kfact << endl;
-    cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
-    cout << "   Weight:         " << Weight <<endl;
-    std::cout << setfill('-') << std::setw(70) << "" << std::endl;
-
-    for (Long64_t jentry=0; jentry<nentries;jentry++) {
-     
-      Sample.tree->GetEntry(jentry); 
-      if ( fVerbose>2 && jentry % 100000 == 0 ){ 
-	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
-	fflush(stdout);
-      }
-      
-      if (!((fMT2tree->NEles==0  ||  fMT2tree->ele[0].lv.Pt()<5)                   &&
-	    (fMT2tree->NMuons==0 ||  fMT2tree->muo[0].lv.Pt()<5)))
-	continue;
-
-      if(fMT2tree->misc.MinMetJetDPhi4 > 0.3)
-	MT2HighDPhi->Fill(fMT2tree->misc.MT2, Weight);
-      else
-	//if(fMT2tree->misc.MinMetJetDPhi4 <= 0.2)
-	MT2LowDPhi->Fill(fMT2tree->misc.MT2, Weight);
-    }}
-
-    TCanvas *MyC = new TCanvas("MyC", "MyC");
-    MyC->Divide(2,1);
-
-    MyC->cd(1);
-    cout<<"Low  "<<MT2LowDPhi->GetBinContent(14)<<" "<<MT2LowDPhi->GetBinError(14)<<endl;
-    MT2LowDPhi->Draw();
-    TH1F* hMT2HighDPhi = (TH1F*) MT2HighDPhi->Clone("hMT2HighDPhi");
-    hMT2HighDPhi->SetName("hMT2HighDPhi");
-    hMT2HighDPhi->SetLineColor(4);
-    hMT2HighDPhi->Draw("sames");
-
-    MyC->cd(2);
-    cout<<"High "<<MT2HighDPhi->GetBinContent(14)<<" "<<MT2HighDPhi->GetBinError(14)<<endl;
-    MT2HighDPhi->Divide(MT2LowDPhi);
-    cout<<"Divi "<<MT2HighDPhi->GetBinContent(14)<<" "<<MT2HighDPhi->GetBinError(14)<<endl;
-    MT2HighDPhi->Draw();
-}
-
-
-void MassPlotter::vs(Long64_t  nevents, TString cuts, TString trigger){ 
+void MassPlotter::vs(unsigned int  nevents, TString cuts, TString trigger){ 
    
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
 
-  //  TH2F *AvsBSignal = new TH2F("AvsBSignal"  , "AvsBSignal" , 60,   0, 6, 40,   0, 4);
-  //  TH2F *AvsBBkg    = new TH2F("AvsBBkg"     , "AvsBBkg"    , 60,   0, 6, 40,   0, 4);
-  TH2F *AvsB2Signal = new TH2F("AvsB2Signal", "AvsB2Signal", 20,   -150, 150, 20,   0, 450);
-  TH2F *AvsB2Bkg    = new TH2F("AvsB2Bkg"   , "AvsB2Bkg"   , 20,   -150, 150, 20,   0, 450);
+  TH2F *AvsBSignal   = new TH2F("AvsBSignal"  , "AvsBSignal" , 60,    0, 500, 60,    0, 150);
+  TH2F *AvsBSignal2  = new TH2F("AvsBSignal2"  , "AvsBSignal2" , 60,    0, 500, 60,    0, 150);
+  TH2F *AvsBBkg      = new TH2F("AvsBBkg"     , "AvsBBkg"    , 60,    0, 500, 60,    0, 150);
+  TH2F *AvsB2Signal  = new TH2F("AvsB2Signal" , "AvsB2Signal", 60,    0, 600, 60,    0, 150);
+  TH2F *AvsB2Signal2 = new TH2F("AvsB2Signal2" , "AvsB2Signal2", 60,    0, 600, 60,    0, 150);
+  TH2F *AvsB2Bkg     = new TH2F("AvsB2Bkg"    , "AvsB2Bkg"   , 60,    0, 600, 60,    0, 150);
+  TH2F *AvsB3Signal  = new TH2F("AvsB3Signal" , "AvsB3Signal", 60,    0, 500, 60,    0, 500);
+  TH2F *AvsB3Signal2 = new TH2F("AvsB3Signal2" , "AvsB3Signal2", 60,    0, 500, 60,    0, 500);
+  TH2F *AvsB3Bkg     = new TH2F("AvsB3Bkg"    , "AvsB3Bkg"   , 60,    0, 500, 60,    0, 500);
 
-  for(int i = 0; i <(int) fSamples.size(); i++){
+  for(unsigned int i = 0; i < fSamples.size(); i++){
     sample Sample = fSamples[i];
    
     TString myCuts = cuts;
@@ -8138,9 +5591,9 @@ void MassPlotter::vs(Long64_t  nevents, TString cuts, TString trigger){
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
     Sample.tree->SetEventList(myEvtList);
-    Long64_t nentries =  myEvtList->GetN();
+    unsigned int nentries =  myEvtList->GetN();
     
-    for (Long64_t jentry = 0; jentry < min(nentries, nevents); jentry++) {
+    for (unsigned int jentry = 0; jentry < min(nentries, nevents); jentry++) {
      
       Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
 
@@ -8150,35 +5603,56 @@ void MassPlotter::vs(Long64_t  nevents, TString cuts, TString trigger){
       }
       float weight = Weight * fMT2tree->pileUp.Weight;
 
-      if(Sample.type == "susy"){
-	cout << fMT2tree->DeltaREleEle();
-	//AvsBSignal->Fill(fMT2tree->DeltaREleEle(),fMT2tree->doubleEle[0].DPhi, weight);
-	AvsB2Signal->Fill(((fMT2tree->misc.MET)-(fMT2tree->doubleEle[0].lv.Pt())),((fMT2tree->misc.MET)+(fMT2tree->doubleEle[0].lv.Pt())), weight);
+      if(Sample.type == "susy" && (fMT2tree->Susy.MassGlu - fMT2tree->Susy.MassLSP) < 225.0 && (fMT2tree->Susy.MassGlu - fMT2tree->Susy.MassLSP) > 175.0){
+// 	cout << fMT2tree->DeltaREleEle();
+	AvsBSignal->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv.Pt()+ fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt(), fMT2tree->muTau[0].GetMT2(), weight);
+	AvsB2Signal->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT + fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT, fMT2tree->muTau[0].GetMT2(), weight);
+	AvsB3Signal->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT, fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT, weight);
       }
        //     if(Sample.sname == "Wtolnu")
+      else   if(Sample.type == "susy"&& (fMT2tree->Susy.MassGlu - fMT2tree->Susy.MassLSP) < 375.0 && (fMT2tree->Susy.MassGlu - fMT2tree->Susy.MassLSP) > 350.0){
+// 	cout << fMT2tree->DeltaREleEle();
+	AvsBSignal2->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv.Pt()+ fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt(), fMT2tree->muTau[0].GetMT2(), weight);
+	AvsB2Signal2->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT + fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT, fMT2tree->muTau[0].GetMT2(), weight);
+	AvsB3Signal2->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT, fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT, weight);
+      }
+      //     if(Sample.sname == "Wtolnu")
       else
 	{
-	  //AvsBBkg->Fill(fMT2tree->DeltaREleEle(),fMT2tree->doubleEle[0].DPhi, weight);
-	  	  AvsB2Bkg->Fill(((fMT2tree->misc.MET)-(fMT2tree->doubleEle[0].lv.Pt())),((fMT2tree->misc.MET)+(fMT2tree->doubleEle[0].lv.Pt())), weight);
+	AvsBBkg->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv.Pt()+ fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt(), fMT2tree->muTau[0].GetMT2(), weight);
+	AvsB2Bkg->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT + fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT, fMT2tree->muTau[0].GetMT2(), weight);
+	AvsB3Bkg->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT, fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT, weight);
 	}
     }
   }
 
   TCanvas *MyC = new TCanvas("MyC", "MyC");
-  MyC->Divide(2,1);
-  //  MyC->cd(1);
-  //  AvsBBkg->Draw();
-  //  MyC->cd(2);
-  //  AvsBSignal->Draw();
+
+  MyC->Divide(3,3);
+  MyC->SetLogz();
   MyC->cd(1);
-  AvsB2Bkg->Draw();
+  AvsBBkg->Draw("colz");
   MyC->cd(2);
-  AvsB2Signal->Draw();
+  AvsBSignal->Draw("colz");
+  MyC->cd(3);
+  AvsBSignal2->Draw("colz");
+  MyC->cd(4);
+  AvsB2Bkg->Draw("colz");
+  MyC->cd(5);
+  AvsB2Signal->Draw("colz");
+  MyC->cd(6);
+  AvsB2Signal2->Draw("colz");
+  MyC->cd(7);
+  AvsB3Bkg->Draw("colz");
+  MyC->cd(8);
+  AvsB3Signal->Draw("colz");
+  MyC->cd(9);
+  AvsB3Signal2->Draw("colz");
   
 }
 
 
-void MassPlotter::SpecialMakePlot(int nevents, TString cuts, TString trigger){
+void MassPlotter::SpecialMakePlot(unsigned int nevents, TString cuts, TString trigger){
   TH1::SetDefaultSumw2();
 
   TH1F *NBJets[NumberOfSamples+1];
@@ -8207,7 +5681,7 @@ void MassPlotter::SpecialMakePlot(int nevents, TString cuts, TString trigger){
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
 
-  for(int ii = 0; ii < fSamples.size(); ii++){
+  for(unsigned int ii = 0; ii < fSamples.size(); ii++){
 
 //     if(fSamples[ii].type != "data" || fSamples[ii].name != "Run2012D1F")
 //       continue;
@@ -8240,10 +5714,10 @@ void MassPlotter::SpecialMakePlot(int nevents, TString cuts, TString trigger){
     fSamples[ii].tree->SetEventList(myEvtList);
 
 
-    Int_t nentries =  myEvtList->GetN();
+    unsigned int nentries =  myEvtList->GetN();
 
 
-    for (Int_t i=0;i<min(nentries, nevents); i++) {
+    for (unsigned int i=0;i<min(nentries, nevents); i++) {
       if(i > nevents) continue;
 
       if ( i % 100000 == 0 ){ 	
@@ -8341,10 +5815,10 @@ void MassPlotter::MakeCutFlowTable( std::vector<std::string> all_cuts ){
   std::vector< TH1* > CutFlowHistos;
   string TotalBkgtitle = "Total Bkg";
   TH1 *hTotalBkg = new TH1D(TotalBkgtitle.c_str(), TotalBkgtitle.c_str(), all_cuts.size() , 0 , all_cuts.size() );
-  for(int ii = 0; ii < fSamples.size(); ii++){
+  for(unsigned int ii = 0; ii < fSamples.size(); ii++){
 
-    string hName = "h" + string(fSamples[ii].name.Data()) + "_cutflow" ;
-    TH1* hCutFlowSample = new TH1D( hName.c_str() , fSamples[ii].sname  , all_cuts.size() , 0 , all_cuts.size() );
+    string hName_ = "h" + string(fSamples[ii].name.Data()) + "_cutflow" ;
+    TH1* hCutFlowSample = new TH1D( hName_.c_str() , fSamples[ii].sname  , all_cuts.size() , 0 , all_cuts.size() );
 
     Double_t weight=0;
     if(fPUReweight) weight = fSamples[ii].xsection * fSamples[ii].kfact * fSamples[ii].lumi / (fSamples[ii].nevents*fSamples[ii].PU_avg_weight);
@@ -8423,7 +5897,7 @@ void MassPlotter::MakeCutFlowTable( std::vector<std::string> all_cuts ){
     cout << endl;
   }
 
-  for( int i = 1 ; i <=  all_cuts.size(); i++){
+  for(unsigned int i = 1 ; i <=  all_cuts.size(); i++){
     if(i == 1)
       cout <<  "          " << "&" ;
     else   
@@ -8451,7 +5925,7 @@ double MassPlotter::DeltaPhi(double phi1, double phi2){
 }
  
 
-void MassPlotter::TauEfficiency(TString cuts, Long64_t nevents, TString myfileName){
+void MassPlotter::TauEfficiency(TString cuts, unsigned int nevents, TString myfileName){
   TH1::SetDefaultSumw2();
  
 //   TH2F *hPtEtaAll  = new TH2F("hPtEtaAll", "hPtEtaAll",  60, -3.0, 3.0, 1000, 0, 1000);
@@ -8462,7 +5936,7 @@ void MassPlotter::TauEfficiency(TString cuts, Long64_t nevents, TString myfileNa
   TH1F *hPtEtaPass2 = new TH1F("hPtEtaPass2","hPtEtaPass2", 200, 0, 200);
 
 
-  for(int ii = 0; ii < fSamples.size(); ii++){
+  for(unsigned int ii = 0; ii < fSamples.size(); ii++){
     
    TString myCuts = cuts;
  
@@ -8493,9 +5967,9 @@ void MassPlotter::TauEfficiency(TString cuts, Long64_t nevents, TString myfileNa
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
     Sample.tree->SetEventList(myEvtList);
 
-    Long64_t nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
+    unsigned int nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
 
-    for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
+    for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
       //Sample.tree->GetEntry(jentry); 
       Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
 
@@ -8537,8 +6011,6 @@ void MassPlotter::TauEfficiency(TString cuts, Long64_t nevents, TString myfileNa
 	float minDR = 100.0;
 
 	float genleptEta = fMT2tree->genlept[j].lv.Eta();
-
-	float genleptPt  = fMT2tree->genlept[j].lv.Pt();
 
 	float genleptPhi = fMT2tree->genlept[j].lv.Phi();
 	
@@ -8584,7 +6056,7 @@ void MassPlotter::TauEfficiency(TString cuts, Long64_t nevents, TString myfileNa
   cout<<" cuts "<<cuts<<endl;
 }
 
-void MassPlotter::TauFakeRate(TString cuts, TString trigger, Long64_t nevents, TString myfileName){
+void MassPlotter::TauFakeRate(TString cuts, TString trigger, unsigned int nevents, TString myfileName){
  TH1::SetDefaultSumw2();
 
  
@@ -8603,7 +6075,7 @@ void MassPlotter::TauFakeRate(TString cuts, TString trigger, Long64_t nevents, T
  TH1F *hMT2All   = new TH1F("hMT2All"  ,"hMT2All"  ,6, xBins);
  TH1F *hMT2Pass  = new TH1F("hMT2Pass" ,"hMT2Pass" ,6, xBins);
 
- for(int ii = 0; ii < fSamples.size(); ii++){
+ for(unsigned int ii = 0; ii < fSamples.size(); ii++){
     
    TString myCuts = cuts;
  
@@ -8638,9 +6110,9 @@ void MassPlotter::TauFakeRate(TString cuts, TString trigger, Long64_t nevents, T
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
     Sample.tree->SetEventList(myEvtList);
 
-    Long64_t nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
+    unsigned int nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
 
-    for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
+    for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
       //Sample.tree->GetEntry(jentry); 
       Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
 
@@ -8698,19 +6170,19 @@ void MassPlotter::TauFakeRate(TString cuts, TString trigger, Long64_t nevents, T
       if(TauInd == -1)
 	continue;
 
-      float MT2 = fMT2tree->CalcMT2(0, false, fMT2tree->tau[TauInd].lv, LeadingMuon, fMT2tree->misc.MET);
+      float myMT2 = fMT2tree->CalcMT2(0, false, fMT2tree->tau[TauInd].lv, LeadingMuon, fMT2tree->misc.MET);
 
       if(fMT2tree->tau[TauInd].PassQCDTau_MuTau == 1){
 	hPtEtaAll->Fill(fMT2tree->tau[TauInd].lv.Eta(), fMT2tree->tau[TauInd].lv.Pt()); 
 	hMETAll->Fill(fMT2tree->misc.MET);
-	hMT2All->Fill(MT2);
+	hMT2All->Fill(myMT2);
 	hMuPtAll->Fill(LeadingMuon.Pt());
       }
       
       if(fMT2tree->tau[TauInd].PassTau_MuTau == 1){
 	hPtEtaPass->Fill(fMT2tree->tau[TauInd].lv.Eta(), fMT2tree->tau[TauInd].lv.Pt()); 
 	hMETPass->Fill(fMT2tree->misc.MET);
-	hMT2Pass->Fill(MT2);
+	hMT2Pass->Fill(myMT2);
 	hMuPtPass->Fill(LeadingMuon.Pt());      
 	hTauPtMuPt->Fill(fMT2tree->tau[TauInd].lv.Pt(), LeadingMuon.Pt());
 	hTauPtMET ->Fill(fMT2tree->tau[TauInd].lv.Pt(), fMT2tree->misc.MET);
@@ -8756,7 +6228,7 @@ void MassPlotter::TauFakeRate(TString cuts, TString trigger, Long64_t nevents, T
 
 
 
-void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfileName, int type){
+void MassPlotter::muTauAnalysis(TString cuts, TString trigger, unsigned int nevents, TString myfileName, int type){
 
   TH1::SetDefaultSumw2();
   setFlags(10);
@@ -8781,7 +6253,6 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
     
 }
 
-
   MT2[7] -> SetMarkerStyle(20);
   MT2[7] -> SetMarkerColor(kBlack);
   MT2[7] -> SetLineColor(kBlack);
@@ -8792,7 +6263,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
 
-  for(int ii = 0; ii < fSamples.size(); ii++){
+  for(unsigned int ii = 0; ii < fSamples.size(); ii++){
     
     TString myCuts = cuts;
  
@@ -8829,9 +6300,9 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
     Sample.tree->SetEventList(myEvtList);
 
-    Long64_t nentries = myEvtList->GetN();//Sample.tree->GetEntries();
+    unsigned int nentries = myEvtList->GetN();//Sample.tree->GetEntries();
 
-    for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
+    for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
       //Sample.tree->GetEntry(jentry);
       Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
 
@@ -9099,7 +6570,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, Long64_t nevents,
 }
 
 
-void MassPlotter::EleFakeRate(TString cuts, TString trigger, Long64_t nevents, TString myfileName){
+void MassPlotter::EleFakeRate(TString cuts, TString trigger, unsigned int nevents, TString myfileName){
  TH1::SetDefaultSumw2();
 
  
@@ -9118,7 +6589,7 @@ void MassPlotter::EleFakeRate(TString cuts, TString trigger, Long64_t nevents, T
  TH1F *hMT2All   = new TH1F("hMT2All"  ,"hMT2All"  ,6, xBins);
  TH1F *hMT2Pass  = new TH1F("hMT2Pass" ,"hMT2Pass" ,6, xBins);
 
- for(int ii = 0; ii < fSamples.size(); ii++){
+ for(unsigned int ii = 0; ii < fSamples.size(); ii++){
     
    TString myCuts = cuts;
  
@@ -9153,9 +6624,9 @@ void MassPlotter::EleFakeRate(TString cuts, TString trigger, Long64_t nevents, T
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
     Sample.tree->SetEventList(myEvtList);
 
-    Long64_t nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
+    unsigned int nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
 
-    for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
+    for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
       //Sample.tree->GetEntry(jentry); 
       Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
 
@@ -9184,14 +6655,14 @@ void MassPlotter::EleFakeRate(TString cuts, TString trigger, Long64_t nevents, T
 
       for(int j=0; j<fMT2tree->NEles; ++j){ 
 
-	float MT2 = fMT2tree->CalcMT2(0,0,fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv,fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv,fMT2tree->misc.MET); 
+	float myMT2 = fMT2tree->CalcMT2(0,0,fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv,fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv,fMT2tree->misc.MET); 
 
 	if (j != LeadingElectronIndex){
 	SubLeadingElectron = fMT2tree->ele[j].lv;
 
       //	hPtEtaAll->Fill(fMT2tree->tau[TauInd].lv.Eta(), fMT2tree->tau[TauInd].lv.Pt()); 
       	hMETAll->Fill(fMT2tree->misc.MET);
-      	hMT2All->Fill(MT2);
+      	hMT2All->Fill(myMT2);
 	hElePtAll->Fill(SubLeadingElectron.Pt());
       }
       
@@ -9199,7 +6670,7 @@ void MassPlotter::EleFakeRate(TString cuts, TString trigger, Long64_t nevents, T
 	//	hPtEtaPass->Fill(fMT2tree->tau[TauInd].lv.Eta(), fMT2tree->tau[TauInd].lv.Pt()); 
 
 	hMETPass->Fill(fMT2tree->misc.MET);
-	hMT2Pass->Fill(MT2);
+	hMT2Pass->Fill(myMT2);
 	hElePtPass->Fill(SubLeadingElectron.Pt());      
 
       }
@@ -9251,7 +6722,7 @@ void MassPlotter::EleFakeRate(TString cuts, TString trigger, Long64_t nevents, T
 }
 
 
-void MassPlotter::EleEleAnalysisFake(TString cuts, TString trigger, Long64_t nevents, TString myfileName){
+void MassPlotter::EleEleAnalysisFake(TString cuts, TString trigger, unsigned int nevents, TString myfileName){
 
 
   TH1::SetDefaultSumw2();
@@ -9289,7 +6760,7 @@ void MassPlotter::EleEleAnalysisFake(TString cuts, TString trigger, Long64_t nev
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
 
-  for(int ii = 0; ii < fSamples.size(); ii++){
+  for(unsigned int ii = 0; ii < fSamples.size(); ii++){
     
     TString myCuts = cuts;
  
@@ -9326,9 +6797,9 @@ void MassPlotter::EleEleAnalysisFake(TString cuts, TString trigger, Long64_t nev
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
     Sample.tree->SetEventList(myEvtList);
 
-    Long64_t nentries = myEvtList->GetN();//Sample.tree->GetEntries();
+    unsigned int nentries = myEvtList->GetN();//Sample.tree->GetEntries();
 
-    for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
+    for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
       //Sample.tree->GetEntry(jentry);
       Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
 
@@ -9500,7 +6971,7 @@ void MassPlotter::EleEleAnalysisFake(TString cuts, TString trigger, Long64_t nev
 
 }
 
-void MassPlotter::EleEleAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfileName){
+void MassPlotter::EleEleAnalysis(TString cuts, TString trigger, unsigned int nevents, TString myfileName){
 
   TH1::SetDefaultSumw2();
 
@@ -9526,7 +6997,7 @@ void MassPlotter::EleEleAnalysis(TString cuts, TString trigger, Long64_t nevents
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
 
-  for(int ii = 0; ii < fSamples.size(); ii++){
+  for(unsigned int ii = 0; ii < fSamples.size(); ii++){
     
     TString myCuts = cuts;
  
@@ -9559,9 +7030,9 @@ void MassPlotter::EleEleAnalysis(TString cuts, TString trigger, Long64_t nevents
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
     Sample.tree->SetEventList(myEvtList);
 
-    Long64_t nentries = myEvtList->GetN();//Sample.tree->GetEntries();
+    unsigned int nentries = myEvtList->GetN();//Sample.tree->GetEntries();
 
-    for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
+    for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
       //Sample.tree->GetEntry(jentry);
       Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
 
@@ -9713,7 +7184,7 @@ MT2[0]->Fill(myQuantity, weight);
   plotRatioStack(h_stack, MT2[4], MT2[6], MT2[5], true, false, "MT2_ratio", Legend1, "MT2", "Events", 0, -10, 2, true);
 }
 
-void MassPlotter::elemuAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfileName ,int type){
+void MassPlotter::elemuAnalysis(TString cuts, TString trigger, unsigned int nevents, TString myfileName ,int type){
 
   TH1::SetDefaultSumw2();
 
@@ -9747,7 +7218,7 @@ void MassPlotter::elemuAnalysis(TString cuts, TString trigger, Long64_t nevents,
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
 
-  for(int ii = 0; ii < fSamples.size(); ii++){
+  for(unsigned int ii = 0; ii < fSamples.size(); ii++){
     
     TString myCuts = cuts;
  
@@ -9780,9 +7251,9 @@ void MassPlotter::elemuAnalysis(TString cuts, TString trigger, Long64_t nevents,
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
     Sample.tree->SetEventList(myEvtList);
 
-    Long64_t nentries = myEvtList->GetN();//Sample.tree->GetEntries();
+    unsigned int nentries = myEvtList->GetN();//Sample.tree->GetEntries();
 
-    for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
+    for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
       //Sample.tree->GetEntry(jentry);
       Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
 
@@ -9999,14 +7470,14 @@ int nbins = MT2[5]->GetNbinsX();
 
 }
 
- void MassPlotter::EleFakeRateforeleMu(TString cuts, TString trigger, Long64_t nevents, TString myfileName){
+ void MassPlotter::EleFakeRateforeleMu(TString cuts, TString trigger, unsigned int nevents, TString myfileName){
  TH1::SetDefaultSumw2();
 
  
  TH2F *hPtEtaAll  = new TH2F("hPtEtaAll", "hPtEtaAll",  60, -3.0, 3.0, 1000, 0, 1000);
  TH2F *hPtEtaPass = new TH2F("hPtEtaPass","hPtEtaPass", 60, -3.0, 3.0, 1000, 0, 1000);
  TH2F *hPtEtaFakeRate = new TH2F("hPtEtaFakeRate","hPtEtaFakeRate", 60, -3.0, 3.0, 1000, 0, 1000);
-  for(int ii = 0; ii < fSamples.size(); ii++){
+  for(unsigned int ii = 0; ii < fSamples.size(); ii++){
     
    TString myCuts = cuts;
  
@@ -10041,9 +7512,9 @@ int nbins = MT2[5]->GetNbinsX();
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
     Sample.tree->SetEventList(myEvtList);
 
-    Long64_t nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
+    unsigned int nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
 
-    for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
+    for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
       //Sample.tree->GetEntry(jentry); 
       Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
 
@@ -10133,7 +7604,7 @@ int nbins = MT2[5]->GetNbinsX();
   cout<<" cuts "<<cuts<<endl;
 }
 
-void MassPlotter::EleEfficiencyforelemu(TString cuts, Long64_t nevents, TString myfileName){
+void MassPlotter::EleEfficiencyforelemu(TString cuts, unsigned int nevents, TString myfileName){
   TH1::SetDefaultSumw2();
  
 //   TH2F *hPtEtaAll  = new TH2F("hPtEtaAll", "hPtEtaAll",  60, -3.0, 3.0, 1000, 0, 1000);
@@ -10143,7 +7614,7 @@ void MassPlotter::EleEfficiencyforelemu(TString cuts, Long64_t nevents, TString 
      TH1F *hPtEtaPromptRate = new TH1F("hPtEtaPromptRate","hPtEtaPromptRate", 200, 0, 200);
 
 
-     for(int ii = 0; ii < fSamples.size(); ii++){
+     for(unsigned int ii = 0; ii < fSamples.size(); ii++){
     
      TString myCuts = cuts;
  
@@ -10174,9 +7645,9 @@ void MassPlotter::EleEfficiencyforelemu(TString cuts, Long64_t nevents, TString 
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
     Sample.tree->SetEventList(myEvtList);
 
-    Long64_t nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
+    unsigned int nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
 
-    for (Long64_t jentry=0; jentry<min(nentries, nevents);jentry++) {
+    for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
       //Sample.tree->GetEntry(jentry); 
       Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
 
@@ -10201,8 +7672,6 @@ void MassPlotter::EleEfficiencyforelemu(TString cuts, Long64_t nevents, TString 
 	float minDR = 100.0;
 
 	float genleptEta = fMT2tree->genlept[j].lv.Eta();
-
-	float genleptPt  = fMT2tree->genlept[j].lv.Pt();
 
 	float genleptPhi = fMT2tree->genlept[j].lv.Phi();
 	
@@ -10365,11 +7834,10 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
   // vector of all histos
   vector<TH1D*> h_samples;
 
-  for(int ii = 0; ii < fSamples.size(); ii++){
+  for(unsigned int ii = 0; ii < fSamples.size(); ii++){
 
     TString myCuts = cuts;
     
-    int data = 0;
     sample Sample = fSamples[ii];
     
  
@@ -10385,7 +7853,6 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
     }
 
     if(Sample.type == "data"){
-      data = 1;
       myCuts += "&& (muTau[0].Isolated >= 0) && " + trigger;
     }else
       myCuts += "&& (muTau[0].Isolated == 1) && (tau[muTau[0].tau0Ind].Isolation3Hits <= 3.)";
@@ -10417,9 +7884,9 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
       TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
       Sample.tree->SetEventList(myEvtList);
       
-      Long64_t nentries = myEvtList->GetN();
+      unsigned int nentries = myEvtList->GetN();
       
-      for (Long64_t jentry=0; jentry<nentries; jentry++) {
+      for (unsigned int jentry=0; jentry<nentries; jentry++) {
 	
 	Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
 	
@@ -10427,7 +7894,7 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 	  fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
 	  fflush(stdout);
 	}
-	int muIndex = fMT2tree->muTau[0].GetMuIndex0();
+	//	int muIndex = fMT2tree->muTau[0].GetMuIndex0();
 	
 	float myQuantity = fMT2tree->muTau[0].GetMT2();//fMT2tree->muo[muIndex].MT;
 
@@ -10438,16 +7905,16 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 	float tauPt  = fMT2tree->tau[tauIndex].lv.Pt();
 	
 	float fakeRate    = 0.0;
-	float fakeRateErr = 0.0;
+// 	float fakeRateErr = 0.0;
 
 	if(fabs(tauEta) < 1.4){
 	  int binNumber = hPt1Pass->FindBin(tauPt);
 	  fakeRate      = hPt1Pass->GetBinContent(binNumber);
-	  fakeRateErr   = hPt1Pass->GetBinError(binNumber);
+// 	  fakeRateErr   = hPt1Pass->GetBinError(binNumber);
 	}else{
 	  int binNumber = hPt2Pass->FindBin(tauPt);
 	  fakeRate      = hPt2Pass->GetBinContent(binNumber);
-	  fakeRateErr   = hPt2Pass->GetBinError(binNumber);
+// 	  fakeRateErr   = hPt2Pass->GetBinError(binNumber);
 	}
 	// P +  F = Loose
 	//pP + fF = Loose - LooseNonTight
@@ -10481,9 +7948,9 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
       TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
       Sample.tree->SetEventList(myEvtList);
 
-      Long64_t nentries = myEvtList->GetN();//Sample.tree->GetEntries();
+      unsigned int nentries = myEvtList->GetN();//Sample.tree->GetEntries();
 
-      for (Long64_t jentry=0; jentry<nentries;jentry++) {
+      for (unsigned int jentry=0; jentry<nentries;jentry++) {
     
 	Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
 
@@ -10646,7 +8113,7 @@ void MassPlotter::DrawMyPlots(TString myfileName, double *xbin, int NumberOfBins
 << "Data: " << hnew_data->Integral() << endl;
     
     //Same, but with errors
-    string OverallSamples[7] = {"QCD","W+jets","Z+Jets","Top","SUSY","Data","TOTAL BG"};
+//     string OverallSamples[7] = {"QCD","W+jets","Z+Jets","Top","SUSY","Data","TOTAL BG"};
     
     TH1F* clone = (TH1F*) hnew_QCD->Clone();
     clone->Rebin(clone->GetNbinsX());
@@ -10741,9 +8208,9 @@ void MassPlotter::setLimitCounting(TString channels, TString cuts, TString hypot
 
       fSamples[i].tree->Draw(variable, selection, "goff");
 
-      TH2D *h_SMSEvents = (TH2D*) fSamples[i].file->Get("h_SMSEvents");
-      h_SMSEvents->Rebin2D(4, 4);
-      h_PN_MLSP_MChi->Divide(h_SMSEvents);
+      TH2D *h_SMSEvent = (TH2D*) fSamples[i].file->Get("h_SMSEvents");
+      h_SMSEvent->Rebin2D(4, 4);
+      h_PN_MLSP_MChi->Divide(h_SMSEvent);
       TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
       h_PN_MLSP_MChi->Multiply(hXsec);
 

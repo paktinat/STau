@@ -8,7 +8,6 @@
 #include "MT2tree.hh"
 #include "helper/Hemisphere.hh"
 #include "helper/Utilities.hh"
-#include "helper/Monitor.hh"
 #include "THStack.h"
 #include "TTree.h"
 #include "TH2.h"
@@ -82,7 +81,7 @@ public:
 
         void MakeCutFlowTable( std::vector<std::string> all_cuts );
 	void makePlots();
-	void makeSmallCopy(int nevents, int sample, TString cuts, TString trigger);
+	void makeSmallCopy(unsigned int nevents, unsigned int sample, TString cuts, TString trigger);
 	void SetSave(bool save=true){fSave=save;};
 	void SetIsPhoton(bool isphoton=true){fisPhoton=isphoton;};
 	void SetMT2Analysis(bool isMT2Analysis){fMT2Analysis=isMT2Analysis;};
@@ -93,7 +92,7 @@ public:
 
 
 	void SetbSFWeights(bool bSF){fbSFReWeight=bSF;};
-        void vs(Long64_t  nevents, TString cuts, TString trigger);
+        void vs(unsigned int nevents, TString cuts, TString trigger);
 
 	
 	struct sample{
@@ -231,17 +230,7 @@ public:
 		      bool stacked=true, bool overlaySUSY=false, float overlayScale = 0, bool add_underflow=false, bool saveHistos=false, TString saveMacro = "", int type = 0);
         void plotSig(TString var="misc.PseudoJetMT2", TString cuts="misc.HBHENoiseFlag == 1", TString xtitle="MT2 [GeV]", 
 		     int nbins=50, double min=0., double max=1., bool cleaned=false, int type=0 ,int LowerCut=0); // 0: s/sqrt(b), 1: s/sqrt(s+b), 3:s/b
-  	void PrintCutFlow(int njets=-2, int nleps=0, TString trigger="", TString cuts="");
-	void PrintCutFlowMT2vsHT(TString trigger="", TString cuts="");
-        void FillMonitor(Monitor *count, TString sname, TString type, TString cut, double weight);
-//	void PrintZllEfficiency(int sample_index, bool data, std::string lept, Long64_t nevents, double lower_mass, double upper_mass, bool pileup_weight);
-	void PrintWEfficiency(int sample_index ,TString process, std::string lept, Long64_t nevents, bool includeTaus);
-        void abcd_MT2(TString var="misc.MinMetJetDPhi", TString basecut="misc.HBHENoiseFlag == 1", 
-		      TString upper_cut="misc.MinMetJetDPhi<0.2", TString lower_cut="misc.MinMetJetDPhi>0.3", 
-		      const int nbins=100, const double min=0., const double max=380., double fit_min=40., double fit_max=100.);
-        void ABCD_MT2(TString var="misc.MinMetJetDPhi", TString basecut="misc.HBHENoiseFlag == 1", 
-		      TString upper_cut="misc.MinMetJetDPhi<0.2", TString lower_cut="misc.MinMetJetDPhi>0.3", 
-		      const int nbins=gNMT2bins, const double *bins=gMT2bins, double fit_min=40., double fit_max=100.);
+	void PrintWEfficiency(int sample_index ,TString process, std::string lept, unsigned int nevents, bool includeTaus);
 
 	void CompSamples(TString var, TString cuts, TString optcut, bool RemoveLepts, TString xtitle, 
 			  const int nbins, const double *bins, bool add_underflow, bool logflag, double scale_factor, bool normalize);
@@ -249,21 +238,21 @@ public:
 			  const int nbins, const double min, const double max, bool add_underflow, bool logflag, double scale_factor, bool normalize);
 
   //public material for the tau estimation
-  void TauContamination(int sample_index, Long64_t nevents, int flag, TString cuts, TString trigger, int signalContamination = 0);//sample_index != -1 reads only a special sample, nevents determines the number of events to read
-  void NewTauContamination(int sample_index, Long64_t nevents, int flag);//sample_index != -1 reads only a special sample, nevents determines the number of events to read
+  void TauContamination(int sample_index, unsigned int nevents, int flag, TString cuts, TString trigger, int signalContamination = 0);//sample_index != -1 reads only a special sample, nevents determines the number of events to read
+  void NewTauContamination(int sample_index, unsigned int nevents, int flag);//sample_index != -1 reads only a special sample, nevents determines the number of events to read
 
-  void SpecialMakePlot(int nevents, TString cuts, TString trigger);
-  void muTauAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfilename, int type = 0);
+  void SpecialMakePlot(unsigned int nevents, TString cuts, TString trigger);
+  void muTauAnalysis(TString cuts, TString trigger, unsigned int nevents, TString myfilename, int type = 0);
   void muTauWJetsEstimation(TString cuts, TString trigger, TString myfileName);
-  void TauFakeRate(TString cuts, TString trigger, Long64_t nevents, TString myfilename);
-  void TauEfficiency(TString cuts, Long64_t nevents, TString myfilename);
+  void TauFakeRate(TString cuts, TString trigger, unsigned int nevents, TString myfilename);
+  void TauEfficiency(TString cuts, unsigned int nevents, TString myfilename);
   void DrawMyPlots(TString myfileName, double *xbin, int NumberOfBins);
-  void EleFakeRate(TString cuts, TString trigger, Long64_t nevents, TString myfilename);
-  void EleEleAnalysisFake(TString cuts, TString trigger, Long64_t nevents, TString myfileName);
-  void EleEleAnalysis(TString cuts, TString trigger, Long64_t nevents, TString myfileName);
-  void elemuAnalysis(TString cuts,  TString trigger, Long64_t nevents, TString myfileName , int type = 0);
-  void EleFakeRateforeleMu(TString cuts, TString trigger, Long64_t nevents, TString myfileName);
-  void EleEfficiencyforelemu(TString cuts, Long64_t nevents, TString myfileName);
+  void EleFakeRate(TString cuts, TString trigger, unsigned int nevents, TString myfilename);
+  void EleEleAnalysisFake(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
+  void EleEleAnalysis(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
+  void elemuAnalysis(TString cuts,  TString trigger, unsigned int nevents, TString myfileName , int type = 0);
+  void EleFakeRateforeleMu(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
+  void EleEfficiencyforelemu(TString cuts, unsigned int nevents, TString myfileName);
   
   void setFlags(int flag); //To determine which analysis we look at HighHT/LowHT MT2(b) options are:
   // 5  :: LowHT  MT2  
@@ -272,18 +261,16 @@ public:
   // 17 :: HighHT MT2b 
   // 19 :: HighHT MT2b(Relaxed BTagging) 
   
-  void TriggerEfficiency(int sixjet, int quadjet, int plusNJets, Long64_t nevents);
   void Efficiency(TString mySample);
-  void TopStudy(TString mySample, Long64_t nevents);
-  void TopStudy2(TString mySample, Long64_t nevents);
+  void TopStudy(TString mySample, unsigned int nevents);
+  void TopStudy2(TString mySample, unsigned int nevents);
   void GetGenInfo(MT2GenParticle * T1, MT2GenParticle * T2, MT2GenParticle * W1, MT2GenParticle * W2, MT2GenParticle * B1, MT2GenParticle * B2, MT2GenParticle * U1, MT2GenParticle * U2, MT2GenParticle * D1, MT2GenParticle * D2);
   float MatchedJets(MT2GenParticle a, int &b);
   void InitializeTopSearch(TopSearch * myTopSearch, int npart, TLorentzVector lv, int bjet);
   void InitializeHemisphereFinder(vector<float> &px, vector<float> &py, vector<float> &pz, vector<float> &E, TLorentzVector lv);
 
-  void SortHighMT2(float MT2cut, Long64_t nevents);
-  void MyMakePlot(Long64_t nevents);
-  void MySmallMakePlot(Long64_t nevents);
+  void SortHighMT2(float MT2cut, unsigned int nevents);
+  void MyMakePlot(unsigned int nevents);
   
   void SetMuTauChannel(bool muIdSF = true, bool muIsoSF = true, bool muTrgSF = true, bool tauTrgSF = true, bool tauWjetsSF = true, bool tauEnergySF = true){
     if(myChannel != "TBD" && myChannel != "muTau")
@@ -321,7 +308,6 @@ void SeteleMuChannel(bool MuTrgSF = true,bool MuIdIsoSF=true, bool  EleTrgSF=tru
 
 }
 
-  void QCD();
   double DeltaPhi(double phi1, double phi2);
   
   void setLimitCounting(TString channels, TString cuts, TString hypothesis);
@@ -364,7 +350,7 @@ private:
 	TTree*   fTree;
 
         TH2F *h_SMSEvents, *h_mSugraEvents;
-        void MakeMT2PredictionAndPlots(bool cleaned , double dPhisplit[], double fudgefactor);
+        void MakeMT2PredictionAndPlots(bool cleaned , double dPhisplit[]);//, double fudgefactor);
         void PrintABCDPredictions(TString var, TString basecut, TString upper_cut, TString lower_cut, TF1* func_qcd, TF1* func_sub, TF1* func_qcd_model);
         void printEstimation(TH1D* h_pred, TH1D* h_pred_c, int nbins, float min, float max);
         void MakePlot(std::vector<sample> Samples, TString var="misc.PseudoJetMT2", TString cuts="misc.HBHENoiseFlag == 1", 
