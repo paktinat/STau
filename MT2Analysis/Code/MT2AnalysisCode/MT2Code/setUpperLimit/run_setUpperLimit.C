@@ -142,7 +142,7 @@ run_setUpperLimit() {
 
             system("rm -f higgsCombineTest.Asymptotic.mH120.root");
             system("rm -f datacard");
-            system("rm -f roostat_*");
+            system("rm -f roostats_*");
 
         }//iy
     }//ix
