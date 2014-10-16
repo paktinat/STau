@@ -8253,7 +8253,7 @@ void MassPlotter::makeCard(double N, double S, double dS, double B, double dB, s
 
 }
 
-TGraph* MassPlotter::plotSig(TH1D *hSgn, TH1D *hBkg, TString xtitle, TString cutType, int type, double sys) {
+TGraphAsymmErrors* MassPlotter::plotSig(TH1D *hSgn, TH1D *hBkg, TString xtitle, TString cutType, int type, double sys) {
     int nbins = hSgn->GetXaxis()->GetNbins();
     float *x = new float[nbins];
     float *ex = new float[nbins];
@@ -8328,8 +8328,8 @@ TGraph* MassPlotter::plotSig(TH1D *hSgn, TH1D *hBkg, TString xtitle, TString cut
         }
     }
 
-    TGraph *sig = (TGraph*) new TGraphErrors(nbins, x, y, ex, ey);
-    if (type == 3) sig = (TGraph*) new TGraphAsymmErrors(nbins, x, y, ex, ex, eym, eyp);
+    TGraphAsymmErrors *sig = new TGraphAsymmErrors(nbins, x, y, ex, ey);
+    if (type == 3) sig = new TGraphAsymmErrors(nbins, x, y, ex, ex, eym, eyp);
 
     sig->SetTitle("");
     sig->GetXaxis()->SetTitle(xtitle + "_" + cutType);
