@@ -8322,14 +8322,14 @@ TGraph* MassPlotter::plotSig(TH1D *hSgn, TH1D *hBkg, TString xtitle, TString cut
 
                 system("rm -f higgsCombineTest.Asymptotic.mH120.root");
                 system("rm -f datacard");
-                system("rm -f roostat_*");
+                system("rm -f roostat*");
 
             }
         }
     }
 
-    TGraph *sig = new TGraphErrors(nbins, x, y, ex, ey);
-    if (type == 3) sig = new TGraphAsymmErrors(nbins, x, y, ex, ex, eym, eyp);
+    TGraph *sig = (TGraph*) new TGraphErrors(nbins, x, y, ex, ey);
+    if (type == 3) sig = (TGraph*) new TGraphAsymmErrors(nbins, x, y, ex, ex, eym, eyp);
 
     sig->SetTitle("");
     sig->GetXaxis()->SetTitle(xtitle + "_" + cutType);
