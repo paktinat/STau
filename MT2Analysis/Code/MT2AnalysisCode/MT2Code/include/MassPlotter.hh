@@ -14,6 +14,8 @@
 #include "TTreeFormula.h"
 #include <map>
 
+#include "TGraphAsymmErrors.h"
+
 static const int gNMT2bins                   = 19;
 static const double  gMT2bins[gNMT2bins+1]   = {0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 85, 105, 135, 180, 260, 360, 500}; 	
 
