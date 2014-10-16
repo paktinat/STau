@@ -232,7 +232,7 @@ public:
 		     int nbins=50, double min=0., double max=1., bool cleaned=false, int type=0 ,int LowerCut=0); // 0: s/sqrt(b), 1: s/sqrt(s+b), 3:s/b
 	
 	void makeCard(double N, double S, double dS, double B, double dB, string sOut);// sOut: dataCard name
-	TGraph* plotSig(TH1D *hSgn, TH1D *hBkg, TString xtitle = "MET", TString cutType = "lowerCut", int type = 0, double sys = 0.10); // type: 0: s/sqrt(b), 1: s/sqrt(s+b), 2:s/b, 3: signal strength 
+	TGraphAsymmErrors* plotSig(TH1D *hSgn, TH1D *hBkg, TString xtitle = "MET", TString cutType = "lowerCut", int type = 0, double sys = 0.10); // type: 0: s/sqrt(b), 1: s/sqrt(s+b), 2:s/b, 3: signal strength 
 	
 	void PrintWEfficiency(int sample_index ,TString process, std::string lept, unsigned int nevents, bool includeTaus);
 
