@@ -230,6 +230,10 @@ public:
 		      bool stacked=true, bool overlaySUSY=false, float overlayScale = 0, bool add_underflow=false, bool saveHistos=false, TString saveMacro = "", int type = 0);
         void plotSig(TString var="misc.PseudoJetMT2", TString cuts="misc.HBHENoiseFlag == 1", TString xtitle="MT2 [GeV]", 
 		     int nbins=50, double min=0., double max=1., bool cleaned=false, int type=0 ,int LowerCut=0); // 0: s/sqrt(b), 1: s/sqrt(s+b), 3:s/b
+	
+	void makeCard(double N, double S, double dS, double B, double dB, string sOut);// sOut: dataCard name
+	TGraph* plotSig(TH1D *hSgn, TH1D *hBkg, TString xtitle = "MET", TString cutType = "lowerCut", int type = 0, double sys = 0.10); // type: 0: s/sqrt(b), 1: s/sqrt(s+b), 2:s/b, 3: signal strength 
+	
 	void PrintWEfficiency(int sample_index ,TString process, std::string lept, unsigned int nevents, bool includeTaus);
 
 	void CompSamples(TString var, TString cuts, TString optcut, bool RemoveLepts, TString xtitle, 
