@@ -8253,7 +8253,7 @@ void MassPlotter::makeCard(double N, double S, double dS, double B, double dB, s
 
 }
 
-TGraph* MassPlotter::plotSig(TH1D *hSgn, TH1D *hBkg, TString xtitle = "MET", TString cutType = "lowerCut", int type = 0, double sys = 0.10) {
+TGraph* MassPlotter::plotSig(TH1D *hSgn, TH1D *hBkg, TString xtitle, TString cutType, int type, double sys) {
     int nbins = hSgn->GetXaxis()->GetNbins();
     float *x = new float[nbins];
     float *ex = new float[nbins];
