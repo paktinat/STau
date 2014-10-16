@@ -11,7 +11,7 @@ from array import array
 import xml.etree.ElementTree as etree 
 
 # Import ROOT classes
-from ROOT import gSystem, gROOT, gApplication, TFile, TTree, TCut, gDirectory , TH1F , TFormula, std
+from ROOT import gSystem, gROOT, gApplication, TFile, TTree, TCut, gDirectory , TH1F , TFormula, std, TGraphAsymmErrors
 
 # Import TMVA classes from ROOT
 from ROOT import TMVA
@@ -20,14 +20,16 @@ os.environ['DISPLAY'] = '0'
 os.environ['TMVASYS'] = os.environ['ROOTSYS']
 
 # Default settings for command line arguments
-DEFAULT_INFNAME  = "/dataLOCAL/hbakhshi/FullSel_NewPU_STitching_FromTree_TreeZPeakVeto.root"
+DEFAULT_INFNAME  = "/dataLOCAL/hbakhshi/MT2_80_ReOptimize_TreeZPeakVeto.root"
 DEFAULT_TREENAME = "ZPeakVeto"
 
 
 #VARIABLES = {"ElePt":['F'] , "EleMT":['F'] ,  "MT2":['F'] , "MCT":['F'] , "MT2Imb":['F'] ,"TauPt":['F'] , "DPt":['F'] , "MET":['F'] ,"EleTauPt":['F'] ,"JPTModMZPTMod":['F'] , 'METModPPZMod':['F'] , 'METModMPZMod':['F'] , 'ModMETmPZ':['F'] }
-VARIABLES = {"EleMTpTauMT":['F'] ,  "MT2":['F'] , 'METModPPZMod':['F'] , 'METModMPZMod':['F']  }
+#VARIABLES = {"EleMTpTauMT":['F'] ,  "MT2":['F'] , 'METModPPZMod':['F'] , 'METModMPZMod':['F']  }
+#VARIABLES = {'METModPPZMod':['F'] , 'METModMPZMod':['F'] , "abs(DPhiJPtZPt)":['F'] ,"EleTauDPhi":['F'] , "EleTauDR":['F'] , 'EleMTpTauMT':['F'] , 'MT2':['F'] }
+VARIABLES = {'EleMTpTauMT':['F'] , 'MT2':['F']}
 
-Category1 = [ ] #'EleTauPt' , 'METModPPZMod' , 'ModMETmPZ' ]
+Category1 = [ ] # 'EleTauPt' , 'METModPPZMod' , 'METModMPZMod' , 'MET' ]
 Category2 = [ ] # 'MCT' , 'MT2' , 'MT2Imb' ]
 
 
@@ -37,7 +39,7 @@ Category2 = [ ] # 'MCT' , 'MT2' , 'MT2Imb' ]
 #             "350-400":"SUSYCategory >= 7  && SUSYCategory < 8" , "400-450":"SUSYCategory >= 8  && SUSYCategory < 9" , 
 #             "450-500":"SUSYCategory >= 9  && SUSYCategory < 10" }
 
-SUSYCats = {"000-100":"(MassGlu-MassLSP) >= 0   && (MassGlu-MassLSP) < 100",
+SUSYCats = {"000-100":"(MassGlu-MassLSP) >= 175 && (MassGlu-MassLSP) < 225",
             "100-200":"(MassGlu-MassLSP) >= 100 && (MassGlu-MassLSP) < 200",
             "200-300":"(MassGlu-MassLSP) >= 200 && (MassGlu-MassLSP) < 300",
             "300-400":"(MassGlu-MassLSP) >= 300 && (MassGlu-MassLSP) < 400",
@@ -46,7 +48,7 @@ SUSYCats = {"000-100":"(MassGlu-MassLSP) >= 0   && (MassGlu-MassLSP) < 100",
 
 class MethodInfo :
 
-    def __init__(self , titDir , name , title):
+    def __init__(self , titDir , name , title , nsignal , nbkg ):
           self.methodName = name
           self.methodTitle = title
 
@@ -65,12 +67,13 @@ class MethodInfo :
           self.maxSignificanceErr = 0.0
 
           self.maxbin = -1
-          self.fNSignal = 1000
-          self.fNBackground = 1000
+          self.fNSignal = nsignal
+          self.fNBackground = nbkg
 
           self.SetResultHists()
-          self.UpdateSignificanceHists('S/sqrt(B)')
-
+          self.UpdateSignificanceHists('S/sqrt(B+S)')
+          #self.UpdateSignificanceHists('S/B')
+          
     def SetResultHists(self):
   
         pname    = "purS_"         + self.methodTitle;
@@ -170,6 +173,8 @@ class MethodInfo :
         ret = []
         ret.append( '%.2f' % ( 100* self.EffSig ) )
         ret.append( '%.2f' % ( 100* self.EffBkg ) )
+        ret.append( '%.2f' % ( self.NSig ) )
+        ret.append( '%.2f' % ( self.NBkg ) )
         ret.append( '%.2f' % ( self.maxSignificance ) )
         ret.append( '%.2f' % ( self.maxSignificanceErr ) )
         for var in self.Variables:
@@ -185,6 +190,39 @@ class MethodInfo :
         return ','.join( [str(item) for item in ret] )
 
 if __name__ == "__main__":
+
+    PDFCTEQ66 = {100:[5823.40, 0.0 , +3.4 , -.6 , -3.2],
+                 125:[2434.10, 0.0, 3.6 , -.6 , -3.5 ],
+                 150:[1194.60, 0.3, +3.9 , -.5 , -3.8],
+                 175:[649.58, 0.3 , 4.2, -.5 , -4. ] ,
+                 200:[379.24, 0.4, 4.5 , -.4 , -4.4] ,
+                 225:[233.41 , 0.5, 5.0 , -.3 , -4.4],
+                 250:[149.86 , 0.3 ,5.1 , -.4 , -4.8],
+                 275:[99.27, 0.1 , 5.5 , -.4 , -5. ],
+                 300:[67.51 , 0.0 , 5.9 , -.2 , -5.1],
+                 325:[46.97 , 0.1 , 6.1 , -.2 , -5.5],
+                 350:[33.28 , 0.0 , 6.4 , -.2 , -5.6],
+                 375:[23.95 , 0.0 , 7.0 , -.1 , -5.7],
+                 400:[17.51 , 0.0 , 6.8 , -.3 , -6.3],
+                 425:[12.93 , 0.0 , 7.5 , -.3 , -6.1],
+                 450:[9.66, 0.0 , 7.5 , -.5 , -6.7],
+                 475:[7.28 , 0.1 , 7.8, -1 , -6.8],
+                 500:[5.53 , 0.0 , 8.1 , -.9 , -7.0]
+                 }
+    
+    gXSections = TGraphAsymmErrors( len(PDFCTEQ66) )
+    step = 25
+    cc = 0
+    for mass in range(100 , 500 , step):
+        gXSections.SetPoint( cc , mass , PDFCTEQ66[mass][0] )
+        
+        errh = math.hypot( PDFCTEQ66[mass][1] , PDFCTEQ66[mass][2] )
+        errl = math.hypot( PDFCTEQ66[mass][3] , PDFCTEQ66[mass][4] )
+        
+        gXSections.SetPointError( cc , errl , errh , step/2. , step/2. )
+            
+        cc += 1
+
     infname     = DEFAULT_INFNAME
     treeName    = DEFAULT_TREENAME
     verbose     = False
@@ -212,7 +250,60 @@ if __name__ == "__main__":
             print "skipped"
             continue
 
-        for COMB_L in range(2,5):
+        SUSYSignalCut = TCut( SUSCatCut )
+        BKGCut = TCut( "SUSYCategory < 0 && SUSYCategory > -10" )
+
+        selection_cut = ' 1==1  ' #MT2 > 30 && EleMTpTauMT > 300'
+
+        signal_selection_tcut = TCut( selection_cut + ' && ' + SUSCatCut )
+        bkg_selection_tcut = TCut( selection_cut + ' && ' + "SUSYCategory < 0 && SUSYCategory > -10" )
+        WWW = TCut("W")
+
+        
+        TheTree.Draw( "1>>hcounts" ,  (signal_selection_tcut)*WWW   )
+        hcounts = ( gDirectory.Get("hcounts") )
+        nSig = hcounts.Integral()
+
+        fTotalNumbers = TFile('/home/hbakhshi/work/STau/CMSSW_6_1_1/src/HiggsAnalysis/all_Histos.root')
+        hNEvents = fTotalNumbers.Get('h_SMSEvents')
+
+        SusyRangeFormula = TFormula("susyformula" , SUSCatCut.replace( 'MassGlu' , 'x' ).replace('MassLSP', 'y' ) )
+        nTotalSignal = 0
+
+        mglu_avg = 0.0
+        nmlsp_zero = 0
+        
+        for mglu_i in range( 1 , hNEvents.GetNbinsY()+1 ):
+            for mlsp_i in range( 1 , hNEvents.GetNbinsX()+1 ):
+                mlsp = hNEvents.GetYaxis().GetBinCenter(mlsp_i)
+                mglu = hNEvents.GetXaxis().GetBinCenter(mglu_i)
+                if( SusyRangeFormula.Eval( mglu , mlsp ) == 1 ):
+                    if mlsp_i == 1 :
+                        mglu_avg += mglu
+                        nmlsp_zero += 1
+                    #print mglu
+                    #print mlsp
+                    nTotalSignal += hNEvents.GetBinContent( mglu_i, mlsp_i)
+                    #print nTotalSignal
+
+
+        mglu_avg /= nmlsp_zero
+        print mglu_avg
+        xSection = gXSections.Eval( mglu_avg )
+        print xSection
+
+        Lumi = 19.6
+
+        nSignal = xSection*Lumi*nSig / nTotalSignal
+        print nSignal
+        
+        TheTree.Draw( "1>>hcountsB" ,  (bkg_selection_tcut)*WWW ) 
+        hcountsB = ( gDirectory.Get("hcountsB") )
+        nBKG = hcountsB.Integral()
+
+        print nBKG
+        
+        for COMB_L in range(2,3):
             if options.ncombs > -1:
                 if not COMB_L == options.ncombs:
                     continue
@@ -238,7 +329,7 @@ if __name__ == "__main__":
                         nCategory1 += 1
                     if cut in Category2:
                         nCategory2 += 1
-                if (nCategory1 > 1) or (nCategory2 > 2):
+                if (nCategory1 > 2) or (nCategory2 > 2):
                     print "two members from the same category, skipped"
                     continue
 
@@ -257,7 +348,6 @@ if __name__ == "__main__":
                 n_forbidden_vars = 0
                 n_forbidden_vars2 = 0
 
-                selection_cut = ''
                 for var in VARIABLES:
                     if var in comb:
                         if not selection_cut == '':
@@ -274,9 +364,6 @@ if __name__ == "__main__":
 
                 if n_forbidden_vars > 2 or n_forbidden_vars2 == 3:
                     continue
-
-                SUSYSignalCut = TCut( SUSCatCut )
-                BKGCut = TCut( "SUSYCategory < 0 && SUSYCategory > -10" )
 
                 factory.SetInputTrees( TheTree , SUSYSignalCut  , BKGCut  )
                 factory.SetSignalWeightExpression("W")
@@ -297,9 +384,10 @@ if __name__ == "__main__":
                     continue
 
 
-                factory.BookMethod( TMVA.Types.kCuts, "Cuts",
-                                   "!H:!V:FitMethod=MC:EffSel:SampleSize=200000:VarProp=FSmart" )
+                #factory.BookMethod( TMVA.Types.kCuts, "Cuts",
+                #                   "!H:!V:FitMethod=MC:EffSel:SampleSize=200000:VarProp=FSmart" )
 
+                factory.BookMethod( TMVA.Types.kLD , "LD" , "!V" )                   
                 # Train MVAs
                 factory.TrainAllMethods()
 
@@ -312,11 +400,11 @@ if __name__ == "__main__":
                 # Save the output.
                 outputFile.Close()
 
-                fin = TFile( outfname , 'read') 
-                fin.cd('Method_Cuts/Cuts/')
-                mInfo = MethodInfo( gDirectory , "Cuts" , "Cuts" )
-                mInfo.ReadCuts('weights/' + Name + '_Cuts.weights.xml')
-                print >> outtxtfile, mInfo.Print()
-                fin.Close()
+                #fin = TFile( outfname , 'read') 
+                #fin.cd('Method_Cuts/Cuts/')
+                #mInfo = MethodInfo( gDirectory , "Cuts" , "Cuts" , nSignal , nBKG )
+                #mInfo.ReadCuts('weights/' + Name + '_Cuts.weights.xml')
+                #print >> outtxtfile, mInfo.Print()
+                #fin.Close()
             outtxtfile.close()
     input.Close()

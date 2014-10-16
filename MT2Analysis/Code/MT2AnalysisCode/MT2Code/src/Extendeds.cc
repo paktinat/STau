@@ -3,61 +3,180 @@
 #include <vector>
 #include <string.h>
 
-void ExtendedObjectProperty::CalcSig(int LowerCut , int type , int SUSCat , bool verbose) {
-  Float_t  x[nBins], y[nBins];
-  theMCH = allHistos["MC"];
+void ExtendedObjectProperty::makeCard(double N, double S, double dS, double B, double dB, string sOut) {
+
+    // === DATA CARD ===
+    ofstream fOut(sOut.c_str());
+    fOut.precision(3);
+    fOut << "imax 1  number of channels" << std::endl;
+    fOut << "jmax 1  number of backgrounds" << std::endl;
+    fOut << "kmax 2  number of nuisance parameters (sources of systematic uncertainties)" << std::endl;
+    fOut << "---" << std::endl;
+    fOut << "bin b1" << std::endl;
+    fOut << "observation " << N << std::endl;
+    fOut << "---" << std::endl;
+    fOut << "bin              b1     b1" << std::endl;
+    fOut << "process         SMS    All" << std::endl;
+    fOut << "process          0     1  " << std::endl;
+    fOut << "rate           " << S << "\t" << B << std::endl;
+    fOut << "---" << std::endl;
+    fOut << "dS  lnN    " << 1 + dS << "\t-" << std::endl;
+    fOut << "dB  lnN    - \t " << 1 + dB << std::endl;
+    fOut.close();
+
+}
+
+
+void ExtendedObjectProperty::CalcSig(int LowerCut , int type,  int SUSCat , double sys  ) {
+
+  TString cutType = LowerCut==0? "upperCut" : "lowerCut" ;
+  TH1 *hBkg = allHistos["MC"];
+  TString xtitle = "title";
+  //Float_t  x[nBins], y[nBins];
 
   TString SignalHistoName = "SUSY";
   if( SUSCat > -1 && SUSCat < int(SUSYNames.size()) )
     SignalHistoName += "_" + SUSYNames[SUSCat] ;
 
-  for (int i = 1; i <=nBins+1; i++){
-    x[i-1] = theMCH->GetBinLowEdge(i);
-    if(verbose) cout <<i<<" x[i-1] "<<x[i-1]<<endl;
-    float s;
-    if(LowerCut == 1) 
-      s = allHistos[SignalHistoName]->Integral(i,nBins+1);
-    else	
-      s = allHistos[SignalHistoName]->Integral(0, i - 1);
-    if(verbose) cout <<" s "<<s<<endl;
-    float b;
-    if(LowerCut == 1) 
-      b = theMCH->Integral(i,nBins+1);
-    else
-      b = theMCH->Integral(0, i - 1);
-    if(verbose) cout <<" b "<<b<<endl;
-    if(b == 0)
-      y[i-1] = 5.0;
-    else{
-      if (type==0) {
-	y[i-1] = s/sqrt(b);
-      }
-      if (type==1) {
-	y[i-1] = s/sqrt(s+b);
-      }
-      if (type==2) {
-	y[i-1] = s/b;
-      }
-      if(verbose) cout <<" y[i-1] "<<y[i-1]<<endl;
+  TH1 *hSgn = allHistos[SignalHistoName];
+
+    int nbins = hSgn->GetXaxis()->GetNbins();
+    float *x = new float[nbins];
+    float *ex = new float[nbins];
+    float *y = new float[nbins];
+    float *ey = new float[nbins];
+    float *eyp = new float[nbins];
+    float *eym = new float[nbins];
+
+    for (int i = 1; i <= nbins; i++) {
+
+        x[i - 1] = hSgn->GetBinLowEdge(i);
+        ex[i - 1] = hSgn->GetBinWidth(i);
+
+        double s = (cutType == "lowerCut") ? hSgn->Integral(i, nbins + 1) : hSgn->Integral(0, i);
+        double ds = sqrt(s) + s * sys;
+        double b = (cutType == "lowerCut") ? hBkg->Integral(i, nbins + 1) : hBkg->Integral(0, i);
+        double db = sqrt(b) + b * sys;
+
+
+        if (b == 0 || s == 0) {
+            y[i - 1] = .0;
+            ey[i - 1] = .0;
+        } else {
+            if (type == 0) {
+                y[i - 1] = s / sqrt(b);
+                ey[i - 1] = y[i - 1] * (ds / s + db / (2 * b));
+            }
+            if (type == 1) {
+                y[i - 1] = s / sqrt(s + b);
+                ey[i - 1] = y[i - 1] * (ds / s + (db + ds) / (2 * (b + s)));
+            }
+            if (type == 2) {
+                y[i - 1] = s / b;
+                ey[i - 1] = y[i - 1] * (ds / s + db / b);
+            }
+            if (type == 3) {
+
+                makeCard(b, s, sys, b, sys, "datacard");
+                if (!(std::ifstream("datacard")).good()) continue;
+                system("combine -M Asymptotic datacard");
+                TTree* tree;
+                TFile * flimit = new TFile("higgsCombineTest.Asymptotic.mH120.root");
+                flimit->GetObject("limit", tree);
+
+                Double_t limit;
+                TBranch *b_limit; //!
+                tree->SetBranchAddress("limit", &limit, &b_limit);
+
+                Float_t quantileExpected;
+                TBranch *b_quantileExpected; //!
+                tree->SetBranchAddress("quantileExpected", &quantileExpected, &b_quantileExpected);
+
+                std::vector<double> vLimit;
+                Long64_t nEntrs = tree->GetEntriesFast();
+                for (Long64_t iEntr = 0; iEntr < nEntrs; iEntr++) {
+                    tree->GetEntry(iEntr);
+                    cout << ">> quantileExpected: " << quantileExpected << "\tlimit: " << limit << endl;
+                    vLimit.push_back(limit);
+                }
+
+                double  SgmP1(vLimit[1]), Mdn(vLimit[2]), SgmM1(vLimit[3]); // SgmP2(vLimit[0]), SgmM2(vLimit[4]), Obs(vLimit[5]);
+
+                y[i - 1] = Mdn;
+                eyp[i - 1] = SgmM1 - y[i - 1];
+                eym[i - 1] = y[i - 1] - SgmP1;
+
+                system("rm -f higgsCombineTest.Asymptotic.mH120.root");
+                system("rm -f datacard");
+                system("rm -f roostat*");
+
+            }
+        }
     }
-  }
-  TGraph *sig = new TGraph(nBins+1,x,y);
-  TString nnn = Name + "_" + std::to_string(LowerCut) + "_" + std::to_string(type) + "_" + SignalHistoName + "_" + CutName ;
-  sig->SetName( nnn );
-  sig->SetTitle(SignalHistoName);
-  sig->GetXaxis()->SetTitle(Name + "(" + (LowerCut?"LowerLimit":"UpperLimit") + ")" );
-  sig->SetMarkerStyle(20);
-  if (type==0){
-    sig->GetYaxis()->SetTitle("S/#sqrt{B}");
-  }
-  if (type==1){
-    sig->GetYaxis()->SetTitle("S/#sqrt{S+B}");
-  }
-  if (type==2){
-    sig->GetYaxis()->SetTitle("S/B");
+
+    TGraphAsymmErrors *sig = new TGraphAsymmErrors(nbins, x, y, ex, ey);
+    if (type == 3) sig = new TGraphAsymmErrors(nbins, x, y, ex, ex, eym, eyp);
+
+    TString nnn = Name + "_" + std::to_string(LowerCut) + "_" + std::to_string(type) + "_" + SignalHistoName + "_" + CutName ;
+    sig->SetName( nnn );
+    //sig->SetTitle(SignalHistoName);
+    //sig->GetXaxis()->SetTitle(Name + "(" + (LowerCut?"LowerLimit":"UpperLimit") + ")" );
+  
+    sig->SetTitle("");
+    sig->GetXaxis()->SetTitle(xtitle + "_" + cutType);
+    sig->SetMarkerStyle(20);
+    sig->SetFillColor(kBlue-7);
+    sig->SetFillStyle(3005);
+    if (type == 0) sig->GetYaxis()->SetTitle("S/#sqrt{B}");
+    if (type == 1) sig->GetYaxis()->SetTitle("S/#sqrt{S+B}");
+    if (type == 2) sig->GetYaxis()->SetTitle("S/B");
+    if (type == 3) sig->GetYaxis()->SetTitle("signal strength (r)");
+
+    AllSignificances.push_back( sig );
+
+
+//   for (int i = 1; i <=nBins+1; i++){
+//     x[i-1] = theMCH->GetBinLowEdge(i);
+//     if(verbose) cout <<i<<" x[i-1] "<<x[i-1]<<endl;
+//     float s;
+//     if(LowerCut == 1) 
+//       s = allHistos[SignalHistoName]->Integral(i,nBins+1);
+//     else	
+//       s = allHistos[SignalHistoName]->Integral(0, i - 1);
+//     if(verbose) cout <<" s "<<s<<endl;
+//     float b;
+//     if(LowerCut == 1) 
+//       b = theMCH->Integral(i,nBins+1);
+//     else
+//       b = theMCH->Integral(0, i - 1);
+//     if(verbose) cout <<" b "<<b<<endl;
+//     if(b == 0)
+//       y[i-1] = 5.0;
+//     else{
+//       if (type==0) {
+// 	y[i-1] = s/sqrt(b);
+//       }
+//       if (type==1) {
+// 	y[i-1] = s/sqrt(s+b);
+//       }
+//       if (type==2) {
+// 	y[i-1] = s/b;
+//       }
+//       if(verbose) cout <<" y[i-1] "<<y[i-1]<<endl;
+//     }
+//   }
+//   TGraph *sig = new TGraph(nBins+1,x,y);
+//   sig->SetMarkerStyle(20);
+//   if (type==0){
+//     sig->GetYaxis()->SetTitle("S/#sqrt{B}");
+//   }
+//   if (type==1){
+//     sig->GetYaxis()->SetTitle("S/#sqrt{S+B}");
+//   }
+//   if (type==2){
+//     sig->GetYaxis()->SetTitle("S/B");
 	  
-  }
-  AllSignificances.push_back( sig );
+//   }
 }
 
 void ExtendedObjectProperty::Print(Option_t* option ) const{
@@ -141,12 +260,12 @@ ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, 
 	theH->GetXaxis()->SetBinLabel( i , *itr);
     }
 
-    if(i == cnames.size()-1){
+    if(i == int(cnames.size()) -1){
       theH -> SetMarkerStyle(20);
       theH -> SetMarkerColor(kBlack);
       theH -> SetLineColor(kBlack);
     }
-    if( i == cnames.size()-3){
+    if( i == int(cnames.size())-3){
       theH -> SetFillStyle(3004);
       theH -> SetFillColor(kBlack);
     }
@@ -442,7 +561,7 @@ TCanvas* ExtendedObjectProperty::plotRatioStack(THStack* hstack, TH1* h1_orig, T
   return c1;
 }
 
-void ExtendedObjectProperty::Write( TDirectory* dir , int lumi , bool plotratiostack){
+void ExtendedObjectProperty::Write( TDirectory* dir , int lumi ,bool plotratiostack ,  bool logy){
   dir->mkdir(  Name  )->cd();
 
   THStack* h_stack     = new THStack( CutName + "_" + Name, "");
@@ -467,7 +586,7 @@ void ExtendedObjectProperty::Write( TDirectory* dir , int lumi , bool plotratios
   Legend1->Write();
 
   if(plotratiostack){
-    plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY"] , true, false, Name + "_ratio", Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
+    plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY"] , logy, false, Name + "_ratio", Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
     for(uint i =0 ; i<SUSYNames.size() ; i++)
       plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY_"+SUSYNames[i] ] , true, false, Name + "_ratio"+ "_"+SUSYNames[i], Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
   }
@@ -826,7 +945,7 @@ void ExtendedEfficiency::Fill(double w ){
   }
 }
 
-void ExtendedEfficiency::Write( TDirectory* dir , int lumi , bool plotratiostack){
+void ExtendedEfficiency::Write( TDirectory* dir , int lumi , bool plotratiostack , bool logy){
   dir->mkdir( Name )->cd();
   for(auto eff : allEffs){
     eff.second->Write();

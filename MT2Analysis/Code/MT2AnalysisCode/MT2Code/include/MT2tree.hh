@@ -1140,6 +1140,7 @@ public:
   void  FillDoubleTau();
   void  FillMuTau();
 
+  Float_t DeltaREleTau();
   Float_t DeltaMETEleTau(int mode);
   void  FillEleTau();
   void  FillEleMu();

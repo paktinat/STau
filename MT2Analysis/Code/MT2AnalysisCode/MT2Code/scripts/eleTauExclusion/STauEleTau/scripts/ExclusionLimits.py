@@ -12,7 +12,7 @@ LogFile = open( 'LogFile' , 'w' )
 class Cuts:
     def __init__(self ):
         self.File = None
-        self.fTotalNumbers = TFile('/afs/cern.ch/work/h/hbakhshi/STau/CMSSW_6_1_1/src/HiggsAnalysis/all_Histos.root')
+        self.fTotalNumbers = TFile('/home/hbakhshi/work/STau/CMSSW_6_1_1/src/HiggsAnalysis/all_Histos.root')
         self.hNEvents = self.fTotalNumbers.Get('h_SMSEvents')
 
         PDFCTEQ66 = {100:[5823.40, 0.0 , +3.4 , -.6 , -3.2],
@@ -74,10 +74,10 @@ class Cuts:
     def getVarName(self , var):
         varNames = { 0:'METModMPZMod',
                      1:'METModPPZMod',
-                     2:'TauPt',
-                     3:'EleTauPt',
+                     2:'DPhi',
+                     3:'DPhiJZ',
                      4:'MET',
-                     5:'EleMT',
+                     5:'SumMT',
                      6:'MT2'
                      }
         return varNames[var]
@@ -111,6 +111,9 @@ class Cuts:
         def getRates(self , MGlu, MLSP , weight):
             mgluBin = self.Signal.GetXaxis().FindBin( MGlu )
             mlspBin = self.Signal.GetYaxis().FindBin( MLSP )
+
+            print "%d,%d,%d,%d" % (MGlu, MLSP, mgluBin , mlspBin)
+            
             currentSignal = self.Signal.GetBinContent( mgluBin , mlspBin )
 
             mgluBin = self.hNSignals.GetXaxis().FindBin( MGlu )
@@ -120,7 +123,12 @@ class Cuts:
 
             self.hNSignals.SetBinContent( mgluBin, mlspBin , signals )
 
+            mgluBin = self.hSignalNorm.GetXaxis().FindBin( MGlu )
+            mlspBin = self.hSignalNorm.GetYaxis().FindBin( MLSP )
             signals = self.hSignalNorm.GetBinContent( mgluBin , mlspBin )
+
+            if self.TotalBkg==0 :
+                self.WJets = 0.000001
 
             return '%(sig)f\t%(dy)f\t%(w)f\t%(top)f\t%(qcd)f' % {'sig':signals,
                                                                  'dy':self.DY,
@@ -156,9 +164,9 @@ class Cuts:
 
         self.Name  = name
 
-        METmPZ , METpPZ , TauPt , zPt , MET , EleMT , MT2 = cuts
+        METmPZ , METpPZ , TauPt , zPt , MET , SumMT , MT2 = cuts
 
-        command =  ' '.join( str(i) for i in ["DrawHists" , -100 , name + ".root" ] + cuts + [ binVariable ] + bins ) + " >& " + name + "_out"
+        command =  ' '.join( str(i) for i in ["DrawHists" , -100 , name  ] + cuts + [ binVariable ] + bins ) + " >& " + name + "_out"
         print command
         self.OutStreamDrawHist = os.system(command )
 
@@ -194,10 +202,16 @@ class Cuts:
             rangeOfBins = [0]
         for binid in rangeOfBins:
             print >> LogFile, binid
-            self.File.ls()
-            hhBKG = self.File.Get("hBKG_%d"%(binid)).Clone("hAllBKG___%d"%(binid))
-            hhSignal = self.File.Get("hSignal_%d"%(binid)).Clone("hMGluMLSP___%d"%(binid))
-            hhsignorm = self.File.Get("hSignal_%d_Normalized"%(binid)).Clone("hMGluMLSP___%d_Normalized"%(binid))
+            #self.File.ls()
+            #hhBKG = self.File.Get("hBKG_%d"%(binid)).Clone("hAllBKG___%d"%(binid))
+            #hhSignal = self.File.Get("hSignal_%d"%(binid)).Clone("hMGluMLSP___%d"%(binid))
+            #hhsignorm = self.File.Get("hSignal_%d_Normalized"%(binid)).Clone("hMGluMLSP___%d_Normalized"%(binid))
+
+            file = TFile.Open("%s_%d.root" % (name , binid) , "read" )
+            hhBKG = file.Get("h_PN_Bkg_Alls").Clone("hAllBKG___%d"%(binid))
+            hhSignal = file.Get("h_PN_MLSP_MChi_UnWeighted").Clone("hMGluMLSP___%d"%(binid))
+            hhsignorm = file.Get("h_PN_MLSP_MChi").Clone("hMGluMLSP___%d_Normalized"%(binid))
+            
             bbinin = self.BinResults(binid , hhBKG , hhSignal , hhsignorm )
             
             self.BinsInfo.append( bbinin )
@@ -391,22 +405,21 @@ if __name__ == "__main__":
     fout = TFile('ExclusionOutput.root', 'recreate')
 
 
-    for i in range(0,1):
+    for i in range(1,2):
         m = Cuts()
 
-        #METmPZ , METpPZ , TauPt , zPt , MET , EleMT , MT2 
+        #METmPZ , METpPZ , dphi , dphi_j_z , MET , SumMT , MT2 
         try:
             if i==0:
-                m.run_cuts( [-50,175,-1,-1,-1,-1,-1] , 6 , [50,70,90,110,130] , 'SyncCuts' )
+                m.run_cuts( [-20,-1,1,-1,-1,-1,90] , 5 , [230,330,400] , 'MT290_Dphi1_SumMT' )
             elif i==1:
-                m.run_cuts( [-999,-1,40,-1,-1,-1,20] , -1 , [50] , 'MET_TauPT' )
+                m.run_cuts( [-20,-1,-1,-1,-1,300,50] , 6 , [50,70,90] , 'SUMMT300_MT2_Binned' )
             elif i==2:
-                m.run_cuts( [-999 , -1 , 50 , -1 , -1 , -1 , 10] , 4 , [  40 , 60 , 80] , 'METBin_TauPt'  )
+                m.run_cuts( [-20,-1,1,.2, -1 , -1 ,80 ] , 6 , [  90 , 100 , 120] , 'MT2Bin_Dphi1_Dphizj2'  )
             elif i==3:
-                continue
-                m.run_cuts( [-50 , 150 , -1 , -1 , -1 , -1 , 50] , -1 , [] , 'MT2_MET_PZ' )
+                m.run_cuts( [-20 , -1 , 1 , .2 , -1 , 230 , 80] , 5 , [320,400] , 'SumMTBinned_MT2_80_DPhi1_DphiJZ2' )
             elif i==4:
-                m.run_cuts( [-50 , -1 , -1 , -1 , -1 , -1 , 50] , 1 , [180 , 200 , 220 , 250] , 'MT2_Met_Pz_Binned' )
+                m.run_cuts( [-20 , -1 , -1 , -1 , -1 , -1 , 50] , 1 , [180 , 200 , 220 , 250] , 'MT2_Met_Pz_Binned' )
             elif i==5:
                 m.run_cuts( [-999 , -1 , -1 , -1 , -1 , -1 , -1] , 6 , [80 , 100 , 120 ], 'MT2Binned' )
             elif i==6:
@@ -420,14 +433,14 @@ if __name__ == "__main__":
 
         print >> LogFile , m.Name 
 
-        # for mchargino in range(100 , 500 , 20):
-        #     LogFile.write( "\n%d" % (mchargino) )
-        #     for mlsp in range( 0 , 500 , 20 ):
-        #         LogFile.write("|%d" % (mlsp) )
-        #         LogFile.flush()
-        #         m.upperlimit(mchargino , mlsp , [ 1.1 ]*5 )
+        for mchargino in range(100 , 500 , 20):
+            LogFile.write( "\n%d" % (mchargino) )
+            for mlsp in range( 0 , 500 , 20 ):
+                LogFile.write("|%d" % (mlsp) )
+                LogFile.flush()
+                m.upperlimit(mchargino , mlsp , [ 1.1 ]*5 )
         
-        m.upperlimit( 200 , 0 , [1.1]*5 )
+        #m.upperlimit( 480 , 100 , [1.1]*5 )
                 
 
         fout.mkdir( m.Name  ).cd()

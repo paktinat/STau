@@ -2,6 +2,13 @@
 #include "helper/Utilities.hh"
 #include "Corrector.h"
 
+Float_t MT2tree::DeltaREleTau(){
+  TLorentzVector ele1( ele[ eleTau[0].GetEleIndex0() ].lv );
+  TLorentzVector tau1( tau[ eleTau[0].GetTauIndex0() ].lv );
+  
+  return ele1.DeltaR( tau1 );
+}
+
 Float_t MT2tree::DeltaMETEleTau(int mode){
   TVector2 MET = pfmet[0].Vect().XYvector() ;
   TVector2 METIMB = TVector2 ( - eleTau[0].GetLV().X() , - eleTau[0].GetLV().Y() );

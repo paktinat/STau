@@ -416,10 +416,14 @@ int main(int argc, char* argv[]) {
   lastCuts.Add( MT2PreCut );
   CutsForControlPlots.Add(MT2PreCut);  
 
-  ExtendedCut* ElePTCut = new ExtendedCut("ElePTCut" , "ele[eleTau[0].ele0Ind].lv.Pt()" , true , true, "" , "" ,false , true);
+  ExtendedCut* ElePTCut = new ExtendedCut("ElePTCut" , "ele[eleTau[0].ele0Ind].lv.Pt() > 25" , true , true, "" , "" ,false , true);
   lastCuts.Add( ElePTCut );
   CutsForControlPlots.Add(ElePTCut);
 
+  ExtendedCut* MT2Cut =new ExtendedCut("MT2Cut" , "eleTau[0].MT2 > 80" , true , true, "" , "" ,false , true); //pileUp.Weight
+  lastCuts.Add( MT2Cut );
+  CutsForControlPlots.Add(MT2Cut);  
+  
   ExtendedCut* metPpz =new ExtendedCut("METpPZ" , "DeltaMETEleTau(2) > 150" , true , true , "" , "" , true , true); 
   //eleTau[0].eleTrgSF * eleTau[0].eleIdIsoSF*eleTau[0].tauTrgSF*SFWeight.BTagCSV40eq0
   lastCuts.Add(metPpz);
@@ -429,9 +433,6 @@ int main(int argc, char* argv[]) {
   lastCuts.Add(metMpz);
   CutsForControlPlots.Add(metMpz);
 
-  ExtendedCut* MT2Cut =new ExtendedCut("MT2Cut" , "eleTau[0].MT2 > 80" , true , true, "" , "" ,false , true); //pileUp.Weight
-  lastCuts.Add( MT2Cut );
-  CutsForControlPlots.Add(MT2Cut);  
 
 
   TString SUSYCatCommand = "((Susy.MassGlu - Susy.MassLSP)/100.0)+(misc.ProcessID-10)";
@@ -591,8 +592,34 @@ int main(int argc, char* argv[]) {
   ExtendedObjectProperty* GenLeptonAnalysisR = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "GenLeptonAnalysisR" , "GenLeptonAnalysis(1,0,1)" , 1000 , 0 , 1000 ,SUSYCatCommand , SUSYCatNames );
   allProps.Add( GenLeptonAnalysisR );
 
+  ExtendedObjectProperty* EleTauDPhi = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "EleTauDPhi" , "eleTau[0].DPhi" , 32 , 0 , 3.2 ,SUSYCatCommand , SUSYCatNames );
+  allProps.Add( EleTauDPhi );
 
-  allProps.Clear();
+  ExtendedObjectProperty* EleTauDR = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "EleTauDR" , "DeltaREleTau()" , 200 , 0 , 20 ,SUSYCatCommand , SUSYCatNames );
+  allProps.Add( EleTauDR );
+
+  ExtendedObjectProperty* TauIsolation = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "TauIsolation" , "tau[eleTau[0].tau0Ind].Isolation" , 5 , 0 , 5 ,SUSYCatCommand , SUSYCatNames );
+  allProps.Add( TauIsolation );
+    
+  ExtendedObjectProperty* TauEleRej = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "TauEleRej" , "tau[eleTau[0].tau0Ind].ElectronRej" , 6, -2 , 4 ,SUSYCatCommand , SUSYCatNames );
+  allProps.Add( TauEleRej );
+    
+  ExtendedObjectProperty* TauMuoRej = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "TauMuoRej" , "tau[eleTau[0].tau0Ind].MuonRej" , 6 , -2 , 4 ,SUSYCatCommand , SUSYCatNames );
+  allProps.Add( TauMuoRej );
+
+  ExtendedObjectProperty* TauIso3Hits = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "TauIso3Hits" , "tau[eleTau[0].tau0Ind].Isolation3Hits" , 10 , -2 , 8 ,SUSYCatCommand , SUSYCatNames );
+  allProps.Add( TauIso3Hits );
+
+  ExtendedObjectProperty* TauIsoMVA2 = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "TauIsoMVA2" , "tau[eleTau[0].tau0Ind].IsolationMVA2" , 7 , -2 , 5 ,SUSYCatCommand , SUSYCatNames );
+  allProps.Add( TauIsoMVA2 );
+
+  ExtendedObjectProperty* TauEleRej3 = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "TauEleRej3" , "tau[eleTau[0].tau0Ind].ElectronRejMVA3" , 7 , -2 , 5 ,SUSYCatCommand , SUSYCatNames );
+  allProps.Add( TauEleRej3 );
+
+  ExtendedObjectProperty* TauMuRej2 = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "TauMuRej2" , "tau[eleTau[0].tau0Ind].MuonRej2" , 7 , -2 , 5 ,SUSYCatCommand , SUSYCatNames );
+  allProps.Add( TauMuRej2 );
+
+  //allProps.Clear();
   ExtendedObjectProperty* eleMTpTauMT = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "EleMTpTauMT" , "ele[eleTau[0].ele0Ind].MT+tau[eleTau[0].tau0Ind].MT" , 80 , 0 , 800 ,SUSYCatCommand , SUSYCatNames );
   allProps.Add( eleMTpTauMT );
     
