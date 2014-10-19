@@ -694,91 +694,15 @@ void MassPlotter::plotSig(TString var, TString theCuts, TString xtitle, int nbin
 
 	}
         if (fVerbose>2)cout<<"----------------------------------bg----"<<h_mc_sum->Integral(0,nbins+1) <<endl;
-  Float_t  x[nbins], y1[nbins], y2[nbins];
-  for (int i = 1; i <=nbins+1; i++){
-    x[i-1] = h_mc_sum->GetBinLowEdge(i);
-    //cout<<i<<" x[i-1] "<<x[i-1]<<endl;
-    float s1, s2;
-
-    s1 = h_susy  ->Integral(i,nbins+1);
-    
-    s2 = h_susy  ->Integral(0, i - 1);
-    //cout<<" s "<<s<<endl;
-    float b1, b2;
-    
-    b1 = h_mc_sum->Integral(i,nbins+1);
-    
-    b2 = h_mc_sum->Integral(0, i - 1);
-    //cout<<" b "<<b<<endl;
-    if(b1 == 0)
-      y1[i-1] = 5.0;
-    else{
-      if (type==0) {
-	y1[i-1] = s1/sqrt(b1);
-      }
-      if (type==1) {
-	y1[i-1] = s1/sqrt(s1+b1);
-      }
-      if (type==2) {
-	y1[i-1] = s1/b1;
-      }
-      //cout<<" y[i-1] "<<y[i-1]<<endl;
-    }
-    
-    if(b2 == 0)
-      y2[i-1] = 5.0;
-    else{
-      if (type==0) {
-	y2[i-1] = s2/sqrt(b2);
-      }
-      if (type==1) {
-	y2[i-1] = s2/sqrt(s2+b2);
-      }
-      if (type==2) {
-	y2[i-1] = s2/b2;
-      }
-      //cout<<" y[i-1] "<<y[i-1]<<endl;
-    }
-  }
-  TGraph *sig1 = new TGraph(nbins+1,x,y1);
-  sig1->SetTitle("");
-  sig1->GetXaxis()->SetTitle(xtitle + " LowerCut");
-  sig1->SetMarkerStyle(20);
-  if (type==0){
-    sig1->GetYaxis()->SetTitle("S/#sqrt{B}");
-  }
-  if (type==1){
-    sig1->GetYaxis()->SetTitle("S/#sqrt{S+B}");
-  }
-  if (type==2){
-    sig1->GetYaxis()->SetTitle("S/B");
-	  
-  }
-
-
-
-  TGraph *sig2 = new TGraph(nbins+1,x,y2);
-  sig2->SetTitle("");
-  sig2->GetXaxis()->SetTitle(xtitle + " UpperCut");
-  sig2->SetMarkerStyle(20);
-  if (type==0){
-    sig2->GetYaxis()->SetTitle("S/#sqrt{B}");
-  }
-  if (type==1){
-    sig2->GetYaxis()->SetTitle("S/#sqrt{S+B}");
-  }
-  if (type==2){
-    sig2->GetYaxis()->SetTitle("S/B");
-	  
-  }
-
-  TCanvas *MyC = new TCanvas("MyC", "MyC");
+   TCanvas *MyC = new TCanvas("MyC", "MyC");
   MyC->Divide(2,1);
   MyC->cd(1);
+  TGraphAsymmErrors* sig1 = plotSig(h_susy, h_mc_sum, xtitle, "Lower Cut", type, /*sys = */ 0.1);
   sig1->Draw("ACP");
-  MyC->cd(2);
-  sig2->Draw("ACP");
 
+  MyC->cd(2);
+  TGraphAsymmErrors* sig2 = plotSig(h_susy, h_mc_sum, xtitle, "Upper Cut", type, /*sys = */ 0.1);
+  sig2->Draw("ACP");
 
 }
 //__________________________________________________________________________
@@ -1459,90 +1383,15 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 	    plotRatioStack(h_stack,  h_mc_sum, h_data, h_susy,  logflag, false, outname, Legend1, xtitle, ytitle, njets, nbjets, nleps, overlayScale, saveMacro);
 
 	}
-	
-  Float_t  x[nbins], y1[nbins], y2[nbins];
-  for (int i = 1; i <=nbins+1; i++){
-    x[i-1] = h_mc_sum->GetBinLowEdge(i);
-    //cout<<i<<" x[i-1] "<<x[i-1]<<endl;
-    float s1, s2;
-
-    s1 = h_susy  ->Integral(i,nbins+1);
-    
-    s2 = h_susy  ->Integral(0, i - 1);
-    //cout<<" s "<<s<<endl;
-    float b1, b2;
-    
-    b1 = h_mc_sum->Integral(i,nbins+1);
-    
-    b2 = h_mc_sum->Integral(0, i - 1);
-    //cout<<" b "<<b<<endl;
-    if(b1 == 0)
-      y1[i-1] = 5.0;
-    else{
-      if (type==0) {
-	y1[i-1] = s1/sqrt(b1);
-      }
-      if (type==1) {
-	y1[i-1] = s1/sqrt(s1+b1);
-      }
-      if (type==2) {
-	y1[i-1] = s1/b1;
-      }
-      //cout<<" y[i-1] "<<y[i-1]<<endl;
-    }
-    
-    if(b2 == 0)
-      y2[i-1] = 5.0;
-    else{
-      if (type==0) {
-	y2[i-1] = s2/sqrt(b2);
-      }
-      if (type==1) {
-	y2[i-1] = s2/sqrt(s2+b2);
-      }
-      if (type==2) {
-	y2[i-1] = s2/b2;
-      }
-      //cout<<" y[i-1] "<<y[i-1]<<endl;
-    }
-  }
-  TGraph *sig1 = new TGraph(nbins+1,x,y1);
-  sig1->SetTitle("");
-  sig1->GetXaxis()->SetTitle(xtitle + " LowerCut");
-  sig1->SetMarkerStyle(20);
-  if (type==0){
-    sig1->GetYaxis()->SetTitle("S/#sqrt{B}");
-  }
-  if (type==1){
-    sig1->GetYaxis()->SetTitle("S/#sqrt{S+B}");
-  }
-  if (type==2){
-    sig1->GetYaxis()->SetTitle("S/B");
-	  
-  }
-
-
-
-  TGraph *sig2 = new TGraph(nbins+1,x,y2);
-  sig2->SetTitle("");
-  sig2->GetXaxis()->SetTitle(xtitle + " UpperCut");
-  sig2->SetMarkerStyle(20);
-  if (type==0){
-    sig2->GetYaxis()->SetTitle("S/#sqrt{B}");
-  }
-  if (type==1){
-    sig2->GetYaxis()->SetTitle("S/#sqrt{S+B}");
-  }
-  if (type==2){
-    sig2->GetYaxis()->SetTitle("S/B");
-	  
-  }
 
   TCanvas *MyC = new TCanvas("MyC", "MyC");
   MyC->Divide(2,1);
   MyC->cd(1);
+  TGraphAsymmErrors* sig1 = plotSig(h_susy, h_mc_sum, xtitle, "Lower Cut", type, /*sys = */ 0.1);
   sig1->Draw("ACP");
+
   MyC->cd(2);
+  TGraphAsymmErrors* sig2 = plotSig(h_susy, h_mc_sum, xtitle, "Upper Cut", type, /*sys = */ 0.1);
   sig2->Draw("ACP");
 
   TH1F *h_PN_Bkg  = (TH1F*)h_mc_sum->Clone();
@@ -5549,9 +5398,9 @@ void MassPlotter::vs(unsigned int  nevents, TString cuts, TString trigger){
   TH2F *AvsB2Signal  = new TH2F("AvsB2Signal" , "AvsB2Signal", 60,    0, 600, 60,    0, 150);
   TH2F *AvsB2Signal2 = new TH2F("AvsB2Signal2" , "AvsB2Signal2", 60,    0, 600, 60,    0, 150);
   TH2F *AvsB2Bkg     = new TH2F("AvsB2Bkg"    , "AvsB2Bkg"   , 60,    0, 600, 60,    0, 150);
-  TH2F *AvsB3Signal  = new TH2F("AvsB3Signal" , "AvsB3Signal", 60,    0, 500, 60,    0, 500);
-  TH2F *AvsB3Signal2 = new TH2F("AvsB3Signal2" , "AvsB3Signal2", 60,    0, 500, 60,    0, 500);
-  TH2F *AvsB3Bkg     = new TH2F("AvsB3Bkg"    , "AvsB3Bkg"   , 60,    0, 500, 60,    0, 500);
+  TH2F *AvsB3Signal  = new TH2F("AvsB3Signal" , "AvsB3Signal", 60,    0, 300, 60,    0, 150);
+  TH2F *AvsB3Signal2 = new TH2F("AvsB3Signal2" , "AvsB3Signal2", 60,    0, 300, 60,    0, 150);
+  TH2F *AvsB3Bkg     = new TH2F("AvsB3Bkg"    , "AvsB3Bkg"   , 60,    0, 300, 60,    0, 150);
 
   for(unsigned int i = 0; i < fSamples.size(); i++){
     sample Sample = fSamples[i];
@@ -5607,21 +5456,21 @@ void MassPlotter::vs(unsigned int  nevents, TString cuts, TString trigger){
 // 	cout << fMT2tree->DeltaREleEle();
 	AvsBSignal->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv.Pt()+ fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt(), fMT2tree->muTau[0].GetMT2(), weight);
 	AvsB2Signal->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT + fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT, fMT2tree->muTau[0].GetMT2(), weight);
-	AvsB3Signal->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT, fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT, weight);
+	AvsB3Signal->Fill(fMT2tree->muTau[0].GetLV().Pt(), fMT2tree->muTau[0].GetMT2(), weight);
       }
        //     if(Sample.sname == "Wtolnu")
-      else   if(Sample.type == "susy"&& (fMT2tree->Susy.MassGlu - fMT2tree->Susy.MassLSP) < 375.0 && (fMT2tree->Susy.MassGlu - fMT2tree->Susy.MassLSP) > 350.0){
+      else   if(Sample.type == "susy"&& (fMT2tree->Susy.MassGlu - fMT2tree->Susy.MassLSP) < 400.0 && (fMT2tree->Susy.MassGlu - fMT2tree->Susy.MassLSP) > 300.0){
 // 	cout << fMT2tree->DeltaREleEle();
 	AvsBSignal2->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv.Pt()+ fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt(), fMT2tree->muTau[0].GetMT2(), weight);
 	AvsB2Signal2->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT + fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT, fMT2tree->muTau[0].GetMT2(), weight);
-	AvsB3Signal2->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT, fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT, weight);
+	AvsB3Signal2->Fill(fMT2tree->muTau[0].GetLV().Pt(), fMT2tree->muTau[0].GetMT2(), weight);
       }
       //     if(Sample.sname == "Wtolnu")
       else
 	{
 	AvsBBkg->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv.Pt()+ fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt(), fMT2tree->muTau[0].GetMT2(), weight);
 	AvsB2Bkg->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT + fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT, fMT2tree->muTau[0].GetMT2(), weight);
-	AvsB3Bkg->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT, fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT, weight);
+	AvsB3Bkg->Fill(fMT2tree->muTau[0].GetLV().Pt(), fMT2tree->muTau[0].GetMT2(), weight);
 	}
     }
   }
@@ -6475,98 +6324,16 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, unsigned int neve
 
   plotRatioStack(h_stack, MT2[5], MT2[7], MT2[6], true, false, "MT2_ratio", Legend1, "MT2", "Events", 0, -10, 2, true);
 
-  int nbins = MT2[5]->GetNbinsX();
-
-  Float_t  x[nbins], y1[nbins], y2[nbins];
-  for (int i = 1; i <=nbins+1; i++){
-    x[i-1] = MT2[5]->GetBinLowEdge(i);
-//     cout<<i<<" x[i-1] "<<x[i-1]<<endl;
-    float s1, s2;
-
-    s1 = MT2[6]  ->Integral(i,nbins+1);
-   
-    s2 = MT2[6]  ->Integral(0, i - 1);
-//     cout<<" s1 "<<s1<<endl;
-//     cout<<" s2 "<<s2<<endl;
-    float b1, b2;
-    
-    b1 = MT2[5]->Integral(i,nbins+1);
-    
-    b2 = MT2[5]->Integral(0, i - 1);
-//     cout<<" b1 "<<b1<<endl;
-//     cout<<" b2 "<<b2<<endl;
-    if(b1 == 0)
-      y1[i-1] = 5.0;
-    else{
-      if (type==0) {
-	y1[i-1] = s1/sqrt(b1);
-      }
-      if (type==1) {
-	y1[i-1] = s1/sqrt(s1+b1);
-      }
-      if (type==2) {
-	y1[i-1] = s1/b1;
-      }
-//       cout<<" y1[i-1] "<<y1[i-1]<<endl;
-    }
-    
-    if(b2 == 0)
-      y2[i-1] = 5.0;
-    else{
-      if (type==0) {
-	y2[i-1] = s2/sqrt(b2);
-      }
-      if (type==1) {
-	y2[i-1] = s2/sqrt(s2+b2);
-      }
-      if (type==2) {
-	y2[i-1] = s2/b2;
-      }
-//       cout<<" y2[i-1] "<<y2[i-1]<<endl;
-    }
-  }
-  TGraph *sig1 = new TGraph(nbins+1,x,y1);
-  sig1->SetTitle("");
-  sig1->GetXaxis()->SetTitle("LowerCut");
-  sig1->SetMarkerStyle(20);
-  if (type==0){
-    sig1->GetYaxis()->SetTitle("S/#sqrt{B}");
-  }
-  if (type==1){
-    sig1->GetYaxis()->SetTitle("S/#sqrt{S+B}");
-  }
-  if (type==2){
-    sig1->GetYaxis()->SetTitle("S/B");
-	  
-  }
-
-//   cout<<" y222[i-1] "<<endl;
- 
-
-  TGraph *sig2 = new TGraph(nbins+1,x,y2);
-  sig2->SetTitle("");
-  sig2->GetXaxis()->SetTitle("UpperCut");
-  sig2->SetMarkerStyle(20);
-  if (type==0){
-    sig2->GetYaxis()->SetTitle("S/#sqrt{B}");
-  }
-  if (type==1){
-    sig2->GetYaxis()->SetTitle("S/#sqrt{S+B}");
-  }
-  if (type==2){
-    sig2->GetYaxis()->SetTitle("S/B");
-	  
-  }
-//   cout<<" y212[i-1] "<<endl;
 
   TCanvas *MyC = new TCanvas("MyC", "MyC");
   MyC->Divide(2,1);
   MyC->cd(1);
+  TGraphAsymmErrors* sig1 = plotSig(MT2[6], MT2[5], "MT2", "Lower Cut", /*type = */ 2, /*sys = */ 0.1);
   sig1->Draw("ACP");
-  MyC->cd(2);
-  sig2->Draw("ACP");
-//   cout<<" y232[i-1] "<<endl;
 
+  MyC->cd(2);
+  TGraphAsymmErrors* sig2 = plotSig(MT2[6], MT2[5], "MT2", "Upper Cut", /*type = */ 2, /*sys = */ 0.1);
+  sig2->Draw("ACP");
 }
 
 
@@ -7374,98 +7141,16 @@ MT2[0]->Fill(myQuantity, weight);
   printHisto(h_stack, MT2[7], MT2[5], MT2[6], Legend1 , "MTC", "hist", true, "MT2", "Events", 0, -10, 2, true);
 
   plotRatioStack(h_stack, MT2[5], MT2[7], MT2[6], true, false, "MT2_ratio", Legend1, "MT2", "Events", 0, -10, 2, true);
-int nbins = MT2[5]->GetNbinsX();
-
-  Float_t  x[nbins], y1[nbins], y2[nbins];
-  for (int i = 1; i <=nbins+1; i++){
-    x[i-1] = MT2[5]->GetBinLowEdge(i);
-//     cout<<i<<" x[i-1] "<<x[i-1]<<endl;
-    float s1, s2;
-
-    s1 = MT2[6]  ->Integral(i,nbins+1);
-   
-    s2 = MT2[6]  ->Integral(0, i - 1);
-//     cout<<" s1 "<<s1<<endl;
-//     cout<<" s2 "<<s2<<endl;
-    float b1, b2;
-    
-    b1 = MT2[5]->Integral(i,nbins+1);
-    
-    b2 = MT2[5]->Integral(0, i - 1);
-//     cout<<" b1 "<<b1<<endl;
-//     cout<<" b2 "<<b2<<endl;
-    if(b1 == 0)
-      y1[i-1] = 5.0;
-    else{
-      if (type==0) {
-	y1[i-1] = s1/sqrt(b1);
-      }
-      if (type==1) {
-	y1[i-1] = s1/sqrt(s1+b1);
-      }
-      if (type==2) {
-	y1[i-1] = s1/b1;
-      }
-//       cout<<" y1[i-1] "<<y1[i-1]<<endl;
-    }
-    
-    if(b2 == 0)
-      y2[i-1] = 5.0;
-    else{
-      if (type==0) {
-	y2[i-1] = s2/sqrt(b2);
-      }
-      if (type==1) {
-	y2[i-1] = s2/sqrt(s2+b2);
-      }
-      if (type==2) {
-	y2[i-1] = s2/b2;
-      }
-//       cout<<" y2[i-1] "<<y2[i-1]<<endl;
-    }
-  }
-  TGraph *sig1 = new TGraph(nbins+1,x,y1);
-  sig1->SetTitle("");
-  sig1->GetXaxis()->SetTitle("LowerCut");
-  sig1->SetMarkerStyle(20);
-  if (type==0){
-    sig1->GetYaxis()->SetTitle("S/#sqrt{B}");
-  }
-  if (type==1){
-    sig1->GetYaxis()->SetTitle("S/#sqrt{S+B}");
-  }
-  if (type==2){
-    sig1->GetYaxis()->SetTitle("S/B");
-	  
-  }
-
-
- 
-
-  TGraph *sig2 = new TGraph(nbins+1,x,y2);
-  sig2->SetTitle("");
-  sig2->GetXaxis()->SetTitle("UpperCut");
-  sig2->SetMarkerStyle(20);
-  if (type==0){
-    sig2->GetYaxis()->SetTitle("S/#sqrt{B}");
-  }
-  if (type==1){
-    sig2->GetYaxis()->SetTitle("S/#sqrt{S+B}");
-  }
-  if (type==2){
-    sig2->GetYaxis()->SetTitle("S/B");
-	  
-  }
-
 
   TCanvas *MyC = new TCanvas("MyC", "MyC");
   MyC->Divide(2,1);
   MyC->cd(1);
+  TGraphAsymmErrors* sig1 = plotSig(MT2[6], MT2[5], "MT2", "Lower Cut", /*type = */ 2, /*sys = */ 0.1);
   sig1->Draw("ACP");
+
   MyC->cd(2);
+  TGraphAsymmErrors* sig2 = plotSig(MT2[6], MT2[5], "MT2", "Upper Cut", /*type = */ 2, /*sys = */ 0.1);
   sig2->Draw("ACP");
-
-
 
 
 }
@@ -8253,7 +7938,7 @@ void MassPlotter::makeCard(double N, double S, double dS, double B, double dB, s
 
 }
 
-TGraphAsymmErrors* MassPlotter::plotSig(TH1D *hSgn, TH1D *hBkg, TString xtitle, TString cutType, int type, double sys) {
+TGraphAsymmErrors* MassPlotter::plotSig(TH1 *hSgn, TH1 *hBkg, TString xtitle, TString cutType, int type, double sys) {
     int nbins = hSgn->GetXaxis()->GetNbins();
     float *x = new float[nbins];
     float *ex = new float[nbins];
@@ -8263,13 +7948,13 @@ TGraphAsymmErrors* MassPlotter::plotSig(TH1D *hSgn, TH1D *hBkg, TString xtitle, 
     float *eym = new float[nbins];
 
     for (int i = 1; i <= nbins; i++) {
-
+      cout<<cutType<<" bin "<<i<<endl;
         x[i - 1] = hSgn->GetBinLowEdge(i);
         ex[i - 1] = hSgn->GetBinWidth(i);
 
-        double s = (cutType == "lowerCut") ? hSgn->Integral(i, nbins + 1) : hSgn->Integral(0, i);
+        double s = (cutType == "Lower Cut") ? hSgn->Integral(i, nbins + 1) : hSgn->Integral(0, i);
         double ds = sqrt(s) + s * sys;
-        double b = (cutType == "lowerCut") ? hBkg->Integral(i, nbins + 1) : hBkg->Integral(0, i);
+        double b = (cutType == "Lower Cut") ? hBkg->Integral(i, nbins + 1) : hBkg->Integral(0, i);
         double db = sqrt(b) + b * sys;
 
 
@@ -8295,7 +7980,14 @@ TGraphAsymmErrors* MassPlotter::plotSig(TH1D *hSgn, TH1D *hBkg, TString xtitle, 
                 if (!(std::ifstream("datacard")).good()) continue;
                 system("combine -M Asymptotic datacard");
                 TTree* tree;
-                TFile * flimit = new TFile("higgsCombineTest.Asymptotic.mH120.root");
+		TString rootFile = xtitle + "Asymptotic.root";
+		rootFile = rootFile.ReplaceAll(" ", "");
+		rootFile = rootFile.ReplaceAll("+", "_");
+		rootFile = rootFile.ReplaceAll("-", "_");
+
+		// TFile * flimit = new TFile("higgsCombineTest.Asymptotic.mH120.root");
+		system("mv higgsCombineTest.Asymptotic.mH120.root " + rootFile);
+                TFile * flimit = new TFile(rootFile);
                 flimit->GetObject("limit", tree);
 
                 Double_t limit;
@@ -8320,7 +8012,8 @@ TGraphAsymmErrors* MassPlotter::plotSig(TH1D *hSgn, TH1D *hBkg, TString xtitle, 
                 eyp[i - 1] = SgmM1 - y[i - 1];
                 eym[i - 1] = y[i - 1] - SgmP1;
 
-                system("rm -f higgsCombineTest.Asymptotic.mH120.root");
+//                 system("rm -f higgsCombineTest.Asymptotic.mH120.root");
+		system("rm -f " + rootFile);
                 system("rm -f datacard");
                 system("rm -f roostat*");
 
