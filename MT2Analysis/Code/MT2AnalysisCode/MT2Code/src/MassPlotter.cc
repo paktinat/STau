@@ -7952,9 +7952,9 @@ TGraphAsymmErrors* MassPlotter::plotSig(TH1 *hSgn, TH1 *hBkg, TString xtitle, TS
         x[i - 1] = hSgn->GetBinLowEdge(i);
         ex[i - 1] = hSgn->GetBinWidth(i);
 
-        double s = (cutType == "Lower Cut") ? hSgn->Integral(i, nbins + 1) : hSgn->Integral(0, i);
+        double s = (cutType == "Lower Cut") ? hSgn->Integral(i, nbins + 1) : hSgn->Integral(0, i-1);
         double ds = sqrt(s) + s * sys;
-        double b = (cutType == "Lower Cut") ? hBkg->Integral(i, nbins + 1) : hBkg->Integral(0, i);
+        double b = (cutType == "Lower Cut") ? hBkg->Integral(i, nbins + 1) : hBkg->Integral(0, i-1);
         double db = sqrt(b) + b * sys;
 
 
