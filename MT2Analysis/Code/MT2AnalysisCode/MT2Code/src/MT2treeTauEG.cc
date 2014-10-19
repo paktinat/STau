@@ -2,6 +2,48 @@
 #include "helper/Utilities.hh"
 #include "Corrector.h"
 
+int MT2tree::DeltaREleTau(int elec_method , double minDR , int& elecindex){
+  bool ele_found = false;
+  TLorentzVector electron;
+  if( NEles == 0 ){
+    if(fVerbose > 5) cout << "preCond : NoEle" << endl;
+    return 0;
+  }
+  if( ele_found = (elec_method == 0) ){
+    electron = ele[0].lv;
+    elecindex = 0;
+  }
+  else
+    for( int eleindex = 0 ; eleindex < NEles ; eleindex++)
+      if( ele[eleindex].IDSelETau ){
+	electron = ele[eleindex].lv ;
+	ele_found = true;
+	elecindex = eleindex ;
+	break;
+      }
+
+  if( !ele_found ){
+    if(fVerbose > 5) cout << "preCond : NoEle found" << endl;
+    return 0;
+  }
+  if( electron.Pt() < 30.0 ){
+    if(fVerbose > 5) cout << "preCond : NoEle with pt>30" << endl;
+    return 0;
+  }
+  int ret = 0;
+  int power = 1;
+  for(int i = 0 ; i< NTaus ; i++ )
+    if( tau[i].PassQCDTau_ElTau ){
+      float dr = electron.DeltaR( tau[i].lv );
+      if( i!= 0) power*= 2; 
+      if( dr > minDR )
+	ret += power ;
+    }
+  
+  if(fVerbose > 5) cout << "precond : " << ret << endl;
+  return ret;
+}
+
 Float_t MT2tree::DeltaREleTau(){
   TLorentzVector ele1( ele[ eleTau[0].GetEleIndex0() ].lv );
   TLorentzVector tau1( tau[ eleTau[0].GetTauIndex0() ].lv );

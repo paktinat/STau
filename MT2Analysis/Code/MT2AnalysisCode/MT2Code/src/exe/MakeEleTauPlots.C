@@ -19,11 +19,13 @@
 #include "Corrector.h"
 #include "BaseMassPlotter.hh"
 
+#include "MT2tree.hh"
+
 #include "helper/Utilities.hh"
 
 #define TREE
 #define FROMEvtLst
-//#define TauFR
+#define TauFR
 
 using namespace std;
 
@@ -31,6 +33,8 @@ class MassPlotterEleTau : public BaseMassPlotter{
 public:
   MassPlotterEleTau(TString outputdir) : BaseMassPlotter( outputdir ) {};
   void eleTauAnalysis(TList* allcuts, Long64_t nevents, vector< pair<int,int> > Significances , TString myfilename, TString SUSYCatCommand , vector<TString> SUSYCatNames , TDirectory* elists=0 , TString cut="" );
+  
+  void TauFakeRate(TList* cuts, Long64_t nevents , TString myfilename ); 
 
   void DrawNSignals(){
     for(int ii = 0; ii < fSamples.size(); ii++){
@@ -50,6 +54,154 @@ public:
     }
   }
 };
+
+void MassPlotterEleTau::TauFakeRate(TList* allCuts, Long64_t nevents , TString myfilename ){
+
+  double ptBins[] {20,50,100,200,500};
+  double etaBins[] {0 , 1.479 , 2.3 };
+  double metBins[] {30 , 70 , 110 , 200 , 300 };
+  double mt2Bins[] { 40 , 55 , 70 , 85 , 100 , 200 };
+
+  TEfficiency tauPt("TauPt" , "TauPt" , 4 , ptBins  );
+  TEfficiency tauEta("TauEta" , "TauEta" , 2 , etaBins );
+  TEfficiency MET( "MET" , "MET" , 4 , metBins );
+  TEfficiency MT2( "MT2" , "MT2" , 5 , mt2Bins );
+  TEfficiency elePt("ElePt" , "ElePt" , 4 , ptBins  );
+
+  int lumi = 0;
+
+  TIter nextcut(allCuts); 
+  TObject *objcut; 
+
+  MT2tree* fMT2tree = new MT2tree();
+
+  for(int ii = 0; ii < fSamples.size(); ii++){
+    int data = 0;
+    sample Sample = fSamples[ii];
+
+    if(Sample.type == "data"){
+      data = 1;
+    }else
+      lumi = Sample.lumi; 
+    
+
+    double Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents*Sample.PU_avg_weight);
+    if(data == 1)
+      Weight = 1.0;
+    else
+      continue;
+    if( Sample.type == "susy" )
+      Weight = 0.0;
+
+    if( (Sample.sname == "Wtolnu"  || (Sample.shapename == "ZJetsToLL" && Sample.name != "DYToLL_M10To50")) )
+      //if( Sample.name != "WJetsToLNu" )
+      //if( Sample.name != "DYToLL_M10To50" )
+      {
+	//continue;
+	Weight = (Sample.lumi / Sample.PU_avg_weight);
+      }
+    Sample.Print(Weight);
+
+    string lastFileName = "";
+
+    Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
+
+    Long64_t nentries =  Sample.tree->GetEntries();
+
+    Long64_t maxloop = min(nentries, nevents);
+
+    int counter = 0;
+    for (Long64_t jentry=0; jentry<maxloop;jentry++, counter++) {
+      Sample.tree->GetEntry(jentry);
+
+      if( lastFileName.compare( ((TChain*)Sample.tree)->GetFile()->GetName() ) != 0 ) {
+	nextcut.Reset();
+	while( objcut = nextcut() ){
+	  ExtendedCut* thecut = (ExtendedCut*)objcut ;
+	  cout << thecut->Name << ":" << endl;
+	  thecut->SetTree( Sample.tree ,  Sample.name , Sample.sname , Sample.type , Sample.xsection, Sample.nevents, Sample.kfact , Sample.PU_avg_weight);
+	}
+      
+	lastFileName = ((TChain*)Sample.tree)->GetFile()->GetName() ;
+	cout << "new file : " << lastFileName << endl;
+      }
+
+      if ( counter == 10000 ){  
+	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+	fflush(stdout);
+	counter = 0;
+      }
+ 
+      nextcut.Reset();
+      double weight = Weight;
+
+      while( objcut = nextcut() ){
+	ExtendedCut* thecut = (ExtendedCut*)objcut ;
+	if(! thecut->Pass(jentry , weight) ){
+	  break;
+	}else{
+	  if( isfinite (weight) ){
+	    int elecindex ;
+	    int preCondsAll = fMT2tree->DeltaREleTau( 1 , 0.2 , elecindex );
+	    if(preCondsAll == 0)
+	      continue;
+	    vector<int> preCondsAllBits;
+	    while(preCondsAll) {
+	      if (preCondsAll&1)
+		preCondsAllBits.push_back(1);
+	      else
+		preCondsAllBits.push_back(0);
+	      preCondsAll>>=1;  
+	    }
+
+	    for( int tauid = 0 ; tauid < fMT2tree->NTaus ; tauid++ ){
+	      if( preCondsAllBits[tauid] == 0 )
+		continue;
+	      
+	      tauPt.FillWeighted( fMT2tree->tau[tauid].PassTau_ElTau , weight , fMT2tree->tau[tauid].lv.Pt() );
+	      tauEta.FillWeighted( fMT2tree->tau[tauid].PassTau_ElTau , weight , fMT2tree->tau[tauid].lv.Eta() );
+	      MET.FillWeighted( fMT2tree->tau[tauid].PassTau_ElTau , weight , fMT2tree->misc.MET );
+
+	      double mt2 = fMT2tree->CalcMT2( 0 , false , fMT2tree->tau[tauid].lv , fMT2tree->ele[elecindex].lv , fMT2tree->misc.MET  );
+	      
+	      MT2.FillWeighted( fMT2tree->tau[tauid].PassTau_ElTau , weight , mt2 );
+	      elePt.FillWeighted( fMT2tree->tau[tauid].PassTau_ElTau , weight , fMT2tree->ele[elecindex].lv.Pt() );
+	    }
+	  }
+	  else
+	    cout << "non-finite weight : " << weight << endl;
+	}
+      }
+    }
+  }
+
+  TString fileName = fOutputDir;
+  if(!fileName.EndsWith("/")) fileName += "/";
+  Util::MakeOutputDir(fileName);
+  fileName = fileName  + myfilename +"_Histos.root";
+
+  TFile *savefile = new TFile(fileName.Data(), "RECREATE");
+  savefile ->cd();
+
+  nextcut.Reset();
+  while( objcut = nextcut() ){
+    ExtendedCut* thecut = (ExtendedCut*)objcut ;
+    //thecut->Write( savefile, lumi , Significances , SUSYCatNames.size() );
+  }
+
+  savefile->mkdir("FakeRates")->cd();
+
+  tauPt.Write();
+  tauEta.Write();
+  elePt.Write();
+  MET.Write();
+  MT2.Write();
+
+  savefile->Close();
+  std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
+
+  
+}
 
 void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vector< pair<int,int> > Significances, TString myfileName , TString SUSYCatCommand , vector<TString> SUSYCatNames , TDirectory* elists  , TString cut){
 
@@ -277,23 +429,7 @@ int main(int argc, char* argv[]) {
 	   <<" misc.eeBadScFlag==0 && misc.EcalDeadCellTriggerPrimitiveFlag==0 ";
   ExtendedCut* cleaningcut = new ExtendedCut("Cleaning" , cleaning.str().c_str() , true , false , "" , "pileUp.Weight" , false , false);
   allCuts.Add( cleaningcut );
-
-  ExtendedCut* triggerCut =new ExtendedCut("Trigger" , "trigger.HLT_EleTau" , true , false , "" , "" , false , false);
-  allCuts.Add(triggerCut);
-
-  double ptBins[] {20,50,100,1000};
-  double etaBins[] {0 , 1.479 , 2.3 };
-  ExtendedEfficiency* effpt = new ExtendedEfficiency("Trigger" , "TauFR_Pt" , "tau.lv.Pt()" , "NTaus" , "tau.PassQCDTau_ElTau", "tau.PassTau_ElTau" , 3 , ptBins );
-  ExtendedEfficiency* effeta = new ExtendedEfficiency("Trigger" , "TauFR_Eta" , "tau.lv.Eta()" , "NTaus" ,"tau.PassQCDTau_ElTau", "tau.PassTau_ElTau",  2 , etaBins );
-  triggerCut->Props.Add( effpt );
-  triggerCut->Props.Add( effeta );
-
-
-  TString SUSYCatCommand = "((Susy.MassGlu - Susy.MassLSP)/50.0)+(misc.ProcessID-10)";
-  std::vector<TString> SUSYCatNames = {"00_50" , "50_100" , "100_150" , "150_200" , "200_250" , "250_300" , "300_350" , "350_400" , "400_450" , "450_500" };
-  vector< pair<int,int> > Significances;
-
-  tA->eleTauAnalysis(&allCuts, neventperfile, Significances ,  outputfile , SUSYCatCommand , SUSYCatNames );
+  tA->TauFakeRate(&allCuts, neventperfile ,  outputfile  );
 
 }
 #else

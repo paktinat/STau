@@ -31,7 +31,7 @@ void ExtendedObjectProperty::CalcSig(int LowerCut , int type,  int SUSCat , doub
 
   TString cutType = LowerCut==0? "upperCut" : "lowerCut" ;
   TH1 *hBkg = allHistos["MC"];
-  TString xtitle = "title";
+  TString xtitle = Name;
   //Float_t  x[nBins], y[nBins];
 
   TString SignalHistoName = "SUSY";
@@ -930,17 +930,39 @@ void ExtendedEfficiency::SetTree( TTree* tree , TString sampletype , TString sam
 void ExtendedEfficiency::Fill(double w ){
   int N = tNFormula->EvalInstance(0);
 
-  for (int i=0 ; i<N ; i++){
-    if( tPreCondFormula->EvalInstance(i) == 0.0 )
-      continue;
+  dVal = tFormula->EvalInstance(0);
+  
+  int preCondsAll = tPreCondFormula->EvalInstance(0);
+  if(preCondsAll == 0)
+    return;
+  vector<int> preCondsAllBits;
+  while(preCondsAll) {
+    if (preCondsAll&1)
+      preCondsAllBits.push_back(1);
+    else
+      preCondsAllBits.push_back(0);
+    preCondsAll>>=1;  
+  }
+  //reverse(preCondsAllBits.begin(),preCondsAllBits.end());
 
-    dVal = tFormula->EvalInstance(i);
+  for (int i=0 ; i<N ; i++){
+    if( tPreCondFormula->GetNdata() > 100 ){
+      if( tPreCondFormula->EvalInstance(i) == 0.0 )
+	continue;
+    }else{
+      cout << preCondsAllBits[i] << endl;
+      if( preCondsAllBits[i] = 0 )
+	continue;
+    }
+
+    if( tFormula->GetNdata() > 1 )
+      dVal = tFormula->EvalInstance(i);
     double cond = tCondFormula->EvalInstance(i);
 
     if( theEff )
       theEff->FillWeighted(cond != 0 , w , dVal);
 
-    if( theMCH )
+    if( theMCEff )
       theMCEff->FillWeighted(cond != 0 , w , dVal);
   }
 }
