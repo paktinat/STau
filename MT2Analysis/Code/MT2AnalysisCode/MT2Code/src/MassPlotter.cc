@@ -218,7 +218,7 @@ void MassPlotter::makeSmallCopy(unsigned int nevents, unsigned int mysample, TSt
 
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
-  /*
+ 
   TFile *pileup_data = new TFile(GETDATALOCALPATH(Certification/pileUp_data/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.root),"READ");
   
   TH1F* pileup_data_histo = (TH1F*) pileup_data->Get("pileup");
@@ -237,7 +237,7 @@ void MassPlotter::makeSmallCopy(unsigned int nevents, unsigned int mysample, TSt
     pileup_data_histo->SetBinContent(i+1,  pileup_data_histo->GetBinContent(i+1)/pileup_mc_histo->GetBinContent(i+1));
   }
 
- */
+  
 
   for(unsigned int ii = 0; ii < fSamples.size(); ii++){
     if(fSamples.size() > mysample && ii != mysample)
@@ -255,14 +255,14 @@ void MassPlotter::makeSmallCopy(unsigned int nevents, unsigned int mysample, TSt
     TString fileName = fSamples[ii].file->GetName();
 
     //    fileName =  fileName.ReplaceAll(".root", "_NBJetsCSVM0_MET30.root");
-    fileName =  fileName.ReplaceAll(".root", "_MuTauPreselection.root");
+    fileName =  fileName.ReplaceAll(".root", "_BigFiles_NewPU_Stitching.root");
 
     TFile *newfile = new TFile(fOutputDir+"/"+fileName,"recreate");
     TTree *newtree = fSamples[ii].tree->CloneTree(0);
     TH1F *h_PUWeights = (TH1F*) fSamples[ii].file->Get("h_PUWeights");
     TH1F *h_Events    = (TH1F*) fSamples[ii].file->Get("h_Events");
     
-    //    h_PUWeights->Reset();
+    h_PUWeights->Reset();
 
     if(fSamples[ii].file->Get("h_SMSEvents")){
       h_SMSEvents    = (TH2F*) fSamples[ii].file->Get("h_SMSEvents");
@@ -289,7 +289,7 @@ void MassPlotter::makeSmallCopy(unsigned int nevents, unsigned int mysample, TSt
       }
  
       fSamples[ii].tree->GetEntry(myEvtList->GetEntry(i));
-      /*
+   
       float oldWeight = fMT2tree->pileUp.Weight;
 
       int binNumber = pileup_data_histo->FindBin(fMT2tree->pileUp.PUtrueNumInt);
@@ -309,10 +309,10 @@ void MassPlotter::makeSmallCopy(unsigned int nevents, unsigned int mysample, TSt
 
       if(fMT2tree->eleMu[0].ele0Ind >= 0)
 	fMT2tree->eleMu[0].EleIdIsoSF  = fMT2tree->ele[fMT2tree->eleMu[0].ele0Ind].GetEleIDISOSFelemu();
-      */
+     
       newtree->Fill();
 
-//       h_PUWeights->Fill(newWeight);
+      h_PUWeights->Fill(newWeight);
    
 //       cout<<"old weight "<<oldWeight<<" new weight "<<newWeight<<endl;
     }
@@ -2328,7 +2328,7 @@ void MassPlotter::loadSamples(const char* filename){
 			sscanf(buffer, "File\t%s", StringValue);
 
 			TString file =fPath+StringValue;
-			if(fVerbose > 3)
+			//			if(fVerbose > 3)
 			  cout<<"my file: "<<file<<endl;
 		
 			s.tree = new TChain("MassTree"); //(TTree*)f->Get("MassTree");
@@ -2339,7 +2339,10 @@ void MassPlotter::loadSamples(const char* filename){
 			  cout << s.tree->GetEntries() << endl;
 
 			s.file = ((TChain*)(s.tree))->GetFile() ;
-			
+			if(s.file == NULL)
+			  s.file = new TFile(file);
+
+// 			s.file->Print("ALL");
 			IN.getline(buffer, 200, '\n');
 			sscanf(buffer, "Xsection\t%f", &ParValue);
 			s.xsection = ParValue;
@@ -2369,16 +2372,25 @@ void MassPlotter::loadSamples(const char* filename){
 			  TChainElement *chEl=0;
 			  while (( chEl=(TChainElement*)next() )) {
 			    TFile f(chEl->GetTitle());
-			    
-			    if( h_PUWeights == NULL )
+			  //   cout<<chEl->GetTitle()<<endl;
+			    //    f.Print("ALL");
+			    if( h_PUWeights == NULL ){
+			      gROOT->cd();
 			      h_PUWeights = (TH1F*)(f.Get("h_PUWeights")->Clone("ClonedhPUWeights"));
+			    }
 			    else
 			      h_PUWeights->Add( (TH1F*)(f.Get("h_PUWeights") ) );
+
+		// 	    h_PUWeights->Print("");
 
 			    if( h_Events == NULL )
 			      h_Events = (TH1F*) (f.Get("h_Events")->Clone("ClonedhEvents") ) ;
 			    else
 			      h_Events->Add( (TH1F*) (f.Get("h_Events")) );
+			  }
+			  if(fileElements->GetEntries() == 0){
+			    h_PUWeights =(TH1F*) s.file->Get("h_PUWeights") ;
+			    h_Events = (TH1F*) s.file->Get("h_Events") ;
 			  }
 			  if(h_PUWeights==0 || h_Events==0){
 			    cout << "ERROR: sample " << (s.file)->GetName() << " does not have PU and NEvents histos! " << endl;
@@ -8007,14 +8019,9 @@ TGraphAsymmErrors* MassPlotter::plotSig(TH1 *hSgn, TH1 *hBkg, TString xtitle, TS
                 if (!(std::ifstream("datacard")).good()) continue;
                 system("combine -M Asymptotic datacard");
                 TTree* tree;
-		TString rootFile = xtitle + "Asymptotic.root";
-		rootFile = rootFile.ReplaceAll(" ", "");
-		rootFile = rootFile.ReplaceAll("+", "_");
-		rootFile = rootFile.ReplaceAll("-", "_");
 
-		// TFile * flimit = new TFile("higgsCombineTest.Asymptotic.mH120.root");
-		system("mv higgsCombineTest.Asymptotic.mH120.root " + rootFile);
-                TFile * flimit = new TFile(rootFile);
+		TFile * flimit = new TFile("higgsCombineTest.Asymptotic.mH120.root");
+
                 flimit->GetObject("limit", tree);
 
                 Double_t limit;
@@ -8039,9 +8046,8 @@ TGraphAsymmErrors* MassPlotter::plotSig(TH1 *hSgn, TH1 *hBkg, TString xtitle, TS
                 eyp[i - 1] = SgmM1 - y[i - 1];
                 eym[i - 1] = y[i - 1] - SgmP1;
 
-//                 system("rm -f higgsCombineTest.Asymptotic.mH120.root");
-		system("rm -f " + rootFile);
-                system("rm -f datacard");
+		system("rm -f higgsCombineTest.Asymptotic.mH120.root");
+		system("rm -f datacard");
                 system("rm -f roostat*");
 
             }
