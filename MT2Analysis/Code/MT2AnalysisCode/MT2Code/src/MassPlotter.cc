@@ -28,6 +28,8 @@
 #include "THStack.h"
 #include "TCanvas.h"
 #include "TTree.h"
+#include "TChain.h"
+#include "TChainElement.h"
 #include "TEventList.h"
 #include "TCut.h"
 #include "TTreeFormula.h"
@@ -2324,13 +2326,19 @@ void MassPlotter::loadSamples(const char* filename){
 
 			IN.getline(buffer, 400, '\n');
 			sscanf(buffer, "File\t%s", StringValue);
-			TString file =fPath+StringValue;
-			cout<<"my file: "<<file<<endl;
-			TFile *f = TFile::Open(file);
-			s.file = f;
-		
-			s.tree = (TTree*)f->Get("MassTree");
 
+			TString file =fPath+StringValue;
+			if(fVerbose > 3)
+			  cout<<"my file: "<<file<<endl;
+		
+			s.tree = new TChain("MassTree"); //(TTree*)f->Get("MassTree");
+			((TChain*)(s.tree))->Add( file , 0 );
+			((TChain*)(s.tree))->LoadTree(0);
+
+			if(fVerbose > 3)
+			  cout << s.tree->GetEntries() << endl;
+
+			s.file = ((TChain*)(s.tree))->GetFile() ;
 			
 			IN.getline(buffer, 200, '\n');
 			sscanf(buffer, "Xsection\t%f", &ParValue);
@@ -2353,8 +2361,25 @@ void MassPlotter::loadSamples(const char* filename){
 			s.color = ParValue;
 
 			if(s.type!="data"){
-			  TH1F *h_PUWeights = (TH1F*) s.file->Get("h_PUWeights");
-			  TH1F *h_Events    = (TH1F*) s.file->Get("h_Events");
+			  TH1F *h_PUWeights = NULL;
+			  TH1F *h_Events    = NULL;
+
+			  TObjArray *fileElements=((TChain*)(s.tree))->GetListOfFiles();
+			  TIter next(fileElements);
+			  TChainElement *chEl=0;
+			  while (( chEl=(TChainElement*)next() )) {
+			    TFile f(chEl->GetTitle());
+			    
+			    if( h_PUWeights == NULL )
+			      h_PUWeights = (TH1F*)(f.Get("h_PUWeights")->Clone("ClonedhPUWeights"));
+			    else
+			      h_PUWeights->Add( (TH1F*)(f.Get("h_PUWeights") ) );
+
+			    if( h_Events == NULL )
+			      h_Events = (TH1F*) (f.Get("h_Events")->Clone("ClonedhEvents") ) ;
+			    else
+			      h_Events->Add( (TH1F*) (f.Get("h_Events")) );
+			  }
 			  if(h_PUWeights==0 || h_Events==0){
 			    cout << "ERROR: sample " << (s.file)->GetName() << " does not have PU and NEvents histos! " << endl;
 			    exit(1);
@@ -2375,7 +2400,21 @@ void MassPlotter::loadSamples(const char* filename){
 			// DON'T DO THAT AT HOME !!!!
 
 			if ( s.type == "susy" && s.name.Contains("Tau")){
-			  TH2F * h_SMSEvent = (TH2F*) s.file->Get("h_SMSEvents");
+			  TH2F * h_SMSEvent = NULL ; 
+			  
+			  TObjArray *fileElements=((TChain*)(s.tree))->GetListOfFiles();
+			  TIter next(fileElements);
+			  TChainElement *chEl=0;
+			  while (( chEl=(TChainElement*)next() )) {
+			    TFile f(chEl->GetTitle());
+			    
+			    if( h_SMSEvent == NULL )
+			      h_SMSEvent = (TH2F*) (f.Get("h_SMSEvents")->Clone("ClonedhSMSEvents") );
+			    else
+			      h_SMSEvents->Add( (TH2F*)(f.Get("h_SMSEvents") ) );
+			  }
+
+
 			  int binNumber = h_SMSEvent->FindBin(150.0, 150.0);//350,50//saeid
 			  
 			  s.nevents = h_SMSEvent->GetBinContent(binNumber); //saeid

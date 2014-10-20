@@ -62,7 +62,11 @@ void MassPlotterEleTau::TauFakeRate(TList* allCuts, Long64_t nevents , TString m
   double metBins[] {30 , 70 , 110 , 200 , 300 };
   double mt2Bins[] { 40 , 55 , 70 , 85 , 100 , 200 };
 
-  TEfficiency tauPt("TauPt" , "TauPt" , 4 , ptBins  );
+  TH1::SetDefaultSumw2(true);
+
+  TEfficiency tauPt_Total("TauPt_Total" , "TauPt" , 4 , ptBins  );
+  TEfficiency tauPt_Barrel("TauPt_Barrel" , "TauPt" , 4 , ptBins  );
+  TEfficiency tauPt_EndCap("TauPt_EndCap" , "TauPt" , 4 , ptBins  );
   TEfficiency tauEta("TauEta" , "TauEta" , 2 , etaBins );
   TEfficiency MET( "MET" , "MET" , 4 , metBins );
   TEfficiency MT2( "MT2" , "MT2" , 5 , mt2Bins );
@@ -158,8 +162,14 @@ void MassPlotterEleTau::TauFakeRate(TList* allCuts, Long64_t nevents , TString m
 	      if( preCondsAllBits[tauid] == 0 )
 		continue;
 	      
-	      tauPt.FillWeighted( fMT2tree->tau[tauid].PassTau_ElTau , weight , fMT2tree->tau[tauid].lv.Pt() );
-	      tauEta.FillWeighted( fMT2tree->tau[tauid].PassTau_ElTau , weight , fMT2tree->tau[tauid].lv.Eta() );
+
+	      tauPt_Total.FillWeighted( fMT2tree->tau[tauid].PassTau_ElTau , weight , fMT2tree->tau[tauid].lv.Pt() );
+	      double tau__eta = fabs( fMT2tree->tau[tauid].lv.Eta() );
+	      if( tau__eta < etaBins[1] )
+		tauPt_Barrel.FillWeighted( fMT2tree->tau[tauid].PassTau_ElTau , weight , fMT2tree->tau[tauid].lv.Pt() );
+	      else if(tau__eta < etaBins[2] )
+		tauPt_EndCap.FillWeighted( fMT2tree->tau[tauid].PassTau_ElTau , weight , fMT2tree->tau[tauid].lv.Pt() );
+	      tauEta.FillWeighted( fMT2tree->tau[tauid].PassTau_ElTau , weight , tau__eta  );
 	      MET.FillWeighted( fMT2tree->tau[tauid].PassTau_ElTau , weight , fMT2tree->misc.MET );
 
 	      double mt2 = fMT2tree->CalcMT2( 0 , false , fMT2tree->tau[tauid].lv , fMT2tree->ele[elecindex].lv , fMT2tree->misc.MET  );
@@ -191,7 +201,9 @@ void MassPlotterEleTau::TauFakeRate(TList* allCuts, Long64_t nevents , TString m
 
   savefile->mkdir("FakeRates")->cd();
 
-  tauPt.Write();
+  tauPt_Total.Write();
+  tauPt_Barrel.Write();
+  tauPt_EndCap.Write();
   tauEta.Write();
   elePt.Write();
   MET.Write();
