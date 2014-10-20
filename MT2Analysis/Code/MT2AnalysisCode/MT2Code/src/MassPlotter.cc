@@ -1102,22 +1102,10 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 		// This failed for older ROOT version when the first(last) bin is empty
 		// and there are underflow (overflow) events --- must check whether this 
 		// is still the case
-		if(add_underflow) {
-		  h_samples[i]->SetBinContent(1,
-					      h_samples[i]->GetBinContent(0) + h_samples[i]->GetBinContent(1));
-		  h_samples[i]->SetBinError(1,
-					    sqrt(h_samples[i]->GetBinError(0)*h_samples[i]->GetBinError(0)+
-						 h_samples[i]->GetBinError(1)*h_samples[i]->GetBinError(1) ));
-		}
-		h_samples[i]->SetBinContent(h_samples[i]->GetNbinsX(),
-					    h_samples[i]->GetBinContent(h_samples[i]->GetNbinsX()  )+ 
-					    h_samples[i]->GetBinContent(h_samples[i]->GetNbinsX()+1) );
-		h_samples[i]->SetBinError(h_samples[i]->GetNbinsX(),
-					  sqrt(h_samples[i]->GetBinError(h_samples[i]->GetNbinsX()  )*
-					       h_samples[i]->GetBinError(h_samples[i]->GetNbinsX()  )+
-					       h_samples[i]->GetBinError(h_samples[i]->GetNbinsX()+1)*
-					       h_samples[i]->GetBinError(h_samples[i]->GetNbinsX()+1)  ));
-		
+
+
+		AddOverAndUnderFlow(h_samples[i], true, add_underflow);
+
 		if(fVerbose>2) cout << "  +++++++ MC   events : "  <<  nev << endl;
 
 		/// event count with errors
@@ -7940,17 +7928,17 @@ void MassPlotter::makeCard(double N, double S, double dS, double B, double dB, s
 
 TGraphAsymmErrors* MassPlotter::plotSig(TH1 *hSgn, TH1 *hBkg, TString xtitle, TString cutType, int type, double sys) {
     int nbins = hSgn->GetXaxis()->GetNbins();
-    float *x = new float[nbins];
-    float *ex = new float[nbins];
-    float *y = new float[nbins];
-    float *ey = new float[nbins];
-    float *eyp = new float[nbins];
-    float *eym = new float[nbins];
+    float *x = new float[nbins + 1];
+    float *ex = new float[nbins + 1];
+    float *y = new float[nbins + 1];
+    float *ey = new float[nbins + 1];
+    float *eyp = new float[nbins + 1];
+    float *eym = new float[nbins + 1];
 
-    for (int i = 1; i <= nbins; i++) {
+    for (int i = 1; i <= nbins+1; i++) {
       cout<<cutType<<" bin "<<i<<endl;
         x[i - 1] = hSgn->GetBinLowEdge(i);
-        ex[i - 1] = hSgn->GetBinWidth(i);
+        ex[i - 1] = hSgn->GetBinWidth(i)/2.0;
 
         double s = (cutType == "Lower Cut") ? hSgn->Integral(i, nbins + 1) : hSgn->Integral(0, i-1);
         double ds = sqrt(s) + s * sys;
@@ -8021,8 +8009,8 @@ TGraphAsymmErrors* MassPlotter::plotSig(TH1 *hSgn, TH1 *hBkg, TString xtitle, TS
         }
     }
 
-    TGraphAsymmErrors *sig = new TGraphAsymmErrors(nbins, x, y, ex, ey);
-    if (type == 3) sig = new TGraphAsymmErrors(nbins, x, y, ex, ex, eym, eyp);
+    TGraphAsymmErrors *sig = new TGraphAsymmErrors(nbins +1 , x, y, ex, ey);
+    if (type == 3) sig = new TGraphAsymmErrors(nbins+1 , x, y, ex, ex, eym, eyp);
 
     sig->SetTitle("");
     sig->GetXaxis()->SetTitle(xtitle + "_" + cutType);
