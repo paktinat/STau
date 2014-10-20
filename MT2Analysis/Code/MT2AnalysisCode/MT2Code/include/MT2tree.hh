@@ -1140,6 +1140,7 @@ public:
   void  FillDoubleTau();
   void  FillMuTau();
 
+  int DeltaREleTau(int elec_method , double minDR, int & elecindex); //elec_method:0for the first, 1 for the first with id
   Float_t DeltaREleTau();
   Float_t DeltaMETEleTau(int mode);
   void  FillEleTau();
