@@ -275,7 +275,7 @@ void MassPlotter::makeSmallCopy(unsigned int nevents, unsigned int mysample, TSt
 
     fSamples[ii].tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-    fSamples[ii].tree->SetEventList(myEvtList);
+//     fSamples[ii].tree->SetEventList(myEvtList);
 
 
     unsigned int nentries = myEvtList->GetN();
@@ -2557,7 +2557,7 @@ void MassPlotter::TauContamination(int sample_index, unsigned int nevents, int f
 
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-    Sample.tree->SetEventList(myEvtList);
+//     Sample.tree->SetEventList(myEvtList);
 
     unsigned int nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -5478,7 +5478,7 @@ void MassPlotter::vs(unsigned int  nevents, TString cuts, TString trigger){
 
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-    Sample.tree->SetEventList(myEvtList);
+//     Sample.tree->SetEventList(myEvtList);
     unsigned int nentries =  myEvtList->GetN();
     
     for (unsigned int jentry = 0; jentry < min(nentries, nevents); jentry++) {
@@ -5599,7 +5599,7 @@ void MassPlotter::SpecialMakePlot(unsigned int nevents, TString cuts, TString tr
 
     fSamples[ii].tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-    fSamples[ii].tree->SetEventList(myEvtList);
+//     fSamples[ii].tree->SetEventList(myEvtList);
 
 
     unsigned int nentries =  myEvtList->GetN();
@@ -5853,7 +5853,7 @@ void MassPlotter::TauEfficiency(TString cuts, unsigned int nevents, TString myfi
    
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-    Sample.tree->SetEventList(myEvtList);
+//     Sample.tree->SetEventList(myEvtList);
 
     unsigned int nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -5996,7 +5996,7 @@ void MassPlotter::TauFakeRate(TString cuts, TString trigger, unsigned int nevent
    
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-    Sample.tree->SetEventList(myEvtList);
+//     Sample.tree->SetEventList(myEvtList);
 
     unsigned int nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -6186,7 +6186,7 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, unsigned int neve
    
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-    Sample.tree->SetEventList(myEvtList);
+//     Sample.tree->SetEventList(myEvtList);
 
     unsigned int nentries = myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -6428,7 +6428,7 @@ void MassPlotter::EleFakeRate(TString cuts, TString trigger, unsigned int nevent
    
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-    Sample.tree->SetEventList(myEvtList);
+//     Sample.tree->SetEventList(myEvtList);
 
     unsigned int nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -6601,7 +6601,7 @@ void MassPlotter::EleEleAnalysisFake(TString cuts, TString trigger, unsigned int
    
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-    Sample.tree->SetEventList(myEvtList);
+//     Sample.tree->SetEventList(myEvtList);
 
     unsigned int nentries = myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -6834,7 +6834,7 @@ void MassPlotter::EleEleAnalysis(TString cuts, TString trigger, unsigned int nev
    
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-    Sample.tree->SetEventList(myEvtList);
+//     Sample.tree->SetEventList(myEvtList);
 
     unsigned int nentries = myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -7055,7 +7055,7 @@ void MassPlotter::elemuAnalysis(TString cuts, TString trigger, unsigned int neve
    
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-    Sample.tree->SetEventList(myEvtList);
+//     Sample.tree->SetEventList(myEvtList);
 
     unsigned int nentries = myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -7234,7 +7234,7 @@ MT2[0]->Fill(myQuantity, weight);
    
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-    Sample.tree->SetEventList(myEvtList);
+//     Sample.tree->SetEventList(myEvtList);
 
     unsigned int nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -7367,7 +7367,7 @@ void MassPlotter::EleEfficiencyforelemu(TString cuts, unsigned int nevents, TStr
    
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-    Sample.tree->SetEventList(myEvtList);
+//     Sample.tree->SetEventList(myEvtList);
 
     unsigned int nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -7606,7 +7606,7 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 
       Sample.tree->Draw(">>selList", myCuts);
       TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-      Sample.tree->SetEventList(myEvtList);
+//       Sample.tree->SetEventList(myEvtList);
       
       unsigned int nentries = myEvtList->GetN();
       
@@ -7670,7 +7670,7 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 
       Sample.tree->Draw(">>selList", myCuts);
       TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-      Sample.tree->SetEventList(myEvtList);
+//       Sample.tree->SetEventList(myEvtList);
 
       unsigned int nentries = myEvtList->GetN();//Sample.tree->GetEntries();
 
