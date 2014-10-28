@@ -664,7 +664,7 @@ Color		600
 
 ## --------- Single Electron Data ---------------------------
 
-SAMPLE
+#SAMPLE
 Name		Run2012A_DoubleEle
 SName		DoubleEle-Data
 ShapeName	Data
@@ -675,6 +675,49 @@ Lumi            1.
 Type            data
 Color		1
 
+SAMPLE
+Name		Run2012A
+SName		Jet-Data
+ShapeName	Data
+File            TauTau_V3_1/Jet-Run2012A-22Jan2013-v1-AOD_NBJetsCSVM0_MET30.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
+
+SAMPLE
+Name		Run2012B
+SName		Jet-Data
+ShapeName	Data
+File            TauTau_V3_1/JetHT-Run2012B-22Jan2013-v1-AOD_NBJetsCSVM0_MET30.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
+
+SAMPLE
+Name		Run2012C
+SName		Jet-Data
+ShapeName	Data
+File            TauTau_V3_1/JetHT-Run2012C-22Jan2013-v1-AOD_NBJetsCSVM0_MET30.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
+
+SAMPLE
+Name		Run2012D
+SName		Jet-Data
+ShapeName	Data
+File            TauTau_V3_1/JetHT-Run2012D-22Jan2013-v1-AOD_NBJetsCSVM0_MET30.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
 
 
 #SAMPLE

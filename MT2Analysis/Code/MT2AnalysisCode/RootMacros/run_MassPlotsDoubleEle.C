@@ -20,9 +20,9 @@
   //  TString samples = "./samples/samplesMineDoubleElectronQCDHtBin-SMS005.dat";  
 
   // TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30.dat";
-   TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30_NewPU_Stitched.dat";
+  //   TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30_NewPU_Stitched.dat";
 
-  //  TString samples = "./samples/samplesMineSingleElectron.dat";
+  TString samples = "./samples/samplesMineSingleElectron.dat";
 
   Int_t channel = 22; //2* 11 (Electron PDG Id)
 
@@ -48,7 +48,7 @@
   tA->SetIsPhoton(false);
   //  tA->SetPileUpReweight(true);
   //  tA->SetbSFWeights(true);   
-  tA->SetEEChannel();
+  //  tA->SetEEChannel();
 
   std::ostringstream triggerStream;
   triggerStream << "( "
@@ -58,9 +58,9 @@
 <<" misc.hcalLaserEventFlag==0 && misc.trackingFailureFlag==0 " <<"&&"
 <<" misc.eeBadScFlag==0 && misc.EcalDeadCellTriggerPrimitiveFlag==0 )" <<"&&("
 
-		<<"(trigger.HLT_DiElectrons) "//<<"&&"
+    //	<<"(trigger.HLT_DiElectrons) "//<<"&&"
     //                  <<"(doubleEle[0].MT2 < 80) "
-    //        <<"(0==0) "
+            <<"(0==0) "
  << ")))";
  
       TString trigger = triggerStream.str().c_str();
@@ -80,19 +80,19 @@
      //myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP == 250)");
   
 // You need to specify the channel
-    TString myChan = "doubleEle[0]";
+//    TString myChan = "doubleEle[0]";
 
     // You need to carefully define the cut variables based on MT2"Channel".hh
 
-      myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele0Ind>=0"));
-      myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele1Ind>=0"));
-      myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==1"));
-      myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)");
+//       myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele0Ind>=0"));
+//       myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele1Ind>=0"));
+//       myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==1"));
+//       myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)");
       myChannelCuts.push_back("NBJetsCSVM==0");
       myChannelCuts.push_back("misc.MET > 30");
-      myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 76) || (doubleEle[0].lv.M() > 106))");
+      //      myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 76) || (doubleEle[0].lv.M() > 106))");
   
-      myChannelCuts.push_back("(doubleEle[0].MT2 > 50)");
+      //      myChannelCuts.push_back("(doubleEle[0].MT2 > 50)");
 
 //            myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>250");
 //            myChannelCuts.push_back("((misc.MET)+(doubleEle[0].lv.Pt()))>80");
@@ -119,6 +119,23 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////Make Plot/////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//    tA->eeFakeRateRatio(cuts, trigger, 1000000000000,"FakePrompt");
+//    tA->eeWJetsEstimation(cuts, trigger, 1000000000000,"FakePrompt");
+//    tA->eeFakePromptCategory(cuts, trigger, 1000000000000,"FakePrompt");
+
+   tA->eeAnalysis(cuts, trigger, 100,"MT2");
+    int NumberOfBins = 17;
+   double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};      //MT2
+   tA->DrawMyPlots("MT2_Histos.root", xbin, NumberOfBins);
+
+   // double * xbin;
+   // double xbin[NumberOfBins+1] = {0.0,50.0,100.0,150.0,200.0,250.0,300};
+
+   //   //tA->muTauAnalysis(cuts, trigger, 10000000000, "MT2_NBCVM_NonIsoMuSS_LoosenIso196");
+   //   int NumberOfBins = 17;
+   //   //double * xbin;
+  
+
 
 //tA->makePlot("(ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT)",     cuts,    -10,  0 , -10 ,   trigger , "1stElectron MT+2ndElectron MT"            ,20,0,200,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 //tA->makePlot("(misc.MET)+(doubleEle[0].lv.Pt())",     cuts,    -10,  0 , -10 ,   trigger , "MET+Pt_Z"     ,50,0,500,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
@@ -150,31 +167,19 @@
 
 //tA->makePlot("pileUp.NVertices",     cuts,    -10,  0 , -10 ,   trigger , "NVertices"            ,60,0,60,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 //------------------------
-//    tA->EleEleAnalysisFake(cuts, trigger, 1000000000000,"FakePrompt");
-//   tA->EleEleAnalysis(cuts, trigger, 1000000000000,"MET");
-//    int NumberOfBins = 16;
 //    double xbin[NumberOfBins+1] = {-700,-620,-550,-490,-440,-400,-360,-320,-280,-240,-200,-180,-160,-140,-120,-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,0,10,20,30,40,50,60,70,80,90,100,120,140,160,180,200,240,280,320,360,400,440,490,550,620,700};      //MT2
 //      double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,115.0,130.0,145.0,160.0,180.0,200.0};      //MT2
 
 // //    // double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
 //    double xbin[NumberOfBins+1] = {0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0}; //Mass
 
-//  tA->DrawMyPlots("MET_Histos.root", xbin, NumberOfBins);
-   // double * xbin;
-   // double xbin[NumberOfBins+1] = {0.0,50.0,100.0,150.0,200.0,250.0,300};
-
-   //   //tA->muTauAnalysis(cuts, trigger, 10000000000, "MT2_NBCVM_NonIsoMuSS_LoosenIso196");
-   //   int NumberOfBins = 17;
-   //   //double * xbin;
-  
-   //   double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};      //MT2
    //   //double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
 
     //      tA->DrawMyPlots("MT2_NBCVM_NonIsoMuSS_LoosenIso196_Histos.root", xbin, NumberOfBins);
 
 //tA->EleFakeRate(cuts, trigger,10000000000000000,  "xxx");
 
-tA->vs(1000000000000000,cuts,trigger);// , "MT2MCT-MT0MT1");
+//tA->vs(1000000000000000,cuts,trigger);// , "MT2MCT-MT0MT1");
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //

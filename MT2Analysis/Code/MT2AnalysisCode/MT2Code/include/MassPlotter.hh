@@ -253,12 +253,14 @@ public:
   void TauFakeRate(TString cuts, TString trigger, unsigned int nevents, TString myfilename);
   void TauEfficiency(TString cuts, unsigned int nevents, TString myfilename);
   void DrawMyPlots(TString myfileName, double *xbin, int NumberOfBins);
-  void EleFakeRate(TString cuts, TString trigger, unsigned int nevents, TString myfilename);
-  void EleEleAnalysisFake(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
-  void EleEleAnalysis(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
   void elemuAnalysis(TString cuts,  TString trigger, unsigned int nevents, TString myfileName , int type = 0);
   void EleFakeRateforeleMu(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
   void EleEfficiencyforelemu(TString cuts, unsigned int nevents, TString myfileName);
+
+  void eeFakeRateRatio(TString cuts, TString trigger, unsigned int nevents, TString myfilename);
+  void eeFakePromptCategory(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
+  void eeAnalysis(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
+  void eeWJetsEstimation(TString cuts, TString trigger, TString myfileName);
   
   void setFlags(int flag); //To determine which analysis we look at HighHT/LowHT MT2(b) options are:
   // 5  :: LowHT  MT2  
