@@ -1013,7 +1013,7 @@ void MT2tree::SetNTausIDLoose2(int n) {
     break;
   case 2:
     leptons_to_clean.push_back( muo[ muTau[0].GetMuIndex0() ].lv );
-    leptons_to_clean.push_back( tau[ eleTau[0].GetTauIndex0() ].lv );
+    leptons_to_clean.push_back( tau[ muTau[0].GetTauIndex0() ].lv );
     break;
   }
   for(int i=0; i<NJets; ++i){
