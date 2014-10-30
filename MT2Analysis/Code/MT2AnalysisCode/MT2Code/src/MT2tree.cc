@@ -1003,11 +1003,29 @@ void MT2tree::SetNTausIDLoose2(int n) {
 
 // --------------------------------------------------------
 // NJets and friends
-Int_t MT2tree::GetNjets(float minJPt, float maxJEta, int PFJID){
+			  Int_t MT2tree::GetNjets(float minJPt, float maxJEta, int PFJID, int lepton_channel_to_clean){
   int njets=0;
+  vector<TLorentzVector> leptons_to_clean;
+  switch( lepton_channel_to_clean ){
+  case 1:
+    leptons_to_clean.push_back( ele[ eleTau[0].GetEleIndex0() ].lv );
+    leptons_to_clean.push_back( tau[ eleTau[0].GetTauIndex0() ].lv );
+    break;
+  case 2:
+    leptons_to_clean.push_back( muo[ muTau[0].GetMuIndex0() ].lv );
+    leptons_to_clean.push_back( tau[ eleTau[0].GetTauIndex0() ].lv );
+    break;
+  }
   for(int i=0; i<NJets; ++i){
 	if(jet[i].IsGoodPFJet(minJPt,maxJEta,PFJID)==false) continue;
-	njets++;
+	int nNeighbourLepts = 0;
+	for( auto lept : leptons_to_clean )
+	  if( lept.DeltaR( jet[i].lv ) < 0.5 ){
+	    nNeighbourLepts ++;
+	    break;
+	  }
+	if( nNeighbourLepts == 0 )
+	  njets++;
   }
   return njets;
 }

@@ -272,6 +272,69 @@ ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, 
   }
 }
 
+ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, TString formula , int nbins, double* bins ,TString SUSYCatCommand_ , std::vector<TString> SUSYNames_,  std::vector<TString>* labels ) :
+  CutName( cutname ),
+  Name(name),
+  Formula(formula),
+  nBins(nbins),
+  Min(bins[0]),
+  Max(bins[nbins]),
+  isString(false),
+  tFormula(0),
+  tSUSYCatFormula(0),
+  SUSYNames( SUSYNames_ ),
+  SUSYCatCommand( SUSYCatCommand_ ){
+
+  gROOT->cd();
+
+  TH1::SetDefaultSumw2();
+   
+
+  vector<TString>  cnames = {"QCD", "Wtolnu","VV", "DY", "Top", "MC", "SUSY" , "data" };
+  vector<int>      ccolor = {  401,     417, kGreen-7 , 419,   600,  500, 1 , 632 };
+
+  //vector<TString>  cnames = {"BCtoE", "EMEnriched" , "MuEnriched" , "GJets" , "VV" , "Wtolnu", "DY", "Top" ,"TTV" , "STop" , "MC", "SUSY" , "data" };
+  //vector<int>      ccolor = {  kYellow, kYellow+3 , kYellow-9 , kYellow-6 , kGreen-7 ,  kGreen+3,   kOrange-3 , kBlue  ,kBlue-7  , kCyan-2,  500, kBlack , kRed };
+
+  NumberOfHistos = (cnames.size() +SUSYNames_.size()) ;
+
+  for( int i=0 ; i< int(SUSYNames.size()) ; i++){
+    cnames.push_back( "SUSY_" + SUSYNames[i] );
+    ccolor.push_back( 1 );
+  }
+
+  TString varname = Name;
+  for (int i=0; i<NumberOfHistos ; i++){
+
+    histoNames.push_back( cnames[i] );
+
+    TH1* theH = allHistos[ cnames[i] ] = new TH1D( CutName + "_" + varname+"_"+cnames[i], "", nBins, bins );
+    theH -> SetFillColor  (ccolor[i]);
+    theH -> SetLineColor  (ccolor[i]);
+    theH -> SetLineWidth  (2);
+    theH -> SetMarkerColor(ccolor[i]);
+    theH -> SetStats(false);
+
+    if(labels){
+      int i = 1;
+      for(std::vector<TString>::const_iterator itr = labels->begin() ; itr != labels->end() && i < nBins+1 ; itr++ , i++)
+	theH->GetXaxis()->SetBinLabel( i , *itr);
+    }
+
+    if(i == int(cnames.size()) -1){
+      theH -> SetMarkerStyle(20);
+      theH -> SetMarkerColor(kBlack);
+      theH -> SetLineColor(kBlack);
+    }
+    if( i == int(cnames.size())-3){
+      theH -> SetFillStyle(3004);
+      theH -> SetFillColor(kBlack);
+    }
+  }
+}
+
+
+
 void ExtendedObjectProperty::SetTree( TTree* tree , TString sampletype, TString samplesname , TString cutname ){
   if( strcmp( cutname , "" ) != 0 )
     CutName = cutname;
@@ -951,7 +1014,7 @@ void ExtendedEfficiency::Fill(double w ){
 	continue;
     }else{
       cout << preCondsAllBits[i] << endl;
-      if( preCondsAllBits[i] = 0 )
+      if( preCondsAllBits[i] == 0 )
 	continue;
     }
 

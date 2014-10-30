@@ -317,7 +317,7 @@ public:
     oDPhiJetsDilept = new ExtendedObjectProperty("AllCuts" , "DPhiJetsDilept" , "abs(DPhiJPtZPt)" , 16 , 0 , 3.2 , susyFormula , ThisSUSYCatName );
     oDPhi = new ExtendedObjectProperty("AllCuts" , "DPhi" , "EleTauDPhi" , 16 , 0 , 3.2 , susyFormula , ThisSUSYCatName );
     oDR = new ExtendedObjectProperty("AllCuts" , "DPR" , "EleTauDR" , 10 , 0 , 5.0 , susyFormula , ThisSUSYCatName );
-    oDiffEleTauPt = new ExtendedObjectProperty("AllCuts" , "DiffEleTauPt" , "TauPt-ElePt" , 2 , -10000 , 10000 , susyFormula , ThisSUSYCatName ) ;
+    oDiffEleTauPt = new ExtendedObjectProperty("AllCuts" , "DiffEleTauPt" , "EleTauPt/(TauPt+ElePt)" , 2 , -10000 , 10000 , susyFormula , ThisSUSYCatName ) ;
     oST = new ExtendedObjectProperty("AllCuts" , "ST" , "ElePt+TauPt+MET" , 25 , 100 , 600 , susyFormula , ThisSUSYCatName ) ;
     oSUMPt = new ExtendedObjectProperty("AllCuts" , "SumPT" , "ElePt+TauPt" , 25 , 50 , 550 , susyFormula , ThisSUSYCatName ) ;
     allObjs = {oDPhi , oSumMT , oDR , oDPhiJetsDilept , oMT2 , oDiffEleTauPt , oST , oMETModMPZMod , oSUMPt } ; //oMET , oMT2 , oMETModPPZMod , oMETModMPZMod , oEleTauPt, oTauPt , oEleMT , oMETPElePt , oJPTModMZPTMod , oCalculatedW , oSumMT , oDPhiJetsDilept , oDPhi , oDR } ;
@@ -561,7 +561,10 @@ public:
       //ret &= EleTauPt >= 100 ;
 
       DiffEleTauPt = oDiffEleTauPt->tFormula->EvalInstance(0) ;
-      ret &= (DiffEleTauPt >=0) ;  
+      //ret &= (DiffEleTauPt < 0.7) ;  
+      //ret &= (MT2 < 90);
+      //ret &= (MT2 + EleTauPt > 150);
+      
 
       double vals[] = {
 	METModMPZMod,
@@ -595,8 +598,8 @@ public:
       //W /= 2;
 
 
-      if(isSignal())
-	W *= sgnXSection2W ;
+  //if(isSignal())
+  //W *= sgnXSection2W ;
 
       double BinVal = vals[ this->nVarToBin ];
       bool ret2 = ( ret && ( BinVal > binnedProps.begin()->first ) );

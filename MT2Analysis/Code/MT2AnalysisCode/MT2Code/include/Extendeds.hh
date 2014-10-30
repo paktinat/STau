@@ -36,6 +36,7 @@ using namespace std;
 class ExtendedObjectProperty : public TObject {
 public:
   ExtendedObjectProperty(TString cutname , TString name, TString formula , int nbins, double min, double max , TString SUSYCatCommand , std::vector<TString> SUSYNames  ,  std::vector<TString>* labels = NULL);
+  ExtendedObjectProperty( TString cutname , TString name, TString formula , int nbins, double* bins ,TString SUSYCatCommand_ , std::vector<TString> SUSYNames_,  std::vector<TString>* labels = NULL ) ;
 
   virtual void SetTree( TTree* tree , TString sampletype , TString samplesname , TString Cutname = "");
 

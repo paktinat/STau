@@ -866,7 +866,7 @@ public:
 
   // My functions here
   // NJets
-  Int_t    GetNjets   (float minJPt=20, float maxJEta=5., int PFJID=0);  // PFJETID not depends on pt and eta
+  Int_t    GetNjets   (float minJPt=20, float maxJEta=5., int PFJID=0 , int lepton_channel_to_clean = 0);  // PFJETID not depends on pt and eta; lepton_channels_to_clean : 0 nothing,1 ele-tau, 2 mu-tau
   Int_t    GetJetIndex(int ijet=0, int PFJID=0, float minJPt=20, float maxJEta=2.4);
   Int_t    GetJetIndexByEta(int ijet=0, int PFJID=0, float minJPt=20, float maxJEta=2.4);
   Int_t    GetNBtags  (int algo=3, float value=2., float minJPt=20, float maxJEta=2.4, int PFJID=0);  // algo - 0:TCHE, 1:TCHP, 2:SSVHE, 3:SSVHP

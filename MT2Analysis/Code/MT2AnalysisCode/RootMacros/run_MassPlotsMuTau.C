@@ -229,7 +229,7 @@
   //tA->makePlot("JZB(-1)",     cuts,    -10,  0 , -10 ,   trigger , "(MET - muTau).Pt"            , 45, 0, 450,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
   //tA->makePlot("abs(JZB())",     cuts,    -10,  0 , -10 ,   trigger , "|METnoMuTau - muTauPt|"            , 15, 0, 150,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 
-  tA->makePlot("tau[muTau[0].tau0Ind].lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "tau Pt"            ,25,0, 250,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+  tA->makePlot("GetNjets(30 , 2.4 , 0 , 2)",     cuts,    -10,  0 , -10 ,   trigger , "tau Pt"            ,10,0, 10,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 
 
   //void MassPlotter::plotSig(TString var, TString cuts, TString xtitle, int nbins, double min, double max, bool flip_order, int type , int LowerCut){ LowerCut = 0(default) <, LowerCut = 1 >
