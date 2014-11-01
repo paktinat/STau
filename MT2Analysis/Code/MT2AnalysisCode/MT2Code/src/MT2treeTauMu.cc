@@ -91,6 +91,20 @@ bool MT2tree::HasNoVetoMuForMuTau(int signalIndex){
   return false;
 }
 
+bool MT2tree::HasNoVetoMuForMuTau(){
+  int nVeto = 0;
+  for(int i = 0; i < NMuons; i++){
+    if(i == muTau[0].GetMuIndex0())
+      continue;
+    if(muo[i].RejMu_TauTau){//decreasing the pt threshold from 15 to 10.
+      nVeto++;
+    }
+  }
+  if(nVeto == 0)
+    return true;
+  return false;
+}
+
 void MT2tree::FillMuTau(){
   muTau[0].Reset();	
 

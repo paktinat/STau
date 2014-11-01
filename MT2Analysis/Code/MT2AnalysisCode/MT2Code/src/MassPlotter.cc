@@ -275,8 +275,6 @@ void MassPlotter::makeSmallCopy(unsigned int nevents, unsigned int mysample, TSt
 
     fSamples[ii].tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-//     fSamples[ii].tree->SetEventList(myEvtList);
-
 
     unsigned int nentries = myEvtList->GetN();
 
@@ -899,17 +897,7 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 	if     (nleps ==-11) nLeps = " && NEles ==1 && NMuons ==0"; 
 	if     (nleps ==-13) nLeps = " && NEles ==0 && NMuons ==1"; 
 
-	TString tmpname = varname+"_CUT_"+nJets+"_"+nBJets+"_"+nLeps;
-	tmpname.ReplaceAll(">=" ,".ge");
-	tmpname.ReplaceAll("<=" ,".le");
-	tmpname.ReplaceAll(">" ,".gt");
-	tmpname.ReplaceAll("<" ,".lt");
-	tmpname.ReplaceAll("==",".eq");
-	tmpname.ReplaceAll("!=",".ne");
-	tmpname.ReplaceAll("&&","_");
-	tmpname.ReplaceAll("||","_");
-	tmpname.ReplaceAll("misc.","");
-	TString varname2 = Util::removeFunnyChar(tmpname.Data());
+	TString varname2 = "h_";
 	
 	THStack* h_stack     = new THStack(varname2, "");
   	TH1D*    h_data      = new TH1D   (varname2+"data"  , "", nbins, bins );
@@ -939,13 +927,14 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 	//TString  cnames[5] = {"QCD", "W/Z/#gamma production", "Top production", "susy", "data"};
 	//int      ccolor[5] = {401, 418, 602, 0, 632};
 	TString  cnames[7] = {"QCD", "W+jets", "Z+jets", "Top",   "WW+jets", "susy", "data"};
+	TString  cnames2[7] = {"QCD", "Wjets", "Zjets",  "Top",   "WWjets",  "susy", "data"};
 	int      ccolor[7] = { 401,   417,       419,      855,    603,     0,     632};
 	vector<TH1D*> h_signals;
 	int n_sig=0;
 	TString  snames[5] = {"signal1","signal2","signal3","signal4","signal5"};
 	int      scolor[5] = {     kRed+3,   kOrange-3,   kViolet-6,   kBlack,   kRed-4};
 	for (int i=0; i<7; i++){
-	  h_composited[i] = new TH1D(varname2+"_"+cnames[i], "", nbins, bins);
+	  h_composited[i] = new TH1D(varname2+"_"+cnames2[i], "", nbins, bins);
 	  h_composited[i] -> Sumw2();
 	  h_composited[i] -> SetFillColor  (stacked ? ccolor[i] : 0);
 	  h_composited[i] -> SetLineColor  (ccolor[i]);
@@ -1134,6 +1123,7 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 		  h_composited[5]->Add(h_samples[i]);
 		  cnames[5] = Samples[i].sname;
 		  snames[n_sig] = Samples[i].sname;
+
 		  char buf[10];
 		  sprintf(buf,"no%d", n_sig);
 		  //itoa(n_sig, buf, 10);
@@ -1284,58 +1274,7 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 
 	TString ytitle = "Events";
 
-	TString oname = var+ "_CUT_";
-	oname += njets < 0 ? TString::Format("ge%dJets",abs(njets)) : TString::Format("%dJets",abs(njets));
-	oname += nbjets == -10 ? "" : nbjets < 0 ? TString::Format("_ge%dBtag",abs(nbjets)) : TString::Format("_%dBtag",abs(nbjets));
-	oname += nleps == 0 ? "_0Lep_" : nleps == -10 ? "_anyLep_" : nleps == -11 ? "_1Ele_" : nleps == -13 ? "_1Muo_" :
-			     nleps < 0 ? TString::Format("_ge%dLeps_",abs(nleps)) : TString::Format("_%dLeps_",abs(nleps));
-	oname += maincuts;
-	oname.ReplaceAll(">=" ,".ge");
-	oname.ReplaceAll("<=" ,".le");
-	oname.ReplaceAll(">" ,".gt");
-	oname.ReplaceAll("<" ,".lt");
-	oname.ReplaceAll("==",".eq");
-	oname.ReplaceAll("!=",".ne");
-	oname.ReplaceAll("&&","_");
-	oname.ReplaceAll("||","_");
-	oname.ReplaceAll("misc.","");
-	oname.ReplaceAll("LeadingJPt","J1Pt");
-	oname.ReplaceAll("SecondJPt","J2Pt");
-	oname.ReplaceAll("LeptConfig","LepCfg");
-	oname.ReplaceAll("Vectorsumpt","VSPT");
-	oname.ReplaceAll("hcalLaserEventFlag","hcalFlg");
-	oname.ReplaceAll("trackingFailureFlag","trkFailFlg");
-	oname.ReplaceAll("eeBadScFlag","eeBadFlg");
-	oname.ReplaceAll("EcalDeadCellTriggerPrimitiveFlag","EcalTPFlg");
-	oname.ReplaceAll("EcalDeadCellBEFlag","BEFlg");
-	oname.ReplaceAll("HBHENoiseFlag","HBHEFlg");
-	oname.ReplaceAll("CSCTightHaloIDFlag","CSCFlg");
-	oname.ReplaceAll("NJetsIDLoose40","NJIDLoose40");
-	oname.ReplaceAll("NJetsIDLoose","NJIDLoose");
-	oname.ReplaceAll("isPFIDLoose","isJLoose");
-	oname.ReplaceAll("IsGoodPFJet","IsGoodPFJ");
-	oname.ReplaceAll("MinMetJetDPhi","MinDPhi");
-	oname.ReplaceAll("trigger.HLT_HT260_MHT60_v2","HLT_HT260_MHT60_v2");
-	oname.ReplaceAll("trigger.HLT_HT250_MHT60_v3","HLT_HT250_MHT60_v3");
-	oname.ReplaceAll("trigger.HLT_HT250_MHT60_v2","HLT_HT250_MHT60_v2");
-	oname.ReplaceAll("trigger.HLT_HT440_v2","HLT_HT440_v2");
-	oname.ReplaceAll("trigger.HLT_HT450_v2","HLT_HT450_v2");
-	oname.ReplaceAll("trigger.HLT_HT500_v3","HLT_HT500_v3");
-	oname.ReplaceAll(",","-");
-        TString outname = Util::removeFunnyChar(oname.Data());
-	outname.ReplaceAll("_ProcessID.ne10_Susy.MassChi.eq350_Susy.MassLSP.eq50","");
-	outname.ReplaceAll("_ProcessID.eq10","");
-	outname.ReplaceAll("NMuons.eq0_muo0.lv.Pt.lt10_NEles.eq0_ele0.lv.Pt.lt10","noLepPt10");
-	outname.ReplaceAll("NMuons.gt0_muo0.lv.Pt.gt10_NEles.gt0_ele0.lv.Pt.gt10","gt1lepPt10");
-	outname.ReplaceAll("Jet0Pass.eq1","J0Pass");
-	outname.ReplaceAll("Jet1Pass.eq1","J1Pass");
-	outname.ReplaceAll("PassJetID.eq1","PassJID");
-	outname.ReplaceAll("Flg.eq0","Flg");
-	outname.ReplaceAll("_ProcessID.ne6_Event.ne1689009_Event.ne2275452_Event.ne1946785_Event.ne1936763_Event.ne1890738_Event.ne1757319_","_");
-	outname.ReplaceAll("ProcessID.ne6_Event.ne4160010_Event.ne5022935_Event.ne1323244_Event.ne1305531_Event.ne4053304_Event.ne5630056_Event.ne3539458_ProcessID.ne10_Susy.MassChi.eq450_Susy.MassLSP.eq150","");
-	outname.ReplaceAll("_ProcessID.ne6_Event.ne4160010_Event.ne5022935_Event.ne1323244_Event.ne1305531_Event.ne4053304_Event.ne5630056_Event.ne3539458","");
-	outname.ReplaceAll("_HBHEFlg_CSCFlg_hcalFlg_trkFailFlg_eeBadFlg_EcalTPFlg_CrazyHCAL.eq0","");
-
+	TString outname = myChannel;
 	if(saveHistos){
 		TString fileName = fOutputDir;
 		if(!fileName.EndsWith("/")) fileName += "/";
@@ -1551,16 +1490,10 @@ void MassPlotter::plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, bo
 
 	TString save=name+"_ratio";
 	if(fSave) Util::Print(c1, save, fOutputDir, fOutputFile);
-	if(saveMacro != "")
-		c1->SaveAs(save+"."+saveMacro);
-
-// 	delete h1;
-// 	delete h2;
-// 	delete h_ratio;
-// 	delete p_plot;
-// 	delete p_ratio;
-// 	delete c1;
-
+	if(saveMacro != ""){
+	  TString newXtitle = Util::removeFunnyChar(xtitle.Data());
+	  c1->SaveAs(newXtitle + "_" + save + "." + saveMacro);
+	}
 }
 //_________________________________________________________________________________
 void MassPlotter::plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, TH1* h3, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle,int njets,int nbjets, int nleps, float overlayScale, TString saveMacro){
@@ -1740,11 +1673,12 @@ void MassPlotter::plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, TH
 
 	TString save=name+"_ratio";
 	if(fSave)Util::Print(c1, save, fOutputDir, fOutputFile);
-    if(saveMacro != "")	
-		c1->SaveAs(save + "." + saveMacro);
-
-
+	if(saveMacro != ""){
+	  TString newXtitle = Util::removeFunnyChar(xtitle.Data());
+	  c1->SaveAs(newXtitle + "_" + save + "." + saveMacro);
+	}
 }
+
 //_________________________________________________________________________________
 void MassPlotter::plotRatio(TH1* h1_orig, TH1* h2_orig, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle){
 	// define canvas and pads
@@ -1864,13 +1798,6 @@ void MassPlotter::plotRatio(TH1* h1_orig, TH1* h2_orig, bool logflag, bool norma
 
 	TString save=name+"_ratio";
 	if(fSave)Util::PrintEPS(c1, save, fOutputDir);	
-
-// 	delete h1;
-//	delete h2;
-//	delete h_ratio;
-// 	delete p_plot;
-// 	delete p_ratio;
-// 	delete c1;
 
 }
 //___________________________________________________________________________
@@ -2557,7 +2484,6 @@ void MassPlotter::TauContamination(int sample_index, unsigned int nevents, int f
 
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-//     Sample.tree->SetEventList(myEvtList);
 
     unsigned int nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -5478,7 +5404,7 @@ void MassPlotter::vs(unsigned int  nevents, TString cuts, TString trigger){
 
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-//     Sample.tree->SetEventList(myEvtList);
+
     unsigned int nentries =  myEvtList->GetN();
     
     for (unsigned int jentry = 0; jentry < min(nentries, nevents); jentry++) {
@@ -5599,11 +5525,8 @@ void MassPlotter::SpecialMakePlot(unsigned int nevents, TString cuts, TString tr
 
     fSamples[ii].tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-//     fSamples[ii].tree->SetEventList(myEvtList);
-
 
     unsigned int nentries =  myEvtList->GetN();
-
 
     for (unsigned int i=0;i<min(nentries, nevents); i++) {
       if(i > nevents) continue;
@@ -5853,7 +5776,6 @@ void MassPlotter::TauEfficiency(TString cuts, unsigned int nevents, TString myfi
    
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-//     Sample.tree->SetEventList(myEvtList);
 
     unsigned int nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -5996,7 +5918,6 @@ void MassPlotter::TauFakeRate(TString cuts, TString trigger, unsigned int nevent
    
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-//     Sample.tree->SetEventList(myEvtList);
 
     unsigned int nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -6186,7 +6107,6 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, unsigned int neve
    
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-//     Sample.tree->SetEventList(myEvtList);
 
     unsigned int nentries = myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -6426,7 +6346,6 @@ void MassPlotter::eeFakeRateRatio(TString cuts, TString trigger, unsigned int ne
    
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-//     Sample.tree->SetEventList(myEvtList);
 
     unsigned int nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -6683,7 +6602,6 @@ void MassPlotter::eeWJetsEstimation(TString cuts, TString trigger, TString myfil
 
       Sample.tree->Draw(">>selList", myCuts);
       TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-//       Sample.tree->SetEventList(myEvtList);
       
       unsigned int nentries = myEvtList->GetN();
       
@@ -6747,7 +6665,6 @@ void MassPlotter::eeWJetsEstimation(TString cuts, TString trigger, TString myfil
 
       Sample.tree->Draw(">>selList", myCuts);
       TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-//       Sample.tree->SetEventList(myEvtList);
 
       unsigned int nentries = myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -6930,7 +6847,6 @@ void MassPlotter::eeFakePromptCategory(TString cuts, TString trigger, unsigned i
    
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-//     Sample.tree->SetEventList(myEvtList);
 
     unsigned int nentries = myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -7174,7 +7090,6 @@ void MassPlotter::eeAnalysis(TString cuts, TString trigger, unsigned int nevents
    
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-//     Sample.tree->SetEventList(myEvtList);
 
     unsigned int nentries = myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -7368,7 +7283,6 @@ void MassPlotter::elemuAnalysis(TString cuts, TString trigger, unsigned int neve
    
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-//     Sample.tree->SetEventList(myEvtList);
 
     unsigned int nentries = myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -7547,7 +7461,6 @@ MT2[0]->Fill(myQuantity, weight);
    
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-//     Sample.tree->SetEventList(myEvtList);
 
     unsigned int nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -7680,7 +7593,6 @@ void MassPlotter::EleEfficiencyforelemu(TString cuts, unsigned int nevents, TStr
    
     Sample.tree->Draw(">>selList", myCuts);
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-//     Sample.tree->SetEventList(myEvtList);
 
     unsigned int nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -7918,7 +7830,6 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 
       Sample.tree->Draw(">>selList", myCuts);
       TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-//       Sample.tree->SetEventList(myEvtList);
       
       unsigned int nentries = myEvtList->GetN();
       
@@ -7982,7 +7893,6 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 
       Sample.tree->Draw(">>selList", myCuts);
       TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
-//       Sample.tree->SetEventList(myEvtList);
 
       unsigned int nentries = myEvtList->GetN();//Sample.tree->GetEntries();
 
@@ -8313,7 +8223,7 @@ TGraphAsymmErrors* MassPlotter::plotSig(TH1 *hSgn, TH1 *hBkg, TString xtitle, TS
     float *eym = new float[nbins + 1];
 
     for (int i = 1; i <= nbins+1; i++) {
-      cout<<cutType<<" bin "<<i<<endl;
+ 
         x[i - 1] = hSgn->GetBinLowEdge(i);
         ex[i - 1] = hSgn->GetBinWidth(i)/2.0;
 
@@ -8340,7 +8250,7 @@ TGraphAsymmErrors* MassPlotter::plotSig(TH1 *hSgn, TH1 *hBkg, TString xtitle, TS
                 ey[i - 1] = y[i - 1] * (ds / s + db / b);
             }
             if (type == 3) {
-
+	      cout<<cutType<<" bin "<<i<<endl;
                 makeCard(b, s, sys, b, sys, "datacard");
                 if (!(std::ifstream("datacard")).good()) continue;
                 system("combine -M Asymptotic datacard");
@@ -8396,3 +8306,206 @@ TGraphAsymmErrors* MassPlotter::plotSig(TH1 *hSgn, TH1 *hBkg, TString xtitle, TS
     return sig;
 }
 
+void MassPlotter::LeptonEfficiency(TString cuts, unsigned int nevents){
+  TH1::SetDefaultSumw2();
+ 
+  float xbin1[4] = {0.0, 50.0, 100.0, 1000.0}; 
+
+  TH1F *hPtTauAllBarrel = new TH1F("PtTauAllBarrel","PtTauAllBarrel", 3, xbin1);
+  TH1F *hPtMuAllBarrel  = new TH1F("PtMuAllBarrel", "PtMuAllBarrel",  3, xbin1);
+  TH1F *hPtEleAllBarrel = new TH1F("PtEleAllBarrel","PtEleAllBarrel", 3, xbin1);
+
+  TH1F *hPtTauAllEndcap = new TH1F("PtTauAllEndcap","PtTauAllEndcap", 3, xbin1);
+  TH1F *hPtMuAllEndcap  = new TH1F("PtMuAllEndcap", "PtMuAllEndcap",  3, xbin1);
+  TH1F *hPtEleAllEndcap = new TH1F("PtEleAllEndcap","PtEleAllEndcap", 3, xbin1);
+
+  TH1F *hPtTauPassBarrel = new TH1F("PtTauPassBarrel","PtTauPassBarrel", 3, xbin1);
+  TH1F *hPtMuPassBarrel  = new TH1F("PtMuPassBarrel", "PtMuPassBarrel",  3, xbin1);
+  TH1F *hPtElePassBarrel = new TH1F("PtElePassBarrel","PtElePassBarrel", 3, xbin1);
+
+  TH1F *hPtTauPassEndcap = new TH1F("PtTauPassEndcap","PtTauPassEndcap", 3, xbin1);
+  TH1F *hPtMuPassEndcap  = new TH1F("PtMuPassEndcap", "PtMuPassEndcap",  3, xbin1);
+  TH1F *hPtElePassEndcap = new TH1F("PtElePassEndcap","PtElePassEndcap", 3, xbin1);
+
+  for(unsigned int ii = 0; ii < fSamples.size(); ii++){
+    
+   TString myCuts = cuts;
+ 
+
+   sample Sample = fSamples[ii];
+    
+   if(Sample.shapename != "ZJetsToLL" && Sample.name != "TTbar" && Sample.sname != "SUSY")
+     continue;
+
+      fMT2tree = new MT2tree();
+   Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
+
+   float Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
+
+   std::cout << setfill('=') << std::setw(70) << "" << std::endl;
+    cout << "looping over :     " <<endl;	
+    cout << "   Name:           " << Sample.name << endl;
+    cout << "   File:           " << (Sample.file)->GetName() << endl;
+    cout << "   Events:         " << Sample.nevents  << endl;
+    cout << "   Events in tree: " << Sample.tree->GetEntries() << endl; 
+    cout << "   Xsection:       " << Sample.xsection << endl;
+    cout << "   kfactor:        " << Sample.kfact << endl;
+    cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
+    cout << "   Weight:         " << Weight <<endl;
+    std::cout << setfill('-') << std::setw(70) << "" << std::endl;
+   
+   if(fStitching && (Sample.sname == "Wtolnu" || (Sample.shapename == "ZJetsToLL" && Sample.name != "DYToLL_M10To50"))){
+
+       Weight = Sample.lumi;
+       if(fPUReweight) Weight /= Sample.PU_avg_weight;
+       
+   }
+
+   Sample.tree->Draw(">>selList", myCuts);
+   TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
+   
+   unsigned int nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
+   
+   for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
+     
+     Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
+     
+     if ( fVerbose>2 && jentry % 100000 == 0 ){  
+       fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+       fflush(stdout);
+     }
+     
+     float weight = Weight * fMT2tree->pileUp.Weight;
+     
+     for(int j = 0; j < fMT2tree->NGenLepts; j++){
+       if(abs(fMT2tree->genlept[j].ID) != 15 && abs(fMT2tree->genlept[j].ID) != 13 && abs(fMT2tree->genlept[j].ID) != 11)
+	 continue;
+		
+	int HadTau = 1;
+	
+	if(abs(fMT2tree->genlept[j].ID) == 15){   
+	  for(int i = 0; i < fMT2tree->NGenLepts; i++){
+	    if((abs(fMT2tree->genlept[i].ID) == 11 && fMT2tree->genlept[i].MID == fMT2tree->genlept[j].ID) || 
+	       (abs(fMT2tree->genlept[i].ID) == 13 && fMT2tree->genlept[i].MID == fMT2tree->genlept[j].ID)){
+	      HadTau = 0;
+	    }
+	  }
+	}
+
+ 	if(HadTau == 0)
+	  continue;
+	
+	TLorentzVector genLepLV;
+
+	genLepLV = fMT2tree->genlept[j].lv;
+	
+
+	//To find the recLep matched to this genLep
+	float minDR = 100.0;
+
+	float genleptEta = fMT2tree->genlept[j].lv.Eta();
+
+	float genleptPhi = fMT2tree->genlept[j].lv.Phi();
+	
+	//To find the rec/id tau matched to this gen had tau
+	
+	if(abs(fMT2tree->genlept[j].ID) == 15){ 
+	  for(int k = 0; k < fMT2tree->NTaus; k++){
+	    float deltaR = Util::GetDeltaR(genleptEta, fMT2tree->tau[k].lv.Eta(), genleptPhi, fMT2tree->tau[k].lv.Phi());
+	    if(fMT2tree->tau[k].PassTau_MuTau == 1)
+	      if(deltaR < minDR){
+		minDR = deltaR;
+	      }
+	  }
+	  if(fabs(genleptEta) < 1.479)
+	    hPtTauAllBarrel->Fill(genLepLV.Pt(), weight);
+	  else
+	    hPtTauAllEndcap->Fill(genLepLV.Pt(), weight);  
+	}
+
+	if(abs(fMT2tree->genlept[j].ID) == 13){ 
+	  for(int k = 0; k < fMT2tree->NMuons; k++){
+	    float deltaR = Util::GetDeltaR(genleptEta, fMT2tree->muo[k].lv.Eta(), genleptPhi, fMT2tree->muo[k].lv.Phi());
+	    if(fMT2tree->muo[k].PassMu0_TauMu == 1)
+	      if(deltaR < minDR){
+		minDR = deltaR;
+	      }
+	  }
+	  if(fabs(genleptEta) < 1.479)
+	    hPtMuAllBarrel->Fill(genLepLV.Pt(), weight);
+	  else
+	    hPtMuAllEndcap->Fill(genLepLV.Pt(), weight);  
+	}
+
+	if(abs(fMT2tree->genlept[j].ID) == 11){ 
+	  for(int k = 0; k < fMT2tree->NEles; k++){
+	    float deltaR = Util::GetDeltaR(genleptEta, fMT2tree->ele[k].lv.Eta(), genleptPhi, fMT2tree->ele[k].lv.Phi());
+	    if(fMT2tree->ele[k].IDSelETau == 1)
+	      if(deltaR < minDR){
+		minDR = deltaR;
+	      }
+	  }
+	  if(fabs(genleptEta) < 1.479)
+	    hPtEleAllBarrel->Fill(genLepLV.Pt(), weight);
+	  else
+	    hPtEleAllEndcap->Fill(genLepLV.Pt(), weight);  
+	}
+
+	if(minDR < 0.1){
+	  if(abs(fMT2tree->genlept[j].ID) == 15){
+	    if(fabs(genleptEta) < 1.479)
+	      hPtTauPassBarrel->Fill(genLepLV.Pt(), weight);
+	    else
+	      hPtTauPassEndcap->Fill(genLepLV.Pt(), weight);}
+
+	  if(abs(fMT2tree->genlept[j].ID) == 13){
+	    if(fabs(genleptEta) < 1.479)
+	      hPtMuPassBarrel->Fill(genLepLV.Pt(), weight);
+	    else
+	      hPtMuPassEndcap->Fill(genLepLV.Pt(), weight);}
+	 
+	  if(abs(fMT2tree->genlept[j].ID) == 11){
+	    if(fabs(genleptEta) < 1.479)
+	      hPtElePassBarrel->Fill(genLepLV.Pt(), weight);
+	    else
+	      hPtElePassEndcap->Fill(genLepLV.Pt(), weight);}
+	}
+     }
+    }
+  }
+
+  hPtTauPassBarrel->Divide(hPtTauAllBarrel);
+  hPtMuPassBarrel ->Divide(hPtMuAllBarrel);
+  hPtElePassBarrel->Divide(hPtEleAllBarrel);
+
+  hPtTauPassEndcap->Divide(hPtTauAllEndcap);
+  hPtMuPassEndcap ->Divide(hPtMuAllEndcap);
+  hPtElePassEndcap->Divide(hPtEleAllEndcap);
+  
+  TCanvas *MyC = new TCanvas("MyC", "MyC");
+  MyC->Divide(3,4);
+  MyC->cd(1);
+  hPtEleAllBarrel->Draw();
+  MyC->cd(2);
+  hPtMuAllBarrel->Draw();
+  MyC->cd(3);
+  hPtTauAllBarrel->Draw();
+  MyC->cd(4);
+  hPtElePassBarrel->Draw();
+  MyC->cd(5);
+  hPtMuPassBarrel->Draw();
+  MyC->cd(6);
+  hPtTauPassBarrel->Draw();
+  MyC->cd(7);
+  hPtEleAllEndcap->Draw();
+  MyC->cd(8);
+  hPtMuAllEndcap->Draw();
+  MyC->cd(9);
+  hPtTauAllEndcap->Draw();
+  MyC->cd(10);
+  hPtElePassEndcap->Draw();
+  MyC->cd(11);
+  hPtMuPassEndcap->Draw();
+  MyC->cd(12);
+  hPtTauPassEndcap->Draw();
+}

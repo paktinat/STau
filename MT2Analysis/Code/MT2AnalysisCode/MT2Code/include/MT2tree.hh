@@ -812,6 +812,7 @@ public:
   bool HasNoVetoMuForDoubleTau();
   bool HasNoVetoElecForDoubleTau();
   bool HasNoVetoMuForMuTau(int);
+  bool HasNoVetoMuForMuTau();
   bool HasNoVetoElecForMuTau();
   bool HasNoVetoMuForEleTau();
   bool HasNoVetoElecForEleTau(int = -1);
@@ -940,6 +941,8 @@ public:
   Float_t JZB1EleMu();
   Float_t JZB2EleMu();
   Float_t DeltaREleEle();
+
+
 
 
   Float_t JZBDPhi(){
