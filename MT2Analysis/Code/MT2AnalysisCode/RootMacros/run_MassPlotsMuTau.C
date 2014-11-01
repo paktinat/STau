@@ -70,13 +70,16 @@
   //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu1QCDInd != -1"));
   myChannelCuts.push_back("(muTau[0].lv.M() < 45 || muTau[0].lv.M() > 75)");
   myChannelCuts.push_back("muTau[0].lv.M() > 15");
-   myChannelCuts.push_back("misc.MET > 30"); //Place holder for MET requirements
+  myChannelCuts.push_back("misc.MET > 30"); //Place holder for MET requirements
   //    myChannelCuts.push_back(std::string(std::string(myChan) + ".DPhi < 2.5"));
   myChannelCuts.push_back("NBJetsCSVM == 0");
   //myChannelCuts.push_back("misc.Jet0Pass");
   //myChannelCuts.push_back("misc.LeadingJPt > 350");
 
-  //myChannelCuts.push_back("muo[muTau[0].mu0Ind].MT > 125.0");
+//   myChannelCuts.push_back("muTau[0].MT2 > 80.0");
+
+//   myChannelCuts.push_back("NJetsIDLoose == 0");
+//   myChannelCuts.push_back("jet[0].isTauMatch < 0");
   myChannelCuts.push_back("0 == 0");	//Place holder for Jet requirements
 
   // We need to make the cut stream
@@ -206,24 +209,24 @@
 //   tA->makePlot(vars[iVar], cuts, -10, -10 , -10, trigger, vars[iVar], 20, 0, 300, false, true, true, true, true, true, 1, true, true, "png");
 //}
 
-  tA->makePlot("PZetaImbalancedMuTau() + 1.85 * PVisibleZetaMuTau()",     cuts,    -10,  -10 , -10 ,   trigger , "PZetaImbalancedMuTau + 1.85 * PVisibleZetaMuTau()"            ,40,-150,2350,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+  //tA->makePlot("MetDotZ()",     cuts,    -10,  0 , -10 ,   trigger , "#Delta#Phi(Met,Z)"            ,34, -0.1, 3.3,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 
-//   tA->makePlot("misc.Run",     cuts,    -10,  -10 , -10 ,   trigger , "Run"            ,19000,190000, 209000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+//  tA->makePlot("misc.Run",     cuts,    -10,  -10 , -10 ,   trigger , "Run"            ,19000,190000, 209000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 
 
 //void MassPlotter::plotSig(TString var, TString cuts, TString xtitle, int nbins, double min, double max, bool flip_order, int type , int LowerCut){ LowerCut = 0(default) <, LowerCut = 1 >
-  //tA->plotSig("PZetaImbalancedMuTau()", cuts,  "PZetaImbalancedMuTau", 40,-150,1850, 0, 0, 1);
+  tA->plotSig("ZJB(1) - muTau[0].lv.Pt()", cuts,  "ZJB Lower Cut", 50, -250, 250, 0, 2, 1);
 
   //tA->vs(10000000000, cuts, trigger);
 
-  //tA->muTauAnalysis(cuts, trigger, 10000000000, "MT2_NBCVM_ZlowMass_MET_dataSF_WjetsWeight_NonIsoTauLooseNotTight");
+  //tA->muTauAnalysis(cuts, trigger, 10000000000, "muPt_NBCVM_ZlowMass_MET_dataSF_WjetsWeight");
   //tA->TauFakeRate(cuts, trigger, 10000000000, "PtEta_TightMuonRej2_LooseEleRej_Over_TauEtaLooseIso3hit_Jet0Pass_LeadingJPt350");
-  int NumberOfBins = 17;
+  int NumberOfBins = 50;//17
   //double * xbin;
-  double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};      //MT2
+  //double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};      //MT2
   //double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
-
-  //tA->DrawMyPlots("MT2_NBCVM_ZlowMass_MET_dataSF_WjetsWeight_NonIsoTauLooseNotTight_Histos.root", xbin, NumberOfBins);
+  double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0, 110.0,120.0,130.0,140.0,150.0,160.0,170.0,180.0,190.0,200.0,210.0,220.0,230.0,240.0,250.0,260.0,270.0,280.0,290.0, 300.0,310.0,320.0,330.0,340.0,350.0,360.0,370.0,380.0,390.0,400.0,410.0,420.0,430.0,440.0,450.0,460.0,470.0,480.0,490.0,500};      //MT2
+  //tA->DrawMyPlots("muPt_NBCVM_ZlowMass_MET_dataSF_WjetsWeight_Histos.root", xbin, NumberOfBins);
 
   /*
 * Show cutflow table
