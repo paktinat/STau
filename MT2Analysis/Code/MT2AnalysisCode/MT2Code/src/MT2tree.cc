@@ -1015,6 +1015,10 @@ void MT2tree::SetNTausIDLoose2(int n) {
     leptons_to_clean.push_back( muo[ muTau[0].GetMuIndex0() ].lv );
     leptons_to_clean.push_back( tau[ muTau[0].GetTauIndex0() ].lv );
     break;
+  case 3:
+    leptons_to_clean.push_back( tau[ doubleTau[0].GetTauIndex0() ].lv );
+    leptons_to_clean.push_back( tau[ doubleTau[0].GetTauIndex1() ].lv );
+    break;
   }
   for(int i=0; i<NJets; ++i){
 	if(jet[i].IsGoodPFJet(minJPt,maxJEta,PFJID)==false) continue;
