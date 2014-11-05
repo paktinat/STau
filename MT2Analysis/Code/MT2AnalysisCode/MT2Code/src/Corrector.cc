@@ -342,7 +342,8 @@ float getCorrFactor(std::string channel, std::string type, TLorentzVector const&
             return (Eff_MuTauTrg_Mu_Data_2012(a) / Eff_MuTauTrg_Mu_MC_2012(a))*(Eff_MuTauTrg_Tau_Data_2012(b) / Eff_MuTauTrg_Tau_MC_2012(b)) * Cor_IDIso_MuTau_Muon_2012(a);
         }
         if (channel == "tautau_ditau") {
-            return (eff2012IsoParkedTau19fb_Simone(a.Pt(), a.Eta()) / eff2012IsoParkedTau19fbMC_Simone(a.Pt(), a.Eta()))*(eff2012IsoParkedTau19fb_Simone(b.Pt(), b.Eta()) / eff2012IsoParkedTau19fbMC_Simone(b.Pt(), b.Eta()));
+          //return (eff2012IsoParkedTau19fb_Simone(a.Pt(), a.Eta()) / eff2012IsoParkedTau19fbMC_Simone(a.Pt(), a.Eta()))*(eff2012IsoParkedTau19fb_Simone(b.Pt(), b.Eta()) / eff2012IsoParkedTau19fbMC_Simone(b.Pt(), b.Eta()));
+            return (eff2012IsoParkedTau19fb_Simone(a.Pt(), a.Eta()) / 1.0)*(eff2012IsoParkedTau19fb_Simone(b.Pt(), b.Eta()) / 1.0);
         }
         if (channel == "tautau_ditaujet") {
             return (eff2012IsoTau19fb_Simone(a.Pt(), a.Eta()) / eff2012IsoTau19fbMC_Simone(a.Pt(), a.Eta()))*(eff2012IsoTau19fb_Simone(b.Pt(), b.Eta()) / eff2012IsoTau19fbMC_Simone(b.Pt(), b.Eta()))*(eff2012Jet19fb(c.Pt(), c.Eta()));
