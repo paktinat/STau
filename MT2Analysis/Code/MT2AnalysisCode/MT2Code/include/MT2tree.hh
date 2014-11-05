@@ -926,6 +926,7 @@ public:
   Float_t PositiveChargedLepWithZBeamPlaneMuTau();
   //-----------------Di-Electron--------------------
   Float_t PZetaEleEle();
+  Float_t weightTauTau();
   Float_t PZetaImbalancedEleEle();
   Float_t PVisibleZetaEleEle();
   Float_t DiLepPtRatioEleEle();
