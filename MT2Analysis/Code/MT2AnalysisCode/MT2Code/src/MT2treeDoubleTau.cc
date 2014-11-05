@@ -1,5 +1,15 @@
 #include "MT2tree.hh"
 #include "helper/Utilities.hh"
+#include "Corrector.h"
+
+Float_t MT2tree::weightTauTau(){
+  if(doubleTau[0].GetTauIndex0() >= 0 && doubleTau[0].GetTauIndex1() >= 0){
+    TLorentzVector tau0LV = tau[doubleTau[0].GetTauIndex0()].lv;
+    TLorentzVector tau1LV = tau[doubleTau[0].GetTauIndex1()].lv;
+    return getCorrFactor("tautau_ditau","mc12", tau0LV, tau1LV, tau0LV);
+  }else
+    return 0.0;
+} 
 
 struct IsoSumSort{
   bool operator() (std::pair <int, std::pair<int,int> > comb1, std::pair <int, std::pair<int,int> > comb2) 
