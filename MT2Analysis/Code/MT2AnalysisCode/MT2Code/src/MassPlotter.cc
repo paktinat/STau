@@ -218,7 +218,7 @@ void MassPlotter::makeSmallCopy(unsigned int nevents, unsigned int mysample, TSt
 
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
- 
+  /* 
   TFile *pileup_data = new TFile(GETDATALOCALPATH(Certification/pileUp_data/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.root),"READ");
   
   TH1F* pileup_data_histo = (TH1F*) pileup_data->Get("pileup");
@@ -237,7 +237,7 @@ void MassPlotter::makeSmallCopy(unsigned int nevents, unsigned int mysample, TSt
     pileup_data_histo->SetBinContent(i+1,  pileup_data_histo->GetBinContent(i+1)/pileup_mc_histo->GetBinContent(i+1));
   }
 
-  
+  */
 
   for(unsigned int ii = 0; ii < fSamples.size(); ii++){
     if(fSamples.size() > mysample && ii != mysample)
@@ -255,14 +255,14 @@ void MassPlotter::makeSmallCopy(unsigned int nevents, unsigned int mysample, TSt
     TString fileName = fSamples[ii].file->GetName();
 
     //    fileName =  fileName.ReplaceAll(".root", "_NBJetsCSVM0_MET30.root");
-    fileName =  fileName.ReplaceAll(".root", "_BigFiles_NewPU_Stitching.root");
+    fileName =  fileName.ReplaceAll(".root", "_DoubleTau.root");
 
     TFile *newfile = new TFile(fOutputDir+"/"+fileName,"recreate");
     TTree *newtree = fSamples[ii].tree->CloneTree(0);
     TH1F *h_PUWeights = (TH1F*) fSamples[ii].file->Get("h_PUWeights");
     TH1F *h_Events    = (TH1F*) fSamples[ii].file->Get("h_Events");
     
-    h_PUWeights->Reset();
+//     h_PUWeights->Reset();
 
     if(fSamples[ii].file->Get("h_SMSEvents")){
       h_SMSEvents    = (TH2F*) fSamples[ii].file->Get("h_SMSEvents");
@@ -290,27 +290,29 @@ void MassPlotter::makeSmallCopy(unsigned int nevents, unsigned int mysample, TSt
    
       float oldWeight = fMT2tree->pileUp.Weight;
 
-      int binNumber = pileup_data_histo->FindBin(fMT2tree->pileUp.PUtrueNumInt);
+//       int binNumber = pileup_data_histo->FindBin(fMT2tree->pileUp.PUtrueNumInt);
 
-      float newWeight = pileup_data_histo->GetBinContent(binNumber);
+//       float newWeight = pileup_data_histo->GetBinContent(binNumber);
     
-      if(fSamples[ii].sname == "Wtolnu" || (fSamples[ii].shapename == "ZJetsToLL" && fSamples[ii].name != "DYToLL_M10To50")){
-	int VBosonID = 24;
-	if(fSamples[ii].sname == "Wtolnu")
-	  VBosonID = 24;
-	else
-	  VBosonID = 23;
+//       if(fSamples[ii].sname == "Wtolnu" || (fSamples[ii].shapename == "ZJetsToLL" && fSamples[ii].name != "DYToLL_M10To50")){
+// 	int VBosonID = 24;
+// 	if(fSamples[ii].sname == "Wtolnu")
+// 	  VBosonID = 24;
+// 	else
+// 	  VBosonID = 23;
 
-	fMT2tree->pileUp.Weight = newWeight * fMT2tree->NewWeightFromStitching(VBosonID);
-      }else
-	fMT2tree->pileUp.Weight = newWeight;
+// 	fMT2tree->pileUp.Weight = newWeight * fMT2tree->NewWeightFromStitching(VBosonID);
+//       }else
+// 	fMT2tree->pileUp.Weight = newWeight;
 
-      if(fMT2tree->eleMu[0].ele0Ind >= 0)
-	fMT2tree->eleMu[0].EleIdIsoSF  = fMT2tree->ele[fMT2tree->eleMu[0].ele0Ind].GetEleIDISOSFelemu();
+//       if(fMT2tree->eleMu[0].ele0Ind >= 0)
+// 	fMT2tree->eleMu[0].EleIdIsoSF  = fMT2tree->ele[fMT2tree->eleMu[0].ele0Ind].GetEleIDISOSFelemu();
      
+      fMT2tree->pileUp.Weight = oldWeight * fMT2tree->weightTauTau();
+
       newtree->Fill();
 
-      h_PUWeights->Fill(newWeight);
+//       h_PUWeights->Fill(newWeight);
    
 //       cout<<"old weight "<<oldWeight<<" new weight "<<newWeight<<endl;
     }
@@ -1914,6 +1916,10 @@ void MassPlotter::printHisto(THStack* h, TH1* h_data, TH1* h_mc_sum, TLegend* le
 	if(fSave)Util::PrintEPS(col, canvname, fOutputDir);
 // 	delete col;
 
+
+	TString newXtitle = Util::removeFunnyChar(xtitle.Data());
+	col->SaveAs(newXtitle + "_" + "NoRatio.C");
+	
 }
 //____________________________________________________________________________
 void MassPlotter::printHisto(THStack* h, TH1* h_data, TH1* h_mc_sum, TH1* h_susy, TLegend* legend,  TString canvname, Option_t *drawopt, bool logflag, TString xtitle, TString ytitle,int njets, int nbjets, int nleps, float overlayScale){
@@ -2023,6 +2029,8 @@ void MassPlotter::printHisto(THStack* h, TH1* h_data, TH1* h_mc_sum, TH1* h_susy
 	if(fSave)Util::PrintNoEPS(col, canvname, fOutputDir, fOutputFile);
 	if(fSave)Util::PrintEPS(col, canvname, fOutputDir);
 // 	delete col;
+	TString newXtitle = Util::removeFunnyChar(xtitle.Data());
+	col->SaveAs(newXtitle + "_" + "NoRatio.C");
 
 }
 //____________________________________________________________________________
@@ -2143,6 +2151,8 @@ void MassPlotter::printHisto(THStack* h, TH1* h_data, TH1* h_mc_sum, vector<TH1D
 	if(fSave)Util::PrintNoEPS(col, canvname, fOutputDir, fOutputFile);
 	if(fSave)Util::PrintEPS(col, canvname, fOutputDir);
 // 	delete col;
+	TString newXtitle = Util::removeFunnyChar(xtitle.Data());
+	col->SaveAs(newXtitle + "_" + "NoRatio.C");
 
 }
 //____________________________________________________________________________
@@ -2201,6 +2211,8 @@ void MassPlotter::printHisto(THStack* h, TH1* h_data, TLegend* leg,  TString can
 	gPad->RedrawAxis();
 	col ->Update();
 	if(fSave) Util::PrintNoEPS(col, canvname, fOutputDir, fOutputFile);
+	TString newXtitle = Util::removeFunnyChar(xtitle.Data());
+	col->SaveAs(newXtitle + "_" + "NoRatio.C");
 	delete col;
 
 }
