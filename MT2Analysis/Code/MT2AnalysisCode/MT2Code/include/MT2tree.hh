@@ -865,6 +865,7 @@ public:
 	return ret;
   } 
 
+  Float_t weightTauTau();
   // My functions here
   // NJets
   Int_t    GetNjets   (float minJPt=20, float maxJEta=5., int PFJID=0 , int lepton_channel_to_clean = 0);  // PFJETID not depends on pt and eta; lepton_channels_to_clean : 0 nothing,1 ele-tau, 2 mu-tau, 3 tau-tau
@@ -924,24 +925,28 @@ public:
   Float_t MinMetLepDPhiMuTau();
   //Float_t PositiveChargedLepWithZBeamPlane(TLorentzVector LepPluslv, TLorentzVector LepNeglv);
   Float_t PositiveChargedLepWithZBeamPlaneMuTau();
-  //-----------------Di-Electron--------------------
-  Float_t PZetaEleEle();
-  Float_t weightTauTau();
-  Float_t PZetaImbalancedEleEle();
-  Float_t PVisibleZetaEleEle();
-  Float_t DiLepPtRatioEleEle();
-  Float_t PositiveChargedLeptonDecayAngleinZframeEleEle();
-  Float_t MinMetLepDPhiEleEle();
-  Float_t PositiveChargedLepWithZBeamPlaneEleEle();
-  Float_t MCTEleEle();
-  Float_t MCTImbEleEle();
-  Float_t METMinusPtZEleEle();
-  Float_t METPlusPtZEleEle();
-  Float_t JZBInDirectEleEle();
-  Float_t absJZBInDirectEleEle();
+
+  //----------------- ee --------------------
+  Float_t eePZeta();
+  Float_t eePZetaImbalanced();
+  Float_t eePVisibleZeta();
+  Float_t eeDiLepPtRatio();
+  Float_t eePositiveChargedLeptonDecayAngleinZframe();
+  Float_t eeMinMetLepDPhi();
+  Float_t eePositiveChargedLepWithZBeamPlane();
+  Float_t eeMCT();
+  Float_t eeMCTImb();
+  Float_t eeMETMinusPtZ();
+  Float_t eeMETPlusPtZ();
+  Float_t eeJZBInDirect();
+  Float_t eeabsJZBInDirect();
+  Float_t eeDeltaR();
+  Float_t eeDeltaRJet0E0();
+  //----------------------------------
+
   Float_t JZB1EleMu();
   Float_t JZB2EleMu();
-  Float_t DeltaREleEle();
+
 
 
 

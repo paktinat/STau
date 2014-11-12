@@ -3662,25 +3662,35 @@ float MT2tree::PositiveChargedLepWithZBeamPlaneMuTau(){
 
   return PositiveChargedLepWithZBeamPlane(LepPluslv, LepNeglv);
 }
-//--------------------EleEle-----------------------
-Float_t MT2tree::PZetaEleEle(){//temporary solution for makePlot. No need to be moved to the next versions.
+
+float MT2tree::JZB1EleMu(){
+return fabs(misc.MET+ eleMu[0].lv.Pt());
+}
+
+float MT2tree::JZB2EleMu(){
+return fabs(misc.MET- eleMu[0].lv.Pt());
+}
+
+//--------------------ee-----------------------
+
+Float_t MT2tree::eePZeta(){//temporary solution for makePlot. No need to be moved to the next versions.
   return PZeta(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, pfmet[0]);
 }
-Float_t MT2tree::PZetaImbalancedEleEle(){//temporary solution for makePlot. No need to be moved to the next versions.
+Float_t MT2tree::eePZetaImbalanced(){//temporary solution for makePlot. No need to be moved to the next versions.
   return PZeta(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, (-doubleEle[0].lv));
 }
 
-Float_t MT2tree::PVisibleZetaEleEle(){//temporary solution for makePlot. No need to be moved to the next versions.
+Float_t MT2tree::eePVisibleZeta(){//temporary solution for makePlot. No need to be moved to the next versions.
   return PVisibleZeta(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv);
 }
 
 
-float MT2tree::DiLepPtRatioEleEle(){//temporary solution for makePlot. No need to be moved to the next versions.
+float MT2tree::eeDiLepPtRatio(){//temporary solution for makePlot. No need to be moved to the next versions.
   return DiLepPtRatio(ele[doubleEle[0].Ele0Ind].lv , ele[doubleEle[0].Ele1Ind].lv);
 }
 
 
-float MT2tree::PositiveChargedLeptonDecayAngleinZframeEleEle(){
+float MT2tree::eePositiveChargedLeptonDecayAngleinZframe(){
   TLorentzVector LepPluslv;
   TLorentzVector LepNeglv;
 
@@ -3696,12 +3706,12 @@ float MT2tree::PositiveChargedLeptonDecayAngleinZframeEleEle(){
 }
 
 
-float MT2tree::MinMetLepDPhiEleEle(){//temporary solution for makePlot. No need to be moved to the next versions.
+float MT2tree::eeMinMetLepDPhi(){//temporary solution for makePlot. No need to be moved to the next versions.
   return MinMetLepDPhi(doubleEle[0].lv = ele[doubleEle[0].Ele0Ind].lv , ele[doubleEle[0].Ele1Ind].lv);
 }
 
 
-float MT2tree::PositiveChargedLepWithZBeamPlaneEleEle(){
+float MT2tree::eePositiveChargedLepWithZBeamPlane(){
   TLorentzVector LepPluslv;
   TLorentzVector LepNeglv;
 
@@ -3716,7 +3726,7 @@ float MT2tree::PositiveChargedLepWithZBeamPlaneEleEle(){
   return PositiveChargedLepWithZBeamPlane(LepPluslv, LepNeglv);
 }
   
-float MT2tree::MCTEleEle(){
+float MT2tree::eeMCT(){
 
   TVector2 pmiss_vector2;
   TLorentzVector downstream(0.,0.,0.,0.); // no particles are downstream, i.e. not selected jets are upstream. 
@@ -3724,7 +3734,7 @@ float MT2tree::MCTEleEle(){
   double MCT = GetMCTcorr(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, downstream, pmiss_vector2);
   return MCT;
 }
-float MT2tree::MCTImbEleEle(){
+float MT2tree::eeMCTImb(){
   TVector2 pmiss_vector2;
   TLorentzVector downstream(0.,0.,0.,0.); // no particles are downstream, i.e. not selected jets are upstream.
   pmiss_vector2.Set(-doubleEle[0].lv.Px(), -doubleEle[0].lv.Py());
@@ -3732,45 +3742,42 @@ float MT2tree::MCTImbEleEle(){
   return MCTImbalanced;
 }
 
-float MT2tree::METMinusPtZEleEle(){
+float MT2tree::eeMETMinusPtZ(){
   TLorentzVector A = pfmet[0]-doubleEle[0].lv;
   double B = A.Pt();
   return B;
 
 }
-float MT2tree::METPlusPtZEleEle(){
+float MT2tree::eeMETPlusPtZ(){
   TLorentzVector A = pfmet[0]+doubleEle[0].lv;
   double B = A.Pt();
   return B;
 }
 
 
-float MT2tree::JZBInDirectEleEle(){
+float MT2tree::eeJZBInDirect(){
   TLorentzVector A = -pfmet[0]-doubleEle[0].lv;
   double B = A.Pt();
   double C = B-doubleEle[0].lv.Pt();
   return C;
 }
-float MT2tree::absJZBInDirectEleEle(){
+float MT2tree::eeabsJZBInDirect(){
   TLorentzVector A = -pfmet[0]-doubleEle[0].lv;
   double B = A.Pt();
   double C = B-doubleEle[0].lv.Pt();
   return fabs(C);
 }
-float MT2tree::JZB1EleMu(){
-return fabs(misc.MET+ eleMu[0].lv.Pt());
-}
 
-float MT2tree::JZB2EleMu(){
-return fabs(misc.MET- eleMu[0].lv.Pt());
-}
-
-float MT2tree::DeltaREleEle(){
+float MT2tree::eeDeltaR(){
 float deltaR = Util::GetDeltaR(ele[doubleEle[0].Ele0Ind].lv.Eta(),ele[doubleEle[0].Ele1Ind].lv.Eta(),ele[doubleEle[0].Ele0Ind].lv.Phi(),ele[doubleEle[0].Ele1Ind].lv.Phi());
 return deltaR;
 }
 
-
+float MT2tree::eeDeltaRJet0E0(){
+float deltaR = Util::GetDeltaR(ele[0].lv.Eta(),jet[0].lv.Eta(),ele[0].lv.Phi(),jet[0].lv.Phi());
+return deltaR;
+ cout << "deltaR..." << deltaR << endl; 
+}
 
 // ----------------------------------------------------------------------------------------------------------
 ClassImp(MT2Susy)

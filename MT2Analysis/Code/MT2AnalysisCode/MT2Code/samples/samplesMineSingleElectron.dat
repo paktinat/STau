@@ -4,9 +4,9 @@ Path         ///dataLOCAL/MT2Tau/RootFiles/
 ________________________________________________________________________________________
 # list of samples
 
-## -------- SMS --------
+ -------- SMS --------
 
-SAMPLE
+#SAMPLE
 Name            TStau
 SName           SUSY
 ShapeName       Signal
@@ -20,7 +20,7 @@ Color           1
 
 ##------------ QCD-Pt-BCtoE ----------------
 
-SAMPLE
+#SAMPLE
 Name		QCD-Pt-20-30-BCtoE
 SName		QCD
 ShapeName	QCD
@@ -31,7 +31,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+#SAMPLE
 Name		QCD-Pt-30-80-BCtoE
 SName		QCD
 ShapeName	QCD
@@ -42,7 +42,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-80-170-BCtoE
 SName		QCD
 ShapeName	QCD
@@ -53,7 +53,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-170-250-BCtoE
 SName		QCD
 ShapeName	QCD
@@ -64,7 +64,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-250-350-BCtoE
 SName		QCD
 ShapeName	QCD
@@ -75,7 +75,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-350-BCtoE
 SName		QCD
 ShapeName	QCD
@@ -87,7 +87,7 @@ Type		mc
 Color		401
 
 ##-------------- QCD-Pt-EMEnriched --------------------
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-20-30-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -98,7 +98,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-30-80-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -109,7 +109,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-80-170-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -120,7 +120,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-170-250-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -131,7 +131,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-250-350-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -142,7 +142,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-350-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -155,7 +155,8 @@ Color		401
 
 
 ##------------ QCD-Pt-MuEnriched ----------------
-SAMPLE
+
+##SAMPLE
 Name		QCD-Pt-15-20-MuEnriched
 SName		QCD
 ShapeName	QCD
@@ -166,7 +167,7 @@ Lumi            19600
 Type		mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-20-30-MuEnriched
 SName		QCD
 ShapeName	QCD
@@ -177,7 +178,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-30-50-MuEnriched
 SName		QCD
 ShapeName	QCD
@@ -188,7 +189,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-50-80-MuEnriched
 SName		QCD
 ShapeName	QCD
@@ -199,7 +200,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-80-120-MuEnriched
 SName		QCD
 ShapeName	QCD
@@ -210,7 +211,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-120-170-MuEnriched
 SName		QCD
 ShapeName	QCD
@@ -221,7 +222,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-170-300-MuEnriched
 SName		QCD
 ShapeName	QCD
@@ -232,7 +233,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-300-470-MuEnriched
 SName		QCD
 ShapeName	QCD   
@@ -243,7 +244,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-470-600-MuEnriched
 SName		QCD
 ShapeName	QCD
@@ -254,7 +255,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-600-800-MuEnriched
 SName		QCD
 ShapeName	QCD
@@ -265,7 +266,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-800-1000-MuEnriched
 SName		QCD
 ShapeName	QCD
@@ -276,7 +277,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		QCD-Pt-1000-MuEnriched
 SName		QCD
 ShapeName	QCD
@@ -286,8 +287,10 @@ Kfact           1.0
 Lumi            19600.0
 Type		mc
 Color		401
+
 ##--------------------------------------------------------
-SAMPLE
+
+##SAMPLE
 Name		GJets_HT-40To100
 SName		QCD
 ShapeName	QCD
@@ -298,7 +301,7 @@ Lumi            19600.0
 Type            mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		GJets_HT-100To200
 SName		QCD
 ShapeName	QCD
@@ -309,7 +312,7 @@ Lumi            19600.0
 Type            mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		GJets_HT-200To400
 SName		QCD
 ShapeName	QCD
@@ -320,7 +323,7 @@ Lumi            19600.0
 Type            mc
 Color		401
 
-SAMPLE
+##SAMPLE
 Name		GJets_HT-400ToInf
 SName		QCD
 ShapeName	QCD
@@ -334,7 +337,7 @@ Color		401
 
 
 # -------- electroweak --------
-SAMPLE
+##SAMPLE
 Name		WWJetsTo2L2Nu
 SName		VV
 ShapeName	WJets  
@@ -345,7 +348,7 @@ Lumi            19600.0
 Type            mc
 Color		417
 
-SAMPLE
+##SAMPLE
 Name		WJetsToLNu
 SName		Wtolnu
 ShapeName	WJets
@@ -357,7 +360,7 @@ Type            mc
 Color		417
 
 
-SAMPLE
+##SAMPLE
 Name		W1JetsToLNu
 SName		Wtolnu
 ShapeName	WJets
@@ -368,7 +371,7 @@ Lumi            19600.0
 Type            mc
 Color		417
 
-SAMPLE
+##SAMPLE
 Name		W2JetsToLNu
 SName		Wtolnu
 ShapeName	WJets
@@ -379,7 +382,7 @@ Lumi            19600.0
 Type            mc
 Color		417
 
-SAMPLE
+##SAMPLE
 Name		W3JetsToLNu
 SName		Wtolnu
 ShapeName	WJets
@@ -390,7 +393,7 @@ Lumi            19600.0
 Type            mc
 Color		417
 
-SAMPLE
+##SAMPLE
 Name		W4JetsToLNu
 SName		Wtolnu
 ShapeName	WJets
@@ -403,7 +406,7 @@ Color		417
 
 
 #----------------DY----------------
-SAMPLE
+##SAMPLE
 Name		DYToLL_M10To50
 SName		DY
 ShapeName	ZJetsToLL
@@ -414,7 +417,7 @@ Lumi            19600.0
 Type            mc
 Color		419 
 
-SAMPLE
+##SAMPLE
 Name		DYToLL_M50
 SName		DY
 ShapeName	ZJetsToLL
@@ -425,7 +428,7 @@ Lumi            19600.0
 Type            mc
 Color		419 
                   
-SAMPLE
+##SAMPLE
 Name		DY1ToLL_M50
 SName		DY
 ShapeName	ZJetsToLL
@@ -436,7 +439,7 @@ Lumi            19600.0
 Type            mc
 Color		419 
                   
-SAMPLE
+##SAMPLE
 Name		DY2ToLL_M50
 SName		DY
 ShapeName	ZJetsToLL
@@ -446,8 +449,8 @@ Kfact           1.
 Lumi            19600.0
 Type            mc
 Color		419 
-                  
-SAMPLE
+                 
+##SAMPLE
 Name		DY3ToLL_M50
 SName		DY
 ShapeName	ZJetsToLL
@@ -458,7 +461,7 @@ Lumi            19600.0
 Type            mc
 Color		419 
                   
-SAMPLE
+##SAMPLE
 Name		DY4ToLL_M50
 SName		DY
 ShapeName	ZJetsToLL
@@ -470,7 +473,7 @@ Type            mc
 Color		419 
                   
 
-SAMPLE
+##SAMPLE
 Name		ZZJetsTo2L2Nu
 SName		DY
 ShapeName	ZZJetsTo2L2Nu
@@ -481,7 +484,7 @@ Lumi            19600.0
 Type            mc
 Color		419
  
-SAMPLE
+##SAMPLE
 Name		ZZJetsTo2L2Q
 SName		DY
 ShapeName	ZZJetsTo2L2Q
@@ -492,7 +495,7 @@ Lumi            19600.0
 Type            mc
 Color		419
     
-SAMPLE
+##SAMPLE
 Name		ZZJetsTo4L
 SName		DY
 ShapeName	ZZJetsTo4L
@@ -503,7 +506,7 @@ Lumi            19600.0
 Type            mc
 Color		419
  
-SAMPLE
+##SAMPLE
 Name		WZJetsTo3LNu
 SName		DY
 ShapeName	WZJetsTo3LNu
@@ -514,7 +517,7 @@ Lumi            19600.0
 Type            mc
 Color		419 
 
-SAMPLE
+##SAMPLE
 Name		WZJetsTo2L2Q
 SName		DY
 ShapeName	WZJetsTo2L2Q
@@ -526,7 +529,8 @@ Type            mc
 Color		419  
 
 ## --------------- Top ----------
-SAMPLE
+
+##SAMPLE
 Name		TTGJets
 SName		Top
 ShapeName	Top
@@ -537,7 +541,7 @@ Lumi            19600.0
 Type            mc
 Color		600
 
-SAMPLE
+##SAMPLE
 Name		TTH_Inclusive
 SName		Top
 ShapeName	Top   
@@ -548,7 +552,7 @@ Lumi            19600.0
 Type            mc
 Color		600
 
-SAMPLE
+##SAMPLE
 Name		TTWJets
 SName		Top
 ShapeName	Top   
@@ -559,7 +563,7 @@ Lumi            19600.0
 Type            mc
 Color		600
  
-SAMPLE
+##SAMPLE
 Name		TTWWJets
 SName		Top
 ShapeName	Top   
@@ -570,7 +574,7 @@ Lumi            19600.0
 Type            mc
 Color		600
 
-SAMPLE
+##SAMPLE
 Name		TTZJets
 SName		Top
 ShapeName	Top  
@@ -581,7 +585,7 @@ Lumi            19600.0
 Type            mc
 Color		600
 
-SAMPLE
+##SAMPLE
 Name		TTbar
 SName		Top
 ShapeName	Top   
@@ -592,7 +596,7 @@ Lumi            19600.0
 Type            mc
 Color		600
 
-SAMPLE
+##SAMPLE
 Name		SingleTop_s
 SName		Top
 ShapeName	Top
@@ -604,7 +608,7 @@ Type            mc
 Color		600
 
 
-SAMPLE
+##SAMPLE
 Name		SingleTopbar_s
 SName		Top
 ShapeName	Top
@@ -615,7 +619,7 @@ Lumi            19600.0
 Type            mc
 Color		600
 
-SAMPLE
+##SAMPLE
 Name		SingleTop_t
 SName		Top
 ShapeName	Top
@@ -627,7 +631,7 @@ Type            mc
 Color		600
 
 
-SAMPLE
+##SAMPLE
 Name		SingleTopbar_t
 SName		Top
 ShapeName	Top
@@ -639,7 +643,7 @@ Type            mc
 Color		600
 
 
-SAMPLE
+##SAMPLE
 Name        	SingleTop_tW
 SName		Top
 ShapeName	Top
@@ -651,7 +655,7 @@ Type            mc
 Color		600
 
 
-SAMPLE
+##SAMPLE
 Name		SingleTopbar_tW
 SName		Top
 ShapeName	Top
@@ -664,7 +668,7 @@ Color		600
 
 ## --------- Single Electron Data ---------------------------
 
-SAMPLE
+##SAMPLE
 Name		Run2012A_DoubleEle
 SName		DoubleEle-Data
 ShapeName	Data
@@ -675,9 +679,7 @@ Lumi            1.
 Type            data
 Color		1
 
-
-
-#SAMPLE
+SAMPLE
 Name		Run2012D_SingleElectron
 SName		SingleElectron-Data
 ShapeName	Data
