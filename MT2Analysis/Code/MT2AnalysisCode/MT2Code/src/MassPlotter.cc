@@ -7613,8 +7613,8 @@ void MassPlotter::eeFakeRateRatio(TString cuts, TString trigger, unsigned int ne
  TH1F *hMETPass  = new TH1F("hMETPass" ,"hMETPass" ,7, xBins);
  TH1F *hElePtAll  = new TH1F("hElePtAll" ,"hElePtAll" ,7, xBins);
  TH1F *hElePtPass = new TH1F("hElePtPass","hElePtPass",7, xBins);
- TH1F *hMT2All   = new TH1F("hMT2All"  ,"hMT2All"  ,7, xBins);
- TH1F *hMT2Pass  = new TH1F("hMT2Pass" ,"hMT2Pass" ,7, xBins);
+ // TH1F *hMT2All   = new TH1F("hMT2All"  ,"hMT2All"  ,7, xBins);
+ // TH1F *hMT2Pass  = new TH1F("hMT2Pass" ,"hMT2Pass" ,7, xBins);
 
  for(unsigned int ii = 0; ii < fSamples.size(); ii++){
     
@@ -7624,10 +7624,12 @@ void MassPlotter::eeFakeRateRatio(TString cuts, TString trigger, unsigned int ne
    sample Sample = fSamples[ii];
     
    if(Sample.type == "data"){
-     data = 1;
-     myCuts += " && " + trigger;
-   }else 
+     //     data = 1;
+     //     myCuts += " && " + trigger;
      continue;
+   }
+else 
+     //continue;
    
 
    fMT2tree = new MT2tree();
@@ -7676,28 +7678,13 @@ void MassPlotter::eeFakeRateRatio(TString cuts, TString trigger, unsigned int ne
 
       //   continue;
 
-   bool ok =false;
-
 for (int kk=0; kk < fMT2tree->NEles; kk++)
-	{
-    for (int jj=0; jj < fMT2tree->NJets; jj++)
-      {  float deltaR = Util::GetDeltaR(fMT2tree->ele[kk].lv.Eta(), fMT2tree->jet[jj].lv.Eta(), fMT2tree->ele[kk].lv.Phi(), fMT2tree->jet[jj].lv.Phi());
+	
+	  //    for (int jj=0; jj < fMT2tree->NJets; jj++)
+  {//  float deltaR = Util::GetDeltaR(fMT2tree->ele[kk].lv.Eta(), fMT2tree->jet[0].lv.Eta(), fMT2tree->ele[kk].lv.Phi(), fMT2tree->jet[0].lv.Phi());
 	  	
-cout << "deltaR..." << deltaR << endl;
- if(deltaR > 0.5 && deltaR < 5)
-                 ok =true;
-	       // continue;		 
-	              
-              else
-		ok =false;
-	       break;      
-}
-
-                if (!ok)
-		  continue;
-                 else		  
-
-{
+     //     cout << "deltaR..." << deltaR << endl;
+    // if(deltaR > 0.5 && deltaR < 6 /*&& fMT2tree->ele[kk].PassE0_EE == 1 /*&& (fMT2tree->ele[kk].MT < 70 || fMT2tree->ele[kk].MT > 90)*/){
 
 	       
 
@@ -7709,26 +7696,28 @@ cout << "deltaR..." << deltaR << endl;
 		//		if (kk==0)
 		//		  {myMT2 =  fMT2tree->CalcMT2(0, 0, fMT2tree->ele[0].lv, fMT2tree->ele[1].lv, fMT2tree->misc.MET);}//fMT2tree->doubleEle[0].MT2;
 		//		else
-		 	  
- float myMT2 = fMT2tree->CalcMT2(0, 0, fMT2tree->ele[kk].lv, fMT2tree->ele[kk+1].lv, fMT2tree->misc.MET);
-
+//    float myMT2=0;
+//    if(kk==0)
+//        myMT2 = fMT2tree->CalcMT2(0, 0, fMT2tree->ele[0].lv, fMT2tree->ele[1].lv, fMT2tree->misc.MET);
+//    else
+//        myMT2 = fMT2tree->CalcMT2(0, 0, fMT2tree->ele[0].lv, fMT2tree->ele[kk].lv, fMT2tree->misc.MET);
  //myChannelCuts.push_back("ele[1].QCDSyst03E0_EE == 1");                                                                                            
 
  //        if(fMT2tree->ele[0].QCDSyst03E0_EE == 1)
       	hPtEtaAll->Fill(fMT2tree->ele[kk].lv.Eta(), fMT2tree->ele[kk].lv.Pt()); 
       	hMETAll->Fill(fMT2tree->misc.MET);
-      	hMT2All->Fill(myMT2);
+	//      	hMT2All->Fill(myMT2);
 	hElePtAll->Fill(fMT2tree->ele[kk].lv.Pt());
       
 	if(fMT2tree->ele[kk].PassE0_EE == 1){
 
         hPtEtaPass->Fill(fMT2tree->ele[kk].lv.Eta(), fMT2tree->ele[kk].lv.Pt());
 	hMETPass->Fill(fMT2tree->misc.MET);
-	hMT2Pass->Fill(myMT2);
+	//	hMT2Pass->Fill(myMT2);
 	hElePtPass->Fill(fMT2tree->ele[kk].lv.Pt());      
 	}
 
-      }
+	//      }
 	}
   
      
@@ -7743,8 +7732,8 @@ cout << "deltaR..." << deltaR << endl;
  MyC->cd(2);
  hMETAll->Draw();
 
- MyC->cd(3);
- hMT2All->Draw();
+ // MyC->cd(3);
+ // hMT2All->Draw();
 
  MyC->cd(4);
  hPtEtaAll->Draw();
@@ -7757,9 +7746,9 @@ cout << "deltaR..." << deltaR << endl;
  hMETPass->Divide(hMETAll);
  hMETPass->Draw();
 
- MyC->cd(7);
- hMT2Pass->Divide(hMT2All);
- hMT2Pass->Draw();
+ // MyC->cd(7);
+ // hMT2Pass->Divide(hMT2All);
+ // hMT2Pass->Draw();
 
  MyC->cd(8);
  hPtEtaPass->Divide(hPtEtaAll);
@@ -7774,12 +7763,12 @@ cout << "deltaR..." << deltaR << endl;
  
  hElePtAll->Write();
   hMETAll->Write();
-  hMT2All->Write();
+  //  hMT2All->Write();
   hPtEtaAll->Write();
 
  hElePtPass->Write();
   hMETPass->Write();
-  hMT2Pass->Write();
+  //  hMT2Pass->Write();
   hPtEtaPass->Write();
 
   savefile->Close();
@@ -7904,6 +7893,7 @@ void MassPlotter::eeWJetsEstimation(TString cuts, TString trigger, TString myfil
 
   for(unsigned int ii = 0; ii < fSamples.size(); ii++){
 
+
     TString myCuts = cuts;
     
     sample Sample = fSamples[ii];
@@ -7920,10 +7910,20 @@ void MassPlotter::eeWJetsEstimation(TString cuts, TString trigger, TString myfil
       h_samples[ii] -> SetLineStyle(kDotted);
     }
 
+    // myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele0Ind>=0"));                                                                         
+    // myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele1Ind>=0"));                                                                         
+    // myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==1"));                                                                        
+    // myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)");                                           
+    // myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 76) || (doubleEle[0].lv.M() > 106))");  
+
     if(Sample.type == "data"){
-      myCuts += "&& (0==0) && " + trigger;
-    }else
-      myCuts += "&& (doubleEle[0].Isolated == 1)";// && (tau[muTau[0].tau0Ind].Isolation3Hits <= 3.)";
+      myCuts += "&&" + trigger;
+    }
+    //else
+    //      myCuts += "&& (doubleEle[0].Isolated == 1)";// && (tau[muTau[0].tau0Ind].Isolation3Hits <= 3.)";
+
+
+
   
     fMT2tree = new MT2tree();
     Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
@@ -7966,19 +7966,42 @@ void MassPlotter::eeWJetsEstimation(TString cuts, TString trigger, TString myfil
 	}
 	//	int muIndex = fMT2tree->muTau[0].GetMuIndex0();
 	
-	float myQuantity = fMT2tree->doubleEle[0].MT2;//muTau[0].GetMT2();//fMT2tree->muo[muIndex].MT;
+	int Ele0Ind = -2;
+	int Ele1Ind = -2;
 
-	// 	int tauIndex = fMT2tree->muTau[0].GetTauIndex0();
+	for (int i=0 ; i < fMT2tree->NEles ; i++){
 
-// 	float tauEta = fMT2tree->tau[tauIndex].lv.Eta();
+	  if  (fMT2tree->ele[i].PassE0_EE)
+	    {
+	      Ele0Ind = i ;
+	      break;
+	    }
+	}
 
-// 	float tauPt  = fMT2tree->tau[tauIndex].lv.Pt();
+	for (int j = Ele0Ind+1 ; j < fMT2tree->NEles ; j++)
+
+	    {
+	      Ele1Ind = j ;
+	      break;
+	    }
+
+ if (Ele0Ind==-2 || Ele1Ind == -2)
+     continue;
+
+int PairCharge = fMT2tree->ele[Ele0Ind].Charge + fMT2tree->ele[Ele1Ind].Charge;
+ if (PairCharge != 0)
+   continue;
+float InvMass = fMT2tree->ele[Ele0Ind].lv.M() + fMT2tree->ele[Ele1Ind].lv.M();
+ if(InvMass > 76 && InvMass < 106)
+   continue;
+
+
+ float myQuantity =  fMT2tree->CalcMT2(0, 0, fMT2tree->ele[Ele0Ind].lv, fMT2tree->ele[Ele1Ind].lv, fMT2tree->misc.MET);
 		
-	int Ele1Index = fMT2tree->doubleEle[0].Ele1Ind;
 
-	float Ele1Eta = fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Eta();
+	float Ele1Eta = fMT2tree->ele[Ele1Ind].lv.Eta();
 
-	float Ele1Pt  = fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Pt();
+	float Ele1Pt  = fMT2tree->ele[Ele1Ind].lv.Pt();
 
 	float fakeRate    = 0.0;
 // 	float fakeRateErr = 0.0;
@@ -8034,6 +8057,41 @@ void MassPlotter::eeWJetsEstimation(TString cuts, TString trigger, TString myfil
 	  fflush(stdout);
 	}
 
+	int Ele0IndMC = -2;
+	int Ele1IndMC = -2;
+
+	for (int ii=0 ; ii < fMT2tree->NEles ; ii++){
+
+	  if  (fMT2tree->ele[ii].PassE0_EE)
+	    {
+	      Ele0IndMC = ii ;
+	      break;
+	    }
+	}
+	for (int jj = Ele0IndMC+1 ; jj < fMT2tree->NEles ; jj++){
+
+	  if  (fMT2tree->ele[ii].PassE1_EE)
+	    {
+	      Ele1IndMC = jj ;
+	      break;
+	    }
+
+	}
+ if (Ele0IndMC==-2 || Ele1IndMC == -2)
+     continue;
+
+int PairChargeMC = fMT2tree->ele[Ele0IndMC].Charge + fMT2tree->ele[Ele1IndMC].Charge;
+ if (PairChargeMC != 0)
+   continue;
+float InvMassMC = fMT2tree->ele[Ele0IndMC].lv.M() + fMT2tree->ele[Ele1IndMC].lv.M();
+ if(InvMassMC > 76 && InvMassMC < 106)
+   continue;
+
+
+ float myQuantityMC =  fMT2tree->CalcMT2(0, 0, fMT2tree->ele[Ele0IndMC].lv, fMT2tree->ele[Ele1IndMC].lv, fMT2tree->misc.MET);
+		
+
+
 	int genEEStatus = fMT2tree->GenLeptonAnalysis(2,0,0);
 
 	if(genEEStatus != 113 && genEEStatus != 123 && genEEStatus != 133 && genEEStatus != -1)
@@ -8048,13 +8106,15 @@ void MassPlotter::eeWJetsEstimation(TString cuts, TString trigger, TString myfil
 	
 	float weight = Weight;
 	
-	weight *= fMT2tree->SFWeight.BTagCSV40eq0 * fMT2tree->doubleEle[0].Ele0IdIsoSF * fMT2tree->doubleEle[0].Ele1IdIsoSF * fMT2tree->doubleEle[0].DiEleTrgSF;
+float DoubleEleTrgSF= ((fMT2tree->ele[Ele0IndMC].GetEleTrigSFleg17() * fMT2tree->ele[Ele1IndMC].GetEleTrigSFleg8()) + (fMT2tree->ele[Ele0IndMC].GetEleTrigSFleg8()  * fMT2tree->ele[Ele1IndMC].GetEleTrigSFleg17()) - (fMT2tree->ele[Ele0IndMC].GetEleTrigSFleg17() * fMT2tree->ele[Ele1IndMC].GetEleTrigSFleg17())) ;
+
+weight *= fMT2tree->SFWeight.BTagCSV40eq0 * fMT2tree->ele[Ele0IndMC].EleIDIsoSFEleEle * fMT2tree->ele[Ele1IndMC].EleIDIsoSFEleEle * DoubleEleTrgSF;
 
 
 	if(fPUReweight)
 	  weight *= fMT2tree->pileUp.Weight;
 
-	h_samples[ii]->Fill(fMT2tree->doubleEle[0].MT2, weight);
+	h_samples[ii]->Fill(myQuantityMC, weight);
       
       }
 
@@ -8457,28 +8517,53 @@ for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
       //      if(!((fMT2tree->NEles == 2) && /*(fMT2tree->ele[0].lv.Pt() > 30) &&*/ (fMT2tree->ele[0].PassE0_EE == 1) &&/* (fMT2tree->ele[0].Charge+fMT2tree->ele[1].Charge == 2 || fMT2tree->ele[0].Charge+fMT2tree->ele[1].Charge == -2) && (fMT2tree->ele[1].PassE0_EE == 1*/(fMT2tree->ele[1].QCDSyst03E0_EE==1)))
       //   continue;
 
-   bool ok =false;
+   bool ok =false;      
+   //   int Neles= -10;
+   //   int EleTightIndex= -10;
+   //   int MuTightIndex = -10;
+for (int ll=0; ll < fMT2tree->NMuons; ll++)
+{
+float deltaR1 = Util::GetDeltaR(fMT2tree->muo[ll].lv.Eta(), fMT2tree->jet[0].lv.Eta(), fMT2tree->muo[ll].lv.Phi(), fMT2tree->jet[0].lv.Phi());
+if(deltaR1 < 0.5 && deltaR1 > 6) /*&& (fMT2tree->ele[kk].MT < 70 || fMT2tree->ele[kk].MT > 90)*/
+    continue;
+if(fMT2tree->muo[ll].PassMu0_EleMu ==1)
+    ok =true;
+    break;	
+}
+if(ok)
+    break;
 
-for (int kk=0; kk < fMT2tree->NEles; kk++)
-	{
-    for (int jj=0; jj < fMT2tree->NJets; jj++)
-      {  float deltaR = Util::GetDeltaR(fMT2tree->ele[kk].lv.Eta(), fMT2tree->jet[jj].lv.Eta(), fMT2tree->ele[kk].lv.Phi(), fMT2tree->jet[jj].lv.Phi());
-	  	
-cout << "deltaR..." << deltaR << endl;
- if(deltaR > 0.5 && deltaR < 5)
-                 ok =true;
+
+for(int kk=0; kk < fMT2tree->NEles; kk++)
+  {
+float deltaR = Util::GetDeltaR(fMT2tree->ele[kk].lv.Eta(), fMT2tree->jet[0].lv.Eta(), fMT2tree->ele[kk].lv.Phi(), fMT2tree->jet[0].lv.Phi());
+
+if(deltaR < 0.5 && deltaR > 6) /*&& (fMT2tree->ele[kk].MT < 70 || fMT2tree->ele[kk].MT > 90)*/
+  continue;
+else    
+  if(fMT2tree->ele[kk].PassE0_EE == 1)
+    {     
+     for(int jj=0; jj < fMT2tree->NEles; jj++)
+       {
+         if(jj != kk && fMT2tree->ele[jj].PassE0_EE == 1) 
+         ok = true;
+         break;
+       }
+    if(ok)
+      break; 
+   //                 ok =true;
 	       // continue;		 
 	              
-              else
-		ok =false;
-	       break;      
-}
+   //              else
+   //		ok =false;
+   //	       break;      
 
-                if (!ok)
-		  continue;
-                 else		  
 
-		   { if(fMT2tree->ele[kk].PassE0_EE == 1){
+   //                if (!ok)
+   //		  continue;
+   //                 else		  
+
+   //		   { if(fMT2tree->ele[kk].PassE0_EE == 1){
 
 
 
@@ -8496,7 +8581,7 @@ cout << "deltaR..." << deltaR << endl;
 // 	//  	cout << "ok:-----" << ok << endl;
 //   	if (ok){
 //for (int kk=1; kk < fMT2tree->NEles; kk++)
-{
+//{
 
   //  int PairCharge = (fMT2tree->ele[0].Charge)+(fMT2tree->ele[kk].Charge) ;
   //cout << "PairCharge Before:-----" << PairCharge << endl;
@@ -8513,7 +8598,7 @@ cout << "deltaR..." << deltaR << endl;
 	  //	if((fMT2tree->ele[0].MT) < 60 || (fMT2tree->ele[0].MT) > 90); 
 	  //        {continue;}
 
-  float myQuantity =  fMT2tree->ele[kk].lv.Pt();//CalcMT2(0, 0, fMT2tree->ele[kk].lv, fMT2tree->ele[1].lv, fMT2tree->misc.MET);//fMT2tree->doubleEle[0].MT2;
+    float myQuantity =  fMT2tree->ele[kk].lv.Pt();//CalcMT2(0, 0, fMT2tree->ele[kk].lv, fMT2tree->ele[1].lv, fMT2tree->misc.MET);//fMT2tree->doubleEle[0].MT2;
 
       if(data == 1){
       
@@ -8540,16 +8625,18 @@ cout << "deltaR..." << deltaR << endl;
 		MT2[0]->Fill(myQuantity, weight);
 	      else
 		if(Sample.sname == "VV")
-		  MT2[4]->Fill(myQuantity, weight);
-		      }
- }}
+		  MT2[4]->Fill(myQuantity, weight);}
+	
+ 
       //	    break; 
 	//        }
       //    else 
       //     continue;
-      }
-}//for(ii<fSamples)
- }}
+  
+}
+}//for(electrons)
+}//for(events)
+}//for(samples)
 
   for(int j = 0; j < (NumberOfSamples); j++){
     AddOverAndUnderFlow(MT2[j], true, true);

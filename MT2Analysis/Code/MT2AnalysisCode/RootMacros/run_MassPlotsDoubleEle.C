@@ -14,9 +14,9 @@ TString outputdir = "../MassPlots/";
 //TString samples = "./samples/samplesMineDoubleElectronQCDHtBin-SMS005.dat";   
 //TString samples = "./samples/samplesMineDoubleElectronQCDHtBin-SMS005.dat";  
 //TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30.dat";
-//TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30_NewPU_Stitched.dat";
+TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30_NewPU_Stitched.dat";
 //TString samples = "./samples/samplesMineTauPlusX.dat";
-TString samples = "./samples/samplesMineJetHT.dat";
+//TString samples = "./samples/samplesMineJetHT.dat";
 //TString samples = "./samples/samplesMineSingleElectron.dat";
 
 int verbose =3;
@@ -71,8 +71,8 @@ myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 
 TString myChan = "doubleEle[0]";
 
 //------------------------DoubleEle Cuts--------------------------
-// myChannelCuts.push_back("NBJetsCSVM==0");
-// myChannelCuts.push_back("misc.MET > 30");
+ myChannelCuts.push_back("NBJetsCSVM==0");
+ myChannelCuts.push_back("misc.MET > 30");
 // myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele0Ind>=0"));
 // myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele1Ind>=0"));
 // myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==1"));
@@ -92,10 +92,10 @@ TString myChan = "doubleEle[0]";
 // myChannelCuts.push_back("ele[1].QCDSyst03E0_EE == 1");
 
 //------------------------JetHT Cuts--------------------------------
- myChannelCuts.push_back("NBJetsCSVM==0");
- myChannelCuts.push_back("misc.MET > 30");
- myChannelCuts.push_back("misc.LeadingJPt > 350");
- myChannelCuts.push_back("misc.Jet0Pass > 0");
+// myChannelCuts.push_back("NBJetsCSVM==0");
+// myChannelCuts.push_back("misc.MET < 40");
+// myChannelCuts.push_back("misc.LeadingJPt > 350");
+// myChannelCuts.push_back("misc.Jet0Pass > 0");
 
 
 
@@ -125,15 +125,17 @@ TString cuts = cutStream.str().c_str();
 //------------------------------Methods-----------------------------------
 
 //tA->MakeCutFlowTable( myChannelCuts );
-//tA->eeFakeRateRatio(cuts, trigger, 100000000000000000000,"fakeRatio-jet-full");
-//tA->eeWJetsEstimation(cuts, trigger, "fakeRatio-jet-full_FRHistos.root");
-tA->eeFakePromptCategory(cuts, trigger, 10,"eeFakeCategory-tight-jet-full");
-//tA->eeAnalysis(cuts, trigger, 1000000000000000000000,"eeAnal-tight-jet-full");
+//tA->eeFakeRateRatio(cuts, trigger, 100000000000000000000,"fakeRatio-wJetMC-tight_metgt30_nB0-eeAnal");
+tA->eeWJetsEstimation(cuts, trigger, "fakeRatio-jetFull-tight_metLt30_noBcut-eeAnal_FRHistos.root");
+//tA->eeFakePromptCategory(cuts, trigger, 10,"eeFakeCategory-tight-jet-full");
+//tA->eeAnalysis(cuts, trigger, 1000000000000000000000,"mt-AllBigMC_jetFull-loose_metLt40_noBcut_reject2ndEextraMu-eeAnal");
+// mt-jetFull-tight_metLt30-eeAnal.root mt-jetFull-tight_mtLt70gt90-eeAnal.root
+
 //int NumberOfBins = 17;
 //double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};      //MT2
 //int NumberOfBins = 8;
 //double xbin[NumberOfBins+1] = {0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0}; //Mass
-//tA->DrawMyPlots("eeAnal-tight-jet-full.root", xbin, NumberOfBins);
+//tA->DrawMyPlots("mt-jetFull-tight_metLt30_noBcut-eeAnal.root", xbin, NumberOfBins);
 
 //double xbin[NumberOfBins+1] = {-700,-620,-550,-490,-440,-400,-360,-320,-280,-240,-200,-180,-160,-140,-120,-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,0,10,20,30,40,50,60,70,80,90,100,120,140,160,180,200,240,280,320,360,400,440,490,550,620,700};      //MT2
 //double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,115.0,130.0,145.0,160.0,180.0,200.0};      //MT2

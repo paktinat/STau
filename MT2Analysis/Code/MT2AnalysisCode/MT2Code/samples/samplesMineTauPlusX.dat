@@ -667,7 +667,7 @@ Type            mc
 Color		600
 
 ## --------- Data ---------------------------
-SAMPLE
+#SAMPLE
 Name		Run2012A_TauPlusX
 SName		TauPlusX-Data
 ShapeName	Data
@@ -678,7 +678,7 @@ Lumi            1.
 Type            data
 Color		1
 
-SAMPLE
+#SAMPLE
 Name		Run2012B_TauPlusX
 SName		TauPlusX-Data
 ShapeName	Data
@@ -689,7 +689,7 @@ Lumi            1.
 Type            data
 Color		1
 
-SAMPLE
+#SAMPLE
 Name		Run2012C_TauPlusX
 SName		TauPlusX-Data
 ShapeName	Data
@@ -701,7 +701,7 @@ Type            data
 Color		1
 
 
-SAMPLE
+#SAMPLE
 Name		Run2012D_TauPlusX
 SName		TauPlusX-Data
 ShapeName	Data
@@ -711,5 +711,16 @@ Kfact           1.
 Lumi            1.
 Type            data
 Color	        1
+
+SAMPLE
+Name		Run2012A_DoubleEle
+SName		DoubleEle-Data
+ShapeName	Data
+File            TauTau_V3_1/DoubleElectron-Run2012A-22Jan2013-v1-AOD_NBJetsCSVM0_MET30.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
 
 
