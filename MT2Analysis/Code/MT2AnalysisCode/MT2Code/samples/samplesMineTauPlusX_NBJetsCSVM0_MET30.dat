@@ -667,7 +667,7 @@ SAMPLE
 Name		Run2012A_TauPlusX
 SName		TauPlusX-Data
 ShapeName	Data
-File            TauTau_V3_1/TauPlusX-Run2012A_2_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/TauPlusX-Run2012A_2.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.
@@ -678,7 +678,7 @@ SAMPLE
 Name		Run2012B_TauPlusX
 SName		TauPlusX-Data
 ShapeName	Data
-File            TauTau_V3_1/TauPlusX-Run2012B_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/TauPlusX-Run2012B.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.
@@ -689,7 +689,7 @@ SAMPLE
 Name		Run2012C_TauPlusX
 SName		TauPlusX-Data
 ShapeName	Data
-File            TauTau_V3_1/TauPlusX-Run2012C-22Jan2013-v1_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/TauPlusX-Run2012C-22Jan2013-v1_Part*.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.
@@ -701,7 +701,7 @@ SAMPLE
 Name		Run2012D_TauPlusX
 SName		TauPlusX-Data
 ShapeName	Data
-File            TauTau_V3_1/TauPlusX-Run2012D-22Jan2013-v1_NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/TauPlusX-Run2012D-22Jan2013-v1_Part*.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.

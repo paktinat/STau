@@ -211,7 +211,7 @@ void ExtendedObjectProperty::Print(Option_t* option ) const{
   }
 }
 
-ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, TString formula , int nbins, double min, double max ,TString SUSYCatCommand_ , std::vector<TString> SUSYNames_,  std::vector<TString>* labels ) :
+ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, TString formula , int nbins, double min, double max ,TString SUSYCatCommand_ , std::vector<TString> SUSYNames_,  std::vector<TString>* labels , const std::vector<TString>& samplesToStoreErrors  ) :
   CutName( cutname ),
   Name(name),
   Formula(formula),
@@ -222,9 +222,20 @@ ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, 
   tFormula(0),
   tSUSYCatFormula(0),
   SUSYNames( SUSYNames_ ),
-  SUSYCatCommand( SUSYCatCommand_ ){
+  SUSYCatCommand( SUSYCatCommand_ ),
+  SamplesToStoreErrors( samplesToStoreErrors),
+  treeWeightErrors(NULL){
 
   gROOT->cd();
+
+  if(SamplesToStoreErrors.size() > 0){
+    treeWeightErrors = new TTree( TString("treeWeightErrors") + "_" + CutName + "_" + Name , "Weight Errors");
+    
+    treeWeightErrors->Branch( "SampleIndex" , &tweSampleIndex , "SampleIndex/I" ); 
+    treeWeightErrors->Branch( "W" , &tweW , "W/D" ); 
+    treeWeightErrors->Branch( "WErr" , &tweWErr , "WErr/D" ); 
+    treeWeightErrors->Branch( "ValueBinIndex" , &tweValueBinIndex , "ValueBinIndex/I" );     
+  }
 
   TH1::SetDefaultSumw2();
    
@@ -272,7 +283,7 @@ ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, 
   }
 }
 
-ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, TString formula , int nbins, double* bins ,TString SUSYCatCommand_ , std::vector<TString> SUSYNames_,  std::vector<TString>* labels ) :
+ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, TString formula , int nbins, double* bins ,TString SUSYCatCommand_ , std::vector<TString> SUSYNames_,  std::vector<TString>* labels , const std::vector<TString>& samplesToStoreErrors ) :
   CutName( cutname ),
   Name(name),
   Formula(formula),
@@ -283,9 +294,20 @@ ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, 
   tFormula(0),
   tSUSYCatFormula(0),
   SUSYNames( SUSYNames_ ),
-  SUSYCatCommand( SUSYCatCommand_ ){
+  SUSYCatCommand( SUSYCatCommand_ ),
+  SamplesToStoreErrors( samplesToStoreErrors),
+  treeWeightErrors(NULL){
 
   gROOT->cd();
+
+  if(SamplesToStoreErrors.size() > 0){
+    treeWeightErrors = new TTree( TString("treeWeightErrors") + "_" + CutName + "_" + Name   , "Weight Errors");
+    
+    treeWeightErrors->Branch( "SampleIndex" , &tweSampleIndex , "SampleIndex/I" ); 
+    treeWeightErrors->Branch( "W" , &tweW , "W/D" ); 
+    treeWeightErrors->Branch( "WErr" , &tweWErr , "WErr/D" ); 
+    treeWeightErrors->Branch( "ValueBinIndex" , &tweValueBinIndex , "ValueBinIndex/I" );     
+  }
 
   TH1::SetDefaultSumw2();
    
@@ -347,6 +369,12 @@ void ExtendedObjectProperty::SetTree( TTree* tree , TString sampletype, TString 
     tSUSYCatFormula = 0;
   }
 
+  tweSampleIndex = -1;
+  for(uint iii = 0; iii<SamplesToStoreErrors.size() ; iii++)
+    if( SamplesToStoreErrors[iii] == samplesname )
+      tweSampleIndex = iii;
+  //cout << "tweSampleIndex : " << tweSampleIndex <<  endl;
+
   tFormula = new TTreeFormula( Name.Data() , Formula.Data() , tree );
   isString = tFormula->IsString() ;
 
@@ -395,6 +423,20 @@ void ExtendedObjectProperty::Fill(double w){
 
   if( theMCH )
     isString ? theMCH->Fill(sVal , w) : theMCH->Fill(dVal , w);
+}
+
+void ExtendedObjectProperty::Fill(double dVal , ValueError w ){
+  this->Fill( dVal , w.Value );
+
+  if(tweSampleIndex>-1){
+    tweW = w.Value;
+    tweWErr = w.Error();
+    tweValueBinIndex = allHistos["data"]->FindBin( dVal );
+
+    //cout << "if filling" << endl;
+
+    treeWeightErrors->Fill();
+  }
 }
 
 void ExtendedObjectProperty::Fill(double dVal , double w ){
@@ -624,8 +666,10 @@ TCanvas* ExtendedObjectProperty::plotRatioStack(THStack* hstack, TH1* h1_orig, T
   return c1;
 }
 
+#include <algorithm>
 void ExtendedObjectProperty::Write( TDirectory* dir , int lumi ,bool plotratiostack ,  bool logy){
-  dir->mkdir(  Name  )->cd();
+  TDirectory* newdir = dir->mkdir(  Name  );
+  newdir->cd();
 
   THStack* h_stack     = new THStack( CutName + "_" + Name, "");
   TLegend* Legend1 = new TLegend(.71,.54,.91,.92);
@@ -647,6 +691,127 @@ void ExtendedObjectProperty::Write( TDirectory* dir , int lumi ,bool plotratiost
   }
   h_stack->Write();
   Legend1->Write();
+
+  TDirectory* uncertDir;
+  if(SamplesToStoreErrors.size() > 0) 
+    uncertDir = newdir->mkdir(  "Uncertainties"  );
+
+  for( int iii = 0 ; iii < SamplesToStoreErrors.size() ; iii++ ){
+    TString sName = SamplesToStoreErrors[iii];
+    TDirectory* sampleUncertDir = uncertDir->mkdir( sName );
+
+    gROOT->cd();
+
+    TH1* hStat =(TH1*)( allHistos["data"]->Clone( sName + "_StatErr" ) ); 
+    //hStat->Reset("ICES");
+
+    TH1* hSystCorr =(TH1*)( allHistos["data"]->Clone( sName + "_SystCorr" ) ); 
+    //hSystCorr->Reset("ICES");
+
+    TH1* hSystUnCorr =(TH1*)( allHistos["data"]->Clone( sName + "_SystUnCorr" ) ); 
+    //hSystUnCorr->Reset("ICES");
+
+    //treeWeightErrors->Print("all");
+    double WPlaceHolder, WErrPlaceHolder;
+    int SampleIndexPlaceHolder, BinIndexPlaceHolder;
+
+    treeWeightErrors->SetBranchAddress( "SampleIndex" , &SampleIndexPlaceHolder );
+    treeWeightErrors->SetBranchAddress( "W" , &WPlaceHolder );
+    treeWeightErrors->SetBranchAddress( "WErr" , &WErrPlaceHolder );
+    treeWeightErrors->SetBranchAddress( "ValueBinIndex" , &BinIndexPlaceHolder );
+
+    treeWeightErrors->Draw(">>events1" , TString::Format( "SampleIndex == %i", iii ) );  
+    TEventList* events1 = (TEventList*)( gROOT->Get("events1") );
+
+    treeWeightErrors->SetEventList( events1 );
+    //events1->Print();
+    for(int binid = 1; binid < hSystCorr->GetNbinsX()+1 ; binid ++ ) {
+
+      hStat->SetBinError( binid , 0 );
+      hSystUnCorr->SetBinError( binid , 0);
+      hSystCorr->SetBinError( binid , 0 );
+
+      int nWbins = 100;
+      int nWErrbins=100;
+
+      double WMin=100000.0;
+      double WMax=-100000.0;
+      double WErrMin=100000.0;
+      double WErrMax=-100000.0;
+
+      //cout << events1->GetN() << endl; 
+      for( int eventid=0 ; eventid < events1->GetN() ; eventid++){
+	treeWeightErrors->GetEntry( events1->GetEntry(eventid) ) ;
+	if( SampleIndexPlaceHolder != iii ){
+	  cout << "wrong sample index " << SampleIndexPlaceHolder << " instead of " << iii << endl;
+	  continue;
+	}
+	if( BinIndexPlaceHolder == binid ){
+	  if( WMin > WPlaceHolder )
+	    WMin = WPlaceHolder;
+	  if( WMax < WPlaceHolder )
+	    WMax = WPlaceHolder ;
+
+	  if( WErrMax < WErrPlaceHolder )
+	    WErrMax = WErrPlaceHolder ;
+	  if( WErrMin > WErrPlaceHolder )
+	    WErrMin = WErrPlaceHolder;
+	}
+      }
+      if( WMin > WMax )
+	std::swap( WMin , WMax);
+      if(WErrMin > WErrMax )
+	std::swap( WErrMin , WErrMax);
+      cout << "SampleIndex : " << iii << ", Bin:" << binid << " W [" << WMin << "," << WMax << "] , WErr [" << WErrMin << "," << WErrMax << "]" << endl; 
+
+      TString hName = TString::Format( "hW_%s_%i_%s_%s" , sName.Data() , binid , CutName.Data() , Name.Data() );
+      TH2* hW = new TH2D( hName , "hW" , nWbins , WMin-fabs(0.1*WMin) , WMax*1.1 , nWErrbins , WErrMin-fabs(0.1*WErrMin) , WErrMax*1.1 );
+			  //nWbins    , treeWeightErrors->GetMinimum("W")/2    , treeWeightErrors->GetMaximum("W")*2, nWErrbins  , treeWeightErrors->GetMinimum("WErr")/2 , treeWeightErrors->GetMaximum("WErr")*2 );
+
+      for( int eventid=0 ; eventid < events1->GetN() ; eventid++){
+        treeWeightErrors->GetEntry( events1->GetEntry(eventid) ) ;
+        if( SampleIndexPlaceHolder != iii ){
+          cout << "wrong sample index " << SampleIndexPlaceHolder << " instead of " << iii << endl;
+          continue;
+        }
+        if( BinIndexPlaceHolder == binid ){
+	  hW->Fill( WPlaceHolder , WErrPlaceHolder );
+	}
+      }
+//       treeWeightErrors->Draw("W:WErr>>"+ hName
+// 			     /*+ "(" + TString::Format( "%i,%.2f,%.2f" , nWbins    , treeWeightErrors->GetMinimum("W")    , treeWeightErrors->GetMaximum("W")    )  
+// 			     + TString::Format( ",%i,%.2,f%.2f", nWErrbins , treeWeightErrors->GetMinimum("WErr") , treeWeightErrors->GetMaximum("WErr") )    
+// 			     + ")" */
+// 			     , TString::Format( "ValueBinIndex == %i", binid ) );
+
+      sampleUncertDir->cd();
+      hW->Write();
+      gROOT->cd();
+      //TH2* hW =(TH2*) ( gDirectory->Get("hW") );
+      //hW->Print("ALL");
+
+      for( int wbin = 1 ; wbin < nWbins+1 ; wbin++ ){
+	for( int werrbin = 1 ; werrbin < nWErrbins+1 ; werrbin++){
+
+	  //cout << wbin <<"  " << werrbin << endl;
+
+	  double wval    = hW->GetXaxis()->GetBinCenter( wbin );
+	  double werrval = hW->GetYaxis()->GetBinCenter( werrbin );
+	  double nnn     = hW->GetBinContent( wbin , werrbin );
+
+	  hStat->SetBinError( binid ,sqrt( hStat->GetBinError(binid)*hStat->GetBinError(binid) + nnn*wval*wval ) );
+	  hSystUnCorr->SetBinError( binid ,sqrt( hSystUnCorr->GetBinError(binid)*hSystUnCorr->GetBinError(binid) + nnn*werrval*werrval ) );
+	  hSystCorr->SetBinError( binid ,sqrt( hSystCorr->GetBinError(binid)*hSystCorr->GetBinError(binid) + nnn*nnn*werrval*werrval ) );
+	}
+      }
+    }
+
+    sampleUncertDir->cd();
+    hSystCorr->Write();
+    hStat->Write();
+    hSystUnCorr->Write();
+  }
+  newdir->cd();
 
   if(plotratiostack){
     plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY"] , logy, false, Name + "_ratio", Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
@@ -678,8 +843,8 @@ void ExtendedCut::SaveTree(){
   theTreeToSave->Branch( "isSUSY" , &(this->isSUSY) , "isSUSY/O" );
   theTreeToSave->Branch( "isMC" , &(this->isMC) , "isMC/O" );
 
-  theTreeToSave->Branch( "SName" , &(this->CurrentSampleSNameS) , "SName/C" );
-  theTreeToSave->Branch( "SType" , &(this->CurrentSampleTypeS)  , "SType/C" );
+  theTreeToSave->Branch( "SName" , &(this->CurrentSampleSNameS) );
+  theTreeToSave->Branch( "SType" , &(this->CurrentSampleTypeS)  );
 }
 
 void ExtendedCut::Print(Option_t* option) const{
@@ -717,7 +882,9 @@ ExtendedCut::ExtendedCut(TString name, TString cutstr , bool applyondata , bool 
     fMCW(0),
     SUSYWeight(susyw),
     Verbose(verbose),
-    StoreTree(false){
+    StoreTree(false),
+    CurrentSampleTypeS(new TClonesArray("TObjString") ),
+    CurrentSampleSNameS(new TClonesArray("TObjString") ){
 
   if(Verbose>1)
     this->Print();
@@ -794,8 +961,8 @@ void ExtendedCut::SetTree( TTree* tree , TString samplename , TString samplesnam
     CurrentSampleType = sampletype;
     CurrentSampleSName = samplesname;
 
-    CurrentSampleTypeS = sampletype;
-    CurrentSampleSNameS = samplesname;
+    new ( (*CurrentSampleTypeS)[0] ) TObjString( sampletype );
+    new ( (*CurrentSampleSNameS)[0] ) TObjString( samplesname );
 
     if(isData)
       CurrentSampleSName = "data";

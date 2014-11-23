@@ -251,7 +251,7 @@ public:
   void muTauAnalysis(TString cuts, TString trigger, unsigned int nevents, TString myfilename, int type = 0);
   void muTauWJetsEstimation(TString cuts, TString trigger, TString myfileName);
   void TauFakeRate(TString cuts, TString trigger, unsigned int nevents, TString myfilename);
-  void TauEfficiency(TString cuts, unsigned int nevents, TString myfilename);
+  void TauEfficiency(TString cuts, unsigned int nevents, TString myfilename , TString SamplSName);
   void LeptonEfficiency(TString cuts, unsigned int nevents);
   void DrawMyPlots(TString myfileName, double *xbin, int NumberOfBins);
   void elemuAnalysis(TString cuts,  TString trigger, unsigned int nevents, TString myfileName , int type = 0);

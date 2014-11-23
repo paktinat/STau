@@ -73,7 +73,7 @@ all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared  RunEleTauAnalyzer
 #	mv shlib/libDiLeptonAnalysis.so /scratch/$$USERNAME/RunMT2Analyzer
 #	mv /scratch/$$USERNAME/RunMT2Analyzer shlib/libDiLeptonAnalysis.so
 
-RunEleTauAnalyzer: src/exe/MakeEleTauPlots.C $(SHARED)	
+RunEleTauAnalyzer2: src/exe/MakeEleTauPlots.C $(SHARED)	
 	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -o $@ $^		
 
 RunMT2Analyzer: src/exe/RunMT2Analyzer.C $(SHARED)

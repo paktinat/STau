@@ -5748,33 +5748,52 @@ double MassPlotter::DeltaPhi(double phi1, double phi2){
 }
  
 
-void MassPlotter::TauEfficiency(TString cuts, unsigned int nevents, TString myfileName){
+#include "TEfficiency.h"
+void MassPlotter::TauEfficiency(TString cuts, unsigned int nevents, TString myfileName , TString SampleSName){
   TH1::SetDefaultSumw2();
- 
-//   TH2F *hPtEtaAll  = new TH2F("hPtEtaAll", "hPtEtaAll",  60, -3.0, 3.0, 1000, 0, 1000);
-//   TH2F *hPtEtaPass = new TH2F("hPtEtaPass","hPtEtaPass", 60, -3.0, 3.0, 1000, 0, 1000);
-  TH1F *hPtEtaAll  = new TH1F("hPtEtaAll", "hPtEtaAll",  200, 0, 200);
-  TH1F *hPtEtaAll2 = new TH1F("hPtEtaAll2", "hPtEtaAll2",  200, 0, 200);
-  TH1F *hPtEtaPass = new TH1F("hPtEtaPass","hPtEtaPass", 200, 0, 200);
-  TH1F *hPtEtaPass2 = new TH1F("hPtEtaPass2","hPtEtaPass2", 200, 0, 200);
 
-
+  double ptBins[] {20,50,100,200,500};
+  double etaBins[] {0 , 1.479 , 2.3 };
+  double metBins[] {30 , 70 , 110 , 200 , 300 };
+  
+  TEfficiency *hPtEta  = new TEfficiency("hPtEta", "PtEta",  4 , ptBins , 2 , etaBins );
+  TEfficiency *hPtMET  = new TEfficiency("hPtMET", "PtMET",  4 , ptBins , 4 , metBins );
+  TEfficiency *hPt = new TEfficiency("hPt" , "Pt" , 4 , ptBins ); 
+  TEfficiency *hOne = new TEfficiency("hOne" , "One" , 1 , 0 , 2);
+  
   for(unsigned int ii = 0; ii < fSamples.size(); ii++){
     
-   TString myCuts = cuts;
- 
-
-   sample Sample = fSamples[ii];
+    TString myCuts = cuts;
+    sample Sample = fSamples[ii];
     
-   if(Sample.sname != "DY")
-     continue;
+    if(Sample.sname != SampleSName )
+      continue;
+    if( SampleSName == "DY" )
+      if(! (Sample.shapename == "ZJetsToLL" && Sample.name != "DYToLL_M10To50") )
+	continue;
 
-      fMT2tree = new MT2tree();
-   Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
+    float Weight = 1.0;
+    if( (Sample.sname == "Wtolnu"  || (Sample.shapename == "ZJetsToLL" && Sample.name != "DYToLL_M10To50")) ){
+      Weight = (Sample.lumi / Sample.PU_avg_weight);
+    }
 
-   float Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
 
-   std::cout << setfill('=') << std::setw(70) << "" << std::endl;
+    fMT2tree = new MT2tree();
+    Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
+
+    Sample.tree->SetBranchStatus("*", 0);
+    Sample.tree->SetBranchStatus("*NTaus" , 1 );
+    Sample.tree->SetBranchStatus("*tau*" , 1 );
+    Sample.tree->SetBranchStatus("*misc*MET" , 1 );
+
+    Sample.tree->SetBranchStatus("*SFWeight*BTagCSV40eq0" , 1 );
+
+    Sample.tree->SetBranchStatus("*NGenLepts" , 1 );
+    Sample.tree->SetBranchStatus("*genlept*" , 1 );
+
+    Sample.tree->SetBranchStatus("pileUp*Weight" , 1);
+
+    std::cout << setfill('=') << std::setw(70) << "" << std::endl;
     cout << "looping over :     " <<endl;	
     cout << "   Name:           " << Sample.name << endl;
     cout << "   File:           " << (Sample.file)->GetName() << endl;
@@ -5790,25 +5809,24 @@ void MassPlotter::TauEfficiency(TString cuts, unsigned int nevents, TString myfi
     TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
 
     unsigned int nentries =  myEvtList->GetN();//Sample.tree->GetEntries();
-
+    
     for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
-      //Sample.tree->GetEntry(jentry); 
       Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
-
+      
       if ( fVerbose>2 && jentry % 100000 == 0 ){  
 	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
 	fflush(stdout);
       }
 
-     float weight = Weight;
+      float weight = Weight;
      
-     weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq0/Sample.PU_avg_weight);//* fMT2tree->SFWeight.TauTagge1/Sample.PU_avg_weight);//
+      weight *= (fMT2tree->pileUp.Weight * fMT2tree->SFWeight.BTagCSV40eq0);
  
-     int GenTau = 0;
+      int GenTau = 0;
      
-     for(int j = 0; j < fMT2tree->NGenLepts; j++){
-       if(abs(fMT2tree->genlept[j].ID) != 15)
-	 continue;
+      for(int j = 0; j < fMT2tree->NGenLepts; j++){
+	if(abs(fMT2tree->genlept[j].ID) != 15)
+	  continue;
 		
 
 	int HadTau = 1;
@@ -5821,8 +5839,6 @@ void MassPlotter::TauEfficiency(TString cuts, unsigned int nevents, TString myfi
 	}
 
  	if(HadTau == 0){
-// 	  if(Sample.sname == "Top") cout<<"ele "<<fMT2tree->TopDecayModeResult(11)<<endl;
-// 	  if(Sample.sname == "Top") cout<<"mu "<<fMT2tree->TopDecayModeResult(13)<<endl;
  	  continue;
 	}
 
@@ -5833,10 +5849,8 @@ void MassPlotter::TauEfficiency(TString cuts, unsigned int nevents, TString myfi
 	float minDR = 100.0;
 
 	float genleptEta = fMT2tree->genlept[j].lv.Eta();
-
 	float genleptPhi = fMT2tree->genlept[j].lv.Phi();
 	
-	//To find the rec/id tau matched to this gen had tau
 	for(int k = 0; k < fMT2tree->NTaus; k++){
 	  float deltaR = Util::GetDeltaR(genleptEta, fMT2tree->tau[k].lv.Eta(), genleptPhi, fMT2tree->tau[k].lv.Phi());
 	  if(deltaR < minDR){
@@ -5847,32 +5861,26 @@ void MassPlotter::TauEfficiency(TString cuts, unsigned int nevents, TString myfi
 
 	if(minDR < 0.1){
 	  if(fMT2tree->tau[jetIndex].PassQCDTau_MuTau == 1){
-	    hPtEtaAll->Fill(fMT2tree->muTau[0].GetMT2(), weight);
-	    hPtEtaAll2->Fill(fMT2tree->muTau[0].GetMT2(), weight);  
-	  }
-
-	  if(fMT2tree->tau[jetIndex].PassTau_MuTau == 1){
-	    hPtEtaPass->Fill(fMT2tree->muTau[0].GetMT2(), weight);
-	    hPtEtaPass2->Fill(fMT2tree->muTau[0].GetMT2(), weight);    
+	    hPtEta->FillWeighted(fMT2tree->tau[jetIndex].PassTau_MuTau == 1 , weight , fMT2tree->tau[jetIndex].lv.Pt() , fabs( fMT2tree->tau[jetIndex].lv.Eta() ) );
+	    hPtMET->FillWeighted(fMT2tree->tau[jetIndex].PassTau_MuTau == 1 , weight , fMT2tree->tau[jetIndex].lv.Pt() , fMT2tree->misc.MET );
+	    hPt->FillWeighted(fMT2tree->tau[jetIndex].PassTau_MuTau == 1 , weight , fMT2tree->tau[jetIndex].lv.Pt() );
+	    hOne->FillWeighted(fMT2tree->tau[jetIndex].PassTau_MuTau == 1 , weight , 1.0 );
 	  }
 	}
-     }
+      }
     }
   }
- hPtEtaAll2->Rebin(20);
-  hPtEtaPass2->Rebin(20);
-  hPtEtaAll2->Divide(hPtEtaPass2);
-  TCanvas *MyC = new TCanvas("MyC", "MyC");
-  hPtEtaAll2->Draw();
 
- TString fileName = fOutputDir;
- if(!fileName.EndsWith("/")) fileName += "/";
+  TString fileName = fOutputDir;
+  if(!fileName.EndsWith("/")) fileName += "/";
   Util::MakeOutputDir(fileName);
-  fileName = fileName  + myfileName +"_PRHistos.root";
+  fileName = fileName  + myfileName +"_" + SampleSName + "_PRHistos.root";
   TFile *savefile = new TFile(fileName.Data(), "RECREATE");
   savefile ->cd();
-  hPtEtaAll->Write();
-  hPtEtaPass->Write();
+  hPtEta->Write();
+  hPtMET->Write();
+  hPt->Write();
+  hOne->Write();
   savefile->Close();
   std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
   cout<<" cuts "<<cuts<<endl;

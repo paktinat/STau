@@ -20,6 +20,7 @@
 #include "TCanvas.h"
 #include "TFile.h"
 #include "TEfficiency.h"
+#include "TClonesArray.h"
 
 #include <vector>
 #include <utility>
@@ -32,16 +33,81 @@
 
 using namespace std;
 
+class ValueError{
+public:
+  double Value;
+  double ErrorLow;
+  double ErrorUp;
+
+  ValueError operator +(double i) const{
+    return ValueError( Value + i , ErrorLow , ErrorUp );
+  }
+  ValueError operator -(double i) const{
+    return ValueError( Value - i , ErrorLow , ErrorUp );
+  }
+  ValueError operator /(double i) const{
+    return ValueError( Value / i , ErrorLow , ErrorUp );
+  }
+  ValueError operator *(double i) const{
+    return ValueError( Value * i , ErrorLow , ErrorUp );
+  }
+  ValueError operator +(const ValueError i) const{
+    return ValueError( Value + i.Value , hypot( ErrorLow, i.ErrorLow ) , hypot(ErrorUp, i.ErrorUp) );
+  }
+  ValueError operator -(const ValueError i) const{
+    return ValueError( Value - i.Value , hypot( ErrorLow, i.ErrorLow ) , hypot(ErrorUp, i.ErrorUp) );
+  }
+  ValueError operator *(const ValueError i) const{
+    double newVal = Value*i.Value; 
+    return ValueError( newVal , newVal*hypot( ErrorLow/Value , i.ErrorLow/i.Value ) , newVal*hypot(ErrorUp/Value, i.ErrorUp/i.Value) );
+  }
+  ValueError operator /(const ValueError i) const{
+    double newVal = Value/i.Value; 
+    return ValueError( newVal , newVal*hypot( ErrorLow/Value , i.ErrorLow/i.Value ) , newVal*hypot(ErrorUp/Value, i.ErrorUp/i.Value) );
+  }
+  ValueError operator -() const{
+    return ValueError( -Value , ErrorLow , ErrorUp ) ;
+  }
+
+  double Error() const{
+    return (ErrorLow+ErrorUp)/2.0 ;
+  }
+  double UpperValue() const{
+    return Value+ErrorUp ;
+  }
+  double LowerValue() const{
+    return Value-ErrorLow;
+  }
+
+
+  ValueError( double val , double err , double err2) 
+    : Value (val),
+      ErrorLow( err ),
+      ErrorUp( err2 ){}
+};
+
+
+
+
+#include "TH3.h"
 
 class ExtendedObjectProperty : public TObject {
 public:
-  ExtendedObjectProperty(TString cutname , TString name, TString formula , int nbins, double min, double max , TString SUSYCatCommand , std::vector<TString> SUSYNames  ,  std::vector<TString>* labels = NULL);
-  ExtendedObjectProperty( TString cutname , TString name, TString formula , int nbins, double* bins ,TString SUSYCatCommand_ , std::vector<TString> SUSYNames_,  std::vector<TString>* labels = NULL ) ;
+  std::vector<TString> SamplesToStoreErrors;
+  TTree* treeWeightErrors;
+  int tweSampleIndex;
+  double tweW;
+  double tweWErr;
+  int tweValueBinIndex;
+
+  ExtendedObjectProperty(TString cutname , TString name, TString formula , int nbins, double min, double max , TString SUSYCatCommand , std::vector<TString> SUSYNames  ,  std::vector<TString>* labels = NULL , const std::vector<TString>& samplesToStoreErrors = std::vector<TString>() ) ; 
+  ExtendedObjectProperty( TString cutname , TString name, TString formula , int nbins, double* bins ,TString SUSYCatCommand_ , std::vector<TString> SUSYNames_,  std::vector<TString>* labels = NULL , const std::vector<TString>& samplesToStoreErrors = std::vector<TString>()) ;
 
   virtual void SetTree( TTree* tree , TString sampletype , TString samplesname , TString Cutname = "");
 
   virtual void Fill(double w = 1.0);
 
+  virtual void Fill(double dVal , ValueError w );
   virtual void Fill(double dVal , double w );
 
   void AddOverAndUnderFlow(TH1 * Histo, bool overflow, bool underflow);
@@ -62,6 +128,7 @@ public:
   
   TString CurrentSampleSName;
   TString CurrentSampleType;
+
   bool CurrentIsData; 
 
   double dVal;
@@ -143,8 +210,8 @@ public :
   TString CurrentSampleSName;
   TString CurrentSampleType;
 
-  std::string CurrentSampleSNameS;
-  std::string CurrentSampleTypeS;
+  TClonesArray* CurrentSampleTypeS;
+  TClonesArray* CurrentSampleSNameS;
 
   TEventList* CurrentList;
 
