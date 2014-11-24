@@ -2310,22 +2310,23 @@ void MassPlotter::loadSamples(const char* filename){
 			  TIter next(fileElements);
 			  TChainElement *chEl=0;
 			  while (( chEl=(TChainElement*)next() )) {
-			    TFile f(chEl->GetTitle());
+			   TFile* f = TFile::Open(chEl->GetTitle());
 			  //   cout<<chEl->GetTitle()<<endl;
 			    //    f.Print("ALL");
 			    if( h_PUWeights == NULL ){
 			      gROOT->cd();
-			      h_PUWeights = (TH1F*)(f.Get("h_PUWeights")->Clone("ClonedhPUWeights"));
+			      h_PUWeights = (TH1F*)(f->Get("h_PUWeights")->Clone("ClonedhPUWeights"));
 			    }
 			    else
-			      h_PUWeights->Add( (TH1F*)(f.Get("h_PUWeights") ) );
+			      h_PUWeights->Add( (TH1F*)(f->Get("h_PUWeights") ) );
 
 		// 	    h_PUWeights->Print("");
 
 			    if( h_Events == NULL )
-			      h_Events = (TH1F*) (f.Get("h_Events")->Clone("ClonedhEvents") ) ;
+			      h_Events = (TH1F*) (f->Get("h_Events")->Clone("ClonedhEvents") ) ;
 			    else
-			      h_Events->Add( (TH1F*) (f.Get("h_Events")) );
+			      h_Events->Add( (TH1F*) (f->Get("h_Events")) );
+			    delete f;
 			  }
 			  if(fileElements->GetEntries() == 0){
 			    h_PUWeights =(TH1F*) s.file->Get("h_PUWeights") ;
@@ -5363,23 +5364,25 @@ void MassPlotter::TopStudy2(TString mySample, unsigned int nevents){
   gPtTopEff->Draw("AP");
 }
 
-
 void MassPlotter::vs(unsigned int  nevents, TString cuts, TString trigger){ 
    
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
 
-  TH2F *AvsBSignal   = new TH2F("AvsBSignal"  , "AvsBSignal" , 60,    0, 500, 60,    0, 150);
-  TH2F *AvsBSignal2  = new TH2F("AvsBSignal2"  , "AvsBSignal2" , 60,    0, 500, 60,    0, 150);
-  TH2F *AvsBBkg      = new TH2F("AvsBBkg"     , "AvsBBkg"    , 60,    0, 500, 60,    0, 150);
-  TH2F *AvsB2Signal  = new TH2F("AvsB2Signal" , "AvsB2Signal", 60,    0, 600, 60,    0, 150);
-  TH2F *AvsB2Signal2 = new TH2F("AvsB2Signal2" , "AvsB2Signal2", 60,    0, 600, 60,    0, 150);
-  TH2F *AvsB2Bkg     = new TH2F("AvsB2Bkg"    , "AvsB2Bkg"   , 60,    0, 600, 60,    0, 150);
-  TH2F *AvsB3Signal  = new TH2F("AvsB3Signal" , "AvsB3Signal", 60,    0, 300, 60,    0, 150);
-  TH2F *AvsB3Signal2 = new TH2F("AvsB3Signal2" , "AvsB3Signal2", 60,    0, 300, 60,    0, 150);
-  TH2F *AvsB3Bkg     = new TH2F("AvsB3Bkg"    , "AvsB3Bkg"   , 60,    0, 300, 60,    0, 150);
+  TH2F *AvsBSignal   = new TH2F("AvsBSignal"  , "AvsBSignal"  , 10,    -1.0, 1.0, 10, -1.5, 1.0);
+  TH2F *AvsBSignal2  = new TH2F("AvsBSignal2" , "AvsBSignal2" , 10,    -1.0, 1.0, 10, -1.5, 1.0);
+  TH2F *AvsBBkg      = new TH2F("AvsBBkg"     , "AvsBBkg"     , 10,    -1.0, 1.0, 10, -1.5, 1.0);
+  TH2F *AvsB2Signal  = new TH2F("AvsB2Signal" , "AvsB2Signal" , 60,       0, 600, 60,    0, 150);
+  TH2F *AvsB2Signal2 = new TH2F("AvsB2Signal2", "AvsB2Signal2", 60,    0, 600, 60,    0, 150);
+  TH2F *AvsB2Bkg     = new TH2F("AvsB2Bkg"    , "AvsB2Bkg"    , 60,    0, 600, 60,    0, 150);
+  TH2F *AvsB3Signal  = new TH2F("AvsB3Signal" , "AvsB3Signal" , 60,    0, 300, 60,    0, 150);
+  TH2F *AvsB3Signal2 = new TH2F("AvsB3Signal2", "AvsB3Signal2", 60,    0, 300, 60,    0, 150);
+  TH2F *AvsB3Bkg     = new TH2F("AvsB3Bkg"    , "AvsB3Bkg"    , 60,    0, 300, 60,    0, 150);
 
   for(unsigned int i = 0; i < fSamples.size(); i++){
+
+    float OldIntegral = AvsBBkg->Integral() + AvsBSignal->Integral() + AvsBSignal2->Integral();
+
     sample Sample = fSamples[i];
    
     TString myCuts = cuts;
@@ -5392,9 +5395,12 @@ void MassPlotter::vs(unsigned int  nevents, TString cuts, TString trigger){
  
     Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
     
-    float Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
+    float Weight;
 
-   std::cout << setfill('=') << std::setw(70) << "" << std::endl;
+    if(fPUReweight) Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents*Sample.PU_avg_weight);
+    else            Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
+    
+    std::cout << setfill('=') << std::setw(70) << "" << std::endl;
     cout << "looping over :     " <<endl;	
     cout << "   Name:           " << Sample.name << endl;
     cout << "   File:           " << (Sample.file)->GetName() << endl;
@@ -5427,29 +5433,50 @@ void MassPlotter::vs(unsigned int  nevents, TString cuts, TString trigger){
 	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
 	fflush(stdout);
       }
-      float weight = Weight * fMT2tree->pileUp.Weight;
 
-      if(Sample.type == "susy" && (fMT2tree->Susy.MassGlu - fMT2tree->Susy.MassLSP) < 225.0 && (fMT2tree->Susy.MassGlu - fMT2tree->Susy.MassLSP) > 175.0){
-// 	cout << fMT2tree->DeltaREleEle();
-	AvsBSignal->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv.Pt()+ fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt(), fMT2tree->muTau[0].GetMT2(), weight);
-	AvsB2Signal->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT + fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT, fMT2tree->muTau[0].GetMT2(), weight);
-	AvsB3Signal->Fill(fMT2tree->muTau[0].GetLV().Pt(), fMT2tree->muTau[0].GetMT2(), weight);
+      float weight = Weight;
+     
+      weight *= fMT2tree->SFWeight.BTagCSV40eq0 * fMT2tree->muTau[0].GetTauEnergySF() * fMT2tree->muTau[0].GetMuIdSF() * fMT2tree->muTau[0].GetMuIsoSF() * fMT2tree->muTau[0].GetMuTrgSF() * fMT2tree->muTau[0].GetTauTrgSF();
+	
+      if(fPUReweight)
+	weight *= fMT2tree->pileUp.Weight;
+	
+      if(Sample.sname == "Wtolnu")
+	weight *= fMT2tree->muTau[0].GetTauWjetsSF();
+     
+      
+
+      float Q_MT = 1 - 80 * 80/(2 * fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv.Pt() * fMT2tree->misc.MET);
+
+      float DeltaPhi_L_MET = DeltaPhi(fMT2tree->pfmet[0].Phi(),fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv.Phi());
+
+      float CosDeltaPhi_L_MET = TMath::Cos(DeltaPhi_L_MET);
+      if(Sample.type == "susy"){
+	if((fMT2tree->Susy.MassGlu - fMT2tree->Susy.MassLSP) < 225.0 && (fMT2tree->Susy.MassGlu - fMT2tree->Susy.MassLSP) > 175.0){
+	  // 	cout << fMT2tree->DeltaREleEle();
+	  AvsBSignal->Fill(CosDeltaPhi_L_MET, Q_MT, weight);
+	  AvsB2Signal->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT + fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT, fMT2tree->muTau[0].GetMT2(), weight);
+	  AvsB3Signal->Fill(fMT2tree->muTau[0].GetLV().Pt(), fMT2tree->muTau[0].GetMT2(), weight);
+	}
+	//     if(Sample.sname == "Wtolnu")
+	else   if((fMT2tree->Susy.MassGlu - fMT2tree->Susy.MassLSP) < 400.0 && (fMT2tree->Susy.MassGlu - fMT2tree->Susy.MassLSP) > 300.0){
+	  // 	cout << fMT2tree->DeltaREleEle();
+	  AvsBSignal2->Fill(CosDeltaPhi_L_MET, Q_MT, weight);
+	  AvsB2Signal2->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT + fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT, fMT2tree->muTau[0].GetMT2(), weight);
+	  AvsB3Signal2->Fill(fMT2tree->muTau[0].GetLV().Pt(), fMT2tree->muTau[0].GetMT2(), weight);
+	}
       }
-       //     if(Sample.sname == "Wtolnu")
-      else   if(Sample.type == "susy"&& (fMT2tree->Susy.MassGlu - fMT2tree->Susy.MassLSP) < 400.0 && (fMT2tree->Susy.MassGlu - fMT2tree->Susy.MassLSP) > 300.0){
-// 	cout << fMT2tree->DeltaREleEle();
-	AvsBSignal2->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv.Pt()+ fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt(), fMT2tree->muTau[0].GetMT2(), weight);
-	AvsB2Signal2->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT + fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT, fMT2tree->muTau[0].GetMT2(), weight);
-	AvsB3Signal2->Fill(fMT2tree->muTau[0].GetLV().Pt(), fMT2tree->muTau[0].GetMT2(), weight);
-      }
-      //     if(Sample.sname == "Wtolnu")
       else
 	{
-	AvsBBkg->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv.Pt()+ fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt(), fMT2tree->muTau[0].GetMT2(), weight);
-	AvsB2Bkg->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT + fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT, fMT2tree->muTau[0].GetMT2(), weight);
-	AvsB3Bkg->Fill(fMT2tree->muTau[0].GetLV().Pt(), fMT2tree->muTau[0].GetMT2(), weight);
+	  AvsBBkg->Fill(CosDeltaPhi_L_MET, Q_MT, weight);
+	  AvsB2Bkg->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT + fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT, fMT2tree->muTau[0].GetMT2(), weight);
+	  AvsB3Bkg->Fill(fMT2tree->muTau[0].GetLV().Pt(), fMT2tree->muTau[0].GetMT2(), weight);
 	}
     }
+    
+    float NewIntegral = AvsBBkg->Integral() + AvsBSignal->Integral() + AvsBSignal2->Integral();
+    cout<<" Integral "<<(NewIntegral - OldIntegral) <<endl;
+    
   }
 
   TCanvas *MyC = new TCanvas("MyC", "MyC");
@@ -5476,6 +5503,8 @@ void MassPlotter::vs(unsigned int  nevents, TString cuts, TString trigger){
   AvsB3Signal2->Draw("colz");
   
 }
+
+
 
 
 void MassPlotter::SpecialMakePlot(unsigned int nevents, TString cuts, TString trigger){

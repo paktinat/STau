@@ -947,6 +947,14 @@ public:
   Float_t JZB1EleMu();
   Float_t JZB2EleMu();
 
+  Int_t nTaus(){
+    int ntaus = 0;
+    for(int t = 0; t < NTaus; t++){
+      if(tau[t].PassTau_MuTau == 1)
+	ntaus++;
+    }
+    return ntaus;
+  }
 
 
 
