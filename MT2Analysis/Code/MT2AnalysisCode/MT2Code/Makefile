@@ -17,7 +17,7 @@ ROOFITLIB = $(shell scram tool tag roofitcore LIBDIR)
 INCLUDES       = -I./include -I../TESCO/include -I${CMSSW_RELEASE_BASE}/src/CondFormats/JetMETObjects/interface -I${CMSSW_RELEASE_BASE}/src/ -I${ZLIBINC} -I${BOOSTINC} -I${ROOFITINC}
 
 CXX            = g++
-CXXFLAGS       = -g -fPIC -fno-var-tracking -Wno-deprecated -D_GNU_SOURCE -O2 -D'GETDATALOCALPATH(arg)=(std::string("$(STauBaseDir)/") + std::string(\#arg)).c_str()'  -std=c++0x $(INCLUDES) 
+CXXFLAGS       = -fPIC -fno-var-tracking -Wno-deprecated -D_GNU_SOURCE -O2 -D'GETDATALOCALPATH(arg)=(std::string("$(STauBaseDir)/") + std::string(\#arg)).c_str()'  -std=c++0x $(INCLUDES) 
 LD             = g++
 LDFLAGS        = 
 #SOFLAGS        = -O --no_exceptions  -dynamiclib -flat_namespace -undefined suppress
@@ -73,7 +73,7 @@ all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared  RunEleTauAnalyzer
 #	mv shlib/libDiLeptonAnalysis.so /scratch/$$USERNAME/RunMT2Analyzer
 #	mv /scratch/$$USERNAME/RunMT2Analyzer shlib/libDiLeptonAnalysis.so
 
-RunEleTauAnalyzer2: src/exe/MakeEleTauPlots.C $(SHARED)	
+RunEleTauAnalyzer: src/exe/MakeEleTauPlots.C $(SHARED)	
 	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -o $@ $^		
 
 RunMT2Analyzer: src/exe/RunMT2Analyzer.C $(SHARED)

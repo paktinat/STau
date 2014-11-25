@@ -23,9 +23,9 @@
 
 #include "helper/Utilities.hh"
 
-//#define TREE
-//#define FROMEvtLst
-#define TauFR
+#define TREE
+#define FROMEvtLst
+//#define TauFR
 
 using namespace std;
 
@@ -1427,6 +1427,18 @@ int main(int argc, char* argv[]) {
 
   ExtendedObjectProperty* EleTauMinMeLeDPhi = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "MinMetLepDPhi" , "eleTau[0].minMetLepDPhi" , 32 , 0 , 3.2 ,SUSYCatCommand , SUSYCatNames );
   allProps.Add( EleTauMinMeLeDPhi );
+
+  ExtendedObjectProperty* MinMetJetDPhi = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "MinMetJetDPhi" , "misc.MinMetJetDPhi" , 32 , 0 , 3.2 ,SUSYCatCommand , SUSYCatNames );
+  allProps.Add( MinMetJetDPhi );
+
+  ExtendedObjectProperty* MinMetJetDPhi4 = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "MinMetJetDPhi4" , "misc.MinMetJetDPhi4" , 32 , 0 , 3.2 ,SUSYCatCommand , SUSYCatNames );
+  allProps.Add( MinMetJetDPhi4 );
+
+  ExtendedObjectProperty* MinMetJetDPhiPt40 = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "MinMetJetDPhiPt40" , "misc.MinMetJetDPhiPt40" , 32 , 0 , 3.2 ,SUSYCatCommand , SUSYCatNames );
+  allProps.Add( MinMetJetDPhiPt40 );
+
+  ExtendedObjectProperty* MinMetJetDPhi4Pt40 = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "MinMetJetDPhi4Pt40" , "misc.MinMetJetDPhi4Pt40" , 32 , 0 , 3.2 ,SUSYCatCommand , SUSYCatNames );
+  allProps.Add( MinMetJetDPhi4Pt40 );
 
   ExtendedObjectProperty* EleTauPZeta = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "PZeta" , "eleTau[0].pZeta" , 100 , 0 , 2000 ,SUSYCatCommand , SUSYCatNames );
   allProps.Add( EleTauPZeta );
