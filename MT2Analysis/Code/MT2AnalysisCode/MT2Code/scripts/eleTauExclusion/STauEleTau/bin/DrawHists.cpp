@@ -7,6 +7,7 @@
 #include "Corrector.cc"
 #include "TLorentzVector.h"
 #include "TGraphAsymmErrors.h"
+#include "TClonesArray.h"
 
 #include <cmath>
 
@@ -34,7 +35,7 @@ std::pair< TString, TString > GetSampleInfo( int processid ){
     sname = "Top";
     break;
   case 5:
-    //sname = "QCD";
+    sname = "VV";
     break;
   case 6:
     sname = "QCD";
@@ -47,6 +48,9 @@ std::pair< TString, TString > GetSampleInfo( int processid ){
     type = "susy";
     break;
   }
+  
+  if(sname == "")
+    cout << processid << endl;
 
   return std::make_pair(sname , type);
 }
@@ -84,7 +88,7 @@ public:
   TGraphAsymmErrors* gXSections;
   TH2* hSMSEvents ;
   void MakeXSections(){
-    TFile* f = TFile::Open("/home/hbakhshi/work/STau/CMSSW_6_1_1/src/HiggsAnalysis/all_Histos.root");
+    TFile* f = TFile::Open("./all_Histos.root");
     gROOT->cd();
     hSMSEvents = (TH2*) ( f->Get("h_SMSEvents")->Clone("h_new_SMSEvents") );
     f->Close();
@@ -184,6 +188,7 @@ public:
   ExtendedObjectProperty* oMT2pDiLepPt;
   ExtendedObjectProperty* oPtRatio;
 
+  ExtendedObjectProperty* oOne;
 
   /*double PUW;
     double tauTrgSF;
@@ -203,8 +208,12 @@ public:
   std::map< double , std::vector< ExtendedObjectProperty* > > binnedProps;
 
   double sgnXSection2W;
+  double sgnXSection2W2;
 
-  variables_to_read(TTree* tbkg , TTree* tsgn, int signalpid , int nVarToBin_ , vector<double> bins){
+  variables_to_read(TTree* tbkg , TTree* tsgn, int signalpid , int nVarToBin_ , vector<double> bins):
+    sType( new TClonesArray("TObjString") ),
+    sSName( new TClonesArray("TObjString" ) )
+  {
     MakeXSections();
     
     treeBKG = tbkg;
@@ -213,8 +222,9 @@ public:
 
     //hWOldNew = new TH2D("hWOldNew" , "" , 300 , 0 , 300 , 300 , 0 , 300 );
 
-    std::vector<TString> ThisSUSYCatName = {"180_60" , "OTHERS"};
-    TString susyFormula = "!((MassGlu) == 180 && (MassLSP) == 60)";
+    std::vector<TString> ThisSUSYCatName = {"180_60" , "380_1"};
+    TString susyFormula = "!(MassGlu >= 180 && MassGlu <200 && MassLSP < 80  && (MassLSP) >= 60)";
+    TString susyFormula2 = "!(MassGlu >= 380 && MassGlu <400 && MassLSP < 20  && (MassLSP) >= 0)";
     //(MassGlu-MassLSP) < 170 || (MassGlu-MassLSP) >= 225";
     //SUSYCategory > 3 || SUSYCategory < 2";
 
@@ -223,7 +233,7 @@ public:
       ThisSUSYCatName = { SUSYCatNames[signalpid] };
       susyFormula = "SUSYCategory - " + TString::Itoa( signalpid , 10) ;
     }
-
+    //treeSGN->Print("ALL");
     treeSGN->SetBranchAddress( "MassGlu" , &MGlu);
     treeSGN->SetBranchAddress( "MassLSP" , &MLSP);
 
@@ -244,27 +254,32 @@ public:
         
     for(int mglu_i= 1 ; mglu_i < hNEvents->GetNbinsY()+1 ; mglu_i++ ){
       for(int mlsp_i = 1 ; mlsp_i < hNEvents->GetNbinsX()+1 ; mlsp_i++){
-	double mlsp = hNEvents->GetYaxis()->GetBinCenter(mlsp_i);
-	double mglu = hNEvents->GetXaxis()->GetBinCenter(mglu_i);
+	double mlsp = hNEvents->GetYaxis()->GetBinLowEdge(mlsp_i);
+	double mglu = hNEvents->GetXaxis()->GetBinLowEdge(mglu_i);
+	//cout << mlsp << "--" << mglu ;
 	if( SusyRangeFormula->Eval( mglu , mlsp ) == 0 ){
-	  if(mlsp_i == 1){
-	    mglu_avg += mglu;
-	    nmlsp_zero += 1;
-	  }
+	  cout <<  mlsp << "--" << mglu << " pass " << endl;
+	  //if(mlsp_i == 1){
+	  mglu_avg += mglu;
+	  nmlsp_zero += 1;
+	    //}
 	  nTotalSignal += hNEvents->GetBinContent( mglu_i, mlsp_i);
+	}else{
+	  //cout << " fail " << endl;
 	}
       }
     }
 
     mglu_avg /= nmlsp_zero;
     double xSection = gXSections->Eval( mglu_avg );
-    cout << " nSignals : " << nTotalSignal << endl;
-    cout << "xsection for signal " << mglu_avg << " : " << xSection << endl;
+    //cout << " nSignals : " << nTotalSignal << endl;
+    //cout << "xsection for signal " << mglu_avg << " : " << xSection << endl;
     double Lumi = 19.6;
     //double nSignal = xSection*Lumi*nSig / nTotalSignal;
-    sgnXSection2W = xSection*Lumi / nTotalSignal; 
-
-    cout << "Signal Weight " << sgnXSection2W << endl;
+    sgnXSection2W = 0.233441 ;// xSection*Lumi / nTotalSignal; 
+    sgnXSection2W2 =0.444175;// 0.406308 ;
+    
+    //cout << "Signal Weight " << sgnXSection2W << endl;
     
     this->nVarToBin = nVarToBin_ ;
     if( nVarToBin == -1 || bins.size() == 0 ){
@@ -281,23 +296,26 @@ public:
 	binnedSigBKG[ bins[bin] ] = std::make_pair( hBKG , hSignal );
       
        
-	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "MT2" , "MT2" , 25 , 0 , 250 , susyFormula , ThisSUSYCatName ) );
-	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "MET" , "MET" , 25 , 0 , 250 , susyFormula , ThisSUSYCatName ) );
-	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "MCT" , "MCT" , 25 , 0 , 250 , susyFormula , ThisSUSYCatName ) );
-	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "ElePt" , "ElePt" , 25 , 0 , 250 , susyFormula , ThisSUSYCatName ) );
-	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "TauPt" , "TauPt" , 25 , 0 , 250 , susyFormula , ThisSUSYCatName ) );
+	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "MT2" , "MT2" , 5 , 40 , 90 , susyFormula , ThisSUSYCatName ) );
+	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "MT2_90" , "MT2" , 8 , 90 , 250 , susyFormula , ThisSUSYCatName ) );
+	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "MET" , "MET" , 10 , 0 , 250 , susyFormula , ThisSUSYCatName ) );
+	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "MCT" , "MCT" , 10 , 0 , 250 , susyFormula , ThisSUSYCatName ) );
+	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "ElePt" , "ElePt" , 10 , 0 , 250 , susyFormula , ThisSUSYCatName ) );
+	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "TauPt" , "TauPt" , 10 , 0 , 250 , susyFormula , ThisSUSYCatName ) );
 
 	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "NJets30" , "NJets30" , 10 , 0 , 10 , susyFormula , ThisSUSYCatName ) );
 
-	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "SumPT" , "ElePt+TauPt" , 50 , 0 , 500 , susyFormula , ThisSUSYCatName ) );
-	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "SumMT" , "EleMTpTauMT" , 50 , 0 , 500 , susyFormula , ThisSUSYCatName ) );
-	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "diLeptPt" , "EleTauPt" , 50 , 0 , 500 , susyFormula , ThisSUSYCatName ) );
-	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "EleMT" , "EleMT" , 50 , 0 , 500 , susyFormula , ThisSUSYCatName ) );
-	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "TauMT" , "EleMTpTauMT - EleMT" , 50 , 0 , 500 , susyFormula , ThisSUSYCatName ) );
-	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "MT2pDiLeptPt" , "MT2+EleTauPt" , 50 , 0 , 500 , susyFormula , ThisSUSYCatName ) );
-	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "METpDiLeptPt" , "MET+EleTauPt" , 50 , 0 , 500 , susyFormula , ThisSUSYCatName ) );
+	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "SumPT" , "ElePt+TauPt" , 10 , 0 , 500 , susyFormula , ThisSUSYCatName ) );
+	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "SumMT" , "EleMTpTauMT" , 10 , 200 , 500 , susyFormula , ThisSUSYCatName ) );
 
-	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "ptRatio" , "EleTauPt/(TauPt+ElePt)" , 10 , 0 , 10 , susyFormula , ThisSUSYCatName ) );
+	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "diLeptPt" , "EleTauPt" , 10 , 0 , 500 , susyFormula , ThisSUSYCatName ) );
+	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "EleMT" , "EleMT" , 10 , 0 , 500 , susyFormula , ThisSUSYCatName ) );
+	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "TauMT" , "EleMTpTauMT - EleMT" , 10 , 0 , 500 , susyFormula , ThisSUSYCatName ) );
+	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "MT2pDiLeptPt" , "MT2+EleTauPt" , 10 , 0 , 500 , susyFormula , ThisSUSYCatName ) );
+	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "METpDiLeptPt" , "MET+EleTauPt" , 10 , 0 , 500 , susyFormula , ThisSUSYCatName ) );
+
+	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "ptRatio" , "EleTauPt/(TauPt+ElePt)" , 10 , 0 , 1 , susyFormula , ThisSUSYCatName ) );
+	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "One" , "1" , 1 , 0 , 10 , susyFormula , ThisSUSYCatName ) );
 
       }
 
@@ -316,22 +334,26 @@ public:
 
     oSUMPt = new ExtendedObjectProperty( "PreSelection" , "SumPT" , "ElePt+TauPt" , 50 , 0 , 500 , susyFormula , ThisSUSYCatName ) ;
     oSumMT = new ExtendedObjectProperty( "PreSelection" , "SumMT" , "EleMTpTauMT" , 50 , 0 , 500 , susyFormula , ThisSUSYCatName ) ;
-    oElePt = new ExtendedObjectProperty( "PreSelection" , "diLeptPt" , "EleTauPt" , 50 , 0 , 500 , susyFormula , ThisSUSYCatName ) ;
+    oEleTauPt = new ExtendedObjectProperty( "PreSelection" , "diLeptPt" , "EleTauPt" , 50 , 0 , 500 , susyFormula , ThisSUSYCatName ) ;
     oEleMT = new ExtendedObjectProperty( "PreSelection" , "EleMT" , "EleMT" , 50 , 0 , 500 , susyFormula , ThisSUSYCatName ) ;
     oTauMT = new ExtendedObjectProperty( "PreSelection" , "TauMT" , "EleMTpTauMT - EleMT" , 50 , 0 , 500 , susyFormula , ThisSUSYCatName ) ;
     oMT2pDiLepPt = new ExtendedObjectProperty( "PreSelection" , "MT2pDiLeptPt" , "MT2+EleTauPt" , 50 , 0 , 500 , susyFormula , ThisSUSYCatName ) ;
     oMETpDiLepPt = new ExtendedObjectProperty( "PreSelection" , "METpDiLeptPt" , "MET+EleTauPt" , 50 , 0 , 500 , susyFormula , ThisSUSYCatName ) ;
 
-    oPtRatio = new ExtendedObjectProperty( "PreSelection" , "ptRatio" , "EleTauPt/(TauPt+ElePt)" , 10 , 0 , 10 , susyFormula , ThisSUSYCatName ) ;
+    oPtRatio = new ExtendedObjectProperty( "PreSelection" , "ptRatio" , "EleTauPt/(TauPt+ElePt)" , 10 , 0 , 1 , susyFormula , ThisSUSYCatName ) ;
+    oOne =  new ExtendedObjectProperty( "PreSelection" , "One" , "1" , 1 , 0 , 10 , susyFormula , ThisSUSYCatName ) ;
       
-    allObjs = {oMT2 , oMET, oMCT , oElePt , oTauPt , onJets , oSUMPt , oSumMT , oElePt , oEleMT , oTauMT , oMT2pDiLepPt , oMETpDiLepPt , oPtRatio} ;
+    allObjs = {oMT2 , oMET, oMCT , oElePt , oTauPt , onJets , oSUMPt , oSumMT , oEleTauPt , oEleMT , oTauMT , oMT2pDiLepPt , oMETpDiLepPt , oPtRatio , oOne} ;
   };
   int last_proce_id ;
+  std::pair<TString, TString> CurrentSampleInfo;
+  TClonesArray* sType;
+  TClonesArray* sSName;
   bool SetTree( int processid ){
     last_proce_id = processid;
-    std::pair<TString, TString> sampleinfo  = GetSampleInfo(processid);
-    TString sname = sampleinfo.first;
-    TString stype = sampleinfo.second;
+    CurrentSampleInfo = GetSampleInfo(processid);
+    TString sname = CurrentSampleInfo.first;
+    TString stype = CurrentSampleInfo.second;
 
     std::cout << sname << "--" << stype << std::endl;
 
@@ -350,6 +372,9 @@ public:
 
     tree->SetBranchAddress( "MT2" , &MT2);
     tree->SetBranchAddress( "EleMTpTauMT" , &SumMT);
+
+    tree->SetBranchAddress( "SName" , &sSName );
+    tree->SetBranchAddress( "SType" , &sType );
 
     for( uint i = 0 ; i < allObjs.size() ; i++)
       allObjs[i]->SetTree( tree , stype , sname );
@@ -379,10 +404,15 @@ public:
 
     int binindex = -1;
     int myBinIndex = -1;
+
     if( MT2 > 40 && MT2 < 90 && SumMT > 300 )
       myBinIndex = 0;
     else if( MT2 > 90 )
       myBinIndex = 1;
+    else
+      return;
+
+
     for( auto a : this->binnedProps ){
       binindex ++;
       if( binindex == myBinIndex ){ // BinVal <= a.first ){
@@ -398,14 +428,19 @@ public:
       
     binindex = -1;
     for( auto a : this->binnedSigBKG ){
-      binindex ++;
-      if( binindex == myBinIndex ) { //BinVal <= a.first ){
+      binindex++;
+      bool ccc = binindex == myBinIndex ;
+      if( ccc ) { 
+	//BinVal <= a.first ){
+
     	hBKG = a.second.first ;
     	hSignal = a.second.second ;
     	break;
       }
     }
-
+    
+    //cout << binindex << "--" << myBinIndex << endl;
+    
     switch(last_proce_id){
     case 0:
       hBKG->Fill( 4.5 , W);
@@ -439,6 +474,7 @@ public:
   void Write( TDirectory* dir , TString outfname = "eletau_", int lumi=19600 ){
     dir->cd();
     //hWOldNew->Write();
+    vector< ExtendedObjectProperty* > TheOnes;
 
     for( auto a : binnedProps ){
       TString dirname = ("AfterCuts_Bin_" + std::to_string( a.first ) );
@@ -454,6 +490,8 @@ public:
 	}catch(...){
 	  b->Write( newdir , lumi , false );
 	}
+	if( b->Name == "One" )
+	  TheOnes.push_back( b );
       }
     }
 
@@ -464,6 +502,7 @@ public:
       allObjs[i]->CalcSig( 1 , 1 , 0  );
       allObjs[i]->CalcSig( 1 , 2 , 0  );
       //allObjs[i]->CalcSig( 1 , 3 , 0  );
+      cout << allObjs[i]->Name << endl;
       allObjs[i]->Write(dir11 , lumi );
     }
     double significance = bkgeff.WPassed!=0 ? efficiencies[10].WPassed / sqrt( bkgeff.WPassed) : -1.0 ;
@@ -505,6 +544,12 @@ public:
       if(bincounter != 0)
 	dir->Close();
     } 
+    
+    oOne->Print( "cutflowtable" );
+    for( auto theOne : TheOnes ){
+      //cout << theOne->CutName << endl;
+      theOne->Print("cutflowtable" );
+    }
 
   }
 
@@ -517,8 +562,11 @@ public:
   bool isBKG(int processid = -100){
     if( processid == 0 || processid >= 10 )
       return false;
-    else if(processid >=0)
-      return ( SUSYCategory == processid-10 );
+    else if(processid >=0){
+      bool ret = CurrentSampleInfo.first == ( (TObjString*)sSName->At(0) )->GetString() ;
+      ret &= CurrentSampleInfo.second ==( (TObjString*)sType->At(0) )->GetString() ;
+      return ret;
+    }
     else if(processid == -100)
       return ( SUSYCategory > -10 && SUSYCategory < 0 );
 
@@ -590,10 +638,21 @@ public:
     //if( MT2<20.0 && isBKG( -100 ) )
     //W /= 2;
 
-
     if(isSignal())
-      W *= sgnXSection2W ;
-
+      {
+	if( MGlu >=180 && MGlu < 200 && MLSP >= 60.0 && MLSP < 80 )
+	  {
+	    W *= sgnXSection2W ;
+	    //cout << "a" <<endl;
+	  }
+	else if( MGlu >=380 && MGlu < 400 && MLSP >= 0.0 && MLSP < 20 )
+	  {
+	    W *= sgnXSection2W2 ;
+	    //cout << "b" << endl;
+	  }
+	else
+	  W = 0;
+      }
     //       double BinVal = vals[ this->nVarToBin ];
     //       bool ret2 = ( ret && ( BinVal > binnedProps.begin()->first ) );
     //       efficiencies[last_proce_id].WAll += W;
@@ -611,16 +670,37 @@ public:
   };
 };
 
+#include "TClonesArray.h"
 int main(int argc, char* argv[]) {
-  TFile* f1 = TFile::Open("/home/hbakhshi/work/STau/CMSSW_6_1_1/src/HiggsAnalysis/all.root" );
-  TTree* t1 = (TTree*)f1->Get("ZPeakVeto");
+  // TFile f("out.root", "recreate");
+  // TClonesArray* tt = new TClonesArray("TObjString");
+
+  // TTree* t = new TTree("TTT" , "TTT");
+  // t->Branch( "a" , &tt );
+
+  // new( (*tt)[0] ) TObjString ("SSS");
+  // new( (*tt)[1] ) TObjString ("TTTT");
+  // //tt->Add( &s);
+  
+  // for(int i = 0; i< 100 ; i++)
+  //   t->Fill();
+
+  // t->Write();
+  // f.Close();
+  // exit(0);
+
+
+  gROOT->ProcessLine(".x SetStyle_PRD.C");
+
+  TFile* f1 = TFile::Open("./all.root" );
+  TTree* t1 = (TTree*)f1->Get("ElePTCut"); //ZPeakVeto
 
   TFile* f2 = f1 ; //TFile::Open("/afs/cern.ch/work/h/hbakhshi/STau/CMSSW_6_1_1/src/HiggsAnalysis/SignalOnly.root");
-  TTree* t2 = (TTree*)f2->Get("ZPeakVeto");
+  TTree* t2 = (TTree*)f2->Get("ElePTCut");
 
   int signal = std::stoi(argv[1]);
   cout << signal << endl;
-  
+
 #define nVarsToCut 7
   double cuts0_50[nVarsToCut]    = {0 , 0 , 0 , 0 , 0 , 0 , 0};
   double cuts50_100[nVarsToCut]  = {-70  , -1 , 40 , -1 , 30 , -1 , 10};
@@ -657,7 +737,31 @@ int main(int argc, char* argv[]) {
     cout << i << "  " ;
   cout << endl;
 
+  
+
+  // TObjString sss;
+  // TObjString ttt;
+
+  // TObjString last_sss = "";
+  // t2->SetBranchAddress( "SName" , &sss );
+  // t2->SetBranchAddress( "SType" , &ttt );
+  // for(int i = 0 ; i< t2->GetEntries() ; i++){
+  //   t2->GetEntry(i);
+  //   //sss = t2->GetBranch("SName")->GetEntry(i);
+  //   //ttt = t2->GetBranch("SType")->GetEntry(i);
+    
+  //   if( sss.String() != last_sss.String() ){
+  //     cout << sss.String() << "---" << ttt.String() << endl;
+  //     last_sss = sss;
+  //   }
+  // }
+  // exit(0);
+
   variables_to_read vars( t1 , t2 , signal , nVarToBin , Bins );
+
+  // cout << 19.6 * vars.gXSections->Eval( 180 )/50000 << endl;
+  // cout << 19.6*  vars.gXSections->Eval( 380 )/1000 << endl;
+  // exit(0);
 
   for( int sampletype = -10 ; sampletype < 1 ; sampletype++ ){
     int processid = sampletype+10;
@@ -670,17 +774,22 @@ int main(int argc, char* argv[]) {
 
     gROOT->cd();
     TString criteria ;
-    if( sampletype < 0 )
+    if( sampletype == -10 )
       criteria = "SUSYCategory ==" + std::to_string(sampletype) ; 
+    else if( sampletype < 0 ){
+      criteria = "SUSYCategory < 0 && SUSYCategory > -10" ;
+    }
     else{
       if(signal == -100)
 	criteria = "SUSYCategory >= 0";
       else
 	criteria = "SUSYCategory >= " + std::to_string(signal) + " && SUSYCategory <" + std::to_string(signal+1) ; 
     }
+    gROOT->cd();
     t->Draw( ">>elist" , criteria , "goff"); 
     TEventList* list = (TEventList*)gROOT->Get("elist");
 
+    cout << criteria << endl;
     cout << "Tree : " << t->GetName() << " ... " << t->GetCurrentFile()->GetName() << list->GetN() << "==" << t->GetEntries() << endl;
 
     for(int i=0 ; i< list->GetN() ; i++){

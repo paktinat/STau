@@ -48,7 +48,7 @@ public:
 
   virtual void Print(Option_t* option = "") const;
 
-  TCanvas* plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, TH1* h3, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle,int njets,int nbjets, int nleps, float overlayScale, TString saveMacro , int lumi_);
+  TCanvas* plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, TH1* h3, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle,int njets,int nbjets, int nleps, float overlayScale, TString saveMacro , int lumi_, TH1* SUSY2=NULL);
 
   virtual void Write( TDirectory* dir , int lumi , bool plotratiostack = true , bool logy = true);
 
@@ -79,6 +79,8 @@ public:
   bool isString;
   TTreeFormula* tFormula;
   TTreeFormula* tSUSYCatFormula;
+  TTreeFormula* tSUSYCatFormula2;
+
   vector<TString> SUSYNames;
   TString SUSYCatCommand;
 

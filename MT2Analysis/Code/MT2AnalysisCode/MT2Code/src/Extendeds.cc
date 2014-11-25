@@ -2,6 +2,7 @@
 #include "Extendeds.hh"
 #include <vector>
 #include <string.h>
+#include "TSystem.h"
 
 void ExtendedObjectProperty::makeCard(double N, double S, double dS, double B, double dB, string sOut) {
 
@@ -180,7 +181,8 @@ void ExtendedObjectProperty::CalcSig(int LowerCut , int type,  int SUSCat , doub
 }
 
 void ExtendedObjectProperty::Print(Option_t* option ) const{
-  if( strcmp(option , "" ) ){
+  //cout << option << endl;
+  if(false &&  strcmp(option , "" ) ){
     cout << "\t" 
 	 << Name << " , " 
 	 << Formula << " : " << endl ;
@@ -196,7 +198,7 @@ void ExtendedObjectProperty::Print(Option_t* option ) const{
     }
 
     cout << endl;
-  }else if( strcmp(option , "cutflowtable") ){
+  }else if( true || strcmp(option , "cutflowtable") ){
     cout << endl << "||" ;
     for( int i=0 ; i<NumberOfHistos ; i++)
       cout << histoNames[i] << "|" ;
@@ -359,6 +361,7 @@ void ExtendedObjectProperty::SetTree( TTree* tree , TString sampletype, TString 
   else if(CurrentSampleType == "susy"){
     theH = NULL;
     tSUSYCatFormula = new TTreeFormula( ( Name + "_SUSY" ).Data() , SUSYCatCommand.Data() , tree );
+    tSUSYCatFormula2 = new TTreeFormula( ( Name + "_SUSY2" ).Data() , "!(MassGlu >= 380 && MassGlu <400 && MassLSP < 20  && (MassLSP) >= 0)" , tree );
   }
   else
     theH = allHistos[ CurrentSampleSName ];
@@ -376,6 +379,16 @@ void ExtendedObjectProperty::Fill(double w){
   else
     dVal = tFormula->EvalInstance(0);
 
+  if( CurrentIsData ){
+    if( CutName == "PreSelection" ){
+      if( (Name =="MT2" || Name=="MCT" ) && dVal > 90 )
+	return;
+      if( Name == "SumMT" && dVal > 300)
+	return;
+    }else
+      return;
+  }
+
   if( theH ){
     if(isString)
       theH->Fill( sVal , w);
@@ -385,10 +398,19 @@ void ExtendedObjectProperty::Fill(double w){
   else if(tSUSYCatFormula){
     isString ? allHistos["SUSY"]->Fill(  sVal , w ) : allHistos["SUSY"]->Fill(  dVal , w );
     double suscatd = tSUSYCatFormula->EvalInstance(0) ;
+    if(suscatd != 0.0){
+      if( tSUSYCatFormula2->EvalInstance(0) == 0 )
+	suscatd = 1.0;
+      else
+	suscatd = 2.0;
+    }
     int suscat = int(suscatd);
     if( suscat < int(SUSYNames.size()) ){
       TString suscatname = SUSYNames[suscat];
       TString sushistname = "SUSY_" + suscatname ;
+      //if( Name == "One")
+      //cout << CutName << "---" << sushistname << "---" << w << "---" << dVal << "----" << sVal << "-----" << allHistos[sushistname]->GetEntries() << endl;
+	
       isString ? allHistos[ sushistname ]->Fill( sVal , w ) : allHistos[ sushistname ]->Fill( dVal , w );
     }
   }
@@ -436,7 +458,7 @@ void ExtendedObjectProperty::AddOverAndUnderFlow(TH1 * Histo, bool overflow, boo
 }
 
 
-TCanvas* ExtendedObjectProperty::plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, TH1* h3, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle,int njets,int nbjets, int nleps, float overlayScale, TString saveMacro , int lumi_){
+TCanvas* ExtendedObjectProperty::plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, TH1* h3, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle,int njets,int nbjets, int nleps, float overlayScale, TString saveMacro , int lumi_ , TH1* SUSY2){
   //LEO TRUE USE THIS
 
   // define canvas and pads 
@@ -459,7 +481,11 @@ TCanvas* ExtendedObjectProperty::plotRatioStack(THStack* hstack, TH1* h1_orig, T
   if(border == scale)
     cout << "just to avoid warning message" << endl;
 
-  TPad *p_plot  = new TPad(name+"_plotpad"+ "_" + Name + "_" + CutName,  "Pad containing the overlay plot", 0,0.211838,1,1 /*0.00, border, 1.00, 1.00, 0, 0*/);
+  double hhhh = 0.211838;
+  if( CutName != "PreSelection" )
+    hhhh = 0.1;
+
+  TPad *p_plot  = new TPad(name+"_plotpad"+ "_" + Name + "_" + CutName,  "Pad containing the overlay plot", 0,hhhh,1,1 /*0.00, border, 1.00, 1.00, 0, 0*/);
   //p_plot->SetBottomMargin(0.05);
   //p_plot->SetTopMargin(0.09);
   //p_plot->SetLeftMargin(0.1669107);
@@ -478,7 +504,8 @@ TCanvas* ExtendedObjectProperty::plotRatioStack(THStack* hstack, TH1* h1_orig, T
   p_ratio->SetTopMargin(0.06976745);
   p_ratio->SetBottomMargin(0.2790698);
 
-  p_ratio->Draw();
+  if( CutName == "PreSelection" )
+    p_ratio->Draw();
  
   // draw overlay plot
   p_plot ->cd();
@@ -529,13 +556,26 @@ TCanvas* ExtendedObjectProperty::plotRatioStack(THStack* hstack, TH1* h1_orig, T
   //MT2_bSel[0]->SetTitleSize(0.03);
   ///MT2_bSel[0]->SetTitleOffset(1.);
   hstack->SetMinimum(0.02);
+  if( CutName != "PreSelection" )
+    hstack->GetXaxis()->SetTitle(xtitle);
   hstack->Draw("hist");
+  h2->SetMarkerColor(1);
   h2    ->Draw("sameE");
   h3->Scale(overlayScale ? overlayScale : h2->Integral() / h3->Integral());
   h3->SetFillColor(0);
-  h3->SetLineStyle(kDotted);
+  h3->SetFillStyle(0);
+  h3->SetLineStyle(3);
   h3->SetLineWidth(4);
   h3->Draw("samehist");
+  
+  if(SUSY2){
+    SUSY2->Scale(overlayScale ? overlayScale : h2->Integral() / h3->Integral());
+    SUSY2->SetLineStyle(1);
+    SUSY2->SetLineWidth(2);
+    SUSY2->SetFillStyle(0);
+    SUSY2->Draw("samehist");
+  }
+
 
   TLatex TitleBox;
   TitleBox.SetNDC();
@@ -605,7 +645,11 @@ TCanvas* ExtendedObjectProperty::plotRatioStack(THStack* hstack, TH1* h1_orig, T
 
 	
   h_ratio_mc->SetFillStyle(3001);
+  h_ratio_mc->SetFillColor(1);
   h_ratio_mc->Draw("E2");
+  
+  h_ratio->SetMarkerColor(1);
+  h_ratio->SetLineColor(1);
   h_ratio ->DrawCopy("Esame");//LEO MOD
  
   TLine *l3 = new TLine(h1->GetXaxis()->GetXmin(), 1.00, h1->GetXaxis()->GetXmax(), 1.00);
@@ -614,12 +658,14 @@ TCanvas* ExtendedObjectProperty::plotRatioStack(THStack* hstack, TH1* h1_orig, T
   l3->Draw();
 	
   gPad->RedrawAxis();
-  p_ratio ->Draw();
+  if(CutName == "PreSelection" )
+    p_ratio ->Draw();
   c1->Update();
 
   TString save=name+"_ratio";
   if(saveMacro != "")	
     c1->SaveAs(save + "." + saveMacro);
+  p_plot->cd();
 
   return c1;
 }
@@ -640,18 +686,34 @@ void ExtendedObjectProperty::Write( TDirectory* dir , int lumi ,bool plotratiost
     }else if( j == NumberOfHistos-SUSYNames.size()-1 ){
       Legend1->AddEntry(theH, "data", "l");
     }else if( j == NumberOfHistos-SUSYNames.size()-2 ){
-      Legend1->AddEntry(theH, "SMS", "l");
+      Legend1->AddEntry(allHistos["SUSY_" + SUSYNames[1]], "SMS_380_1", "l");
+      Legend1->AddEntry(theH, "SMS_180_60", "l");
     }
 
     theH->Write();
   }
+  for(auto name : SUSYNames)
+    allHistos["SUSY_"+name ]->Write();
+
   h_stack->Write();
+
   Legend1->Write();
 
   if(plotratiostack){
     plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY"] , logy, false, Name + "_ratio", Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
-    for(uint i =0 ; i<SUSYNames.size() ; i++)
-      plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY_"+SUSYNames[i] ] , true, false, Name + "_ratio"+ "_"+SUSYNames[i], Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
+    //for(uint i =0 ; i<SUSYNames.size() ; i++)
+    TCanvas* ccc = plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY_"+SUSYNames[0] ] , true, false, Name + "_ratio"+ "_"+SUSYNames[0], Legend1, Formula, "Events", -10, -10, 2, true , "" , lumi , allHistos["SUSY_" + SUSYNames[1]] );
+    if(Name == "One")
+      cout << CutName << "--" << allHistos["SUSY_"+SUSYNames[0] ]->GetEntries() << endl;
+
+    //ccc->cd(0);
+    //allHistos["SUSY_" + SUSYNames[1]]->Draw("SAME");
+    ccc->Write();
+    gSystem->mkdir( CutName );
+    ccc->SetName( Name );
+    
+    ccc->SaveAs(CutName + "/" + Name + ".C" );
+    ccc->SaveAs(CutName + "/" + Name + ".png" );
   }
   for( std::vector< TGraph* >::const_iterator itr = AllSignificances.begin() ; itr != AllSignificances.end() ; itr++)
     (*itr)->Write();
