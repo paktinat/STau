@@ -5372,7 +5372,7 @@ void MassPlotter::vs(unsigned int  nevents, TString cuts, TString trigger){
   TH2F *AvsBSignal   = new TH2F("AvsBSignal"  , "AvsBSignal"  , 10,    -1.0, 1.0, 10, -1.5, 1.0);
   TH2F *AvsBSignal2  = new TH2F("AvsBSignal2" , "AvsBSignal2" , 10,    -1.0, 1.0, 10, -1.5, 1.0);
   TH2F *AvsBBkg      = new TH2F("AvsBBkg"     , "AvsBBkg"     , 10,    -1.0, 1.0, 10, -1.5, 1.0);
-  TH2F *AvsB2Signal  = new TH2F("AvsB2Signal" , "AvsB2Signal" , 60,       0, 600, 60,    0, 150);
+  TH2F *AvsB2Signal  = new TH2F("AvsB2Signal" , "AvsB2Signal" , 60,    0, 600, 60,    0, 150);
   TH2F *AvsB2Signal2 = new TH2F("AvsB2Signal2", "AvsB2Signal2", 60,    0, 600, 60,    0, 150);
   TH2F *AvsB2Bkg     = new TH2F("AvsB2Bkg"    , "AvsB2Bkg"    , 60,    0, 600, 60,    0, 150);
   TH2F *AvsB3Signal  = new TH2F("AvsB3Signal" , "AvsB3Signal" , 60,    0, 300, 60,    0, 150);
@@ -5452,7 +5452,7 @@ void MassPlotter::vs(unsigned int  nevents, TString cuts, TString trigger){
 
       float CosDeltaPhi_L_MET = TMath::Cos(DeltaPhi_L_MET);
       if(Sample.type == "susy"){
-	if((fMT2tree->Susy.MassGlu - fMT2tree->Susy.MassLSP) < 225.0 && (fMT2tree->Susy.MassGlu - fMT2tree->Susy.MassLSP) > 175.0){
+	if((fMT2tree->Susy.MassGlu - fMT2tree->Susy.MassLSP) < 150.0 && (fMT2tree->Susy.MassGlu - fMT2tree->Susy.MassLSP) > 100.0){
 	  // 	cout << fMT2tree->DeltaREleEle();
 	  AvsBSignal->Fill(CosDeltaPhi_L_MET, Q_MT, weight);
 	  AvsB2Signal->Fill(fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT + fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT, fMT2tree->muTau[0].GetMT2(), weight);
@@ -5662,6 +5662,7 @@ void MassPlotter::SpecialMakePlot(unsigned int nevents, TString cuts, TString tr
 
 
 void MassPlotter::MakeCutFlowTable( std::vector<std::string> all_cuts ){
+  bool SetfPUReweight = fPUReweight; // To be able to control the pile weight from the run_MassPlot.C
 
   TH1::SetDefaultSumw2();
   std::vector< TH1* > CutFlowHistos;
@@ -5671,6 +5672,10 @@ void MassPlotter::MakeCutFlowTable( std::vector<std::string> all_cuts ){
 
     string hName_ = "h" + string(fSamples[ii].name.Data()) + "_cutflow" ;
     TH1* hCutFlowSample = new TH1D( hName_.c_str() , fSamples[ii].sname  , all_cuts.size() , 0 , all_cuts.size() );
+
+    if (fSamples[ii].name == "QCD-Pt-15-20-MuEnriched"){
+      fPUReweight = false;}
+    else fPUReweight = SetfPUReweight;
 
     Double_t weight=0;
     if(fPUReweight) weight = fSamples[ii].xsection * fSamples[ii].kfact * fSamples[ii].lumi / (fSamples[ii].nevents*fSamples[ii].PU_avg_weight);
@@ -5688,15 +5693,57 @@ void MassPlotter::MakeCutFlowTable( std::vector<std::string> all_cuts ){
       full_cut += ("&&" + *cut);
 
       TString btagweight = "1.00"; //stored btag weights up to >=3, default is weight==1 to avoid non-existing weights
-      if(full_cut.find("NBJetsCSVT") != string::npos ) btagweight = TString::Format("SFWeight.BTagCSV40ge%d",abs(1));
+      if(full_cut.find("NBJetsCSVM") != string::npos ) btagweight = TString::Format("SFWeight.BTagCSV40eq%d",abs(0));
 
+      TString ChannelSpecificSF = "1.00";
+		  
+      if(myChannel == "muTau"){
+	if(fMuIdSF)
+	  ChannelSpecificSF += "*muTau[0].muIdSF";
+	if(fMuIsoSF)
+	  ChannelSpecificSF += "*muTau[0].muIsoSF";
+	if(fMuTrgSF)
+	  ChannelSpecificSF += "*muTau[0].muTrgSF";
+	if(fTauTrgSF)
+	  ChannelSpecificSF += "*muTau[0].tauTrgSF";
+	if(fTauWjetsSF && (fSamples[ii].sname == "Wtolnu"))
+	  ChannelSpecificSF += "*muTau[0].tauWjetsSF";	  
+	if(fTauEnergySF )
+	  ChannelSpecificSF += "*muTau[0].tauEnergySF";	  
+      }
+      else
+	if(myChannel == "ee"){
+	  if(fE0IdIsoSF)
+	    ChannelSpecificSF += "*doubleEle[0].Ele0IdIsoSF";
+	  if(fE1IdIsoSF)
+	    ChannelSpecificSF += "*doubleEle[0].Ele1IdIsoSF";
+	  if(fETrgSF)
+	    ChannelSpecificSF += "*doubleEle[0].DiEleTrgSF";
+	}
+	else if (myChannel == "eleMu"){          
+	  if (fMuTrgSFeleMu)
+	    ChannelSpecificSF += "*eleMu[0].MuTrgSF";
+	  if (fMuIdIsoSF)
+	    ChannelSpecificSF += "*eleMu[0].MuIdIsoSF";
+	  if (fEleTrgSF)
+	    ChannelSpecificSF += "*eleMu[0].EleTrgSF";
+	  if ( fEleIdIsoSF )
+	    ChannelSpecificSF += "*eleMu[0].EleIdIsoSF";
+	}
+      
+      if(fStitching && (fSamples[ii].sname == "Wtolnu" || (fSamples[ii].shapename == "ZJetsToLL" && fSamples[ii].name != "DYToLL_M10To50"))){
+	weight = fSamples[ii].lumi;
+	if(fPUReweight) weight /= fSamples[ii].PU_avg_weight;
+      }
+       	  
       TString selection;
-      if(     fSamples[ii].type!="data" && fPUReweight && fbSFReWeight) selection = TString::Format("(%.15f*pileUp.Weight*%s)",weight, btagweight.Data());
-      else if(fSamples[ii].type!="data" && fPUReweight                ) selection = TString::Format("(%.15f*pileUp.Weight)",   weight);
-      else if(fSamples[ii].type!="data" &&                fbSFReWeight) selection = TString::Format("(%.15f*%s)",              weight, btagweight.Data());
-      else                                                            selection = TString::Format("(%.15f)",                 weight); 
-    
-      if(     fSamples[ii].type=="susy")  selection = TString::Format("(%.15f)",weight);
+
+      if(fPUReweight && fbSFReWeight) selection = TString::Format("(%.15f*pileUp.Weight*%s*%s) * (%s)",weight, btagweight.Data(), ChannelSpecificSF.Data(), full_cut.c_str());
+      else if(fPUReweight)  selection = TString::Format("(%.15f*pileUp.Weight*%s) * (%s)",   weight,                    ChannelSpecificSF.Data(), full_cut.c_str());
+      else if(fbSFReWeight) selection = TString::Format("(%.15f*%s*%s) * (%s)",              weight, btagweight.Data(), ChannelSpecificSF.Data(), full_cut.c_str());
+      else                  selection = TString::Format("(%.15f*%s) * (%s)",                 weight,                    ChannelSpecificSF.Data(), full_cut.c_str()); 
+      
+      
       string full_weight = selection.Data();
 
       if( cut_number == 0 )
@@ -6995,8 +7042,8 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 	//F * (f - p) = (1 - p) Loose - LooseNonTight
 
 	float promptRate = 0.66;
-	int binNumber = hMT2Pass->FindBin(myQuantity);
-	promptRate    = hMT2Pass->GetBinContent(binNumber);
+// 	int binNumber = hMT2Pass->FindBin(myQuantity);
+// 	promptRate    = hMT2Pass->GetBinContent(binNumber);
 	
 	float weight = fakeRate * (1 - promptRate);
 	
