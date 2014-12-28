@@ -3537,14 +3537,14 @@ void MassPlotter::setFlags(int flag){
     }
 
     //For muTau 
-    MT2Min = 50.0;
+    MT2Min = 20.0;
     
     xMT2bin[0] = MT2Min;
-    xMT2bin[1] = 65.0;
-    xMT2bin[2] = 80.0;
-    xMT2bin[3] = 100.0;
-    xMT2bin[4] = 120.0;
-    xMT2bin[5] = 1200.0;
+    xMT2bin[1] = 40.0;
+    xMT2bin[2] = 65.0;
+    xMT2bin[3] = 90.0;
+    xMT2bin[4] = 100.0;
+    xMT2bin[5] = 200.0;
 
 }
 
@@ -5866,6 +5866,10 @@ void MassPlotter::TauEfficiency(TString cuts, unsigned int nevents, TString myfi
 
     Sample.tree->SetBranchStatus("*NGenLepts" , 1 );
     Sample.tree->SetBranchStatus("*genlept*" , 1 );
+    Sample.tree->SetBranchStatus("muTau*" , 1 );
+    Sample.tree->SetBranchStatus("NBJetsCSVM" , 1 );
+    Sample.tree->SetBranchStatus("*MET*" , 1 );
+    Sample.tree->SetBranchStatus("*MinMetJetDPhiPt40*" , 1 );
 
     Sample.tree->SetBranchStatus("pileUp*Weight" , 1);
 
@@ -5937,10 +5941,12 @@ void MassPlotter::TauEfficiency(TString cuts, unsigned int nevents, TString myfi
 
 	if(minDR < 0.1){
 	  if(fMT2tree->tau[jetIndex].PassQCDTau_MuTau == 1){
-	    hPtEta->FillWeighted(fMT2tree->tau[jetIndex].PassTau_MuTau == 1 , weight , fMT2tree->tau[jetIndex].lv.Pt() , fabs( fMT2tree->tau[jetIndex].lv.Eta() ) );
-	    hPtMET->FillWeighted(fMT2tree->tau[jetIndex].PassTau_MuTau == 1 , weight , fMT2tree->tau[jetIndex].lv.Pt() , fMT2tree->misc.MET );
-	    hPt->FillWeighted(fMT2tree->tau[jetIndex].PassTau_MuTau == 1 , weight , fMT2tree->tau[jetIndex].lv.Pt() );
-	    hOne->FillWeighted(fMT2tree->tau[jetIndex].PassTau_MuTau == 1 , weight , 1.0 );
+
+	    bool pass = ((fMT2tree->tau[jetIndex].PassTau_MuTau == 1 ) && (fMT2tree->tau[jetIndex].Isolation3Hits <= 1.));
+	    hPtEta->FillWeighted(pass, weight , fMT2tree->tau[jetIndex].lv.Pt() , fabs( fMT2tree->tau[jetIndex].lv.Eta() ) );
+	    hPtMET->FillWeighted(pass, weight , fMT2tree->tau[jetIndex].lv.Pt() , fMT2tree->misc.MET );
+	    hPt->FillWeighted(pass, weight , fMT2tree->tau[jetIndex].lv.Pt() );
+	    hOne->FillWeighted(pass, weight , 1.0 );
 	  }
 	}
       }
@@ -6039,7 +6045,7 @@ void MassPlotter::TauFakeRate(TString cuts, TString trigger, unsigned int nevent
       TLorentzVector LeadingMuon;
       
       for(int i=0; i<fMT2tree->NMuons; ++i){ 
-	if(fMT2tree->muo[i].PassMu0_TauMu == 1){
+	if(fMT2tree->muo[i].PassMu0_TauMu == 1 && fMT2tree->muo[i].lv.Pt() > 27.0){
 	  hasMuon = 1;
 	  LeadingMuon = fMT2tree->muo[i].lv;
 	  break;
@@ -6084,7 +6090,7 @@ void MassPlotter::TauFakeRate(TString cuts, TString trigger, unsigned int nevent
 	hMuPtAll->Fill(LeadingMuon.Pt());
       }
       
-      if(fMT2tree->tau[TauInd].PassTau_MuTau == 1){
+      if(fMT2tree->tau[TauInd].PassTau_MuTau == 1 && fMT2tree->tau[TauInd].Isolation3Hits <= 1.){
 	hPtEtaPass->Fill(fMT2tree->tau[TauInd].lv.Eta(), fMT2tree->tau[TauInd].lv.Pt()); 
 	hMETPass->Fill(fMT2tree->misc.MET);
 	hMT2Pass->Fill(myMT2);
@@ -6889,8 +6895,8 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
     static const int nbins = 6;//11;
   //  double bins[nbins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};      //MT2
   //  double bins[nbins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,100.0,120.0,200.0};      //MT2
-  double bins[nbins+1] = {50.0,60.0,70.0,80.0,100.0,120.0,200.0};      //MT2
-
+    double bins[nbins+1] = {0.0,20.0,40.0,65.0,90.0,100.0,200.0};      //MT2
+  /*
   fileName = fOutputDir + "/MT2_MuTau_Over_QCDMuTau_SignalSelectionNoZVeto_PRHistos.root";
   
   TFile *file2 = new TFile(fileName.Data(), "READ");
@@ -6925,11 +6931,12 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 //   for(int j = 1; j < hMT2All->GetNbinsX(); j++){
 //     cout<<" bin "<<j<<" hMT2Pass "<<hMT2Pass->GetBinContent(j)<<" +- "<<hMT2Pass->GetBinError(j)<<endl;
 //   }
-
+*/
 
   TH1F *myWeights       = new TH1F("myWeights",       "myWeights",       30, -0.1, 0.2);
   TH2F *WeightsFakeRate = new TH2F("WeightsFakeRate", "WeightsFakeRate", 30, 0, 0.025, 30, -0.1, 0.2);
  
+
   TString  cnames[NumberOfSamples] = {"QCD", "Wjets", "Zjets", "Top", "WWjets", "MC", "susy","data"};
   int      ccolor[NumberOfSamples] = { 401,       417,    419,   855,       603,  603,      1, 632};
   TString varname = "MT2";
@@ -6976,7 +6983,7 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
     if(Sample.type == "data"){
       myCuts += "&& (muTau[0].Isolated >= 0) && " + trigger;
     }else
-      myCuts += "&& (muTau[0].Isolated == 1) && (tau[muTau[0].tau0Ind].Isolation3Hits <= 3.)";
+      myCuts += "&& (muTau[0].Isolated == 1) && (tau[muTau[0].tau0Ind].Isolation3Hits <= 1.)";
   
     fMT2tree = new MT2tree();
     Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
@@ -7041,7 +7048,7 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 	//FakeContribution = f * F 
 	//F * (f - p) = (1 - p) Loose - LooseNonTight
 
-	float promptRate = 0.66;
+	float promptRate = 0.55;
 // 	int binNumber = hMT2Pass->FindBin(myQuantity);
 // 	promptRate    = hMT2Pass->GetBinContent(binNumber);
 	
@@ -7063,6 +7070,8 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 
       //       if(Sample.sname != "Wtolnu" && Sample.sname != "QCD" && Sample.sname != "SUSY") 
       //	 continue;
+      if(Sample.tree->GetEntries() == 0)
+	continue;
 
       Sample.tree->Draw(">>selList", myCuts);
       TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
@@ -7162,7 +7171,7 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
   MyC->cd(2);
   hPt2Pass->Draw();
   MyC->cd(3);
-  hMT2Pass->Draw();
+//   hMT2Pass->Draw();
   MyC->cd(4);
   //AddOverAndUnderFlow(WeightsFakeRate);
   //WeightsFakeRate->Draw();
