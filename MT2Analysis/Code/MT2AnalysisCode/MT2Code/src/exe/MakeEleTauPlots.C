@@ -24,7 +24,7 @@
 #include "helper/Utilities.hh"
 
 #define TREE
-#define FROMEvtLst
+//#define FROMEvtLst
 //#define TauFR
 
 using namespace std;
@@ -991,9 +991,16 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vect
     else
       continue;
     #endif
-    if( Sample.type == "susy" )
-      Weight = 1.0;
 
+    TTreeFormula* susyXSection ;
+    TTreeFormula* mGlu;
+    TTreeFormula* mLSP;
+    if( Sample.type == "susy" ){
+      Weight = 1.0/Sample.PU_avg_weight;
+      susyXSection = new TTreeFormula("susyXSection" , "GetSUSYXSection()" , Sample.tree );
+      mGlu = new TTreeFormula("mGlu" , "Susy.MassGlu" , Sample.tree );
+      mLSP = new TTreeFormula("mLSP" , "Susy.MassLSP" , Sample.tree );
+    }
     if( (Sample.sname == "Wtolnu"  || (Sample.shapename == "ZJetsToLL" && Sample.name != "DYToLL_M10To50")) )
       //if( Sample.name != "WJetsToLNu" )
       //if( Sample.name != "DYToLL_M10To50" )
@@ -1055,6 +1062,13 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vect
 	  if(Sample.sname == "Wtolnu"){
 	    weight *= wToLNuW->EvalInstance(0) ;
 	  }
+	}
+	if(cutindex == 0.5 && data != 1 && Sample.type == "susy"){
+	  double mglu = mGlu->EvalInstance(0);
+	  double mlsp = mLSP->EvalInstance(0);
+	  int nbintmp1 = hAllSMSEvents->FindBin( mglu , mlsp );
+	  double ntotalevents = hAllSMSEvents->GetBinContent( nbintmp1 );
+	  weight *= susyXSection->EvalInstance(0)*Sample.lumi / (1000*ntotalevents) ;
 	}
 
 	ExtendedCut* thecut = (ExtendedCut*)objcut ;
@@ -1318,8 +1332,8 @@ int main(int argc, char* argv[]) {
   CutsForControlPlots.Add(metMpz);
 
 
-  TString SUSYCatCommand = "((Susy.MassGlu - Susy.MassLSP)/100.0)+(misc.ProcessID-10)";
-  std::vector<TString> SUSYCatNames = {"00_100" , "100_200" , "200_300" , "300_400" , "400_500" };
+  TString SUSYCatCommand = "GetSUSYCategory()" ; //"((Susy.MassGlu - Susy.MassLSP)/100.0)+(misc.ProcessID-10)";
+  std::vector<TString> SUSYCatNames =  {"180_60", "380_1" , "240_60" , "240_80"} ; // {"00_100" , "100_200" , "200_300" , "300_400" , "400_500" };
 
   TIter cut(&  CutsForControlPlots );
   TObject* cuto ;

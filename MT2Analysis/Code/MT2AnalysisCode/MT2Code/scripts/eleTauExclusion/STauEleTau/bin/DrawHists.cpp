@@ -134,6 +134,7 @@ public:
 	double masslsp = histo->GetYaxis()->GetBinLowEdge( nbiny );
 	int nbintmp1 = hSMSEvents->FindBin( massglu , masslsp );
 	double ntotalevents = hSMSEvents->GetBinContent( nbintmp1 );
+	//cout << massglu << " :  "  << xsection << " : " << ntotalevents << endl;
 	int nbintmp = histo->GetBin( nbinx , nbiny );
 	double nselectedevents = histo->GetBinContent( nbintmp );
 	double newval = 0.0;
@@ -187,6 +188,11 @@ public:
   ExtendedObjectProperty* oMETpDiLepPt;
   ExtendedObjectProperty* oMT2pDiLepPt;
   ExtendedObjectProperty* oPtRatio;
+
+  ExtendedObjectProperty* oMinMetJetDPhi;
+  ExtendedObjectProperty* oMinMetJetDPhi4;
+  ExtendedObjectProperty* oMinMetJetDPhiPt40;
+  ExtendedObjectProperty* oMinMetJetDPhi4Pt40;
 
   ExtendedObjectProperty* oOne;
 
@@ -271,10 +277,10 @@ public:
     }
 
     mglu_avg /= nmlsp_zero;
-    double xSection = gXSections->Eval( mglu_avg );
+    //double xSection = gXSections->Eval( mglu_avg );
     //cout << " nSignals : " << nTotalSignal << endl;
     //cout << "xsection for signal " << mglu_avg << " : " << xSection << endl;
-    double Lumi = 19.6;
+    //double Lumi = 19.6;
     //double nSignal = xSection*Lumi*nSig / nTotalSignal;
     sgnXSection2W = 0.233441 ;// xSection*Lumi / nTotalSignal; 
     sgnXSection2W2 =0.444175;// 0.406308 ;
@@ -314,6 +320,11 @@ public:
 	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "MT2pDiLeptPt" , "MT2+EleTauPt" , 10 , 0 , 500 , susyFormula , ThisSUSYCatName ) );
 	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "METpDiLeptPt" , "MET+EleTauPt" , 10 , 0 , 500 , susyFormula , ThisSUSYCatName ) );
 
+	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "MinMetJetDPhi"  , "MinMetJetDPhi"  , 10 , 0 , 3.2 , susyFormula , ThisSUSYCatName ) );
+	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "MinMetJetDPhi4" , "MinMetJetDPhi4" , 10 , 0 , 3.2 , susyFormula , ThisSUSYCatName ) );
+	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "MinMetJetDPhiPt40" , "MinMetJetDPhiPt40" , 10 , 0 , 3.2 , susyFormula , ThisSUSYCatName ) );
+	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "MinMetJetDPhi4Pt40" , "MinMetJetDPhi4Pt40" , 10 , 0 , 3.2 , susyFormula , ThisSUSYCatName ) );
+
 	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "ptRatio" , "EleTauPt/(TauPt+ElePt)" , 10 , 0 , 1 , susyFormula , ThisSUSYCatName ) );
 	binnedProps[ bins[bin] ].push_back( new ExtendedObjectProperty( ("AllCuts_Bin" + std::to_string(bin)).c_str() , "One" , "1" , 1 , 0 , 10 , susyFormula , ThisSUSYCatName ) );
 
@@ -324,7 +335,7 @@ public:
       cout << a.first << " : " << a.second.first->GetName() << "," << a.second.second->GetName() << endl;
 
 
-    oMT2 = new ExtendedObjectProperty( "PreSelection" , "MT2" , "MT2" , 25 , 0 , 250 , susyFormula , ThisSUSYCatName ) ;
+    oMT2 = new ExtendedObjectProperty( "PreSelection" , "MT2" , "MT2" , 15 , 0 , 150 , susyFormula , ThisSUSYCatName ) ;
     oMET = new ExtendedObjectProperty( "PreSelection" , "MET" , "MET" , 25 , 0 , 250 , susyFormula , ThisSUSYCatName ) ;
     oMCT = new ExtendedObjectProperty( "PreSelection" , "MCT" , "MCT" , 25 , 0 , 250 , susyFormula , ThisSUSYCatName ) ;
     oElePt = new ExtendedObjectProperty( "PreSelection" , "ElePt" , "ElePt" , 25 , 0 , 250 , susyFormula , ThisSUSYCatName ) ;
@@ -342,8 +353,13 @@ public:
 
     oPtRatio = new ExtendedObjectProperty( "PreSelection" , "ptRatio" , "EleTauPt/(TauPt+ElePt)" , 10 , 0 , 1 , susyFormula , ThisSUSYCatName ) ;
     oOne =  new ExtendedObjectProperty( "PreSelection" , "One" , "1" , 1 , 0 , 10 , susyFormula , ThisSUSYCatName ) ;
-      
-    allObjs = {oMT2 , oMET, oMCT , oElePt , oTauPt , onJets , oSUMPt , oSumMT , oEleTauPt , oEleMT , oTauMT , oMT2pDiLepPt , oMETpDiLepPt , oPtRatio , oOne} ;
+
+    oMinMetJetDPhi = new ExtendedObjectProperty( "PreSelection" , "MinMetJetDPhi" , "MinMetJetDPhi" , 10 , 0 , 3.2 , susyFormula , ThisSUSYCatName ) ;
+    oMinMetJetDPhi4 = new ExtendedObjectProperty( "PreSelection" , "MinMetJetDPhi4" , "MinMetJetDPhi4" , 10 , 0 , 3.2 , susyFormula , ThisSUSYCatName ) ;
+    oMinMetJetDPhiPt40 = new ExtendedObjectProperty( "PreSelection" , "MinMetJetDPhiPt40" , "MinMetJetDPhiPt40" , 10 , 0 , 3.2 , susyFormula , ThisSUSYCatName ) ;
+    oMinMetJetDPhi4Pt40 = new ExtendedObjectProperty( "PreSelection" , "MinMetJetDPhi4Pt40" , "MinMetJetDPhi4Pt40" , 10 , 0 , 3.2 , susyFormula , ThisSUSYCatName ) ;
+
+    allObjs = {oMT2 , oMET, oMCT , oElePt , oTauPt , onJets , oSUMPt , oSumMT , oEleTauPt , oEleMT , oTauMT , oMT2pDiLepPt , oMETpDiLepPt , oPtRatio , oOne , oMinMetJetDPhi4Pt40 , oMinMetJetDPhiPt40 , oMinMetJetDPhi4 , oMinMetJetDPhi} ;
   };
   int last_proce_id ;
   std::pair<TString, TString> CurrentSampleInfo;
@@ -405,9 +421,11 @@ public:
     int binindex = -1;
     int myBinIndex = -1;
 
-    if( MT2 > 40 && MT2 < 90 && SumMT > 300 )
+    TauMT = oTauMT->tFormula->EvalInstance(0);
+
+    if( MT2 > 40 && MT2 < 90 ) //&& SumMT > 300 )
       myBinIndex = 0;
-    else if( MT2 > 90 )
+    else if( MT2 > 90 )//&& TauMT > 200 )
       myBinIndex = 1;
     else
       return;
@@ -480,10 +498,17 @@ public:
       TString dirname = ("AfterCuts_Bin_" + std::to_string( a.first ) );
       TDirectory* newdir = dir->mkdir( dirname );
       //newdir->Print("all");
+      vector<TString> VariablesToSig = {"SumMT" , "TauMT"}; //"MinMetJetDPhi4Pt40" , "MinMetJetDPhiPt40" , "MinMetJetDPhi4" , "MinMetJetDPhi" , 
       for( auto b : a.second ){
-	b->CalcSig( 1 , 0 , 0 );
-	b->CalcSig( 1 , 1 , 0 );
-	b->CalcSig( 1 , 2 , 0 );
+	TString VarName = b->Name;
+	if( std::find( VariablesToSig.begin() , VariablesToSig.end() , VarName ) != VariablesToSig.end() ){
+	  cout << "Calculating significance for " << VarName << endl;
+	  b->CalcSig( 1 , 3 , 0 , 0.1 );
+	  b->CalcSig( 0 , 3 , 0 , 0.1 );
+
+	  b->CalcSig( 1 , 3 , 1 , 0.1 );
+	  b->CalcSig( 0 , 3 , 1 , 0.1 );
+	}
 	//b->CalcSig( 1 , 3 , 0 );
 	try{
 	  b->Write( newdir , lumi , true , false  );
@@ -497,6 +522,10 @@ public:
 
     TDirectory* dir11 = dir->mkdir( "AfterCuts_FullRange" );
     dir11->cd();
+    oMT2->CalcSig( 1 , 3 , 0 , 0.1 );
+    oMT2->CalcSig( 0 , 3 , 0 , 0.1 );
+    oMT2->CalcSig( 1 , 3 , 1 , 0.1 );
+    oMT2->CalcSig( 0 , 3 , 1 , 0.1 );
     for( uint i = 0 ; i < allObjs.size() ; i++){
       allObjs[i]->CalcSig( 1 , 0 , 0  );
       allObjs[i]->CalcSig( 1 , 1 , 0  );
@@ -522,7 +551,7 @@ public:
 
     int bincounter=0;
     for( auto a : binnedSigBKG ){
-      if(bincounter!=0){
+      if(bincounter!=-1){
 	TString fname=outfname + TString::Itoa( bincounter , 10) + ".root";
 	TFile* f = new TFile( fname ,"recreate");
 	dir = f;
@@ -599,6 +628,9 @@ public:
     //       ret &= (ElePt > 25.0 );
     ret &= (TauIso3Hits < 3) ;
 
+    double minMetJetDPhiPt40 = oMinMetJetDPhiPt40->tFormula->EvalInstance(0);
+    ret &= (minMetJetDPhiPt40 > 1.0);
+
     //ret &= EleTauPt >= 100 ;
 
     //DiffEleTauPt = oDiffEleTauPt->tFormula->EvalInstance(0) ;
@@ -638,21 +670,21 @@ public:
     //if( MT2<20.0 && isBKG( -100 ) )
     //W /= 2;
 
-    if(isSignal())
-      {
-	if( MGlu >=180 && MGlu < 200 && MLSP >= 60.0 && MLSP < 80 )
-	  {
-	    W *= sgnXSection2W ;
-	    //cout << "a" <<endl;
-	  }
-	else if( MGlu >=380 && MGlu < 400 && MLSP >= 0.0 && MLSP < 20 )
-	  {
-	    W *= sgnXSection2W2 ;
-	    //cout << "b" << endl;
-	  }
-	else
-	  W = 0;
-      }
+//     if(isSignal())
+//       {
+// 	if( MGlu >=180 && MGlu < 200 && MLSP >= 60.0 && MLSP < 80 )
+// 	  {
+// 	    W *= sgnXSection2W ;
+// 	    //cout << "a" <<endl;
+// 	  }
+// 	else if( MGlu >=380 && MGlu < 400 && MLSP >= 0.0 && MLSP < 20 )
+// 	  {
+// 	    W *= sgnXSection2W2 ;
+// 	    //cout << "b" << endl;
+// 	  }
+// 	else
+// 	  W = 0;
+//       }
     //       double BinVal = vals[ this->nVarToBin ];
     //       bool ret2 = ( ret && ( BinVal > binnedProps.begin()->first ) );
     //       efficiencies[last_proce_id].WAll += W;

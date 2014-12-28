@@ -48,7 +48,7 @@ public:
 
   virtual void Print(Option_t* option = "") const;
 
-  TCanvas* plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, TH1* h3, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle,int njets,int nbjets, int nleps, float overlayScale, TString saveMacro , int lumi_, TH1* SUSY2=NULL);
+  TCanvas* plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, vector< pair<TH1*,Color_t> > h3s, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle,int njets,int nbjets, int nleps, float overlayScale, TString saveMacro , int lumi_);
 
   virtual void Write( TDirectory* dir , int lumi , bool plotratiostack = true , bool logy = true);
 
