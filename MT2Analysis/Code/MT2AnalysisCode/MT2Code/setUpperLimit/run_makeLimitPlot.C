@@ -61,6 +61,46 @@ TGraph* accRange() {
     return g00;
 }
 
+struct vGraph {
+    TGraph** g;
+    Int_t n;
+
+    void draw() {
+        for (int i = 0; i < n; i++)
+            g[i]->Draw("C");
+    }
+};
+
+void Contour2Graph(TH2D* h, vGraph &vg) {
+    h->Draw("CONT Z LIST");
+    gPad->Update();
+    TObjArray *conts = (TObjArray*) gROOT->GetListOfSpecials()->FindObject("contours");
+
+    Int_t TotalConts = 0;
+    if (!(conts == NULL)) TotalConts = conts->GetSize();
+
+    for (int i = 0; i < TotalConts; i++) {
+        TList* contLevel = (TList*) conts->At(i);
+        vg.n = contLevel->GetSize();
+
+        vg.g = new TGraph*[vg.n];
+        for (int j = 0; j < vg.n; j++) {
+
+            TGraph* curv = (TGraph*) contLevel->At(j);
+            Int_t np = curv->GetN();
+            vg.g[j] = new TGraph(np);
+            Double_t x0, y0;
+            for (int k = 0; k < np; k++) {
+                curv->GetPoint(k, x0, y0);
+                vg.g[j]->SetPoint(k, x0 - 10, y0 - 10);
+            }// k over np
+            vg.g[j]->SetLineColor(h->GetLineColor());
+            vg.g[j]->SetLineStyle(h->GetLineStyle());
+            vg.g[j]->SetLineWidth(h->GetLineWidth());
+        }// j over ngc
+    }// i over TotalConts
+}
+
 run_makeLimitPlot() {
 
     std::vector< TString > sin;
@@ -92,7 +132,13 @@ run_makeLimitPlot() {
     fixTH2D(h01, 2, kBlue, 2);
     fixTH2D(h02, 1, kBlue, 7);
 
+    vGraph vg00, vg01, vg02;
+    Contour2Graph(h00, vg00);
+    Contour2Graph(h01, vg01);
+    Contour2Graph(h02, vg02);
+    
     TGraph* g00 = accRange();
+    
     // ===  ===
     TCanvas *c1 = new TCanvas("c1", "", 800, 600);
     c1->SetGrid();
@@ -103,9 +149,12 @@ run_makeLimitPlot() {
 
     hXsecUp->Draw("colz");
 
-    h00->Draw("cont3same");
-    h01->Draw("cont3same");
-    h02->Draw("cont3same");
+//    h00->Draw("cont3same");
+//    h01->Draw("cont3same");
+//    h02->Draw("cont3same");
+    vg00.draw();
+    vg01.draw();
+    vg02.draw();
 
     g00->Draw();
 
