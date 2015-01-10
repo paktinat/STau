@@ -61,6 +61,33 @@ TGraph* accRange() {
     return g00;
 }
 
+TGraph* atlasGraph() {
+
+    // ===
+    TGraph *g00 = new TGraph(7);
+    g00->SetFillColor(kWhite);
+    g00->SetLineColor(kRed);
+    g00->SetLineWidth(3);
+    g00->SetPoint(0, 345, 0);
+    g00->SetPoint(1, 350, 25);
+    g00->SetPoint(2, 335, 50);
+    g00->SetPoint(3, 270, 70);
+    g00->SetPoint(4, 225, 60);
+    g00->SetPoint(5, 150, 25);
+    g00->SetPoint(6, 120, 0);
+
+    return g00;
+}
+
+void text(float x, float y, float a, float w, TString s) {
+    TLatex Tl;
+//    Tl.SetTextAlign(0);
+    Tl.SetTextSize(w);
+    Tl.SetTextAngle(a);
+    Tl.DrawLatex(x, y, s);
+}
+
+
 struct vGraph {
     TGraph** g;
     Int_t n;
@@ -138,6 +165,7 @@ run_makeLimitPlot() {
     Contour2Graph(h02, vg02);
     
     TGraph* g00 = accRange();
+    TGraph* g01 = atlasGraph();
     
     // ===  ===
     TCanvas *c1 = new TCanvas("c1", "", 800, 600);
@@ -157,12 +185,14 @@ run_makeLimitPlot() {
     vg02.draw();
 
     g00->Draw();
+    g01->Draw("C");
+    text(110,70,-43, 0.02, "m(#tilde{#tau}) < 95 GeV");
 
     TLegend* leg = legend();
     leg->AddEntry(h00, sgnStrName, "lpf");
     leg->AddEntry(h01, (sgnStrName+" + 1#sigma"), "lpf");
     leg->AddEntry(h02, (sgnStrName+" + 2#sigma"), "lpf");
-
+    leg->AddEntry(g01, ("ATLAS Expected"), "lpf");
     //leg->AddEntry(g00, "Accepted Range", "lpf");
     leg->Draw();
 }
