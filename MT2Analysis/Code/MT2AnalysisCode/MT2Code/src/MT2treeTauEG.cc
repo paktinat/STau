@@ -2,7 +2,7 @@
 #include "helper/Utilities.hh"
 #include "Corrector.h"
 
-int MT2tree::DeltaREleTau(int elec_method , double minDR , int& elecindex){
+int MT2tree::DeltaREleTau(int elec_method , double minDR , int& elecindex , double minElePt , bool SS , int& oldRET){
   bool ele_found = false;
   TLorentzVector electron;
   if( NEles == 0 ){
@@ -26,22 +26,28 @@ int MT2tree::DeltaREleTau(int elec_method , double minDR , int& elecindex){
     if(fVerbose > 5) cout << "preCond : NoEle found" << endl;
     return 0;
   }
-  if( electron.Pt() < 30.0 ){
-    if(fVerbose > 5) cout << "preCond : NoEle with pt>30" << endl;
+  if( electron.Pt() < minElePt ){
+    if(fVerbose > 5) cout << "preCond : NoEle with pt>25" << endl;
     return 0;
   }
+  int theFirstGoodTauIndex = -1;
   int ret = 0;
   int power = 1;
-  for(int i = 0 ; i< NTaus ; i++ )
-    if( tau[i].PassQCDTau_ElTau ){
-      float dr = electron.DeltaR( tau[i].lv );
-      if( i!= 0) power*= 2; 
-      if( dr > minDR )
-	ret += power ;
-    }
-  
+  for(int i = 0 ; i< NTaus ; i++ ){
+    if( i!= 0) power*= 2; 
+    if( tau[i].PassQCDTau0_TauTau ) //PassTau_ElTau
+      if( (SS && tau[i].Charge == ele[elecindex].Charge) || (!SS) ){
+	float dr = electron.DeltaR( tau[i].lv );
+	if( dr > minDR ){
+	  ret += power ;
+	  if(theFirstGoodTauIndex == -1)
+	    theFirstGoodTauIndex = i ;
+	}
+      }
+  }
   if(fVerbose > 5) cout << "precond : " << ret << endl;
-  return ret;
+  oldRET = ret;
+  return theFirstGoodTauIndex;
 }
 
 Float_t MT2tree::DeltaREleTau(){

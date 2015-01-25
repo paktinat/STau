@@ -179,8 +179,9 @@ void ExtendedObjectProperty::CalcSig(int LowerCut , int type,  int SUSCat , doub
 //   }
 }
 
-void ExtendedObjectProperty::Print(Option_t* option ) const{
-  if( strcmp(option , "" ) ){
+void ExtendedObjectProperty::Print(TString option ) const{
+  //cout << option << endl;
+  if( option == ""  ){
     cout << "\t" 
 	 << Name << " , " 
 	 << Formula << " : " << endl ;
@@ -196,13 +197,15 @@ void ExtendedObjectProperty::Print(Option_t* option ) const{
     }
 
     cout << endl;
-  }else if( strcmp(option , "cutflowtable") ){
+  }else if( option == "cutflowtable" ){
     cout << endl << "||" ;
     for( int i=0 ; i<NumberOfHistos ; i++)
       cout << histoNames[i] << "|" ;
     cout << endl;
 
     for( int cut=1; cut<nBins+1 ; cut++){
+      //cout << cut << endl;
+      //allHistos.begin()->second->Print("ALL");
       cout << "|" << allHistos.begin()->second->GetXaxis()->GetBinLabel( cut ) << "|";
       for( int i=0 ; i<NumberOfHistos ; i++)
 	cout <<std::setprecision(2)<< allHistos.find(histoNames[i])->second->GetBinContent(cut) << "+-" << allHistos.find(histoNames[i])->second->GetBinError(cut) << "|" ;
@@ -211,7 +214,7 @@ void ExtendedObjectProperty::Print(Option_t* option ) const{
   }
 }
 
-ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, TString formula , int nbins, double min, double max ,TString SUSYCatCommand_ , std::vector<TString> SUSYNames_,  std::vector<TString>* labels , const std::vector<TString>& samplesToStoreErrors  ) :
+ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, TString formula , int nbins, double min, double max ,TString SUSYCatCommand_ , std::vector<TString> SUSYNames_,  std::vector<TString>* labels , TString _SampleNameForSyst , const std::vector<TString>& _SystNames ):
   CutName( cutname ),
   Name(name),
   Formula(formula),
@@ -223,19 +226,9 @@ ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, 
   tSUSYCatFormula(0),
   SUSYNames( SUSYNames_ ),
   SUSYCatCommand( SUSYCatCommand_ ),
-  SamplesToStoreErrors( samplesToStoreErrors),
-  treeWeightErrors(NULL){
+  SampleNameForSyst( _SampleNameForSyst ){
 
   gROOT->cd();
-
-  if(SamplesToStoreErrors.size() > 0){
-    treeWeightErrors = new TTree( TString("treeWeightErrors") + "_" + CutName + "_" + Name , "Weight Errors");
-    
-    treeWeightErrors->Branch( "SampleIndex" , &tweSampleIndex , "SampleIndex/I" ); 
-    treeWeightErrors->Branch( "W" , &tweW , "W/D" ); 
-    treeWeightErrors->Branch( "WErr" , &tweWErr , "WErr/D" ); 
-    treeWeightErrors->Branch( "ValueBinIndex" , &tweValueBinIndex , "ValueBinIndex/I" );     
-  }
 
   TH1::SetDefaultSumw2();
    
@@ -280,10 +273,18 @@ ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, 
       theH -> SetFillStyle(3004);
       theH -> SetFillColor(kBlack);
     }
+
+    if( cnames[i] == SampleNameForSyst ){
+      for( auto systName : _SystNames ){
+	SystHistos[ systName ] = new TH1D( CutName + "_" + varname+"_"+cnames[i]+"_" + systName, "", nBins, Min, Max);
+	SystHistos2D[ systName ] = new TH2D( CutName + "_" + varname+"_2d_"+cnames[i]+"_" + systName, "", nBins, Min, Max , 100 , -.5 , .5);
+      }
+      SystHistos2D[ SampleNameForSyst ] = new TH2D( CutName + "_" + varname+"_2d_"+cnames[i]+ "_Central" , "", nBins, Min, Max , 100 , -.5 , .5); 
+    }
   }
 }
 
-ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, TString formula , int nbins, double* bins ,TString SUSYCatCommand_ , std::vector<TString> SUSYNames_,  std::vector<TString>* labels , const std::vector<TString>& samplesToStoreErrors ) :
+  ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, TString formula , int nbins, double* bins ,TString SUSYCatCommand_ , std::vector<TString> SUSYNames_,  std::vector<TString>* labels , TString _SampleNameForSyst ,const std::vector<TString>& _SystNames ):
   CutName( cutname ),
   Name(name),
   Formula(formula),
@@ -295,19 +296,9 @@ ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, 
   tSUSYCatFormula(0),
   SUSYNames( SUSYNames_ ),
   SUSYCatCommand( SUSYCatCommand_ ),
-  SamplesToStoreErrors( samplesToStoreErrors),
-  treeWeightErrors(NULL){
+    SampleNameForSyst(_SampleNameForSyst){
 
   gROOT->cd();
-
-  if(SamplesToStoreErrors.size() > 0){
-    treeWeightErrors = new TTree( TString("treeWeightErrors") + "_" + CutName + "_" + Name   , "Weight Errors");
-    
-    treeWeightErrors->Branch( "SampleIndex" , &tweSampleIndex , "SampleIndex/I" ); 
-    treeWeightErrors->Branch( "W" , &tweW , "W/D" ); 
-    treeWeightErrors->Branch( "WErr" , &tweWErr , "WErr/D" ); 
-    treeWeightErrors->Branch( "ValueBinIndex" , &tweValueBinIndex , "ValueBinIndex/I" );     
-  }
 
   TH1::SetDefaultSumw2();
    
@@ -352,10 +343,36 @@ ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, 
       theH -> SetFillStyle(3004);
       theH -> SetFillColor(kBlack);
     }
+
+    if( cnames[i] == SampleNameForSyst ){
+      for( auto systName : _SystNames ){
+	SystHistos[ systName ] = new TH1D( CutName + "_" + varname+"_"+cnames[i]+"_"+ systName, "", nBins, bins);
+	SystHistos2D[ systName ] = new TH2D( CutName + "_" + varname+"_2d_"+cnames[i]+"_"+ systName, "", nBins, bins , 100 , -.5 , 5);
+      }
+      SystHistos2D[ SampleNameForSyst ] = new TH2D( CutName + "_" + varname+"_2d_"+cnames[i]+ "_Central" , "", nBins, Min, Max , 100 , -.5 , .5); 
+    }
   }
 }
 
+void ExtendedObjectProperty::ScaleData( TEfficiency* eff ){
+  TH1* hdata = allHistos["data"];
+  
+  TH1* hEff =(TH1*)( hdata->Clone("hEff") );
+  hEff->Reset("ICESM");
 
+  for(int i=1 ; i < nBins + 1 ; i++ ){
+    hEff->SetBinContent( i,  eff->GetEfficiency( i ) ) ;
+    hEff->SetBinError( i , ( eff->GetEfficiencyErrorLow(i)+eff->GetEfficiencyErrorUp(i) )/2.0 );
+  }
+
+  hdata->Multiply( hEff );
+
+  if( "data" == SampleNameForSyst )
+    for( auto syst : SystHistos )
+      syst.second->Multiply( hEff );
+
+  delete hEff;
+}
 
 void ExtendedObjectProperty::SetTree( TTree* tree , TString sampletype, TString samplesname , TString cutname ){
   if( strcmp( cutname , "" ) != 0 )
@@ -368,12 +385,6 @@ void ExtendedObjectProperty::SetTree( TTree* tree , TString sampletype, TString 
     delete tSUSYCatFormula;
     tSUSYCatFormula = 0;
   }
-
-  tweSampleIndex = -1;
-  for(uint iii = 0; iii<SamplesToStoreErrors.size() ; iii++)
-    if( SamplesToStoreErrors[iii] == samplesname )
-      tweSampleIndex = iii;
-  //cout << "tweSampleIndex : " << tweSampleIndex <<  endl;
 
   tFormula = new TTreeFormula( Name.Data() , Formula.Data() , tree );
   isString = tFormula->IsString() ;
@@ -425,17 +436,15 @@ void ExtendedObjectProperty::Fill(double w){
     isString ? theMCH->Fill(sVal , w) : theMCH->Fill(dVal , w);
 }
 
-void ExtendedObjectProperty::Fill(double dVal , ValueError w ){
-  this->Fill( dVal , w.Value );
+ void ExtendedObjectProperty::Fill(double dVal , double w , std::map<TString,double> WSyst ){
+  this->Fill( dVal , w );
 
-  if(tweSampleIndex>-1){
-    tweW = w.Value;
-    tweWErr = w.Error();
-    tweValueBinIndex = allHistos["data"]->FindBin( dVal );
+  if( WSyst.size() > 0 )
+    SystHistos2D[ SampleNameForSyst ]->Fill( dVal , w );
 
-    //cout << "if filling" << endl;
-
-    treeWeightErrors->Fill();
+  for(auto ws : WSyst){
+    SystHistos[ ws.first ]->Fill( dVal , ws.second ); 
+    SystHistos2D[ ws.first ]->Fill( dVal , ws.second ); 
   }
 }
 
@@ -478,7 +487,7 @@ void ExtendedObjectProperty::AddOverAndUnderFlow(TH1 * Histo, bool overflow, boo
 }
 
 
-TCanvas* ExtendedObjectProperty::plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, TH1* h3, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle,int njets,int nbjets, int nleps, float overlayScale, TString saveMacro , int lumi_){
+TCanvas* ExtendedObjectProperty::plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, vector<pair<TH1*,Color_t> > h3s, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle,int njets,int nbjets, int nleps, float overlayScale, TString saveMacro , int lumi_ ){
   //LEO TRUE USE THIS
 
   // define canvas and pads 
@@ -571,13 +580,24 @@ TCanvas* ExtendedObjectProperty::plotRatioStack(THStack* hstack, TH1* h1_orig, T
   //MT2_bSel[0]->SetTitleSize(0.03);
   ///MT2_bSel[0]->SetTitleOffset(1.);
   hstack->SetMinimum(0.02);
+  if( CutName != "PreSelection" )
+    hstack->GetXaxis()->SetTitle(xtitle);
   hstack->Draw("hist");
+  h2->SetMarkerColor(1);
   h2    ->Draw("sameE");
-  h3->Scale(overlayScale ? overlayScale : h2->Integral() / h3->Integral());
-  h3->SetFillColor(0);
-  h3->SetLineStyle(kDotted);
-  h3->SetLineWidth(4);
-  h3->Draw("samehist");
+
+  for(auto h3c : h3s ){
+    TH1* h3 = h3c.first;
+    Color_t color = h3c.second;
+
+    h3->Scale(overlayScale ? overlayScale : h2->Integral() / h3->Integral());
+    h3->SetFillColor(0);
+    h3->SetFillStyle(0);
+    h3->SetLineStyle(1);
+    h3->SetLineWidth(4);
+    h3->SetLineColor(color);
+    h3->Draw("samehist");
+  }
 
   TLatex TitleBox;
   TitleBox.SetNDC();
@@ -647,7 +667,11 @@ TCanvas* ExtendedObjectProperty::plotRatioStack(THStack* hstack, TH1* h1_orig, T
 
 	
   h_ratio_mc->SetFillStyle(3001);
+  h_ratio_mc->SetFillColor(1);
   h_ratio_mc->Draw("E2");
+  
+  h_ratio->SetMarkerColor(1);
+  h_ratio->SetLineColor(1);
   h_ratio ->DrawCopy("Esame");//LEO MOD
  
   TLine *l3 = new TLine(h1->GetXaxis()->GetXmin(), 1.00, h1->GetXaxis()->GetXmax(), 1.00);
@@ -662,6 +686,7 @@ TCanvas* ExtendedObjectProperty::plotRatioStack(THStack* hstack, TH1* h1_orig, T
   TString save=name+"_ratio";
   if(saveMacro != "")	
     c1->SaveAs(save + "." + saveMacro);
+  p_plot->cd();
 
   return c1;
 }
@@ -674,6 +699,8 @@ void ExtendedObjectProperty::Write( TDirectory* dir , int lumi ,bool plotratiost
   THStack* h_stack     = new THStack( CutName + "_" + Name, "");
   TLegend* Legend1 = new TLegend(.71,.54,.91,.92);
 
+  vector< pair<TH1*, Color_t> > susycolors;
+
   for(uint j = 0; j < (NumberOfHistos-SUSYNames.size()); j++){
     theH = allHistos[ histoNames[j] ];
     AddOverAndUnderFlow(theH, true, true);
@@ -683,143 +710,68 @@ void ExtendedObjectProperty::Write( TDirectory* dir , int lumi ,bool plotratiost
       Legend1->AddEntry(theH, histoNames[j] , "f");
     }else if( j == NumberOfHistos-SUSYNames.size()-1 ){
       Legend1->AddEntry(theH, "data", "l");
-    }else if( j == NumberOfHistos-SUSYNames.size()-2 ){
-      Legend1->AddEntry(theH, "SMS", "l");
     }
 
     theH->Write();
   }
+  int color = 1;
+  for(auto name : SUSYNames){
+    TH1* h3 = allHistos["SUSY_"+name ];
+    h3->Write();
+
+    susycolors.push_back( make_pair( h3 , color ) );
+
+    h3->SetFillColor(0);
+    h3->SetFillStyle(0);
+    h3->SetLineStyle(1);
+    h3->SetLineWidth(4);
+    h3->SetLineColor(color);
+
+    Legend1->AddEntry( h3 , name , "l" );
+    color++;
+  }
+
   h_stack->Write();
   Legend1->Write();
 
-  TDirectory* uncertDir;
-  if(SamplesToStoreErrors.size() > 0) 
-    uncertDir = newdir->mkdir(  "Uncertainties"  );
-
-  for( int iii = 0 ; iii < SamplesToStoreErrors.size() ; iii++ ){
-    TString sName = SamplesToStoreErrors[iii];
-    TDirectory* sampleUncertDir = uncertDir->mkdir( sName );
-
-    gROOT->cd();
-
-    TH1* hStat =(TH1*)( allHistos["data"]->Clone( sName + "_StatErr" ) ); 
-    //hStat->Reset("ICES");
-
-    TH1* hSystCorr =(TH1*)( allHistos["data"]->Clone( sName + "_SystCorr" ) ); 
-    //hSystCorr->Reset("ICES");
-
-    TH1* hSystUnCorr =(TH1*)( allHistos["data"]->Clone( sName + "_SystUnCorr" ) ); 
-    //hSystUnCorr->Reset("ICES");
-
-    //treeWeightErrors->Print("all");
-    double WPlaceHolder, WErrPlaceHolder;
-    int SampleIndexPlaceHolder, BinIndexPlaceHolder;
-
-    treeWeightErrors->SetBranchAddress( "SampleIndex" , &SampleIndexPlaceHolder );
-    treeWeightErrors->SetBranchAddress( "W" , &WPlaceHolder );
-    treeWeightErrors->SetBranchAddress( "WErr" , &WErrPlaceHolder );
-    treeWeightErrors->SetBranchAddress( "ValueBinIndex" , &BinIndexPlaceHolder );
-
-    treeWeightErrors->Draw(">>events1" , TString::Format( "SampleIndex == %i", iii ) );  
-    TEventList* events1 = (TEventList*)( gROOT->Get("events1") );
-
-    treeWeightErrors->SetEventList( events1 );
-    //events1->Print();
-    for(int binid = 1; binid < hSystCorr->GetNbinsX()+1 ; binid ++ ) {
-
-      hStat->SetBinError( binid , 0 );
-      hSystUnCorr->SetBinError( binid , 0);
-      hSystCorr->SetBinError( binid , 0 );
-
-      int nWbins = 100;
-      int nWErrbins=100;
-
-      double WMin=100000.0;
-      double WMax=-100000.0;
-      double WErrMin=100000.0;
-      double WErrMax=-100000.0;
-
-      //cout << events1->GetN() << endl; 
-      for( int eventid=0 ; eventid < events1->GetN() ; eventid++){
-	treeWeightErrors->GetEntry( events1->GetEntry(eventid) ) ;
-	if( SampleIndexPlaceHolder != iii ){
-	  cout << "wrong sample index " << SampleIndexPlaceHolder << " instead of " << iii << endl;
-	  continue;
-	}
-	if( BinIndexPlaceHolder == binid ){
-	  if( WMin > WPlaceHolder )
-	    WMin = WPlaceHolder;
-	  if( WMax < WPlaceHolder )
-	    WMax = WPlaceHolder ;
-
-	  if( WErrMax < WErrPlaceHolder )
-	    WErrMax = WErrPlaceHolder ;
-	  if( WErrMin > WErrPlaceHolder )
-	    WErrMin = WErrPlaceHolder;
-	}
-      }
-      if( WMin > WMax )
-	std::swap( WMin , WMax);
-      if(WErrMin > WErrMax )
-	std::swap( WErrMin , WErrMax);
-      cout << "SampleIndex : " << iii << ", Bin:" << binid << " W [" << WMin << "," << WMax << "] , WErr [" << WErrMin << "," << WErrMax << "]" << endl; 
-
-      TString hName = TString::Format( "hW_%s_%i_%s_%s" , sName.Data() , binid , CutName.Data() , Name.Data() );
-      TH2* hW = new TH2D( hName , "hW" , nWbins , WMin-fabs(0.1*WMin) , WMax*1.1 , nWErrbins , WErrMin-fabs(0.1*WErrMin) , WErrMax*1.1 );
-			  //nWbins    , treeWeightErrors->GetMinimum("W")/2    , treeWeightErrors->GetMaximum("W")*2, nWErrbins  , treeWeightErrors->GetMinimum("WErr")/2 , treeWeightErrors->GetMaximum("WErr")*2 );
-
-      for( int eventid=0 ; eventid < events1->GetN() ; eventid++){
-        treeWeightErrors->GetEntry( events1->GetEntry(eventid) ) ;
-        if( SampleIndexPlaceHolder != iii ){
-          cout << "wrong sample index " << SampleIndexPlaceHolder << " instead of " << iii << endl;
-          continue;
-        }
-        if( BinIndexPlaceHolder == binid ){
-	  hW->Fill( WPlaceHolder , WErrPlaceHolder );
-	}
-      }
-//       treeWeightErrors->Draw("W:WErr>>"+ hName
-// 			     /*+ "(" + TString::Format( "%i,%.2f,%.2f" , nWbins    , treeWeightErrors->GetMinimum("W")    , treeWeightErrors->GetMaximum("W")    )  
-// 			     + TString::Format( ",%i,%.2,f%.2f", nWErrbins , treeWeightErrors->GetMinimum("WErr") , treeWeightErrors->GetMaximum("WErr") )    
-// 			     + ")" */
-// 			     , TString::Format( "ValueBinIndex == %i", binid ) );
-
-      sampleUncertDir->cd();
-      hW->Write();
-      gROOT->cd();
-      //TH2* hW =(TH2*) ( gDirectory->Get("hW") );
-      //hW->Print("ALL");
-
-      for( int wbin = 1 ; wbin < nWbins+1 ; wbin++ ){
-	for( int werrbin = 1 ; werrbin < nWErrbins+1 ; werrbin++){
-
-	  //cout << wbin <<"  " << werrbin << endl;
-
-	  double wval    = hW->GetXaxis()->GetBinCenter( wbin );
-	  double werrval = hW->GetYaxis()->GetBinCenter( werrbin );
-	  double nnn     = hW->GetBinContent( wbin , werrbin );
-
-	  hStat->SetBinError( binid ,sqrt( hStat->GetBinError(binid)*hStat->GetBinError(binid) + nnn*wval*wval ) );
-	  hSystUnCorr->SetBinError( binid ,sqrt( hSystUnCorr->GetBinError(binid)*hSystUnCorr->GetBinError(binid) + nnn*werrval*werrval ) );
-	  hSystCorr->SetBinError( binid ,sqrt( hSystCorr->GetBinError(binid)*hSystCorr->GetBinError(binid) + nnn*nnn*werrval*werrval ) );
-	}
-      }
-    }
-
-    sampleUncertDir->cd();
-    hSystCorr->Write();
-    hStat->Write();
-    hSystUnCorr->Write();
-  }
   newdir->cd();
 
   if(plotratiostack){
-    plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY"] , logy, false, Name + "_ratio", Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
-    for(uint i =0 ; i<SUSYNames.size() ; i++)
-      plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY_"+SUSYNames[i] ] , true, false, Name + "_ratio"+ "_"+SUSYNames[i], Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
+    //plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY"] , logy, false, Name + "_ratio", Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
+    //for(uint i =0 ; i<SUSYNames.size() ; i++){
+    TCanvas* ccc = plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], susycolors , true, false, Name + "_ratio"+ "_AllSUSY", Legend1, Formula, "Events", -10, -10, 2, true , "" , lumi ) ; // , allHistos["SUSY_" + SUSYNames[1]] );
+    //if(Name == "One")
+    //cout << CutName << "--" << allHistos["SUSY_"+SUSYNames[0] ]->GetEntries() << endl;
+
+    //ccc->cd(0);
+    //allHistos["SUSY_" + SUSYNames[1]]->Draw("SAME");
+    ccc->Write();
+    gSystem->mkdir( CutName );
+    ccc->SetName( Name );
+    
+    ccc->SaveAs(CutName + "/" + Name + ".C" );
+    ccc->SaveAs(CutName + "/" + Name + ".png" );
+    //}
   }
   for( std::vector< TGraph* >::const_iterator itr = AllSignificances.begin() ; itr != AllSignificances.end() ; itr++)
     (*itr)->Write();
+
+  if( allHistos[ SampleNameForSyst ] != NULL ){
+    TDirectory* systdir = newdir->mkdir("Systematics");
+    systdir->cd();
+    TH1* theH = allHistos[ SampleNameForSyst ];
+    for(auto ws : SystHistos){
+      SystHistos[ ws.first ]->Add( theH , -1 ); 
+      SystHistos[ ws.first ]->Multiply( SystHistos[ ws.first ] );
+      for(int binii = 1 ; binii <= theH->GetNbinsX()  ; binii ++ ){
+	SystHistos[ ws.first ]->SetBinContent( binii , sqrt( SystHistos[ ws.first ]->GetBinContent(binii) )/theH->GetBinContent(binii) );
+	SystHistos[ ws.first ]->SetBinError( binii , 0.0001 );
+      }
+      SystHistos2D[ ws.first ]->Write();
+      SystHistos[ ws.first ]->Write();
+    } 
+    SystHistos2D[ SampleNameForSyst ]->Write();
+  }
 }
 
 void ExtendedCut::SaveTree(){

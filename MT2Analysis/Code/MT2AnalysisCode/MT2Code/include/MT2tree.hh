@@ -111,6 +111,8 @@ public:
 
 
 // ----------------------------------------
+#include "TGraphAsymmErrors.h"
+
 class MT2Susy : public TObject {
   
 public:
@@ -127,6 +129,10 @@ public:
   float Mu;
   float XSec;
   float TanBeta;
+
+  TGraphAsymmErrors* theXSecGraph;
+  double XSectionCharginoLSP() const;
+  int Category( ) const ;
 
   ClassDef(MT2Susy, 1);
 };
@@ -1106,6 +1112,8 @@ public:
   MT2Top         fitTop[10];
   MT2GenParticle genparticle[m_genparticleSize];
   MT2Susy        Susy;
+  double GetSUSYXSection(){return Susy.XSectionCharginoLSP();};
+  double GetSUSYCategory(){return Susy.Category();};
   MT2Misc        misc;
   MT2PileUp      pileUp;
   MT2Trigger     trigger;
@@ -1163,7 +1171,7 @@ public:
   void  FillDoubleTau();
   void  FillMuTau();
 
-  int DeltaREleTau(int elec_method , double minDR, int & elecindex); //elec_method:0for the first, 1 for the first with id
+  int DeltaREleTau(int elec_method , double minDR, int & elecindex , double minElePt , bool SS , int& oldRET ); //elec_method:0for the first, 1 for the first with id
   Float_t DeltaREleTau();
   Float_t DeltaMETEleTau(int mode);
   void  FillEleTau();

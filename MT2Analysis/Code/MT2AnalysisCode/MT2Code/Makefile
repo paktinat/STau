@@ -21,7 +21,7 @@ CXXFLAGS       = -fPIC -fno-var-tracking -Wno-deprecated -D_GNU_SOURCE -O2 -D'GE
 LD             = g++
 LDFLAGS        = 
 #SOFLAGS        = -O --no_exceptions  -dynamiclib -flat_namespace -undefined suppress
-SOFLAGS        = -O  -shared  -fPIC #-flat_namespace 
+SOFLAGS        = -O -shared  -fPIC #-flat_namespace 
 
 
 CXXFLAGS      += $(ROOTCFLAGS)
@@ -62,7 +62,7 @@ SHARED=shlib/libDiLeptonAnalysis.so
 .PHONY : clean purge all depend PhysQC
 
 # Rules ====================================
-all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared  RunEleTauAnalyzer
+all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared  RunEleTauAnalyzerClosure RunEleTauAnalyzerFakeEstimation RunEleTauAnalyzerPreSelection RunEleTauAnalyzerSelection RunEleTauAnalyzerCalcFR
 
  shared: $(SHARED)
  $(SHARED): $(OBJS)
@@ -73,8 +73,20 @@ all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared  RunEleTauAnalyzer
 #	mv shlib/libDiLeptonAnalysis.so /scratch/$$USERNAME/RunMT2Analyzer
 #	mv /scratch/$$USERNAME/RunMT2Analyzer shlib/libDiLeptonAnalysis.so
 
-RunEleTauAnalyzer: src/exe/MakeEleTauPlots.C $(SHARED)	
-	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -o $@ $^		
+RunEleTauAnalyzerClosure: src/exe/MakeEleTauPlots.C $(SHARED)	
+	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -DTauFR -DClosure -o $@ $^		
+
+RunEleTauAnalyzerFakeEstimation: src/exe/MakeEleTauPlots.C $(SHARED)	
+	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -DTauFR -o $@ $^		
+
+RunEleTauAnalyzerPreSelection: src/exe/MakeEleTauPlots.C $(SHARED)	
+	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -DTREE -o $@ $^		
+
+RunEleTauAnalyzerSelection: src/exe/MakeEleTauPlots.C $(SHARED)	
+	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -DTREE -DFROMEvtLst -o $@ $^		
+
+RunEleTauAnalyzerCalcFR: src/exe/MakeEleTauPlots.C $(SHARED)	
+	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -DTauFR -DCalcFR -o $@ $^		
 
 RunMT2Analyzer: src/exe/RunMT2Analyzer.C $(SHARED)
 	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -o $@ $^	
@@ -103,6 +115,7 @@ clean:
 	$(RM) RunMT2Analyzer
 	$(RM) RunQuickAnalyzer
 	$(RM) MakeMassPlots
+	$(RM) RunEleTauAnalyzer*
 purge:
 	$(RM) $(OBJS)
 

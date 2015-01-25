@@ -1,0 +1,120 @@
+#########################################################################################
+GENERAL
+Path         ///dataLOCAL/MT2Tau/RootFiles/
+________________________________________________________________________________________
+# list of samples
+
+SAMPLE
+Name		WJetsToLNu
+SName		Wtolnu
+ShapeName	WJets
+File            TauTau_V3_1/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball_NBJetsCSVM0_MET30_NewPU_Stitching.root
+Xsection  	36257.2
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		417
+
+
+SAMPLE
+Name		W1JetsToLNu
+SName		Wtolnu
+ShapeName	WJets
+File            TauTau_V3_1/W1JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
+Xsection  	1.23 * 5400
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		417
+
+SAMPLE
+Name		W2JetsToLNu
+SName		Wtolnu
+ShapeName	WJets
+File            TauTau_V3_1/W2JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
+Xsection  	1.23 * 1750
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		417
+
+SAMPLE
+Name		W3JetsToLNu
+SName		Wtolnu
+ShapeName	WJets
+File            TauTau_V3_1/W3JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
+Xsection  	1.23 * 519
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		417
+
+SAMPLE
+Name		W4JetsToLNu
+SName		Wtolnu
+ShapeName	WJets
+File            TauTau_V3_1/W4JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
+Xsection  	1.23 * 214
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		417
+
+
+## ------------- DATA  ---------------------------
+
+SAMPLE
+Name		WJetsToLNu_Data
+SName		WtolnuData
+ShapeName	Data
+File            TauTau_V3_1/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball_NBJetsCSVM0_MET30_NewPU_Stitching.root
+Xsection  	1.
+Kfact           1.	
+Lumi            19600.0
+Type            data
+Color		1
+
+SAMPLE
+Name		W1JetsToLNu_Data
+SName		WtolnuData
+ShapeName	Data
+File            TauTau_V3_1/W1JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
+Xsection  	1.
+Kfact           1.	
+Lumi            19600.0
+Type            data
+Color		1
+
+SAMPLE
+Name		W2JetsToLNu_Data
+SName		WtolnuData
+ShapeName	Data
+File            TauTau_V3_1/W2JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
+Xsection  	1.
+Kfact           1.	
+Lumi            19600.0
+Type            data
+Color		1
+
+SAMPLE
+Name		W3JetsToLNu_Data
+SName		WtolnuData
+ShapeName	Data
+File            TauTau_V3_1/W3JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
+Xsection  	1.
+Kfact           1.	
+Lumi            19600.0
+Type            data
+Color		1
+
+SAMPLE
+Name		W4JetsToLNu_Data
+SName		WtolnuData
+ShapeName	Data
+File            TauTau_V3_1/W4JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
+Xsection  	1.
+Kfact           1.	
+Lumi            19600.0
+Type            data
+Color		1
+

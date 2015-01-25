@@ -5831,10 +5831,12 @@ void MassPlotter::TauEfficiency(TString cuts, unsigned int nevents, TString myfi
   double ptBins[] {20,50,100,200,500};
   double etaBins[] {0 , 1.479 , 2.3 };
   double metBins[] {30 , 70 , 110 , 200 , 300 };
-  
+  double mt2Bins[] {0, 15 , 40 , 65 , 90 , 500 };
+
   TEfficiency *hPtEta  = new TEfficiency("hPtEta", "PtEta",  4 , ptBins , 2 , etaBins );
   TEfficiency *hPtMET  = new TEfficiency("hPtMET", "PtMET",  4 , ptBins , 4 , metBins );
   TEfficiency *hPt = new TEfficiency("hPt" , "Pt" , 4 , ptBins ); 
+  TEfficiency *hMT2 = new TEfficiency("hMT2" , "MT2" , 5 , mt2Bins ); 
   TEfficiency *hOne = new TEfficiency("hOne" , "One" , 1 , 0 , 2);
   
   for(unsigned int ii = 0; ii < fSamples.size(); ii++){
@@ -5867,6 +5869,7 @@ void MassPlotter::TauEfficiency(TString cuts, unsigned int nevents, TString myfi
     Sample.tree->SetBranchStatus("*NGenLepts" , 1 );
     Sample.tree->SetBranchStatus("*genlept*" , 1 );
     Sample.tree->SetBranchStatus("muTau*" , 1 );
+    Sample.tree->SetBranchStatus("eleTau*" , 1 );
     Sample.tree->SetBranchStatus("NBJetsCSVM" , 1 );
     Sample.tree->SetBranchStatus("*MET*" , 1 );
     Sample.tree->SetBranchStatus("*MinMetJetDPhiPt40*" , 1 );
@@ -5940,13 +5943,19 @@ void MassPlotter::TauEfficiency(TString cuts, unsigned int nevents, TString myfi
 	}
 
 	if(minDR < 0.1){
-	  if(fMT2tree->tau[jetIndex].PassQCDTau_MuTau == 1){
+	  if(fMT2tree->tau[jetIndex].PassTau_ElTau == 1){
 
-	    bool pass = ((fMT2tree->tau[jetIndex].PassTau_MuTau == 1 ) && (fMT2tree->tau[jetIndex].Isolation3Hits <= 1.));
+	    //bool pass = ((fMT2tree->tau[jetIndex].PassTau_MuTau == 1 ) && (fMT2tree->tau[jetIndex].Isolation3Hits <= 1.));
+	    bool pass = ((fMT2tree->tau[jetIndex].PassTau_ElTau == 1 ) && (fMT2tree->tau[jetIndex].Isolation3Hits <= 1.));
 	    hPtEta->FillWeighted(pass, weight , fMT2tree->tau[jetIndex].lv.Pt() , fabs( fMT2tree->tau[jetIndex].lv.Eta() ) );
 	    hPtMET->FillWeighted(pass, weight , fMT2tree->tau[jetIndex].lv.Pt() , fMT2tree->misc.MET );
 	    hPt->FillWeighted(pass, weight , fMT2tree->tau[jetIndex].lv.Pt() );
 	    hOne->FillWeighted(pass, weight , 1.0 );
+
+	    if( fMT2tree->eleTau[0].GetTauIndex0() == jetIndex && 
+		fMT2tree->eleTau[0].GetEleIndex0() >= 0 && 
+		fMT2tree->eleTau[0].GetSumCharge() == 0 )
+	      hMT2->FillWeighted(pass , weight , fMT2tree->eleTau[0].GetMT2() );
 	  }
 	}
       }
@@ -5963,6 +5972,7 @@ void MassPlotter::TauEfficiency(TString cuts, unsigned int nevents, TString myfi
   hPtMET->Write();
   hPt->Write();
   hOne->Write();
+  hMT2->Write();
   savefile->Close();
   std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
   cout<<" cuts "<<cuts<<endl;

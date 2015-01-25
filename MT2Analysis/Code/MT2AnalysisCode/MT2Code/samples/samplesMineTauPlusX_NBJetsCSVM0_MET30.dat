@@ -87,7 +87,7 @@ Type		mc
 Color		401
 
 ##-------------- QCD-Pt-EMEnriched --------------------
-SAMPLE
+#SAMPLE
 Name		QCD-Pt-20-30-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -98,7 +98,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+#SAMPLE
 Name		QCD-Pt-30-80-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -109,7 +109,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+#SAMPLE
 Name		QCD-Pt-80-170-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -120,7 +120,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+#SAMPLE
 Name		QCD-Pt-170-250-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -131,7 +131,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+#SAMPLE
 Name		QCD-Pt-250-350-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -142,7 +142,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+#SAMPLE
 Name		QCD-Pt-350-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -689,7 +689,7 @@ SAMPLE
 Name		Run2012C_TauPlusX
 SName		TauPlusX-Data
 ShapeName	Data
-File            TauTau_V3_1/TauPlusX-Run2012C-22Jan2013-v1_Part*NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/TauPlusX-Run2012C-22Jan2013-v1_NBJetsCSVM0_MET30.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.
@@ -701,7 +701,7 @@ SAMPLE
 Name		Run2012D_TauPlusX
 SName		TauPlusX-Data
 ShapeName	Data
-File            TauTau_V3_1/TauPlusX-Run2012D-22Jan2013-v1_Part*NBJetsCSVM0_MET30.root
+File            TauTau_V3_1/TauPlusX-Run2012D-22Jan2013-v1_NBJetsCSVM0_MET30.root
 Xsection  	1.
 Kfact           1.	
 Lumi            1.

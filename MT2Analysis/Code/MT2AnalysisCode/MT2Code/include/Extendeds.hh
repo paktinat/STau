@@ -1,6 +1,8 @@
 #ifndef Extendeds_HH
 #define Extendeds_HH
 
+#include "TSystem.h"
+
 #include "TLatex.h"
 #include "TLegend.h"
 #include "TLegendEntry.h"
@@ -79,6 +81,10 @@ public:
     return Value-ErrorLow;
   }
 
+  void Print() const{
+    cout << Value << "+-" << Error() << endl;
+  }
+
 
   ValueError( double val , double err , double err2) 
     : Value (val),
@@ -93,28 +99,27 @@ public:
 
 class ExtendedObjectProperty : public TObject {
 public:
-  std::vector<TString> SamplesToStoreErrors;
-  TTree* treeWeightErrors;
-  int tweSampleIndex;
-  double tweW;
-  double tweWErr;
-  int tweValueBinIndex;
+  TString SampleNameForSyst;
+  std::map< TString , TH1* > SystHistos;
+  std::map< TString , TH2* > SystHistos2D;
 
-  ExtendedObjectProperty(TString cutname , TString name, TString formula , int nbins, double min, double max , TString SUSYCatCommand , std::vector<TString> SUSYNames  ,  std::vector<TString>* labels = NULL , const std::vector<TString>& samplesToStoreErrors = std::vector<TString>() ) ; 
-  ExtendedObjectProperty( TString cutname , TString name, TString formula , int nbins, double* bins ,TString SUSYCatCommand_ , std::vector<TString> SUSYNames_,  std::vector<TString>* labels = NULL , const std::vector<TString>& samplesToStoreErrors = std::vector<TString>()) ;
+  ExtendedObjectProperty(TString cutname , TString name, TString formula , int nbins, double min, double max , TString SUSYCatCommand , std::vector<TString> SUSYNames  ,  std::vector<TString>* labels = NULL , TString _SampleNameForSyst = "", const std::vector<TString>& SystNames = std::vector<TString>() ) ; 
+  ExtendedObjectProperty( TString cutname , TString name, TString formula , int nbins, double* bins ,TString SUSYCatCommand_ , std::vector<TString> SUSYNames_,  std::vector<TString>* labels = NULL ,  TString _SampleNameForSyst = "" , const std::vector<TString>& SystNames = std::vector<TString>() ) ;
 
   virtual void SetTree( TTree* tree , TString sampletype , TString samplesname , TString Cutname = "");
 
   virtual void Fill(double w = 1.0);
 
-  virtual void Fill(double dVal , ValueError w );
+  virtual void Fill(double dVal , double w , std::map<TString , double> WSyst );
   virtual void Fill(double dVal , double w );
 
   void AddOverAndUnderFlow(TH1 * Histo, bool overflow, bool underflow);
 
-  virtual void Print(Option_t* option = "") const;
+  virtual void Print(TString option = "") const;
 
-  TCanvas* plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, TH1* h3, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle,int njets,int nbjets, int nleps, float overlayScale, TString saveMacro , int lumi_);
+  //TCanvas* plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, TH1* h3, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle,int njets,int nbjets, int nleps, float overlayScale, TString saveMacro , int lumi_);
+  TCanvas* plotRatioStack(THStack* hstack, TH1* h1_orig, TH1* h2_orig, vector< pair<TH1*,Color_t> > h3s, bool logflag, bool normalize, TString name, TLegend* leg, TString xtitle, TString ytitle,int njets,int nbjets, int nleps, float overlayScale, TString saveMacro , int lumi_);
+
 
   virtual void Write( TDirectory* dir , int lumi , bool plotratiostack = true , bool logy = true);
 
@@ -153,6 +158,8 @@ public:
   int NumberOfHistos;
   std::vector<TString> histoNames;
   std::map<TString , TH1*> allHistos;
+
+  void ScaleData( TEfficiency* eff );
 protected:
   ExtendedObjectProperty() {};
 };
