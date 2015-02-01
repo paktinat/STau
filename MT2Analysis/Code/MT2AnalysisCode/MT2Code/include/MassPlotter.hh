@@ -249,7 +249,7 @@ public:
 
   void SpecialMakePlot(unsigned int nevents, TString cuts, TString trigger);
   void muTauAnalysis(TString cuts, TString trigger, unsigned int nevents, TString myfilename, int type = 0);
-  void muTauWJetsEstimation(TString cuts, TString trigger, TString myfileName);
+  void muTauWJetsEstimation(TString cuts, TString trigger, TString myfileName, bool calculateTauMTPass = false, float sysFR = 0, float sysPR = 0, float sysMT2 = 0, float sysTauMT = 0);
   void TauFakeRate(TString cuts, TString trigger, unsigned int nevents, TString myfilename);
   void TauEfficiency(TString cuts, unsigned int nevents, TString myfilename , TString SamplSName);
   void LeptonEfficiency(TString cuts, unsigned int nevents);
@@ -419,12 +419,14 @@ private:
   static const int NumberOfSamples = 8;
   TH1* MT2[NumberOfSamples];
 
+  TH1F *tauMTPass;
+
   //Few functions for debugging and ready for .tex printout
   void printYield();
 
   void AddOverAndUnderFlow(TH1 * Histo, bool overflow=true, bool underflow=true);
-  void Cout(int k, TH1F * Histo);
-  void Cout(int k, TH2F * Histo);
+  void Cout(int k, TH1 * Histo);
+  void Cout(int k, TH2 * Histo);
 
 };
 

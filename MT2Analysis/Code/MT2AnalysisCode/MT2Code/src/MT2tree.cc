@@ -113,41 +113,42 @@ void MT2Top::Reset(){
 // MT2Susy
 
 MT2Susy::MT2Susy(){
-  cout << "the xsection tgraph is being created" << endl;
-  int nbins = 17 ;
-  int masses[] = {100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500} ;
-  double vals100[]={5823.40, 0.0 , +3.4 , -.6 , -3.2};
-  double vals125[]={2434.10, 0.0, 3.6 , -.6 , -3.5 };
-  double vals150[]={1194.60, 0.3, +3.9 , -.5 , -3.8};
-  double vals175[]={649.58, 0.3 , 4.2, -.5 , -4. } ;
-  double vals200[]={379.24, 0.4, 4.5 , -.4 , -4.4};
-  double vals225[]={233.41 , 0.5, 5.0 , -.3 , -4.4};
-  double vals250[]={149.86 , 0.3 ,5.1 , -.4 , -4.8};
-  double vals275[]={99.27, 0.1 , 5.5 , -.4 , -5. };
-  double vals300[]={67.51 , 0.0 , 5.9 , -.2 , -5.1};
-  double vals325[]={46.97 , 0.1 , 6.1 , -.2 , -5.5};
-  double vals350[]={33.28 , 0.0 , 6.4 , -.2 , -5.6};
-  double vals375[]={23.95 , 0.0 , 7.0 , -.1 , -5.7};
-  double vals400[]={17.51 , 0.0 , 6.8 , -.3 , -6.3};
-  double vals425[]={12.93 , 0.0 , 7.5 , -.3 , -6.1};
-  double vals450[]={9.66, 0.0 , 7.5 , -.5 , -6.7};
-  double vals475[]={7.28 , 0.1 , 7.8, -1 , -6.8};
-  double vals500[]={5.53 , 0.0 , 8.1 , -.9 , -7.0};
-  double* vals[] = {vals100,vals125,vals150,vals175,vals200,vals225,vals250,vals275,vals300,vals325,vals350,vals375,vals400,vals425,vals450,vals475,vals500} ;
-  gROOT->cd();
-  theXSecGraph = new TGraphAsymmErrors( 17 );
-  for(int i = 0 ; i< nbins ; i++){
-    theXSecGraph->SetPoint( i , masses[i] , vals[i][0] );
-    double errh = hypot( vals[i][1] , vals[i][2] );
-    double errl = hypot( vals[i][3] , vals[i][4] );
-    theXSecGraph->SetPointError( i , errl , errh , 12.5 , 12.5 );
-  }
+//   cout << "the xsection tgraph is being created" << endl;
+//   int nbins = 17 ;
+//   int masses[] = {100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500} ;
+//   double vals100[]={5823.40, 0.0 , +3.4 , -.6 , -3.2};
+//   double vals125[]={2434.10, 0.0, 3.6 , -.6 , -3.5 };
+//   double vals150[]={1194.60, 0.3, +3.9 , -.5 , -3.8};
+//   double vals175[]={649.58, 0.3 , 4.2, -.5 , -4. } ;
+//   double vals200[]={379.24, 0.4, 4.5 , -.4 , -4.4};
+//   double vals225[]={233.41 , 0.5, 5.0 , -.3 , -4.4};
+//   double vals250[]={149.86 , 0.3 ,5.1 , -.4 , -4.8};
+//   double vals275[]={99.27, 0.1 , 5.5 , -.4 , -5. };
+//   double vals300[]={67.51 , 0.0 , 5.9 , -.2 , -5.1};
+//   double vals325[]={46.97 , 0.1 , 6.1 , -.2 , -5.5};
+//   double vals350[]={33.28 , 0.0 , 6.4 , -.2 , -5.6};
+//   double vals375[]={23.95 , 0.0 , 7.0 , -.1 , -5.7};
+//   double vals400[]={17.51 , 0.0 , 6.8 , -.3 , -6.3};
+//   double vals425[]={12.93 , 0.0 , 7.5 , -.3 , -6.1};
+//   double vals450[]={9.66, 0.0 , 7.5 , -.5 , -6.7};
+//   double vals475[]={7.28 , 0.1 , 7.8, -1 , -6.8};
+//   double vals500[]={5.53 , 0.0 , 8.1 , -.9 , -7.0};
+//   double* vals[] = {vals100,vals125,vals150,vals175,vals200,vals225,vals250,vals275,vals300,vals325,vals350,vals375,vals400,vals425,vals450,vals475,vals500} ;
+//   gROOT->cd();
+//   theXSecGraph = new TGraphAsymmErrors( 17 );
+//   for(int i = 0 ; i< nbins ; i++){
+//     theXSecGraph->SetPoint( i , masses[i] , vals[i][0] );
+//     double errh = hypot( vals[i][1] , vals[i][2] );
+//     double errl = hypot( vals[i][3] , vals[i][4] );
+//     theXSecGraph->SetPointError( i , errl , errh , 12.5 , 12.5 );
+//   }
 
   Reset();
 }
 
 double MT2Susy::XSectionCharginoLSP() const{
-  return theXSecGraph->Eval( MassGlu );
+  //  return theXSecGraph->Eval( MassGlu );
+  return 0;
 }
 int MT2Susy::Category( ) const{
   vector< pair<int,int> > susypoints = { {180 , 60} , {380 , 0} , {240 , 60} , {240 , 80} };

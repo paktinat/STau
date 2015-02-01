@@ -130,11 +130,11 @@ public:
   float XSec;
   float TanBeta;
 
-  TGraphAsymmErrors* theXSecGraph;
-  double XSectionCharginoLSP() const;
-  int Category( ) const ;
+//   TGraphAsymmErrors* theXSecGraph;
+   double XSectionCharginoLSP() const;
+   int Category( ) const ;
 
-  ClassDef(MT2Susy, 1);
+  ClassDef(MT2Susy, 2);
 };
 
 
