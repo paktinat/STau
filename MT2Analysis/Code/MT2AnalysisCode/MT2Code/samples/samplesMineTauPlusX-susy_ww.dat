@@ -1,0 +1,130 @@
+#########################################################################################
+GENERAL
+Path         ///dataLOCAL/MT2Tau/RootFiles/
+________________________________________________________________________________________
+# list of samples
+
+## -------- SMS --------
+
+#SAMPLE
+Name            TStau
+SName           SUSY
+ShapeName       Signal
+File            TauTau_V3_1/SMS-TChipChimStauSnu-mChi-120to500-mLSP-1to480-x-050-TuneZ2star-8TeV-pythia6-tauolapp_BigFiles_NewPU_Stitching.root
+Xsection        0.119 pb
+Kfact           1.
+Lumi            19600.0
+Type            susy
+Color           1
+
+
+#SAMPLE
+Name            TStau
+SName           SUSY
+ShapeName       Signal
+File            TauTau_V3_1/SMS-TChipChimStauSnu_mChi-120to500_mLSP-80to480_x-005_TuneZ2star_8TeV-pythia6-tauolapp_BigFiles_NewPU_Stitching.root
+Xsection        0.119 pb
+Kfact           1.
+Lumi            19600.0
+Type            susy
+Color           1
+
+SAMPLE
+Name            TStau
+SName           SUSY
+ShapeName       Signal
+File            TauTau_V3_1/SMS-TChipChimStauSnu_mChi-100to500_mLSP-1to480_x-095_TuneZ2star_8TeV-pythia6-tauolapp_BigFiles_NewPU_Stitching.root
+Xsection        0.119 pb
+Kfact           1.
+Lumi            19600.0
+Type            susy
+Color           1
+
+
+SAMPLE
+Name		GluGluToHToTauTau
+SName		Higgs
+ShapeName	Higgs  
+File            TauTau_V3_1/GluGluToHToTauTau_M-125_8TeV-powheg-pythia6_BigFiles_NewPU_Stitching.root
+Xsection  	19   #4.7 pb 
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		417
+
+SAMPLE
+Name		WWJetsTo2L2Nu
+SName		VV
+ShapeName	WJets  
+File            TauTau_V3_1/WWJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola_BigFiles_NewPU_Stitching.root
+Xsection  	5.8   #4.7 pb 
+Kfact           1.	
+Lumi            19600.0
+Type            mc
+Color		417
+
+SAMPLE
+Name		ZZJetsTo2L2Nu
+SName		DY
+ShapeName	ZZJetsTo2L2Nu
+File            TauTau_V3_1/ZZJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola_BigFiles_NewPU_Stitching.root
+Xsection  	0.7   #0.28 pb 
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		419
+ 
+SAMPLE
+Name		ZZJetsTo2L2Q
+SName		DY
+ShapeName	ZZJetsTo2L2Q
+File            TauTau_V3_1/ZZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola_BigFiles_NewPU_Stitching.root
+Xsection  	2.5     #0.91 pb
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		419
+    
+SAMPLE
+Name		ZZJetsTo4L
+SName		DY
+ShapeName	ZZJetsTo4L
+File            TauTau_V3_1/ZZJetsTo4L_TuneZ2star_8TeV-madgraph-tauola_BigFiles_NewPU_Stitching.root
+Xsection  	0.2 #0.1296 pb
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		419
+ 
+SAMPLE
+Name		WZJetsTo3LNu
+SName		DY
+ShapeName	WZJetsTo3LNu
+File            TauTau_V3_1/WZJetsTo3LNu_TuneZ2_8TeV-madgraph-tauola_BigFiles_NewPU_Stitching.root
+Xsection  	1.1     #0.8674 pb
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		419 
+
+SAMPLE
+Name		WZJetsTo2L2Q
+SName		DY
+ShapeName	WZJetsTo2L2Q
+File            TauTau_V3_1/WZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola_BigFiles_NewPU_Stitching.root
+Xsection  	2.2     #1.755 pb
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		419  
+
+
+
+#GluGluToHToTauTau_M-125_8TeV-powheg-pythia6_BigFiles_NewPU_Stitching.root
+#GluGluToHToTauTau_M-125_8TeV-powheg-pythia6_BigFiles_NewPU_Stitching_DoubleTauRelaxed.root
+#VBF_HToTauTau_M-125_8TeV-powheg-pythia6_BigFiles_NewPU_Stitching.root
+#VBF_HToTauTau_M-125_8TeV-powheg-pythia6_BigFiles_NewPU_Stitching_DoubleTauRelaxed.root
+#WH_ZH_TTH_HToTauTau_M-125_8TeV-pythia6-tauola_BigFiles_NewPU_Stitching.root
+#WH_ZH_TTH_HToTauTau_M-125_8TeV-pythia6-tauola_BigFiles_NewPU_Stitching_DoubleTauRelaxed.root
+
+

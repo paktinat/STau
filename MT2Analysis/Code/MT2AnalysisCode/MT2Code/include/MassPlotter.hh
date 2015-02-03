@@ -262,7 +262,9 @@ public:
   void eeFakePromptCategory(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
   void eeAnalysis(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
   void eeWJetsEstimation(TString cuts, TString trigger, TString myfileName);
-  
+  void eeVS(Long64_t nevents, TString cuts, TString trigger);
+  void miscEfficiency(int sample_index, unsigned int nevents);
+
   void setFlags(int flag); //To determine which analysis we look at HighHT/LowHT MT2(b) options are:
   // 5  :: LowHT  MT2  
   // 7  :: HighHT MT2 

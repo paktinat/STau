@@ -1,9 +1,9 @@
 {
 TString outputdir = "./results/";
 
-
-//TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30_NewPU_Stitched.dat";
- TString samples = "samples/samplesMineTauPlusX-susy_ww.dat";
+TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30_NewPU_Stitched-119.dat";
+//TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30_NewPU_Stitched-227.dat";
+//TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30_NewPU_Stitched-68.dat";
 //TString samples = "./samples/samplesMineTest.dat";
 
 int verbose =3;
@@ -47,8 +47,10 @@ std::vector<std::string> myChannelCuts;
 myChannelCuts.push_back(std::string(trigger));
 
 //-------------------------Susy Cuts------------------------------
- myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 100) <= 5.0 && abs(Susy.MassLSP - 0) <= 5.0))");
- //myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 125)  && (Susy.MassGlu - Susy.MassLSP) < 175))");
+//myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 180) <= 5.0 && abs(Susy.MassLSP - 60) <= 5.0))");
+//myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 380) <= 5.0 && abs(Susy.MassLSP - 1) <= 5))");
+//myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 300) <= 5.0 && abs(Susy.MassLSP - 1) <= 5))");
+//myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 125)  && (Susy.MassGlu - Susy.MassLSP) < 175))");
 //myChannelCuts.push_back("(misc.ProcessID!=10 || (  (Susy.MassLSP < 150) && (Susy.MassGlu < 400) ))");
 //myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 25)  && (Susy.MassGlu - Susy.MassLSP) < 75))");
 //myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 175)  && (Susy.MassGlu - Susy.MassLSP) < 225))");
@@ -59,17 +61,20 @@ TString myChan = "doubleEle[0]";
 
 //------------------------DoubleEle Cuts--------------------------
 
-//   myChannelCuts.push_back("NBJetsCSVM==0");
-//   myChannelCuts.push_back("misc.MinMetJetDPhiPt40 > 1");
-//   myChannelCuts.push_back("misc.MET > 30");
-//   myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele0Ind>=0"));
-//   myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele1Ind>=0"));
-//   myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==1"));
-//   myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)");
+  myChannelCuts.push_back("NBJetsCSVM==0");
+  myChannelCuts.push_back("misc.MET > 30");
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele0Ind>=0"));
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele1Ind>=0"));
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==1"));
+  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)");
+  myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 76) || (doubleEle[0].lv.M() > 106))");
 
-//   //   myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 90"));
+  //   myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 90"));
 
-//   myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 76) || (doubleEle[0].lv.M() > 106))");
+  myChannelCuts.push_back("misc.MinMetJetDPhiPt40 > 1");
+  //  myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 40"));
+  //  myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 < 90"));
+
 //  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>250");
 //  myChannelCuts.push_back("((misc.MET)+(doubleEle[0].lv.Pt()))>80");
 //  myChannelCuts.push_back("((misc.MET)-(doubleEle[0].lv.Pt()))>-50");
@@ -95,11 +100,9 @@ TString cuts = cutStream.str().c_str();
 //tA->eeFakeRateRatio(cuts, trigger, 100000000000000000,"fakeRatio-Zveto_ele0in_ele1out-singleData-1");
 //tA->eeWJetsEstimation(cuts, trigger, "2014-12-06/fakeRatio-Zveto_ele0out_ele1in-Wjets-ele1Base_FRHistos.root");
 //tA->eeFakePromptCategory(cuts, trigger, 10000000000000000000000,"fakePrompt-allBigMC_singleFull-tight-ele0outWwindow-ele1inWwindow-noEM");
+//tA->eeAnalysis(cuts, trigger, 1000000000000000000,"e0_GENe_deltaR");
 
-//tA->eeAnalysis(cuts, trigger, 100000000000,"METJetDPhi-NoMisc-NoBveto-susy95-140-0");
-//tA->eeAnalysis(cuts, trigger, 1000000000000,"MinMETJetDPhi-ZZJetsTo2L2Nu");
-//tA->SystematicsMisc(cuts,trigger,100000000000,"MinMETJetDPhi");
-tA->PrintMiscEfficiency(3, 100000000000);
+ tA->eeVS(100000000000000000, cuts, trigger);
 //int NumberOfBins = 17;
 //double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};      //MT2
 //int NumberOfBins = 8;
@@ -115,37 +118,57 @@ tA->PrintMiscEfficiency(3, 100000000000);
 //const int nbins, const double min, const double max,
 //bool flip_order, bool logflag, bool composited, bool ratio, bool stacked,
 //bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos, TString saveMacro, int type)
-
-//tA->makePlot("misc.MinMetJetDPhiPt40", cuts, -10, 0, -10, trigger, "MinMetJetDPhiPt40", 10, 0, 3, false, true, true, true,true, true, 1, true, true, "png",1);
-
-//tA->makePlot("pileUp.PUtrueNumInt", cuts, -10, 0, -10, trigger, "pileUp.PUtrueNumInt", 60, 0, 60, false, true, true, true,true, true, 1, true, true, "png",1);
-
 //tA->makePlot("ele[0].MT", cuts, -10, 0, -10, trigger, "ele[0].MT.1Dec", 20, 0, 200, false, true, true, true, true, true, 1, true, true, "png");
 //tA->makePlot("ele[0].MT", cuts, -10, 0, -10, trigger, "ele[0].MT-loose-noEM-2Dec", 20, 0, 200, false, true, true, true, true, true, 1, true, true, "png");
 
-//tA->makePlot("misc.MET", cuts, -10, 0, -10, trigger, "MET", 50, 0, 500, false, true, true, true,true, true, 1, true, true, "png",1);
 
-//tA->makePlot("misc.MET", cuts, -10, 0, -10, trigger, "MET", 50, 0, 500, false, true, true, true,true, true, 1, true, true, "png",3);
-//tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2-xxx", 50, 0, 500, false, true, true, true,true, true, 1, true, true,"root",1);
-
-//tA->vs(1000000000000000,cuts,trigger);// , "MT2MCT-MT0MT1");
-//tA->makePlot("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))", cuts, -10, 0, -10, trigger, "e0MT+e1MT", 50,0,500, false, true, true,true, true, true, 1, true, true, "png", 3);
-
-//tA->makePlot("(misc.MET)+(doubleEle[0].lv.Pt())",     cuts,    -10,  0 , -10 ,   trigger , "MET+Pt_Z"     ,50,0,500,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-//tA->makePlot("(misc.MET)-(doubleEle[0].lv.Pt())",     cuts,    -10,  0 , -10 ,   trigger , "MET-Pt_Z"     ,100,-500,500,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-//tA->makePlot("misc.MET", cuts, -10, 0, -10, trigger, "MET", 50, 0, 500, false, true, true, true, true, true, 1, true, false, "png");
-//tA->makePlot("eeDeltaR()", cuts, -10, 0, -10, trigger, "MT2", 7, 0, 7, false, true, true, true, true, true, 1, true, false, "png");
-//tA->makePlot("eeDeltaR()", cuts, -10, 0, -10, trigger, "DeltaR", 7, 0, 7, false, true, true, true, true, true, 1, true, false, "png"); 
-//tA->makePlot("eeMCT()", cuts, -10, 0, -10, trigger, "MCT", 50, 0, 500, false, true , true, true, true, true, 1, true, false, "png");
-//tA->makePlot("ele[doubleEle[0].Ele1Ind].MT",     cuts,    -10,  0 , -10 ,   trigger , "Second Electron MT"           ,20,0,200,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-//tA->makePlot("ele[doubleEle[0].Ele0Ind].lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "First Electron Pt"            ,20,0,200,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-//tA->makePlot("ele[doubleEle[0].Ele1Ind].lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "Second Electron Pt"            ,20,0,200,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-//tA->makePlot("eeMETMinusPtZ()", cuts, -10,  0 , -10 , trigger , "|MET-Pt_Z| 175", 50, 0, 500, false, true , true,  true, true, true, 1, true, false, "png");
-//tA->makePlot("eeJZBInDirect()",     cuts,    -10,  0 , -10 ,   trigger , "JZB"     ,50,0,500,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-//tA->makePlot("doubleEle[0].DPhi",     cuts,    -10,  0 , -10 ,   trigger , "Di-Electron Delta_Phi"            ,10,0,3,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-//tA->makePlot("(misc.MET)+(ele[doubleEle[0].Ele0Ind].lv.Pt())",     cuts,    -10,  0 , -10 ,   trigger , "MET+FirElePt"     ,50,0,500,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-//tA->makePlot("(misc.MET)+(ele[doubleEle[0].Ele1Ind].lv.Pt())",     cuts,    -10,  0 , -10 ,   trigger , "MET+SecElePt"     ,50,0,500,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
-//tA->makePlot("pileUp.NVertices",     cuts,    -10,  0 , -10 ,   trigger , "NVertices"            ,60,0,60,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+// tA->makePlot("misc.MET", cuts, -10, 0, -10, trigger, "MET-380_1-MT2gt90", 25, 0, 500, false, true, true, true,true, true, 1, true, true, "png", 1);
+//tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2-380_1-MT2gt90", 25, 0, 500, false, true, true, true,true, true, 1, true, true,"png", 1);
+// tA->makePlot("eeMCT()", cuts, -10, 0, -10, trigger, "MCT-380_1-MT2gt90", 25, 0, 500, false, true , true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("abs(doubleEle[0].lv.M()-90)", cuts, -10, 0, -10, trigger, "invMass-M_Z-380_1-MT2gt90", 50, 0, 500, false, true, true, true, true, true, 1, true, true, "png", 1);
+//tA->makePlot("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))", cuts, -10, 0, -10, trigger, "sumMT-300_1-MT2gt90", 25, 0, 500, false, true, true,true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("min(ele[doubleEle[0].Ele0Ind].MT,ele[doubleEle[0].Ele1Ind].MT)", cuts, -10, 0, -10, trigger, "min-MT_e0-MT_e1-380_1-MT2gt90", 15, 0, 300, false, true,true,   true,  true,  true, 1,true, false, "png", 1);
+//tA->makePlot("max(ele[doubleEle[0].Ele0Ind].MT,ele[doubleEle[0].Ele1Ind].MT)", cuts, -10, 0, -10, trigger, "maxMT-300_1-MT2gt90", 15, 0, 300, false,true,true,   true,  true,  true, 1,true, false, "png", 1);
+// tA->makePlot("doubleEle[0].lv.M()", cuts, -10, 0, -10, trigger, "invMass_e0_e1-380_1-MT2gt90", 50, 0, 500, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("misc.MinMetJetDPhi", cuts, -10, 0, -10, trigger, "MinMetJetDPhi-380_1-MT2gt90", 20, 0, 4, false, true, true,   true,  true,  true, 1, true, true, "png", 1);
+// tA->makePlot("misc.MinMetJetDPhi4", cuts, -10, 0, -10, trigger, "MinMetJetDPhi4-380_1-MT2gt90", 20, 0, 4, false, true, true,   true,  true,  true, 1, true, true, "png", 1);
+// tA->makePlot("misc.MinMetJetDPhiPt40", cuts, -10, 0, -10, trigger, "MinMetJetDPhiPt40-380_1-MT2gt90", 20, 0, 4, false, true, true,   true,  true,  true, 1, true, true, "png", 1);
+// tA->makePlot("misc.MinMetJetDPhi4Pt40", cuts, -10, 0, -10, trigger, "MinMetJetDPhi4Pt40-380_1-MT2gt90", 20, 0, 4, false, true, true,   true,  true,  true, 1, true, true, "png", 1);
+// tA->makePlot("(misc.MET)+(doubleEle[0].lv.Pt())", cuts, -10, 0, -10, trigger, "MET+Pt_Z-380_1-MT2gt90", 25, 0, 500, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("(misc.MET)-(doubleEle[0].lv.Pt())", cuts, -10, 0, -10, trigger, "MET-Pt_Z-380_1-MT2gt90", 50, -500, 500, false, true , true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("eeDeltaR()", cuts, -10, 0, -10, trigger, "deltaR_e0_e1-380_1-MT2gt90", 35, 0, 7, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("ele[doubleEle[0].Ele0Ind].MT", cuts, -10, 0, -10, trigger, "MT_e0-380_1-MT2gt90", 15, 0, 300, false, true, true, true, true, true, 1,true, true, "png" , 1);
+// tA->makePlot("ele[doubleEle[0].Ele1Ind].MT", cuts, -10, 0, -10, trigger, "MT_e1-380_1-MT2gt90", 15, 0, 300, false, true, true, true, true, true, 1,true, true, "png" , 1);
+// tA->makePlot("ele[doubleEle[0].Ele0Ind].lv.Pt()", cuts, -10, 0, -10, trigger, "Pt_e0-380_1-MT2gt90", 25, 0, 500, false, true, true, true, true, true,1,true, true, "png" , 1);
+// tA->makePlot("ele[doubleEle[0].Ele1Ind].lv.Pt()", cuts, -10, 0, -10, trigger, "Pt_e1-380_1-MT2gt90", 25, 0, 500, false, true, true, true, true, true,1, true, true, "png", 1);
+// tA->makePlot("eeJZBInDirect()", cuts, -10, 0, -10, trigger, "JZB-380_1-MT2gt90", 25, 0, 500, false, true,  true,   true,  true,  true, 1,true, true, "png", 1);
+// tA->makePlot("doubleEle[0].DPhi", cuts, -10, 0, -10, trigger, "deltaPhi_e0_e1-380_1-MT2gt90", 20, 0, 4, false, true, true, true, true, true, 1, true,true, "png", 1);
+// tA->makePlot("(misc.MET)+(ele[doubleEle[0].Ele0Ind].lv.Pt())", cuts, -10, 0, -10, trigger, "MET+Pt_e0-380_1-MT2gt90", 25, 0, 500, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("(misc.MET)+(ele[doubleEle[0].Ele1Ind].lv.Pt())", cuts, -10, 0, -10, trigger, "MET+Pt_e1-380_1-MT2gt90", 25, 0, 500, false, true, true, true, true,true, 1, true, true, "png", 1);
+// tA->makePlot("(misc.MET)-(ele[doubleEle[0].Ele0Ind].lv.Pt())", cuts, -10, 0, -10, trigger, "MET-Pt_e0-380_1-MT2gt90", 25, 0, 500, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("(misc.MET)-(ele[doubleEle[0].Ele1Ind].lv.Pt())", cuts, -10, 0, -10, trigger, "MET-Pt_e1-380_1-MT2gt90", 25, 0, 500, false, true, true, true, true,true, 1, true, true, "png", 1);
+// tA->makePlot("eePZeta()", cuts, -10, 0, -10, trigger, "PZeta-380_1-MT2gt90", 25, 0, 500, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("eePZetaImbalanced()", cuts, -10, 0, -10, trigger, "PZeta_Imbalanced-380_1-MT2gt90", 25, 0, 500, false,        true ,  true,   true,  true,  true, 1,true, true, "png", 1);
+// tA->makePlot("eePVisibleZeta()", cuts, -10, 0, -10, trigger, "PVisibleZeta-380_1-MT2gt90", 25, 0, 500, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("eeDiLepPtRatio()", cuts, -10, 0, -10, trigger, "Pt_Ratio-380_1-MT2gt90" , 5, 0, 1, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("eePositiveChargedLeptonDecayAngleinZframe()", cuts, -10, 0, -10, trigger, "PositronDecayAngleinZframe-380_1-MT2gt90", 20, 0, 4, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("eeMinMetLepDPhi()", cuts, -10, 0, -10, trigger, "MinMetLepDeltaPhi-380_1-MT2gt90", 20, 0, 4, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("PositiveChargedLepWithZBeamPlane()", cuts, -10, 0, -10, trigger, "PositronAngleWithZBeamPlane-380_1-MT2gt90", 20, 0, 4, false,        true ,  true,   true,  true,  true, 1,true, false, "png", 1);
+// tA->makePlot("eePZeta()-1.85*eePVisibleZeta()", cuts, -10, 0, -10, trigger, "PZeta-1.85*PVisZeta-380_1-MT2gt90", 25, 0, 500, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("eePZeta()+1.85*eePVisibleZeta()", cuts, -10, 0, -10, trigger, "PZeta+1.85*PVisZeta-380_1-MT2gt90", 25, 0, 500, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("eeMETPlusPtZ()", cuts, -10, 0, -10, trigger, "(MET.lv+ee.lv).Pt-380_1-MT2gt90", 25, 0, 500, false, true, true, true, true, true, 1, true, true, "png", 1);
+//  tA->makePlot("eeMETMinusPtZ()", cuts, -10, 0, -10, trigger, "(MET.lv-ee.lv).Pt-380_1-MT2gt90", 50, -500, 500, false, true, true, true, true, true, 1,true, true, "png", 1);
+// tA->makePlot("NBJetsCSVL", cuts, -10, 0, -10, trigger, "NBJetsCSVL-380_1-MT2gt90", 10, 0, 10, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("NBJetsCSVM", cuts, -10, 0, -10, trigger, "NBJetsCSVM-380_1-MT2gt90", 10, 0, 10, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("NBJetsCSVT", cuts, -10, 0, -10, trigger, "NBJetsCSVT-380_1-MT2gt90", 10, 0, 10, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("NBJets40CSVL", cuts, -10, 0, -10, trigger, "NBJets40CSVL-380_1-MT2gt90", 10, 0, 10, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("NBJets40CSVM", cuts, -10, 0, -10, trigger, "NBJets40CSVM-380_1-MT2gt90", 10, 0, 10, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("NBJets40CSVT", cuts, -10, 0, -10, trigger, "NBJets40CSVT-380_1-MT2gt90", 10, 0, 10, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("NJetsIDLoose", cuts, -10, 0, -10, trigger, "NJetsIDLoose-380_1-MT2gt90", 10, 0, 10, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("NJetsIDLoose40", cuts, -10, 0, -10, trigger, "NJetsIDLoose40-380_1-MT2gt90", 10, 0, 10, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("NJetsIDLoose50", cuts, -10, 0, -10, trigger, "NJetsIDLoose50-380_1-MT2gt90", 10, 0, 10, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("NEles", cuts, -10, 0, -10, trigger, "NEles-380_1-MT2gt90", 10, 0, 10, false, true, true, true, true, true, 1, true, true, "png", 1);
+// tA->makePlot("pileUp.NVertices", cuts, -10, 0, -10, trigger, "NVertices-380_1-MT2gt90", 60, 0, 60, false, true, true, true, true, true, 1, true, true, "png", 1);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
