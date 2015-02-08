@@ -962,7 +962,9 @@ public:
     return ntaus;
   }
 
-
+  Int_t minMetTauDPhiMuTauInd();
+  
+  Float_t minMetTauDPhiMuTau();
 
 
   Float_t JZBDPhi(){
