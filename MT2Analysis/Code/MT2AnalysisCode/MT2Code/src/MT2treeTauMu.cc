@@ -244,4 +244,26 @@ void MT2tree::FillMuTau(){
   }
 }
 
+Int_t MT2tree::minMetTauDPhiMuTauInd(){
+  Int_t Ind = -1;
+  Float_t mindPhi = 100.0;
+  for(int i=0; i<NTaus; ++i){ 
+    if(tau[i].PassTau_MuTau){
+      Float_t dPhi = fabs(Util::DeltaPhi(tau[i].lv.Phi(), pfmet[0].Phi()));
+      if(dPhi < mindPhi){
+	Ind = i;
+	mindPhi = dPhi;
+      }
+    }
+  }
+  return Ind;
+}
 
+Float_t MT2tree::minMetTauDPhiMuTau(){
+  Float_t dPhi = 100;
+  if(minMetTauDPhiMuTauInd() != -1)
+    dPhi = fabs(Util::DeltaPhi(tau[minMetTauDPhiMuTauInd()].lv.Phi(), pfmet[0].Phi()));
+//     dPhi = fabs(Util::DeltaPhi(tau[muTau[0].GetTauIndex0()].lv.Phi(), pfmet[0].Phi()));
+
+  return dPhi;
+}
