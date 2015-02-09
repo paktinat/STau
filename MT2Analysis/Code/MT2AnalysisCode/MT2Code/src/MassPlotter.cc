@@ -9259,7 +9259,7 @@ if(fPUReweight)
 
 
     float px_all_up, py_all_up, E_all_up =0;
-    TLorentzVector tau_all_lv =(0,0,0,0);
+    TLorentzVector tau_all_lv (0,0,0,0);
 
   for (int l=0; l <fMT2tree->NTaus ; l++)
   {
