@@ -739,7 +739,7 @@ void ExtendedObjectProperty::Write( TDirectory* dir , int lumi ,bool plotratiost
   if(plotratiostack){
     //plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY"] , logy, false, Name + "_ratio", Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
     //for(uint i =0 ; i<SUSYNames.size() ; i++){
-    TCanvas* ccc = plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], susycolors , true, false, Name + "_ratio"+ "_AllSUSY", Legend1, Formula, "Events", -10, -10, 2, true , "" , lumi ) ; // , allHistos["SUSY_" + SUSYNames[1]] );
+    TCanvas* ccc = plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], susycolors , true, false, Name + "_ratio"+ "_AllSUSY", Legend1, Name, "Events", -10, -10, 2, true , "" , lumi ) ; // , allHistos["SUSY_" + SUSYNames[1]] );
     //if(Name == "One")
     //cout << CutName << "--" << allHistos["SUSY_"+SUSYNames[0] ]->GetEntries() << endl;
 

@@ -280,6 +280,10 @@ public:
 
   void SortHighMT2(float MT2cut, unsigned int nevents);
   void MyMakePlot(unsigned int nevents);
+
+  void SetEleTauChannel(){
+    myChannel = "eleTau";
+  }
   
   void SetMuTauChannel(bool muIdSF = true, bool muIsoSF = true, bool muTrgSF = true, bool tauTrgSF = true, bool tauWjetsSF = true, bool tauEnergySF = true){
     if(myChannel != "TBD" && myChannel != "muTau")

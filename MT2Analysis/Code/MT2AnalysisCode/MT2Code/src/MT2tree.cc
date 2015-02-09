@@ -2560,9 +2560,11 @@ int     MT2tree::GenLeptonAnalysis( int neles , int nmus , int ntaus ){
 	nGEleTau ++;
 	TLorentzVector motherLV = genlept[i].Mlv;
 	auto existingTau = std::find_if( tauLvs.begin() , tauLvs.end() , 
-					 [motherLV]( const TLorentzVector s ){ 
+					 [motherLV]( const TLorentzVector s ){
+					   double dr = s.DrEtaPhi( motherLV );
+					   return dr < 0.3;
 					   double diff = (s.Vect()-motherLV.Vect()).Mag() ;
-					   return  (diff < (s.Vect().Mag()/100.0)) ;
+					   return  (diff < (s.Vect().Mag()/20.0)) ;
 					 } 
 	  );
       if( existingTau == tauLvs.end() ){
@@ -2580,8 +2582,10 @@ int     MT2tree::GenLeptonAnalysis( int neles , int nmus , int ntaus ){
 	TLorentzVector motherLV = genlept[i].Mlv;
 	auto existingTau = std::find_if( tauLvs.begin() , tauLvs.end() , 
 					 [motherLV]( const TLorentzVector s ){ 
+					   double dr = s.DrEtaPhi( motherLV );
+					   return dr < 0.3;
 					   double diff = (s.Vect()-motherLV.Vect()).Mag() ;
-					   return  (diff < (s.Vect().Mag()/100.0)) ;
+					   return  (diff < (s.Vect().Mag()/20.0)) ;
 					 } );
 	if( existingTau == tauLvs.end() ){
 	  tauLvs.push_back( motherLV );
@@ -2596,8 +2600,10 @@ int     MT2tree::GenLeptonAnalysis( int neles , int nmus , int ntaus ){
       TLorentzVector motherLV = genlept[i].lv;
       auto existingTau = std::find_if( tauLvs.begin() , tauLvs.end() , 
 				       [motherLV]( const TLorentzVector s ){ 
+					 double dr = s.DrEtaPhi( motherLV );
+					 return dr < 0.3;
 					 double diff = (s.Vect()-motherLV.Vect()).Mag() ;
-					 return  (diff < (s.Vect().Mag()/100.0)) ;}
+					 return  (diff < (s.Vect().Mag()/20.0)) ;}
 					   );
       if( existingTau == tauLvs.end() ){
 	tauLvs.push_back( motherLV );

@@ -1048,11 +1048,9 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
                    if ( fEleIdIsoSF )
                   ChannelSpecificSF += "*eleMu[0].EleIdIsoSF";
 
-                                           }
+		 }
       
-
-
-
+      
 
 		  if(fStitching && (Samples[i].sname == "Wtolnu" || (Samples[i].shapename == "ZJetsToLL" && Samples[i].name != "DYToLL_M10To50"))){
 		    weight = Samples[i].lumi;
@@ -5729,6 +5727,10 @@ void MassPlotter::MakeCutFlowTable( std::vector<std::string> all_cuts ){
 	    ChannelSpecificSF += "*eleMu[0].EleTrgSF";
 	  if ( fEleIdIsoSF )
 	    ChannelSpecificSF += "*eleMu[0].EleIdIsoSF";
+	}else if(myChannel == "eleTau"){
+	  ChannelSpecificSF = "eleTau[0].tauTrgSF * eleTau[0].eleTrgSF * eleTau[0].eleIdIsoSF";
+	  if( fSamples[ii].sname == "Wtolnu" )
+	    ChannelSpecificSF += " * ( ( (eleTau[0].tauWjetsSF > 0) * eleTau[0].tauWjetsSF ) + ( (eleTau[0].tauWjetsSF <= 0) * 1.0) )";
 	}
       
       if(fStitching && (fSamples[ii].sname == "Wtolnu" || (fSamples[ii].shapename == "ZJetsToLL" && fSamples[ii].name != "DYToLL_M10To50"))){
