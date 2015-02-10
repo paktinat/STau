@@ -3733,6 +3733,17 @@ float MT2tree::JZB2EleMu(){
 return fabs(misc.MET- eleMu[0].lv.Pt());
 }
 
+
+Float_t MT2tree::maxTauMT(){
+  if(doubleTau[0].GetTauIndex0() >= 0 && doubleTau[0].GetTauIndex1() >= 0){
+    float maxMT = tau[doubleTau[0].GetTauIndex0()].MT;
+    if (tau[doubleTau[0].GetTauIndex1()].MT > maxMT) maxMT = tau[doubleTau[0].GetTauIndex1()].MT;
+    return maxMT;
+  }
+  else
+    return -10.0;
+}
+
 //--------------------ee-----------------------
 
 Float_t MT2tree::eePZeta(){//temporary solution for makePlot. No need to be moved to the next versions.

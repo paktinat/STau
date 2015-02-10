@@ -950,8 +950,13 @@ public:
   Float_t eeDeltaRJet0E0();
   //----------------------------------
 
+
+
   Float_t JZB1EleMu();
   Float_t JZB2EleMu();
+
+
+  Float_t maxTauMT();
 
   Int_t nTaus(){
     int ntaus = 0;
