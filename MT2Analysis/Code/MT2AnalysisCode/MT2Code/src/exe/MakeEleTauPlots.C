@@ -1832,8 +1832,8 @@ int main(int argc, char* argv[]) {
   tA->setVerbose(verbose);
   tA->init(samples);
 
-  tA->AnalyzeNGenTausInSignal();
-  exit(0);
+  //tA->AnalyzeNGenTausInSignal();
+  //exit(0);
 
   TList allCuts;
   TList CutsForControlPlots;
@@ -1928,7 +1928,7 @@ int main(int argc, char* argv[]) {
   lastCuts.Add(MT2Cut);
 
   
-  ExtendedCut* TauMT = new ExtendedCut( "TauMT" , "tau[eleTau[0].tau0Ind].MT > 200 " , true , true, "" , "" ,false , true);
+  ExtendedCut* TauMT = new ExtendedCut( "TauMT" , "tau[eleTau[0].tau0Ind].MT <= 200 " , true , true, "" , "" ,false , true);
   allCuts.Add(TauMT);
   CutsForControlPlots.Add( TauMT );
 

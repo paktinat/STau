@@ -85,7 +85,7 @@ Type		mc
 Color		401
 
 ##-------------- QCD-Pt-EMEnriched --------------------
-SAMPLE
+#SAMPLE
 Name		QCD-Pt-20-30-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -96,7 +96,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+#SAMPLE
 Name		QCD-Pt-30-80-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -107,7 +107,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+#SAMPLE
 Name		QCD-Pt-80-170-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -118,7 +118,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+#SAMPLE
 Name		QCD-Pt-170-250-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -129,7 +129,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+#SAMPLE
 Name		QCD-Pt-250-350-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -140,7 +140,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-SAMPLE
+#SAMPLE
 Name		QCD-Pt-350-EMEnriched
 SName		QCD
 ShapeName	QCD
