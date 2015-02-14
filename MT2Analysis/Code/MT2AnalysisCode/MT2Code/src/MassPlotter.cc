@@ -9063,53 +9063,48 @@ void MassPlotter::eeAnalysis(TString cuts, TString trigger, unsigned int nevents
 
   TH1::SetDefaultSumw2();
 
-  TFile *pileup_data = new TFile("pileupData.root","READ");
+   TFile* pileup_data = new TFile("pileupData.root","READ");
   
-  TH1F* pileup_data_histo = (TH1F*) pileup_data->Get("pileup");
+   TH1F* pileup_data_histo = (TH1F*) pileup_data->Get("pileup");
 
-  TFile *pileup_data_up = new TFile("pileupDataUp.root","READ");
+   TFile* pileup_data_up = new TFile("pileupDataUp.root","READ");
   
-  TH1F* pileup_data_up_histo = (TH1F*) pileup_data_up->Get("pileup");
+   TH1F* pileup_data_up_histo = (TH1F*) pileup_data_up->Get("pileup");
  
- TFile *pileup_data_down = new TFile("pileupDataDown.root","READ");
+  TFile* pileup_data_down = new TFile("pileupDataDown.root","READ");
   
- TH1F* pileup_data_down_histo = (TH1F*) pileup_data_down->Get("pileup");
+  TH1F* pileup_data_down_histo = (TH1F*) pileup_data_down->Get("pileup");
 
   
- //   pileup_data_histo->Scale(1.0/pileup_data_histo->Integral());
- //   pileup_data_up_histo->Scale(1.0/pileup_data_up_histo->Integral());
- //   pileup_data_down_histo->Scale(1.0/pileup_data_down_histo->Integral());
+   pileup_data_histo->Scale(1.0/pileup_data_histo->Integral());
+   pileup_data_up_histo->Scale(1.0/pileup_data_up_histo->Integral());
+   pileup_data_down_histo->Scale(1.0/pileup_data_down_histo->Integral());
 
 
-   for(int i = 0; i < pileup_data_up_histo->GetNbinsX();i++){
-     pileup_data_up_histo->SetBinContent(i+1,  pileup_data_up_histo->GetBinContent(i+1)/pileup_data_histo->GetBinContent(i+1));
-   }
-
-        int nbin_up = pileup_data_up_histo->FindBin(fMT2tree->pileUp.PUtrueNumInt);
-        float pu_up_Weight = pileup_data_up_histo->GetBinContent(nbin_up);
-        cout << "pu_up_Weight" << pu_up_Weight << endl;
-
-    for(int i = 0; i < pileup_data_down_histo->GetNbinsX();i++){
-      pileup_data_down_histo->SetBinContent(i+1,  pileup_data_down_histo->GetBinContent(i+1)/pileup_data_histo->GetBinContent(i+1));
+    for(int i = 0; i < pileup_data_up_histo->GetNbinsX();i++){
+      pileup_data_up_histo->SetBinContent(i+1,  pileup_data_up_histo->GetBinContent(i+1)/pileup_data_histo->GetBinContent(i+1));
     }
 
-        int nbin_down = pileup_data_down_histo->FindBin(fMT2tree->pileUp.PUtrueNumInt);
-        float pu_down_Weight = pileup_data_down_histo->GetBinContent(nbin_down);
 
+	 //	 fMT2tree->pileUp.Weight = pu_up_Weight;
+
+     for(int i = 0; i < pileup_data_down_histo->GetNbinsX();i++){
+       pileup_data_down_histo->SetBinContent(i+1,  pileup_data_down_histo->GetBinContent(i+1)/pileup_data_histo->GetBinContent(i+1));
+     }
 
 
   TString  cnames[NumberOfSamples+1] = {"QCD", "Wjets", "Zjets", "Top", "WWjets", "MC", "susy","data"};
   int      ccolor[NumberOfSamples+1] = { 401,       417,    419,   855,       603,  603,      1, 632};
 
-  //            static const int nbins = 8;//11;
+            static const int nbins = 8;//11;
 //   //  double bins[nbins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};      //MT2
 //   //  double bins[nbins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,100.0,120.0,200.0};      //MT2
 //	  double bins[nbins+1] = {0.0,0.5,1.0,1.5.0,90.0,120.0,150.0,200.0,500.0};      //MT2
-  //    double bins[nbins+1] = {0.0,20.0,40.0,60.0,90.0,120.0,150.0,200.0,500.0};      //MT2
+    double bins[nbins+1] = {0.0,20.0,40.0,60.0,90.0,120.0,150.0,200.0,500.0};      //MT2
 
   TString varname = "MT2";
   for (int i=0; i<(NumberOfSamples+1); i++){
-    MT2[i] = new TH1D(varname+"_"+cnames[i], "", 35,0,3.5);//nbins, bins);
+    MT2[i] = new TH1D(varname+"_"+cnames[i], "",nbins, bins);
     MT2[i] -> SetFillColor (ccolor[i]);
     MT2[i] -> SetLineColor (ccolor[i]);
     MT2[i] -> SetLineWidth (2);
@@ -9169,9 +9164,10 @@ void MassPlotter::eeAnalysis(TString cuts, TString trigger, unsigned int nevents
     unsigned int nentries = myEvtList->GetN();//Sample.tree->GetEntries();
 
 
-     if (Sample.name == "QCD-Pt-15-20-MuEnriched"){
-       fPUReweight = false;}
-     else {fPUReweight = true;}
+     if (Sample.name == "QCD-Pt-15-20-MuEnriched")
+       fPUReweight = false;
+     else 
+       fPUReweight = true;
 
     float Weight=0.0;
     
@@ -9195,6 +9191,17 @@ for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
         Weight /= Sample.PU_avg_weight;
       
       }
+
+         int nbin_up = pileup_data_up_histo->FindBin(fMT2tree->pileUp.PUtrueNumInt);
+         double pu_up_Weight = pileup_data_up_histo->GetBinContent(nbin_up);
+	 //         cout << "pu_Weight" << fMT2tree->pileUp.Weight << endl;
+	 //         cout << "pu_up_Weight" << pu_up_Weight << endl;
+
+         int nbin_down = pileup_data_down_histo->FindBin(fMT2tree->pileUp.PUtrueNumInt);
+         double pu_down_Weight = pileup_data_down_histo->GetBinContent(nbin_down);
+	 //         cout << "pu_up_Weight" << pu_up_Weight << endl;
+
+
  
       float weight = Weight;
 
@@ -9206,16 +9213,17 @@ for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
 	// 	  if (fMT2tree->NBJetsCSVM==0)
   //	    cout << fMT2tree->SFWeight.BTagCSV40eq0<< endl;
 	
-	//             weight *= fMT2tree->SFWeight.BTagCSV40eq0; 
+             weight *= fMT2tree->SFWeight.BTagCSV40eq0; 
 
 	      if(fPUReweight)
 		weight *= fMT2tree->pileUp.Weight;
-		//		weight *= pu_up_Weight;
+	      //				weight *= pu_down_Weight;
+	      //				weight *= pu_up_Weight;
 
-	      //	      	      	      weight *=  fMT2tree->muTau[0].GetTauEnergySF() * fMT2tree->muTau[0].GetMuIdSF() * fMT2tree->muTau[0].GetMuIsoSF() * fMT2tree->muTau[0].GetMuTrgSF() * fMT2tree->muTau[0].GetTauTrgSF();
+    weight *=  fMT2tree->muTau[0].GetTauEnergySF() * fMT2tree->muTau[0].GetMuIdSF() * fMT2tree->muTau[0].GetMuIsoSF() * fMT2tree->muTau[0].GetMuTrgSF() * fMT2tree->muTau[0].GetTauTrgSF();
 
-	      // 	                  if(Sample.sname == "Wtolnu")
-	      // 	            	weight *= fMT2tree->muTau[0].GetTauWjetsSF();
+                if(Sample.sname == "Wtolnu")
+          	weight *= fMT2tree->muTau[0].GetTauWjetsSF();
 
 
 
@@ -9262,98 +9270,194 @@ for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
 //-----------------------------------------------------------
 
 
-//       float px_all_up=0;
-//       float py_all_up=0;
-//       float E_all_up =0;
-//       //     TLorentzVector tau_all_lv =(0,0,0,0);
+      double px_all_up=0;
+      double py_all_up=0;
+      double pz_all_up=0;
+      double E_all_up =0;
+      //     TLorentzVector tau_all_lv (0,0,0,0);
 
-//    for (int l=0; l <fMT2tree->NTaus ; l++)
-//    {
+   for (int l=0; l <fMT2tree->NTaus ; l++)
+   {
 
-//       px_all_up   +=  0.03*fMT2tree->tau[l].lv.Px();
-//       py_all_up   +=  0.03*fMT2tree->tau[l].lv.Py();
-//       E_all_up    +=  0.03*fMT2tree->tau[l].lv.E();
-//       //      tau_all_lv  += fMT2tree->tau[l].lv;
+      px_all_up   +=  0.03*fMT2tree->tau[l].lv.Px();
+      py_all_up   +=  0.03*fMT2tree->tau[l].lv.Py();
+      pz_all_up   +=  0.03*fMT2tree->tau[l].lv.Pz();
+      E_all_up    +=  0.03*fMT2tree->tau[l].lv.E();
+      //      tau_all_lv  += fMT2tree->tau[l].lv;
 
-//   }
+  }
 
-//    TLorentzVector tau_delta_up = (px_all_up, py_all_up, 0, E_all_up);
-//    TLorentzVector tau_delta_down = (-px_all_up, -py_all_up, 0, -E_all_up);
+   TLorentzVector tau_delta_up = (px_all_up, py_all_up, pz_all_up, E_all_up);
+   TLorentzVector tau_delta_down = (-px_all_up, -py_all_up, -pz_all_up, -E_all_up);
 
-//    //  TLorentzVector tau_up   = tau_all_lv + tau_delta_up;
-//    //  TLorentzVector tau_down = tau_all_lv + tau_delta_down;
+   //  TLorentzVector tau_up   = tau_all_lv + tau_delta_up;
+   //  TLorentzVector tau_down = tau_all_lv + tau_delta_down;
 
-//   TLorentzVector MET_up = fMT2tree->pfmet[0] - tau_delta_up;
-//   TLorentzVector MET_down = fMT2tree->pfmet[0] - tau_delta_down;
+  TLorentzVector MET_up = fMT2tree->pfmet[0] - tau_delta_up;
+  TLorentzVector MET_down = fMT2tree->pfmet[0] - tau_delta_down;
 
-//   float tau_mutau_px_up = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Px()+0.03* fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Px();
-//   float tau_mutau_py_up = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Py()+0.03* fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Py();
-//   float tau_mutau_pz_up = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pz()+0.03* fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pz();
-//   float tau_mutau_E_up  = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.E()+0.03* fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.E();
+  double tau_mutau_px_up = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Px()+0.03* fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Px();
+  double tau_mutau_py_up = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Py()+0.03* fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Py();
+  double tau_mutau_pz_up = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pz()+0.03* fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pz();
+  double tau_mutau_E_up  = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.E()+0.03* fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.E();
 
-//   float tau_mutau_px_down = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Px()-0.03* fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Px();
-//   float tau_mutau_py_down = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Py()-0.03* fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Py();
-//   float tau_mutau_pz_down = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pz()-0.03* fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pz();
-//   float tau_mutau_E_down  = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.E()-0.03* fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.E();
-//   //  fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()]
+  double tau_mutau_px_down = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Px()-0.03* fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Px();
+  double tau_mutau_py_down = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Py()-0.03* fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Py();
+  double tau_mutau_pz_down = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pz()-0.03* fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pz();
+  double tau_mutau_E_down  = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.E()-0.03* fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.E();
+  //  fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()]
 
-//   TLorentzVector tau_mutau_up= (tau_mutau_px_up, tau_mutau_py_up, tau_mutau_pz_up, tau_mutau_E_up);
-//   TLorentzVector tau_mutau_down= (tau_mutau_px_down, tau_mutau_py_down, tau_mutau_pz_down, tau_mutau_E_down);
+  TLorentzVector tau_mutau_up= (tau_mutau_px_up, tau_mutau_py_up, tau_mutau_pz_up, tau_mutau_E_up);
+  TLorentzVector tau_mutau_down= (tau_mutau_px_down, tau_mutau_py_down, tau_mutau_pz_down, tau_mutau_E_down);
 
 
-//   float tau0_ditau_px_up = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Px()+0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Px();
-//   float tau0_ditau_py_up = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Py()+0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Py();
-//   float tau0_ditau_pz_up = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Pz()+0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Pz();
-//   float tau0_ditau_E_up  = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.E()+0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.E();
+  double tau0_ditau_px_up = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Px()+0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Px();
+  double tau0_ditau_py_up = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Py()+0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Py();
+  double tau0_ditau_pz_up = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Pz()+0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Pz();
+  double tau0_ditau_E_up  = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.E()+0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.E();
 
-//   float tau0_ditau_px_down = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Px()-0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Px();
-//   float tau0_ditau_py_down = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Py()-0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Py();
-//   float tau0_ditau_pz_down = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Pz()-0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Pz();
-//   float tau0_ditau_E_down  = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.E()-0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.E();
+  double tau0_ditau_px_down = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Px()-0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Px();
+  double tau0_ditau_py_down = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Py()-0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Py();
+  double tau0_ditau_pz_down = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Pz()-0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Pz();
+  double tau0_ditau_E_down  = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.E()-0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.E();
  
-//   float tau1_ditau_px_up = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Px()+0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Px();
-//   float tau1_ditau_py_up = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Py()+0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Py();
-//   float tau1_ditau_pz_up = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Pz()+0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Pz();
-//   float tau1_ditau_E_up  = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.E()+0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.E();
+  double tau1_ditau_px_up = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Px()+0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Px();
+  double tau1_ditau_py_up = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Py()+0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Py();
+  double tau1_ditau_pz_up = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Pz()+0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Pz();
+  double tau1_ditau_E_up  = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.E()+0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.E();
 
-//   float tau1_ditau_px_down = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Px()-0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Px();
-//   float tau1_ditau_py_down = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Py()-0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Py();
-//   float tau1_ditau_pz_down = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Pz()-0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Pz();
-//   float tau1_ditau_E_down  = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.E()-0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.E();
-
-
-//   //  fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()]
-
-//   TLorentzVector tau0_ditau_up   = (tau0_ditau_px_up   , tau0_ditau_py_up   , tau0_ditau_pz_up   , tau0_ditau_E_up);
-//   TLorentzVector tau0_ditau_down = (tau0_ditau_px_down , tau0_ditau_py_down , tau0_ditau_pz_down , tau0_ditau_E_down);
-
-//   TLorentzVector tau1_ditau_up   = (tau1_ditau_px_up   , tau1_ditau_py_up   , tau1_ditau_pz_up   , tau1_ditau_E_up);
-//   TLorentzVector tau1_ditau_down = (tau1_ditau_px_down , tau1_ditau_py_down , tau1_ditau_pz_down , tau1_ditau_E_down);
+  double tau1_ditau_px_down = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Px()-0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Px();
+  double tau1_ditau_py_down = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Py()-0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Py();
+  double tau1_ditau_pz_down = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Pz()-0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Pz();
+  double tau1_ditau_E_down  = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.E()-0.03* fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.E();
 
 
-  //   cout << "tau_delta_up:........" << tau_delta_up.Pt() << endl;
-  //   cout << "tau_delta_down:......" << tau_delta_down.Pt() << endl;
+  //  fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()]
 
-  //   cout << "tau_up:.............." << tau_up.Pt() << endl;
-  //   cout << "tau_down:............" << tau_down.Pt() << endl;
-//   cout << "MET_up:.............." << MET_up.Pt() << endl;
-//   cout << "MET_down:............" << MET_down.Pt() << endl;
+  TLorentzVector tau0_ditau_up   = (tau0_ditau_px_up   , tau0_ditau_py_up   , tau0_ditau_pz_up   , tau0_ditau_E_up);
+  TLorentzVector tau0_ditau_down = (tau0_ditau_px_down , tau0_ditau_py_down , tau0_ditau_pz_down , tau0_ditau_E_down);
 
-// float myQuantity = fMT2tree->CalcMT2(0, false, tau_up, tau_up, MET_up); 
-
-//  float myQuantity = fMT2tree->CalcMT2(0, false, fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv, tau_mutau_up, MET_up); 
-//  float myQuantity = fMT2tree->CalcMT2(0, false, fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv, tau_mutau_down, MET_down); 
-//    float myQuantity = fMT2tree->muTau[0].GetMT2();
+  TLorentzVector tau1_ditau_up   = (tau1_ditau_px_up   , tau1_ditau_py_up   , tau1_ditau_pz_up   , tau1_ditau_E_up);
+  TLorentzVector tau1_ditau_down = (tau1_ditau_px_down , tau1_ditau_py_down , tau1_ditau_pz_down , tau1_ditau_E_down);
 
 
+  double tau_mutau_MT_up = sqrt(abs(2*(MET_up.Pt())*(tau_mutau_up.Pt())*(1-TMath::Cos(Util::DeltaPhi(tau_mutau_up.Phi(), MET_up.Phi())))));
+  double tau0_mutau_MT_up = sqrt(abs(2*(MET_up.Pt())*(tau0_ditau_up.Pt())*(1-TMath::Cos(Util::DeltaPhi(tau0_ditau_up.Phi(), MET_up.Phi())))));
+  double tau1_mutau_MT_up = sqrt(abs(2*(MET_up.Pt())*(tau1_ditau_up.Pt())*(1-TMath::Cos(Util::DeltaPhi(tau1_ditau_up.Phi(), MET_up.Phi())))));
 
-//   float myQuantity =fMT2tree->doubleTau[0].GetMT2(); //fMT2tree->doubleTau[0].MT2;
-//      float myQuantity = fMT2tree->CalcMT2(0, false,tau0_ditau_up, tau1_ditau_up, MET_up); 
-//    float myQuantity = fMT2tree->CalcMT2(0, false,tau0_ditau_down, tau1_ditau_down, MET_down); 
-//  float myQuantity = fMT2tree->CalcMT2(0, false, fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv, tau_mutau_down, MET_down); 
+  double tau_mutau_MT_down = sqrt(abs(2*(MET_down.Pt())*(tau_mutau_down.Pt())*(1-TMath::Cos(Util::DeltaPhi(tau_mutau_down.Phi(), MET_down.Phi())))));
+  double tau0_mutau_MT_down = sqrt(abs(2*(MET_down.Pt())*(tau0_ditau_down.Pt())*(1-TMath::Cos(Util::DeltaPhi(tau0_ditau_down.Phi(), MET_down.Phi())))));
+  double tau1_mutau_MT_down = sqrt(abs(2*(MET_down.Pt())*(tau1_ditau_down.Pt())*(1-TMath::Cos(Util::DeltaPhi(tau1_ditau_down.Phi(), MET_down.Phi())))));
+
+  double maxMT_up   = max(tau0_mutau_MT_up, tau1_mutau_MT_up);
+  double maxMT_down = max(tau0_mutau_MT_down, tau1_mutau_MT_down);
+  double sumMT_up   = tau0_mutau_MT_up+tau1_mutau_MT_up;
+  double sumMT_down = tau0_mutau_MT_down+tau1_mutau_MT_down;
+
+  //  cout << "maxMT_down...." << maxMT_down << endl;  
+  //  cout << "maxMT_up......" << maxMT_up   << endl;  
+  //  cout << "sumMT_down...." << sumMT_down << endl;  
+  //  cout << "sumMT_up......" << sumMT_up   << endl;  
+
+//   double minJetMETdphiPt40_up = 10;
+// 	for(int k = 0; k < fMT2tree->NJets; k++){
+// 	  double jetMETdphi_up = Util::DeltaPhi(fMT2tree->jet[k].lv.Phi() , MET_up.Phi());
+// 	  if((jetMETdphi_up < minJetMETdphiPt40_up ) && fMT2tree->jet[k].lv.Pt() > 40)
+//           {
+// 	    minJetMETdphiPt40_up = jetMETdphi_up;
+// 	    }
+// 	}	
+
+// 	if (minJetMETdphiPt40_up <= 1)
+//           continue;
+
+//    double minJetMETdphiPt40_down = 10;
+//  	for(int k = 0; k < fMT2tree->NJets; k++){
+//  	  double jetMETdphi_down = Util::DeltaPhi(fMT2tree->jet[k].lv.Phi() , MET_down.Phi());
+//  	  if((jetMETdphi_down < minJetMETdphiPt40_down) && fMT2tree->jet[k].lv.Pt() > 40)
+//            {
+//  	    minJetMETdphiPt40_down = jetMETdphi_down;
+//  	  }
+//  	}	
+//  	if (minJetMETdphiPt40_down <= 1)
+//            continue;
+
+//  double myQuantity = fMT2tree->CalcMT2(0, false, fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv, tau_mutau_up, MET_up); //
+//
+//    double myQuantity = fMT2tree->CalcMT2(0, false, fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv, tau_mutau_down, MET_down); 
+
+  //   double myQuantity = fMT2tree->CalcMT2(0, false,tau0_ditau_up, tau1_ditau_up, MET_up); 
+   //      double myQuantity = fMT2tree->CalcMT2(0, false,tau0_ditau_down, tau1_ditau_down, MET_down); 
 
 
-     //     float myQuantity = fMT2tree->doubleEle[0].MT2;
+  //  double myQuantity = fMT2tree->muTau[0].GetMT2();
+  //  double myQuantity = fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt();
+  double myQuantity = tau_mutau_down.Pt();
+   //   if(fMT2tree->misc.MET <= 30)
+   //     continue;
+
+  //   if (myQuantity <=40)
+  //     continue;
+
+  //   if( myQuantity <=90)
+     //     continue;
+   //   if(fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT<=200)
+	// if(tau_mutau_MT_up<=200)
+   //      if(tau_mutau_MT_down<=200)
+   //   if(maxMT_down<=200)
+   // if(maxMT_up<=200)
+     //  if(sumMT_up<=250)
+  //   if(fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT <=200)
+  //    continue;
+
+
+   //   double myQuantity = mutau_MT2_up;
+
+
+
+  //    cout << "tau_delta_up:........" << tau_delta_up.Pt() << endl;
+  //    cout << "tau_delta_down:......" << tau_delta_down.Pt() << endl;
+  //    cout << "tau_up:.............." << tau_up.Pt() << endl;
+  //    cout << "tau_down:............" << tau_down.Pt() << endl;
+  //    cout << "MET_up:.............." << MET_up.Pt() << endl;
+  //    cout << "MET_down:............" << MET_down.Pt() << endl;
+
+  //double myQuantity = fMT2tree->CalcMT2(0, false, tau_up, tau_up, MET_up); 
+
+   //   double myQuantity = fMT2tree->CalcMT2(0, false, fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv, tau_mutau_up, MET_up); 
+
+
+  //     double tau_mutau_up_MT= tau_mutau_up.Mt();
+
+  //  double MT = sqrt(abs((fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.E()*fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.E())-(fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pz()*fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pz())));
+		   //*(sign(((fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.E()*fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.E())-(fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pz()*fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pz())))));
+
+
+  //
+
+  //MT =sqrt(abs(2*(fMT2tree->misc.MET)*(fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt())*(1-TMath::Cos(Util::DeltaPhi(fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Phi(), fMT2tree->pfmet[0].Phi())))));
+  //    cout << "tau_MT_tree:......" << fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT << endl;
+  //    cout << "tau_MT_calc:......" << fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Mt() << endl;
+  //    cout << "tau_MT_double:......" << MT <<endl;
+
+
+   //   float myQuantity = fMT2tree->muTau[0].GetMT2();
+
+   //  float myQuantity =fMT2tree->doubleTau[0].GetMT2(); //fMT2tree->doubleTau[0].MT2;
+   //     float myQuantity = fMT2tree->CalcMT2(0, false,tau0_ditau_up, tau1_ditau_up, MET_up); 
+   //   float myQuantity = fMT2tree->CalcMT2(0, false,tau0_ditau_down, tau1_ditau_down, MET_down); 
+   // float myQuantity = fMT2tree->CalcMT2(0, false, fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv, tau_mutau_down, MET_down); 
+
+//    float tau0_ditau_up_MT= tau0_ditau_up.Mt();
+//    float tau0_ditau_down_MT= tau0_ditau_down.Mt();
+
+//    float tau1_ditau_up_MT= tau1_ditau_up.Mt();
+//    float tau1_ditau_down_MT= tau1_ditau_down.Mt();
+
+//    float max_tau0_tau1_ditau_up_MT=max(tau1_ditau_up_MT,tau1_ditau_up_MT);
+//    float max_tau0_tau1_ditau_down_MT=max(tau1_ditau_down_MT,tau1_ditau_down_MT); 
+   //         float myQuantity = fMT2tree->doubleEle[0].MT2;
+
 // //-------------------------------------------------------------------
 
 
@@ -9504,7 +9608,7 @@ for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
       //	myQuantity = fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].MT;
       //      else 
 
-     float myQuantity =fMT2tree->misc.MinMetJetDPhiPt40;
+      //           float myQuantity =fMT2tree->misc.MinMetJetDPhiPt40;
 
       if(data == 1){
       
@@ -9523,8 +9627,6 @@ for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
 	    MT2[2]->Fill(myQuantity, weight);
 	  else
 	    if(Sample.sname == "Wtolnu"){
-// 	      float pt = fMT2tree->tau[tauIndex].lv.Pt();
-// 	      weight *= 1.157 - 7.361E-3 * pt + 4.370E-5 * pt * pt - 1.188E-7*pt * pt * pt;
             MT2[1]->Fill(myQuantity, weight);}
 	    else
 	      if(Sample.sname == "QCD")
@@ -9587,157 +9689,146 @@ for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
        h_stack -> Add(MT2[j]);
    }
 
-    MT2[6]->Scale(1.0/MT2[6]->Integral());
-    MT2[4]->Scale(1.0/MT2[4]->Integral());
+//     MT2[6]->Scale(1.0/MT2[6]->Integral());
+//     MT2[4]->Scale(1.0/MT2[4]->Integral());
 
 
-   TCanvas *c1 = new TCanvas("c1","");
-   c1->Divide(1,2);
+//    TCanvas *c1 = new TCanvas("c1","");
+//    c1->Divide(1,2);
 
-   TH1F *CDF_susy = new TH1F("CDF_susy","", 35, 0,3.5);
-   TH1F *CDF_MC = new TH1F("CDF_MC","", 35,0,3.5);
-   float susy_event = 0;
-   float MC_event = 0;
+//    TH1F *CDF_susy = new TH1F("CDF_susy","", 35, 0,3.5);
+//    TH1F *CDF_MC = new TH1F("CDF_MC","", 35,0,3.5);
+//    float susy_event = 0;
+//    float MC_event = 0;
    
 
 
-   for (int i=0;i< 35;i++)
-     {
-       susy_event += MT2[6]->GetBinContent(35-i);// / MT2[6]->Integral());
-       CDF_susy->SetBinContent(35-i,  susy_event);
+//    for (int i=0;i< 35;i++)
+//      {
+//        susy_event += MT2[6]->GetBinContent(35-i);// / MT2[6]->Integral());
+//        CDF_susy->SetBinContent(35-i,  susy_event);
 
-       MC_event += MT2[4]->GetBinContent(35-i);// / MT2[4]->Integral());
-       CDF_MC->SetBinContent(35-i,  MC_event);
-//        for (int k=0;k<susy_event;k++)
-// 	 {
-// 	   CDF_susy->AddBinContent(i);
-// 	 }
+//        MC_event += MT2[4]->GetBinContent(35-i);// / MT2[4]->Integral());
+//        CDF_MC->SetBinContent(35-i,  MC_event);
 
+//     }
 
-//        for (int l=0;l<MC_event;l++)
-// 	 {
-// 	   CDF_MC->AddBinContent(i);
-// 	 }
+//    //  //  CDF_susy->Scale(1.0/CDF_susy->Integral());  
+//    // //    CDF_MC->Scale(1.0/CDF_MC->Integral());  
 
+//       c1->cd(1);
+//       MT2[6]->Draw();
+//       MT2[4]->Draw("same");
 
-     }
-
-   //  CDF_susy->Scale(1.0/CDF_susy->Integral());  
-   //  CDF_MC->Scale(1.0/CDF_MC->Integral());  
-
-   c1->cd(1);
-   MT2[6]->Draw();
-   MT2[4]->Draw("same");
-
-   c1->cd(2);
-   CDF_susy->SetLineColor(kRed-4);
-   CDF_susy->Draw();
-   CDF_MC->Draw("same");
+//       c1->cd(2);
+//       CDF_susy->SetLineColor(kRed-4);
+//       CDF_susy->Draw();
+//       CDF_MC->Draw("same");
 
 
 
-//       Double a ;
-//       double b ;
+      double a ;
+      double b ;
 
 
-//     for(int jj = 0; jj < NumberOfSamples; jj++){
-//     std::cout << setfill('#') << std::setw(70) << "" << std::endl;
-//      cout << "sample:" << cnames[jj] << endl;
+    for(int jj = 0; jj < NumberOfSamples; jj++){
+    std::cout << setfill('#') << std::setw(70) << "" << std::endl;
+     cout << "sample:" << cnames[jj] << endl;
 
-//       a = 0;
-//       b = 0;
-
-
-//    for(int k = 0; k < nbins; k++){
-//     std::cout << setfill('=') << std::setw(70) << "" << std::endl;
-//     cout << "bin" << k <<":" << bins[k]<<"-"<<bins[k+1] <<"..."<<"its content:" <<MT2[jj]->GetBinContent(k)<< "its error: " << MT2[jj]->GetBinError(k)<<endl;
+      a = 0;
+      b = 0;
 
 
-//      a += MT2[jj]->GetBinContent(k);
-
-//      b += MT2[jj]->GetBinError(k)*MT2[jj]->GetBinError(k);
-
-//  } 
-//    double c =0;
-//    c = sqrt(b);
-//    std::cout << setfill('=') << std::setw(70) << "" << std::endl;
-//    cout << "sample:" << cnames[jj] << endl;
-//    cout << "all_bin_content:..."<< a << endl;   
-//    cout << "all_bin_error:..."<< c << endl;   
-//    }
+   for(int k = 0; k < nbins; k++){
+    std::cout << setfill('=') << std::setw(70) << "" << std::endl;
+    cout << "bin" << k <<":" << bins[k]<<"-"<<bins[k+1] <<"..."<<"its content:" <<MT2[jj]->GetBinContent(k)<< "its error: " << MT2[jj]->GetBinError(k)<<endl;
 
 
+     a += MT2[jj]->GetBinContent(k);
 
-//    //   static const int nbins = 8;//11;                                                                                                            
-//    //   double bins[nbins+1] = {0.0,50.0,60.0,70.0,80.0,100.0,120.0,200.0,1000.0};      //MT2 
+     b += MT2[jj]->GetBinError(k)*MT2[jj]->GetBinError(k);
 
-//   TLegend* Legend1 = new TLegend(.71,.54,.91,.92);
-//   Legend1->AddEntry(MT2[0], "QCD", "f");
-//   Legend1->AddEntry(MT2[1], "W+jets", "f");
-//   Legend1->AddEntry(MT2[2], "Z+jets", "f");
-//   Legend1->AddEntry(MT2[3], "Top", "f");
-//   Legend1->AddEntry(MT2[4], "WWto2L2Nu", "f");
-//   Legend1->AddEntry(MT2[6], "Susy", "l");
-//   Legend1->AddEntry(MT2[7], "data", "l");
-
-//   // TCanvas *MyC1 = new TCanvas("MT2","MT2");
-//   //  MyC1->Divide(1,2);
-//   // MyC1->cd(1);
-//   // h_stack->Draw();
-//   // Legend1->Draw("SAME");
+ } 
+   double c =0;
+   c = sqrt(b);
+   std::cout << setfill('=') << std::setw(70) << "" << std::endl;
+   cout << "sample:" << cnames[jj] << endl;
+   cout << "all_bin_content:..."<< a << endl;   
+   cout << "all_bin_error:..."<< c << endl;   
+   }
 
 
 
-//   TString fileName = fOutputDir;
-//   if(!fileName.EndsWith("/")) fileName += "/";
-//   Util::MakeOutputDir(fileName);
-//   fileName = fileName + myfileName +".root";
-//   TFile *savefile = new TFile(fileName.Data(), "RECREATE");
-//   savefile ->cd();
+   //   static const int nbins = 8;//11;                                                                                                            
+   //   double bins[nbins+1] = {0.0,50.0,60.0,70.0,80.0,100.0,120.0,200.0,1000.0};      //MT2 
+
+  TLegend* Legend1 = new TLegend(.71,.54,.91,.92);
+  Legend1->AddEntry(MT2[0], "QCD", "f");
+  Legend1->AddEntry(MT2[1], "W+jets", "f");
+  Legend1->AddEntry(MT2[2], "Z+jets", "f");
+  Legend1->AddEntry(MT2[3], "Top", "f");
+  Legend1->AddEntry(MT2[4], "WWto2L2Nu", "f");
+  Legend1->AddEntry(MT2[6], "Susy", "l");
+  Legend1->AddEntry(MT2[7], "data", "l");
+
+  // TCanvas *MyC1 = new TCanvas("MT2","MT2");
+  //  MyC1->Divide(1,2);
+  // MyC1->cd(1);
+  // h_stack->Draw();
+  // Legend1->Draw("SAME");
+
+
+
+  TString fileName = fOutputDir;
+  if(!fileName.EndsWith("/")) fileName += "/";
+  Util::MakeOutputDir(fileName);
+  fileName = fileName + myfileName +".root";
+  TFile *savefile = new TFile(fileName.Data(), "RECREATE");
+  savefile ->cd();
+  h_stack->Write();
+  MT2[0]->Write();
+  MT2[1]->Write();
+  MT2[2]->Write();
+  MT2[3]->Write();
+  MT2[4]->Write();
+  MT2[5]->Write();
+  MT2[6]->Write();
+  MT2[7]->Write();
+  Legend1->Write();
+  //  MyC1->Write();
+  savefile->Close();
+  std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
+
+  //  TCanvas *col  = new TCanvas("MinMETJETDPhi", "MinMETJETDPhi");
+  //  col->cd();
+
+  //  h_stack->Draw();
+  //  MT2[6]->Draw("same");
+  //  col->Write();
+
+//   TString fileName1 = fOutputDir;
+//   if(!fileName1.EndsWith("/")) fileName1 += "/";
+//   Util::MakeOutputDir(fileName1);
+//   fileName1 = fileName1 + myfileName +".png";
+//   TFile *savefile1 = new TFile(fileName1.Data(), "RECREATE");
+//   savefile1 ->cd();
 //   h_stack->Write();
-//   MT2[0]->Write();
-//   MT2[1]->Write();
-//   MT2[2]->Write();
-//   MT2[3]->Write();
-//   MT2[4]->Write();
-//   MT2[5]->Write();
-//   MT2[6]->Write();
-//   MT2[7]->Write();
 //   Legend1->Write();
-//   //  MyC1->Write();
-//   savefile->Close();
-//   std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
-
-//   //  TCanvas *col  = new TCanvas("MinMETJETDPhi", "MinMETJETDPhi");
-//   //  col->cd();
-
-//   //  h_stack->Draw();
-//   //  MT2[6]->Draw("same");
-//   //  col->Write();
-
-// //   TString fileName1 = fOutputDir;
-// //   if(!fileName1.EndsWith("/")) fileName1 += "/";
-// //   Util::MakeOutputDir(fileName1);
-// //   fileName1 = fileName1 + myfileName +".png";
-// //   TFile *savefile1 = new TFile(fileName1.Data(), "RECREATE");
-// //   savefile1 ->cd();
-// //   h_stack->Write();
-// //   Legend1->Write();
-// //   savefile1->Close();
-// //   std::cout << "Saved histograms in " << savefile1->GetName() << std::endl;
+//   savefile1->Close();
+//   std::cout << "Saved histograms in " << savefile1->GetName() << std::endl;
 
 
 
-//   cout<<" trigger "<<trigger<<endl;
-//   cout<<" cuts "<<cuts<<endl;
+  cout<<" trigger "<<trigger<<endl;
+  cout<<" cuts "<<cuts<<endl;
 
-//     printHisto(h_stack, MT2[7], MT2[5], MT2[6], Legend1 , myfileName, "hist", true, myfileName, "Events", -10, 0, -10, true);
+    printHisto(h_stack, MT2[7], MT2[5], MT2[6], Legend1 , myfileName, "hist", true, myfileName, "Events", -10, 0, -10, true);
 
-//     plotRatioStack(h_stack, MT2[5], MT2[7], MT2[6], true, false, myfileName, Legend1, myfileName, "Events", -10, 0, -10, true);
+    plotRatioStack(h_stack, MT2[5], MT2[7], MT2[6], true, false, myfileName, Legend1, myfileName, "Events", -10, 0, -10, true);
 
-//   //        printHisto(h_stack, MT2[7], MT2[5], MT2[6], Legend1 , myfileName, "hist", true, myfileName, "Events", 0, -10, 2, true);
+  //        printHisto(h_stack, MT2[7], MT2[5], MT2[6], Legend1 , myfileName, "hist", true, myfileName, "Events", 0, -10, 2, true);
 
-//   //    plotRatioStack(h_stack, MT2[5], MT2[7], MT2[6], true, false, myfileName, Legend1, myfileName, "Events", 0, -10, 2, true);
+  //    plotRatioStack(h_stack, MT2[5], MT2[7], MT2[6], true, false, myfileName, Legend1, myfileName, "Events", 0, -10, 2, true);
 
 
 }

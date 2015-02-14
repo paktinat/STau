@@ -203,11 +203,11 @@
   /*
 * Define the properties of plots
 */	
-  Objectproperties PHI("phi");
-  Objectproperties PT("pt");
-  Objectproperties MULT("mult");
-  std::vector<TString> vars;
-  TList props;
+  //  Objectproperties PHI("phi");
+  //  Objectproperties PT("pt");
+  //  Objectproperties MULT("mult");
+  //  std::vector<TString> vars;
+  //  TList props;
     
   /*
 * Plot the channel specific variables: add what you like to see ....
@@ -240,7 +240,7 @@
 
   /*Kinematics*/
 
-  TString myMisc = "misc";
+  //  TString myMisc = "misc";
   //vars.push_back(myMisc + ".Run"); props.Add(&PT);
 
   //vars.push_back(myMisc + ".MET"); props.Add(&PT);
@@ -290,6 +290,7 @@
   // variable, cuts, njet, nbjet, nlep, HLT, xtitle nbins bins flip_order, log , comp , ratio, stack, overlay
 
 //   for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
+
 //     tA->makePlot(vars[iVar], cuts, -10, 0 , -10, trigger, vars[iVar], ((Objectproperties*)props.At(iVar))->nBins,
 // 		 ((Objectproperties*)props.At(iVar))->lowVal, ((Objectproperties*)props.At(iVar))->highVal, false, true, true,
 //   	       	 true, true, true, 1, true, true, "png");
@@ -298,6 +299,8 @@
 //  for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
 //    tA->makePlot(vars[iVar], cuts, -10, 0 , -10, trigger, vars[iVar], 20, 0, 200, false, true, true, true, true, true, 1, true, true, "png");
 //  }
+  tA->eeAnalysis(cuts, trigger, 100000000000000000, "tau_Pt_mutau_down");
+
   //tA->makePlot("pileUp.NVertices",     cuts,    -10,  0 , -10 ,   trigger , "NVertices"            , 50, 0, 50,          false,        true ,  true,   true,  true,  true, 1,true, false, "C");
   //tA->makePlot("muTau[0].MT2",     cuts,    -10,  0 , -10 ,   trigger , "MT2"            , 18, 30, 120,          false,        true ,  true,   true,  true,  true, 1,true, false, "C", 3);
 
@@ -312,13 +315,12 @@
   //>140 1.8
   //>100 1.35//minMetJetDPhiPt40 > 1
   //>120 1.5//SumMT > 300
-  tA->makePlot("muo[muTau[0].mu0Ind].lv.Pt() + tau[muTau[0].tau0Ind].lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "muPt + tauPt"            ,18, 0, 540,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);  
+  //  tA->makePlot("muo[muTau[0].mu0Ind].lv.Pt() + tau[muTau[0].tau0Ind].lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "muPt + tauPt"            ,18, 0, 540,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);  
   //tA->makePlot("muTau.lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "muTauPt"            , 25, 0, 500,          false,        true ,  true,   true,  true,  true, 1,true, false, "C", 2);
   //>0 Loose of Signal//minMetJetDPhiPt40 > 1  
   //>0 13.2 40-90
   //tA->makePlot("tau[muTau[0].tau0Ind].lv.Pt() - muo[muTau[0].mu0Ind].lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "tauPt - muPt"            ,10, -250, 250,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);
   //  tA->makePlot("tau[muTau[0].tau0Ind].lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "tauPt"            ,10, 0, 500,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);
-
 
 
 
@@ -403,8 +405,8 @@
 //   tA->TauFakeRate(cuts, trigger, 10000000000, "PtEta_MuTauTight_Over_Loose_pfOnly_WJets_SameSign_MET_NBJets_Weighted");
   //tA->vs(10000000000, cuts, trigger);
 
-   int NumberOfBins = 15;
-  double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0};      //MT2
+  //   int NumberOfBins = 15;
+  //  double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0};      //MT2
   //double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
 
   //tA->DrawMyPlots("MT2_NewFiles.root", xbin, NumberOfBins);

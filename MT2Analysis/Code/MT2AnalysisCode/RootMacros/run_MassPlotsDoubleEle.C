@@ -97,9 +97,9 @@ TString cuts = cutStream.str().c_str();
 //tA->eeFakePromptCategory(cuts, trigger, 10000000000000000000000,"fakePrompt-allBigMC_singleFull-tight-ele0outWwindow-ele1inWwindow-noEM");
 
 //tA->eeAnalysis(cuts, trigger, 100000000000,"METJetDPhi-NoMisc-NoBveto-susy95-140-0");
-//tA->eeAnalysis(cuts, trigger, 1000000000000,"MinMETJetDPhi-ZZJetsTo2L2Nu");
+tA->eeAnalysis(cuts, trigger, 1000000000000,"MinMETJetDPhiPt40-susy_100_0-ZZ");
 //tA->SystematicsMisc(cuts,trigger,100000000000,"MinMETJetDPhi");
-tA->miscEfficiency(3, 100000000000);
+//tA->miscEfficiency(3, 100000000000);
 //int NumberOfBins = 17;
 //double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};      //MT2
 //int NumberOfBins = 8;

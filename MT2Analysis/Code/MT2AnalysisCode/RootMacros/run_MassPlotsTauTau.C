@@ -41,24 +41,24 @@
   << "doubleTau[0].hasNoVetoMu" << "&&"
   << "doubleTau[0].signalDoubleTau" << "&&" 
   << "doubleTau[0].lv.M() > 12" << "&&"
-  << "misc.MinMetJetDPhiPt40 > 1" << "&&"
-  << "doubleTau[0].MT2 > 40.0"<< "&&"
+    //  << "misc.MinMetJetDPhiPt40 > 1" << "&&"
+    //  << "doubleTau[0].MT2 > 40.0"<< "&&"
   << "( 0 == 0 ) " << ")";
 
   TString preSelection = preSelCuts.str().c_str();
   myChannelCuts_bin1.push_back(std::string(preSelection));
   myChannelCuts_bin2.push_back(std::string(preSelection));
 
-  //myChannelCuts_bin1.push_back("tau[doubleTau[0].tau0Ind].ElectronRejMVA3>0.5");
-  //myChannelCuts_bin2.push_back("tau[doubleTau[0].tau0Ind].ElectronRejMVA3>0.5");
+//  myChannelCuts_bin1.push_back("tau[doubleTau[0].tau0Ind].ElectronRejMVA3>0.5");
+//  myChannelCuts_bin2.push_back("tau[doubleTau[0].tau0Ind].ElectronRejMVA3>0.5");
 
 // --- bin1 ---
-  myChannelCuts_bin1.push_back(std::string(std::string(myChan) + ".MT2 > 90.0 ")); 
-  myChannelCuts_bin1.push_back("maxTauMT() > 200"); 
+//  myChannelCuts_bin1.push_back(std::string(std::string(myChan) + ".MT2 > 90.0 ")); 
+//  myChannelCuts_bin1.push_back("maxTauMT() > 200"); 
 
 // --- bin2 ---
-  myChannelCuts_bin2.push_back("doubleTau[0].MT2 < 90");
-  myChannelCuts_bin2.push_back("(tau[doubleTau[0].tau0Ind].MT + tau[doubleTau[0].tau1Ind].MT) > 250.0");
+//  myChannelCuts_bin2.push_back("doubleTau[0].MT2 < 90");
+//  myChannelCuts_bin2.push_back("(tau[doubleTau[0].tau0Ind].MT + tau[doubleTau[0].tau1Ind].MT) > 250.0");
   myChannelCuts_bin2.push_back("NBJetsCSVM == 0");
 
   std::ostringstream cutStream_1;
@@ -82,6 +82,6 @@
   TString cuts_bin2 = cutStream_2.str().c_str();
 
 //tA->makePlot("doubleTau[0].MT2",cuts_bin1, -10, -10 , -10 , trigger , "M_{T2}"  ,4,40, 140,   true,  true ,  true,   true,  true,  true, 1,true, false, "png");
-tA->makePlot("doubleTau[0].MT2",cuts_bin2, -10, 0 , -10 , trigger , "M_{T2}"  ,4,40, 140,   true,  true ,  true,   true,  true,  true, 1,true, false, "png");
-
+//tA->makePlot("doubleTau[0].MT2",cuts_bin2, -10, 0 , -10 , trigger , "M_{T2}"  ,4,40, 140,   true,  true ,  true,   true,  true,  true, 1,true, false, "png");
+  tA->eeAnalysis(cuts_bin1, trigger, 1000000000000000000, "MT2_ditau_bin1_up");
 }

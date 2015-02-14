@@ -41,9 +41,9 @@ Type            susy
 Color           1
 
 
-SAMPLE
+#SAMPLE
 Name		GluGluToHToTauTau
-SName		Higgs
+SName		VV
 ShapeName	Higgs  
 File            TauTau_V3_1/GluGluToHToTauTau_M-125_8TeV-powheg-pythia6_BigFiles_NewPU_Stitching.root
 Xsection  	19   #4.7 pb 
@@ -52,7 +52,7 @@ Lumi            19600.0
 Type            mc
 Color		417
 
-SAMPLE
+#SAMPLE
 Name		WWJetsTo2L2Nu
 SName		VV
 ShapeName	WJets  
@@ -65,7 +65,7 @@ Color		417
 
 SAMPLE
 Name		ZZJetsTo2L2Nu
-SName		DY
+SName		VV
 ShapeName	ZZJetsTo2L2Nu
 File            TauTau_V3_1/ZZJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola_BigFiles_NewPU_Stitching.root
 Xsection  	0.7   #0.28 pb 
@@ -74,7 +74,7 @@ Lumi            19600.0
 Type            mc
 Color		419
  
-SAMPLE
+#SAMPLE
 Name		ZZJetsTo2L2Q
 SName		DY
 ShapeName	ZZJetsTo2L2Q
@@ -85,7 +85,7 @@ Lumi            19600.0
 Type            mc
 Color		419
     
-SAMPLE
+#SAMPLE
 Name		ZZJetsTo4L
 SName		DY
 ShapeName	ZZJetsTo4L
@@ -96,9 +96,9 @@ Lumi            19600.0
 Type            mc
 Color		419
  
-SAMPLE
+#SAMPLE
 Name		WZJetsTo3LNu
-SName		DY
+SName		VV
 ShapeName	WZJetsTo3LNu
 File            TauTau_V3_1/WZJetsTo3LNu_TuneZ2_8TeV-madgraph-tauola_BigFiles_NewPU_Stitching.root
 Xsection  	1.1     #0.8674 pb
@@ -107,7 +107,7 @@ Lumi            19600.0
 Type            mc
 Color		419 
 
-SAMPLE
+#SAMPLE
 Name		WZJetsTo2L2Q
 SName		DY
 ShapeName	WZJetsTo2L2Q
