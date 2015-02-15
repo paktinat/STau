@@ -1255,7 +1255,35 @@ Float_t MT2tree::MinMetJetDPhi(int PFJID, float minJPt, float maxJEta, int met, 
 	for(int i=0; i<NMuons; ++i){
 		MET = MET + muo[i].lv;
 	}
-  } else         return -9;
+  } else if( met == 100 ) {// tau energy scale up correction
+    double px_all_up=0;
+    double py_all_up=0;
+    double pz_all_up=0;
+    double E_all_up =0;
+    for (int l=0; l < NTaus ; l++){
+      px_all_up += 0.03*tau[l].lv.Px();
+      py_all_up += 0.03*tau[l].lv.Py();
+      pz_all_up += 0.03*tau[l].lv.Pz();
+      E_all_up += 0.03*tau[l].lv.E();
+    }
+    TLorentzVector tau_delta_up(px_all_up, py_all_up, pz_all_up, E_all_up);
+
+    MET = pfmet[0] - tau_delta_up;
+  } else if( met ==-100 ) {// tau energy scale down correction
+    double px_all_up=0;
+    double py_all_up=0;
+    double pz_all_up=0;
+    double E_all_up =0;
+    for (int l=0; l <NTaus ; l++){
+      px_all_up += 0.03*tau[l].lv.Px();
+      py_all_up += 0.03*tau[l].lv.Py();
+      pz_all_up += 0.03*tau[l].lv.Pz();
+      E_all_up += 0.03*tau[l].lv.E();
+    }
+    TLorentzVector tau_delta_down(-px_all_up, -py_all_up, -pz_all_up, -E_all_up);
+
+    MET = pfmet[0] - tau_delta_down;
+  }else         return -9;
 
   int index = MinMetJetDPhiIndex(PFJID, minJPt, maxJEta, met, njets, onlyCrack);
   if(index >=0) {
@@ -1280,6 +1308,34 @@ Int_t MT2tree::MinMetJetDPhiIndex(int PFJID, float minJPt, float maxJEta, int me
 	for(int i=0; i<NMuons; ++i){
 		MET = MET + muo[i].lv;
 	}
+  }else if( met == 100 ) {// tau energy scale up correction
+    double px_all_up=0;
+    double py_all_up=0;
+    double pz_all_up=0;
+    double E_all_up =0;
+    for (int l=0; l < NTaus ; l++){
+      px_all_up += 0.03*tau[l].lv.Px();
+      py_all_up += 0.03*tau[l].lv.Py();
+      pz_all_up += 0.03*tau[l].lv.Pz();
+      E_all_up += 0.03*tau[l].lv.E();
+    }
+    TLorentzVector tau_delta_up(px_all_up, py_all_up, pz_all_up, E_all_up);
+
+    MET = pfmet[0] - tau_delta_up;
+  } else if( met ==-100 ) {// tau energy scale down correction
+    double px_all_up=0;
+    double py_all_up=0;
+    double pz_all_up=0;
+    double E_all_up =0;
+    for (int l=0; l <NTaus ; l++){
+      px_all_up += 0.03*tau[l].lv.Px();
+      py_all_up += 0.03*tau[l].lv.Py();
+      pz_all_up += 0.03*tau[l].lv.Pz();
+      E_all_up += 0.03*tau[l].lv.E();
+    }
+    TLorentzVector tau_delta_down(-px_all_up, -py_all_up, -pz_all_up, -E_all_up);
+
+    MET = pfmet[0] - tau_delta_down;
   } else    return -9;
 
   std::vector<int> indices;

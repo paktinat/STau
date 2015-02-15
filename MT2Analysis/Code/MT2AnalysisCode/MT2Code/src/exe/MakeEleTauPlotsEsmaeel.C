@@ -137,6 +137,9 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,TString
     Sample.tree->SetBranchStatus("*SFWeight*BTagCSV40eq0" , 1 );
     Sample.tree->SetBranchStatus("*NBJetsCSVM*" , 1 );
 
+    Sample.tree->SetBranchStatus("*NJets*" , 1 );
+    Sample.tree->SetBranchStatus("*jet*" , 1 );
+
     Sample.tree->SetBranchStatus("*NGenLepts" , 1 );
     Sample.tree->SetBranchStatus("*genlept*" , 1 );
 
@@ -223,24 +226,65 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,TString
       }
 
       //MET & tauPt RELATED CUTS READY TO CHANGE FOR ESMAEEL
-      double tauPt = fMT2tree->tau[ fMT2tree->eleTau[0].GetTauIndex0() ].lv.Pt();
+
+      double px_all_up=0;
+      double py_all_up=0;
+      double pz_all_up=0;
+      double E_all_up =0;
+      for (int l=0; l <fMT2tree->NTaus ; l++){
+	  px_all_up += 0.03*fMT2tree->tau[l].lv.Px();
+	  py_all_up += 0.03*fMT2tree->tau[l].lv.Py();
+	  pz_all_up += 0.03*fMT2tree->tau[l].lv.Pz();
+	  E_all_up += 0.03*fMT2tree->tau[l].lv.E();
+      }
+      TLorentzVector tau_delta_up(px_all_up, py_all_up, pz_all_up, E_all_up);
+      TLorentzVector tau_delta_down(-px_all_up, -py_all_up, -pz_all_up, -E_all_up);
+
+      TLorentzVector MET_up = fMT2tree->pfmet[0] - tau_delta_up;
+      TLorentzVector MET_down = fMT2tree->pfmet[0] - tau_delta_down;
+
+      TLorentzVector tau_eletau_up( 1.03*fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].lv.Px() ,
+				    1.03*fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].lv.Py() ,
+				    1.03*fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].lv.Pz() ,
+				    1.03*fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].lv.E() );
+
+      TLorentzVector tau_eletau_down( 0.97*fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].lv.Px(),
+				      0.97*fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].lv.Py(),
+				      0.97*fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].lv.Pz(),
+				      0.97*fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].lv.E() );
+
+
+      double tauPt_nominal = fMT2tree->tau[ fMT2tree->eleTau[0].GetTauIndex0() ].lv.Pt();
+      double tauPt_up = tau_eletau_up.Pt();
+      double tauPt_down = tau_eletau_down.Pt();
+
+      double tauPt = tauPt_up;
       pass &= tauPt > 20.0;
       
       if(pass) cutflowtable.Fill(cutindex , weight); cutindex++;
 
       double MET = fMT2tree->misc.MET;
+      MET = MET_up.Pt();
       pass &= MET > 30.0;
       if(pass) cutflowtable.Fill(cutindex , weight); cutindex++;
       
       double MinMetJetDPhi = fMT2tree->misc.MinMetJetDPhiPt40 ;
+      
+      MinMetJetDPhi = fMT2tree->MinMetJetDPhi(0,40,5.0,100);
       pass &= MinMetJetDPhi > 1.0;
       if(pass) cutflowtable.Fill(cutindex , weight); cutindex++;
 
       double MT2 = fMT2tree->eleTau[0].GetMT2();
+
+      MT2 = fMT2tree->CalcMT2(0, 0, fMT2tree->ele[ fMT2tree->eleTau[0].GetEleIndex0() ].lv, tau_eletau_up , MET_up);
+
       pass &= MT2 > 90.0;
       if(pass) cutflowtable.Fill(cutindex , weight); cutindex++;
 
       double tauMT = fMT2tree->tau[ fMT2tree->eleTau[0].GetTauIndex0() ].MT;
+
+      tauMT = fMT2tree->GetMT( tau_eletau_up , 0., MET_up , 0.); 
+
       pass &= tauMT > 200;
       if(pass) cutflowtable.Fill(cutindex , weight); cutindex++;
 

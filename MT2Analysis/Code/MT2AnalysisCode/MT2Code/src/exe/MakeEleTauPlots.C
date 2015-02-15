@@ -55,7 +55,6 @@ public:
   void TauFakeRate(TList* cuts, Long64_t nevents , TString myfilename  , bool justss , double mt2cut ); 
   void EstimateFakeBKG(TList* allcuts, Long64_t nevents , TString myfilename , TString inputFRFileName ); 
 
-
   void AnalyzeNGenTausInSignal(){
     for(int ii = 0; ii < fSamples.size(); ii++){
       sample Sample = fSamples[ii];
@@ -688,6 +687,8 @@ void MassPlotterEleTau::EstimateFakeBKG(TList* allCuts, Long64_t nevents , TStri
   alllabels.push_back("Isolated");
   alllabels.push_back("Electron");
   alllabels.push_back("Tau");
+  
+  //alllabels.push_back("MatchWithGenEle");
 
   alllabels.push_back("OS");
 
@@ -933,6 +934,8 @@ void MassPlotterEleTau::EstimateFakeBKG(TList* allCuts, Long64_t nevents , TStri
 	  }else
 	    continue ;
 
+	  
+
 	  for(auto tauid : tauIds ){
 	  
 //             #ifndef Closure
@@ -998,6 +1001,10 @@ void MassPlotterEleTau::EstimateFakeBKG(TList* allCuts, Long64_t nevents , TStri
 	    taueta.Fill( fMT2tree->tau[ tauid ].lv.Eta() , weight );
 
 	    bool pass = fMT2tree->tau[tauid].PassTau_ElTau && ( fMT2tree->tau[tauid].Isolation3Hits == 1 ) ;
+	    
+	    #ifdef Closure
+	    
+	    #endif 
 
 	    if(pass){
 	      cutflowtable.Fill( cutindex , weight );
@@ -1012,23 +1019,15 @@ void MassPlotterEleTau::EstimateFakeBKG(TList* allCuts, Long64_t nevents , TStri
 
 	    }
 
-	    if( data ){
-	      estPt.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2values[0] ,  fMT2tree->tau[ tauid ].MT, pass , weight );
-	      estEta.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2values[0] , fMT2tree->tau[ tauid ].MT, pass , weight );
-	      estEtaPt.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2values[0] , fMT2tree->tau[ tauid ].MT, pass , weight );
-	      estMt2.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2values[0] ,  fMT2tree->tau[ tauid ].MT, pass , weight );
-	      estMet.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2values[0] , fMT2tree->tau[ tauid ].MT, pass , weight );
-	      estMetPt.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2values[0] ,  fMT2tree->tau[ tauid ].MT, pass , weight );
-	    }
-	    else{
+	    if(! data )
 	      pass &= ( genlevelinfo_i == 1 || genlevelinfo_i == 3 || genlevelinfo_i == 6 ); 
-	      estPt.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2values[0] , fMT2tree->tau[ tauid ].MT, pass  , weight );
-	      estEta.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2values[0] , fMT2tree->tau[ tauid ].MT, pass , weight );
-	      estEtaPt.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2values[0] , fMT2tree->tau[ tauid ].MT, pass , weight );
-	      estMt2.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2values[0] , fMT2tree->tau[ tauid ].MT, pass , weight );
-	      estMet.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2values[0] , fMT2tree->tau[ tauid ].MT, pass , weight );
-	      estMetPt.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2values[0] , fMT2tree->tau[ tauid ].MT, pass , weight );
-	    }
+
+	    estPt.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2values[0] ,  fMT2tree->tau[ tauid ].MT, pass , weight );
+	    estEta.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2values[0] , fMT2tree->tau[ tauid ].MT, pass , weight );
+	    estEtaPt.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2values[0] , fMT2tree->tau[ tauid ].MT, pass , weight );
+	    estMt2.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2values[0] ,  fMT2tree->tau[ tauid ].MT, pass , weight );
+	    estMet.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2values[0] , fMT2tree->tau[ tauid ].MT, pass , weight );
+	    estMetPt.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2values[0] ,  fMT2tree->tau[ tauid ].MT, pass , weight );
 	  }
 	}
 	else
