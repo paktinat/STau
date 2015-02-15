@@ -21,7 +21,7 @@ int gNMT2bins_l = 14;
 
 MassPlotter *tA = new MassPlotter(outputdir , "MassPlots_DoubleEle.root");
 
-tA->SetSave(true);
+tA->SetSave(false);
 tA->SetIsPhoton(false);
 tA->SetPileUpReweight(true);
 tA->SetbSFWeights(true);   
@@ -97,7 +97,7 @@ TString cuts = cutStream.str().c_str();
 //tA->eeFakePromptCategory(cuts, trigger, 10000000000000000000000,"fakePrompt-allBigMC_singleFull-tight-ele0outWwindow-ele1inWwindow-noEM");
 
 //tA->eeAnalysis(cuts, trigger, 100000000000,"METJetDPhi-NoMisc-NoBveto-susy95-140-0");
-tA->eeAnalysis(cuts, trigger, 1000000000000,"MinMETJetDPhiPt40-susy_100_0-ZZ");
+tA->eeAnalysis(cuts, trigger, 10000,"MinMETJetDPhiPt40-susy_100_0-ZZ");
 //tA->SystematicsMisc(cuts,trigger,100000000000,"MinMETJetDPhi");
 //tA->miscEfficiency(3, 100000000000);
 //int NumberOfBins = 17;

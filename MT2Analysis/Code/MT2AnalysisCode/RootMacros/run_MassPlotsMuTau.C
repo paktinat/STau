@@ -1,7 +1,7 @@
 {
   TString outputdir = "../MassPlots/";
-  TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat"; 
-  //TString samples = "./samples/samplesMineTauPlusX_BigFiles_NewPU_Stitching.dat";
+  //  TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat"; 
+  TString samples = "./samples/samplesMineTauPlusX_BigFiles_NewPU_Stitching.dat";
 
   //TString samples = "./samples/samplesMineTauPlusX.dat"; 
   //TString samples = "./samples/samplesMineSingleMu.dat";
@@ -30,7 +30,7 @@
   tA->SetIsPhoton(false);
   //To define the channel and turn on/off the channel specific SF. They are applied by default.
   //void SetMuTauChannel(bool muIdSF = true, bool muIsoSF = true, bool muTrgSF = true, bool tauTrgSF = true, bool tauWjetsSF = true)
-  tA->SetMuTauChannel();
+  //  tA->SetMuTauChannel();
 //  tA->SetStitching(false);
   /*
 * Define preselections including trigger
@@ -80,8 +80,6 @@
   myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0Ind >=0")); // Second lepton index, channel specific
   myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated > 0 ")); //1 iso mu and iso tau, 0 iso mu and non iso tau, -1 non iso mu and non iso tau
   
-  myChannelCuts.push_back("misc.MET > 30"); 
-  myChannelCuts.push_back("NBJetsCSVM == 0");
   
   //myChannelCuts.push_back(std::string(std::string(myChan) + ".signalMuTau"));
 
@@ -98,31 +96,60 @@
   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoElec"));
   myChannelCuts.push_back("(muTau[0].hasNoVetoMu && HasNoVetoMuForMuTau() )"); //decreasing the pt threshold of the rejected muons from 15 to 10.
 
-//   myChannelCuts.push_back(" muTau[0].MT2 >  20 ");
-  myChannelCuts.push_back(" misc.MinMetJetDPhiPt40 > 1.0 ");
 
-  myChannelCuts.push_back("muTau[0].lv.M() > 15");
-  myChannelCuts.push_back("(muTau[0].lv.M() < 45 || muTau[0].lv.M() > 75)");
- 
-//   myChannelCuts.push_back("NMuons > 0");
-//   myChannelCuts.push_back("muo[0].lv.Pt() > 27");
+  myChannelCuts.push_back("NBJetsCSVM == 0");
+  //  myChannelCuts.push_back("misc.MET > 30"); 
 
-//   myChannelCuts.push_back("abs(tau[muTau[0].tau0Ind].lv.Eta()) < 1.4 ");
-//   //  myChannelCuts.push_back("(tau[muTau[0].tau0Ind].lv.Pt()) < 100 ");
-//   myChannelCuts.push_back("(tau[muTau[0].tau0Ind].lv.Pt()) < 50 ");
-  
+//  myChannelCuts.push_back(" misc.MinMetJetDPhiPt40 > 1.0 ");
+
+//  myChannelCuts.push_back("muTau[0].lv.M() > 15");
+//  myChannelCuts.push_back("(muTau[0].lv.M() < 45 || muTau[0].lv.M() > 75)");
 
 //   Bin1
-  myChannelCuts.push_back(" muTau[0].MT2 >  90 ");
-  //    myChannelCuts.push_back(" muTau[0].MT2 >  60 ");
-  myChannelCuts.push_back(" tau[muTau[0].tau0Ind].MT > 200 ");//tauMT
-//   myChannelCuts.push_back(" max(muo[muTau[0].mu0Ind].MT, tau[muTau[0].tau0Ind].MT) > 200 ");//maxMT
+//  myChannelCuts.push_back(" muTau[0].MT2 >  90 "); 
+//  myChannelCuts.push_back(" tau[muTau[0].tau0Ind].MT > 200 ");//tauMT
   
 //   Bin2
 //   myChannelCuts.push_back(" (muo[muTau[0].mu0Ind].MT + tau[muTau[0].tau0Ind].MT) > 300 ");//SumMT
 //   myChannelCuts.push_back(" muTau[0].MT2 >  40 ");
 //   myChannelCuts.push_back(" muTau[0].MT2 <=  90 ");
   
+  myChannelCuts.push_back("0 == 0");	//Place holder for Jet requirements
+
+
+
+  // We need to make the cut stream
+
+  std::ostringstream cutStream;
+  cutStream << " ";
+  for(unsigned int iCut = 1; iCut < myChannelCuts.size(); iCut++){
+    cutStream << myChannelCuts[iCut];
+    if(iCut < (myChannelCuts.size() - 1))
+      cutStream	<<" && ";
+  }
+
+  TString cuts = cutStream.str().c_str();
+           
+
+
+
+  tA->eeAnalysis(cuts, trigger, 100000000000000000, "tau_Pt_mutau_down");
+
+
+//   myChannelCuts.push_back("abs(tau[muTau[0].tau0Ind].lv.Eta()) < 1.4 ");
+//   //  myChannelCuts.push_back("(tau[muTau[0].tau0Ind].lv.Pt()) < 100 ");
+//   myChannelCuts.push_back("(tau[muTau[0].tau0Ind].lv.Pt()) < 50 ");
+//   myChannelCuts.push_back(" muTau[0].MT2 >  20 ");  
+
+
+
+  //    myChannelCuts.push_back(" muTau[0].MT2 >  60 ");
+
+//   myChannelCuts.push_back(" max(muo[muTau[0].mu0Ind].MT, tau[muTau[0].tau0Ind].MT) > 200 ");//maxMT
+
+//   myChannelCuts.push_back("NMuons > 0");
+//   myChannelCuts.push_back("muo[0].lv.Pt() > 27");
+
 
   //   myChannelCuts.push_back(" GetNjets(30 , 2.4 , 1 , 2) < 3 ");
 
@@ -184,22 +211,6 @@
   //  myChannelCuts.push_back("eleTau[0].MT2 > 50");
 */
 
-  myChannelCuts.push_back("0 == 0");	//Place holder for Jet requirements
-
-
-
-  // We need to make the cut stream
-
-  std::ostringstream cutStream;
-  cutStream << " ";
-  for(unsigned int iCut = 1; iCut < myChannelCuts.size(); iCut++){
-    cutStream << myChannelCuts[iCut];
-    if(iCut < (myChannelCuts.size() - 1))
-      cutStream	<<" && ";
-  }
-
-  TString cuts = cutStream.str().c_str();
-           
   /*
 * Define the properties of plots
 */	
@@ -299,7 +310,7 @@
 //  for(unsigned int iVar = 0; iVar < vars.size(); iVar++){
 //    tA->makePlot(vars[iVar], cuts, -10, 0 , -10, trigger, vars[iVar], 20, 0, 200, false, true, true, true, true, true, 1, true, true, "png");
 //  }
-  tA->eeAnalysis(cuts, trigger, 100000000000000000, "tau_Pt_mutau_down");
+
 
   //tA->makePlot("pileUp.NVertices",     cuts,    -10,  0 , -10 ,   trigger , "NVertices"            , 50, 0, 50,          false,        true ,  true,   true,  true,  true, 1,true, false, "C");
   //tA->makePlot("muTau[0].MT2",     cuts,    -10,  0 , -10 ,   trigger , "MT2"            , 18, 30, 120,          false,        true ,  true,   true,  true,  true, 1,true, false, "C", 3);
