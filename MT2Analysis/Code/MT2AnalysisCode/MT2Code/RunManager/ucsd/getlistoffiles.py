@@ -6,7 +6,8 @@ from dbs.apis.dbsClient import DbsApi
 
 def GetFileIndex( filename ):
     fn = os.path.basename( filename )
-    return int( fn.split("_")[3] )
+    ff = fn.split("_")[3] 
+    return int( ff.split(".")[0] )
      
 if __name__ == "__main__":
     parser = OptionParser(usage='%prog --dataset=</specify/dataset/name> --username=<username>')
