@@ -426,7 +426,19 @@ std::pair<float, float> MT2Analysis::getLHESusyMasses(){
 	 std::cerr << "Invalid argument: " << ia.what() << '\n';
        }
      }
-   }
+     else  if(sParts.size() == 3){
+       try{
+	 mlsp_comment = stoi( sParts[1] );
+       }catch(const invalid_argument& ia){
+	 std::cerr << "Invalid argument: " << ia.what() << '\n';
+       }
+       try{
+	 mch_comment = stoi(sParts[2] );
+       }catch(const invalid_argument& ia){
+	 std::cerr << "Invalid argument: " << ia.what() << '\n';
+       }
+     }
+    }
    if( mch_comment != -1 && mlsp_comment != -1 )
      return make_pair( float(mch_comment) , float(mlsp_comment) );
    
