@@ -2,7 +2,8 @@
 # Submit description file for mathematica
 ########################
 executable     = ./runMT2TreeProducer.sh
-universe       = vanilla 
+universe       = grid
+Grid_Resource  = condor cmssubmit-r1.t2.ucsd.edu glidein-collector.t2.ucsd.edu 
 notification   = Always
 notify_user    = USERNAME@cern.ch
 output         = JOBNAME.out$(Process) 
@@ -16,6 +17,7 @@ transfer_executable=True
 should_transfer_files = IF_NEEDED
 #when_to_transfer_output = ON_EXIT
 +DESIRED_Sites="UCSD"
++remote_DESIRED_Sites="T2_US_UCSD" 
 +Owner = undefined 
 x509userproxy=PROXYFILENAME
 use_x509userproxy = True

@@ -6141,22 +6141,31 @@ void MassPlotter::TauFakeRate(TString cuts, TString trigger, unsigned int nevent
 	weight *= fMT2tree->muTau[0].GetTauWjetsSF();
 	}
      
-
-
-      int hasMuon = 0;
-      TLorentzVector LeadingMuon;
       int chargeMu = 0;      
-
+      TLorentzVector LeadingMuon;
+       
       for(int i=0; i<fMT2tree->NMuons; ++i){ 
-	if(fMT2tree->muo[i].PassMu0_TauMu == 1 && fMT2tree->muo[i].lv.Pt() > 27.0){
-	  hasMuon = 1;
+	if(fMT2tree->muo[i].PassMu0_TauMu == 1 && fMT2tree->muo[i].lv.Pt() > 27.0 && chargeMu == 0){
 	  LeadingMuon = fMT2tree->muo[i].lv;
 	  chargeMu = fMT2tree->muo[i].Charge;
-	  break;
+	}
+	else
+	  if(fMT2tree->muo[i].RejMu_TauTau == 1){
+	    chargeMu = 0;
+	    break;
+	  }
+      }
+      
+      if(chargeMu == 0)
+	continue;
+
+      for(int i = 0; i < fMT2tree->NEles; i++){
+	if(fMT2tree->ele[i].IDVetoMuTau){
+	  chargeMu = 0;
 	}
       }
       
-      if(hasMuon == 0)
+      if(chargeMu == 0)
 	continue;
 
       float MaxPtMuTau = -1;
@@ -6365,26 +6374,32 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, unsigned int neve
 // 	  nExtraTaus++;
 //       }
       
-//       myQuantity = fMT2tree->pileUp.NVertices;//nExtraTaus;
-
-//following to check the promptness and faking of the events:
-       TString myQuantity = fMT2tree->GenLeptonAnalysisInterpretation(0,1,1, false);
-
-
-       int hasMuon = 0;
-       int chargeMu = 0;      
-       TLorentzVector LeadingMuon;
       
+      int chargeMu = 0;      
+      TLorentzVector LeadingMuon;
+       
       for(int i=0; i<fMT2tree->NMuons; ++i){ 
-	if(fMT2tree->muo[i].PassMu0_TauMu == 1 && fMT2tree->muo[i].lv.Pt() > 27.0){
-	  hasMuon = 1;
+	if(fMT2tree->muo[i].PassMu0_TauMu == 1 && fMT2tree->muo[i].lv.Pt() > 27.0 && chargeMu == 0){
 	  LeadingMuon = fMT2tree->muo[i].lv;
 	  chargeMu = fMT2tree->muo[i].Charge;
-	  break;
 	}
+	else
+	  if(fMT2tree->muo[i].RejMu_TauTau == 1){
+	    chargeMu = 0;
+	    break;
+	  }
       }
       
-      if(hasMuon == 0)
+      if(chargeMu == 0)
+	continue;
+
+      for(int i = 0; i < fMT2tree->NEles; i++){
+	if(fMT2tree->ele[i].IDVetoMuTau){
+	  chargeMu = 0;
+	}
+      }
+
+      if(chargeMu == 0)
 	continue;
 
       float MaxPtMuTau = -1;
@@ -6412,16 +6427,21 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, unsigned int neve
       if(TauInd == -1)
 	continue;
 
-      if((chargeMu + fMT2tree->tau[TauInd].Charge) == 0)
+      if((chargeMu + fMT2tree->tau[TauInd].Charge) != 0)
 	continue;
       
       float myMT2 = fMT2tree->CalcMT2(0, false, fMT2tree->tau[TauInd].lv, LeadingMuon, fMT2tree->pfmet[0]);
 
-      if(fMT2tree->tau[TauInd].PassQCDTau_MuTau != 1)
+      if(fMT2tree->tau[TauInd].PassTau_MuTau == 0)
  	continue;
       
-//      if(fMT2tree->tau[TauInd].PassTau_MuTau != 1 || fMT2tree->tau[TauInd].Isolation3Hits != 1.)
-	//	continue;
+      //myQuantity = fMT2tree->pileUp.NVertices;//nExtraTaus;
+
+      //following to check the promptness and faking of the events:
+      TString myQuantity = fMT2tree->GenLeptonAnalysisInterpretation(0,1,1, false);
+      
+      //if(fMT2tree->tau[TauInd].PassTau_MuTau != 1 || fMT2tree->tau[TauInd].Isolation3Hits != 1.)
+      //  continue;
 
      /*
 	std::vector<int> Tau0;
@@ -6486,8 +6506,6 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, unsigned int neve
 	    MT2[2]->Fill(myQuantity, weight);
 	  else
 	    if(Sample.sname == "Wtolnu"){
-// 	      float pt = fMT2tree->tau[tauIndex].lv.Pt();
-// 	      weight *= 1.157 - 7.361E-3 * pt + 4.370E-5 * pt * pt - 1.188E-7*pt * pt * pt;
 	      MT2[1]->Fill(myQuantity, weight);}
 	    else
 	      if(Sample.sname == "QCD")
