@@ -919,18 +919,32 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 	// vector of all histos
 	vector<TH1D*> h_samples;
 
+// 	// arrays of composited stuff
+// 	TH1D    *h_composited[7];
+// 	//TString  cnames[5] = {"QCD", "W/Z/#gamma production", "Top production", "susy", "data"};
+// 	//int      ccolor[5] = {401, 418, 602, 0, 632};
+// 	TString  cnames[7] = {"QCD", "W+jets", "Z+jets", "Top",   "WW+jets", "susy", "data"};
+// 	TString  cnames2[7] = {"QCD", "Wjets", "Zjets",  "Top",   "WWjets",  "susy", "data"};
+// 	int      ccolor[7] = { 401,   417,       419,      855,    603,     0,     632};
+
+
+	int SignalInd = NumberOfSamples-2;//index of signal in the canmes[]
+
 	// arrays of composited stuff
-	TH1D    *h_composited[7];
+	TH1D    *h_composited[NumberOfSamples];
 	//TString  cnames[5] = {"QCD", "W/Z/#gamma production", "Top production", "susy", "data"};
 	//int      ccolor[5] = {401, 418, 602, 0, 632};
-	TString  cnames[7] = {"QCD", "W+jets", "Z+jets", "Top",   "WW+jets", "susy", "data"};
-	TString  cnames2[7] = {"QCD", "Wjets", "Zjets",  "Top",   "WWjets",  "susy", "data"};
-	int      ccolor[7] = { 401,   417,       419,      855,    603,     0,     632};
+	TString  cnames[NumberOfSamples]  = {"QCD",     "W",    "ZX",  "Top",       "WW",  "Higgs", "susy", "data"};
+	TString  cnames2[NumberOfSamples] = {"QCD", "Wjets", "Zjets",  "Top",   "WWjets",  "Higgs", "susy", "data"};
+	int      ccolor[NumberOfSamples]  = {  401,     417,     419,    855,        603,   kRed,        0,    632};
+
+
+
 	vector<TH1D*> h_signals;
 	int n_sig=0;
 	TString  snames[5] = {"signal1","signal2","signal3","signal4","signal5"};
 	int      scolor[5] = {     kRed+3,   kOrange-3,   kViolet-6,   kBlack,   kRed-4};
-	for (int i=0; i<7; i++){
+	for (int i=0; i<NumberOfSamples; i++){
 	  h_composited[i] = new TH1D(varname2+"_"+cnames2[i], "", nbins, bins);
 	  h_composited[i] -> Sumw2();
 	  h_composited[i] -> SetFillColor  (stacked ? ccolor[i] : 0);
@@ -966,8 +980,8 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 		if(Samples[i].type == "susy" ){
 			h_samples[i] -> SetLineColor(kBlack);
 			h_samples[i] -> SetLineStyle(kDotted);
-			h_composited[5] -> SetLineColor(kBlack);
-			h_composited[5] -> SetLineStyle(kDotted);
+			h_composited[SignalInd] -> SetLineColor(kBlack);
+			h_composited[SignalInd] -> SetLineStyle(kDotted);
 		}
 	
 		Double_t weight=0;
@@ -1123,9 +1137,12 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 		else if(Samples[i].sname=="VV" || Samples[i].sname=="VGamma" || Samples[i].sname=="Photons") {
 		  h_composited[4]->Add(h_samples[i]);
 		}
+		else if(Samples[i].sname=="Higgs") {
+		  h_composited[5]->Add(h_samples[i]);  
+		}
 		else if(Samples[i].type.Contains("susy")){
-		  h_composited[5]->Add(h_samples[i]);
-		  cnames[5] = Samples[i].sname;
+		  h_composited[SignalInd]->Add(h_samples[i]);
+		  cnames[SignalInd] = Samples[i].sname;
 		  snames[n_sig] = Samples[i].sname;
 
 		  char buf[10];
@@ -1147,23 +1164,23 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 		  n_sig++;
 		}
 		else if(Samples[i].type.Contains("data")){
-		  h_composited[6]->Add(h_samples[i]);
+		  h_composited[NumberOfSamples - 1]->Add(h_samples[i]);
 		}
 
 	}
 
 	if (composited){
 	  if(flip_order){
-	    for (int i=5; i>=0; --i){
+	    for (int i=(NumberOfSamples-2); i>=0; --i){
 	      if (!stacked)  {
 	        h_composited[i]->Scale(1./h_composited[i]->Integral());
 	        h_composited[i] -> SetMinimum(0.00005);
 	        //if (fVerbose>2) cout << " h_composited[" << i<< "]->Integral = " << h_composited[i]->Integral()  << endl;
 	      }
-	      if( i!=5 || !overlaySUSY) h_stack  -> Add(h_composited[i]);
-	      if( i==5)                 h_susy   -> Add(h_composited[i]);
+	      if( i!=SignalInd || !overlaySUSY) h_stack  -> Add(h_composited[i]);
+	      if( i==SignalInd)                 h_susy   -> Add(h_composited[i]);
 	      else        	        h_mc_sum -> Add(h_composited[i]);
-	      if( i==5 && overlaySUSY)
+	      if( i==SignalInd && overlaySUSY)
 	        //Legend1 ->AddEntry(h_composited[i], cnames[i]  , "f");  
 		for (int iii=0; iii<n_sig; iii++) Legend1 ->AddEntry(h_signals[iii], snames[iii]  , "f");  
 	      else
@@ -1171,17 +1188,18 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 	    }
 	  }
 	  else{
-	    for (int i=0; i<6; ++i){
+	    for (int i=0; i<(NumberOfSamples - 1); ++i){
 	      if (!stacked)  {
 	        h_composited[i]->Scale(1./h_composited[i]->Integral());
 	        h_composited[i] -> SetMinimum(0.00005);
 	        //if (fVerbose>2) cout << " h_composited[" << i<< "]->Integral = " << h_composited[i]->Integral()  << endl;
 	      }
-	      if( i!=5 || !overlaySUSY) h_stack  -> Add(h_composited[i]);
-	      if( i==5)                 h_susy   -> Add(h_composited[i]);
+	      if( i!=SignalInd || !overlaySUSY) h_stack  -> Add(h_composited[i]);
+	      if( i==SignalInd)                 h_susy   -> Add(h_composited[i]);
 	      else        	      h_mc_sum -> Add(h_composited[i]);
-	      if( i==5 && overlaySUSY){
+	      if( i==SignalInd && overlaySUSY){
 	        //if(h_composited[i]->GetEntries()>0) Legend1 ->AddEntry(h_composited[i], cnames[i] + (overlayScale ? overlayScale==1? "":
+
 		//  					      TString::Format(" x %.0f",overlayScale) :
 		//  					      " scaled to data")   , "f");  
 		for (int iii=0; iii<n_sig; iii++) Legend1 ->AddEntry(h_signals[iii], snames[iii]+  (overlayScale ? overlayScale==1? "":
@@ -1192,7 +1210,7 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 	      }
 	    }
 	  }
-	  h_data->Add(h_composited[6]);
+	  h_data->Add(h_composited[NumberOfSamples - 1]);
 	  if(h_data->Integral()>0 && stacked){
 	    Legend1     ->AddEntry(h_data, "data", "p");
 	  }
@@ -1203,12 +1221,13 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 			        << "Z+jets Integral:   " << h_composited[2]->Integral()  << endl
 			        << "Top Integral:      " << h_composited[3]->Integral()  << endl
 			        << "WW +jets Integral: " << h_composited[4]->Integral()  << endl
-				<< "TOTAL BG:          " << h_composited[0]->Integral()+h_composited[1]->Integral()+h_composited[2]->Integral()+h_composited[3]->Integral()+h_composited[4]->Integral() <<endl
-			        << "SUSY:              " << h_composited[5]->Integral()  << endl
-			        << "Data:              " << h_composited[6]->Integral()  << endl;
+			        << "Higgs    Integral: " << h_composited[5]->Integral()  << endl
+				<< "TOTAL BG:          " << h_composited[0]->Integral()+h_composited[1]->Integral()+h_composited[2]->Integral()+h_composited[3]->Integral()+h_composited[4]->Integral()+h_composited[5]->Integral() <<endl
+			        << "SUSY:              " << h_composited[NumberOfSamples - 2]->Integral()  << endl
+			        << "Data:              " << h_composited[NumberOfSamples - 1]->Integral()  << endl;
 	  
 			   //Same, but with errors
-			   string OverallSamples[8] = {"QCD","W+jets","Z+Jets","Top","WW+jets","SUSY","Data","TOTAL BG"};
+			   string OverallSamples[NumberOfSamples + 1] = {"QCD","W+jets","Z+Jets","Top","WW+jets","Higgs","SUSY","Data","TOTAL BG"};
 			   for(int os=0; os<8; os++){
 			     string tSample = OverallSamples[os];
 			     if(tSample!="TOTAL BG"){
@@ -1222,6 +1241,7 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 			       clone->Add(h_composited[2]);
                                clone->Add(h_composited[3]);
 			       clone->Add(h_composited[4]);
+			       clone->Add(h_composited[5]);
 			       clone->Rebin(clone->GetNbinsX());
                                if(fVerbose>2) cout << tSample << ": " << clone->GetBinContent(1) << " +- " << clone->GetBinError(1) << endl;
 			     }
@@ -1233,12 +1253,14 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 				fWpred.Z_bg_e     = h_composited[2]->Integral();
 				fWpred.Top_bg_e   = h_composited[3]->Integral();
 				fWpred.Other_bg_e = h_composited[4]->Integral();
+				fWpred.Other_bg_e = h_composited[5]->Integral();
 			  }else if(nleps==-13){
 			  	fWpred.QCD_bg_mu   = h_composited[0]->Integral();	
 				fWpred.W_bg_mu     = h_composited[1]->Integral();
 				fWpred.Z_bg_mu     = h_composited[2]->Integral();
 				fWpred.Top_bg_mu   = h_composited[3]->Integral();
 				fWpred.Other_bg_mu = h_composited[4]->Integral();
+				fWpred.Other_bg_mu = h_composited[5]->Integral();
 			  } 
 	  }
 	}
@@ -5731,6 +5753,10 @@ void MassPlotter::SpecialMakePlot(unsigned int nevents, TString cuts, TString tr
 void MassPlotter::MakeCutFlowTable( std::vector<std::string> all_cuts ){
   bool SetfPUReweight = fPUReweight; // To be able to control the pile weight from the run_MassPlot.C
 
+  for( vector<string>::const_iterator cut = all_cuts.begin(); cut != all_cuts.end() ; cut++){
+    cout<<*cut<<endl;
+  }
+
   TH1::SetDefaultSumw2();
   std::vector< TH1* > CutFlowHistos;
   string TotalBkgtitle = "Total Bkg";
@@ -5808,13 +5834,16 @@ void MassPlotter::MakeCutFlowTable( std::vector<std::string> all_cuts ){
       }
        	  
       TString selection;
+      if(fSamples[ii].type != "data"){
+	if(fPUReweight && fbSFReWeight) selection = TString::Format("(%.15f*pileUp.Weight*%s*%s) * (%s)",weight, btagweight.Data(), ChannelSpecificSF.Data(), full_cut.c_str());
+	else if(fPUReweight)  selection = TString::Format("(%.15f*pileUp.Weight*%s) * (%s)",   weight,                    ChannelSpecificSF.Data(), full_cut.c_str());
+	else if(fbSFReWeight) selection = TString::Format("(%.15f*%s*%s) * (%s)",              weight, btagweight.Data(), ChannelSpecificSF.Data(), full_cut.c_str());
+	else                  selection = TString::Format("(%.15f*%s) * (%s)",                 weight,                    ChannelSpecificSF.Data(), full_cut.c_str()); 
+      }else{
+	weight = 1;
+	selection = TString::Format("(%.15f) * (%s)", weight,  full_cut.c_str()); 
+      }
 
-      if(fPUReweight && fbSFReWeight) selection = TString::Format("(%.15f*pileUp.Weight*%s*%s) * (%s)",weight, btagweight.Data(), ChannelSpecificSF.Data(), full_cut.c_str());
-      else if(fPUReweight)  selection = TString::Format("(%.15f*pileUp.Weight*%s) * (%s)",   weight,                    ChannelSpecificSF.Data(), full_cut.c_str());
-      else if(fbSFReWeight) selection = TString::Format("(%.15f*%s*%s) * (%s)",              weight, btagweight.Data(), ChannelSpecificSF.Data(), full_cut.c_str());
-      else                  selection = TString::Format("(%.15f*%s) * (%s)",                 weight,                    ChannelSpecificSF.Data(), full_cut.c_str()); 
-      
-      
       string full_weight = selection.Data();
 
       if( cut_number == 0 )
@@ -6195,8 +6224,8 @@ void MassPlotter::TauFakeRate(TString cuts, TString trigger, unsigned int nevent
 
       if(TauInd == -1)
 	continue;
-
-      if(chargeMu != fMT2tree->tau[TauInd].Charge)
+      
+      if(chargeMu == fMT2tree->tau[TauInd].Charge)
 	 continue;
 
       float myMT2 = fMT2tree->CalcMT2(0, false, fMT2tree->tau[TauInd].lv, LeadingMuon, fMT2tree->pfmet[0]);
@@ -7093,12 +7122,13 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
   
   hPt2Pass->Divide(hPt2All);
 
-    static const int nbins = 6;//11;
+  static const int nbins = 3;//6;//11
   //  double bins[nbins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};      //MT2
   //  double bins[nbins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,100.0,120.0,200.0};      //MT2
-    double bins[nbins+1] = {0.0,20.0,40.0,50.0,70.0,90.0,300.0};      //MT2
+  //  double bins[nbins+1] = {0.0,20.0,40.0,50.0,70.0,90.0,300.0};      //MT2
 //     double bins[nbins+1] = {0.0,18.0,36.0,54.0,72.0,90.0,300.0};      //MT2
-//     double binsTauPt[nbins+1] = {-20.0,40.0,60.0,80.0,100.0,150,1300.0};      //tauPt
+  double bins[nbins+1] = {0.0, 50.0, 100.0, 1000.0};
+  //    double binsTauPt[nbins+1] = {-20.0,40.0,60.0,80.0,100.0,150,1300.0};      //tauPt
   /*
   fileName = fOutputDir + "/MT2_MuTau_Over_QCDMuTau_SignalSelectionNoZVeto_PRHistos.root";
   
@@ -7270,7 +7300,7 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
     std::cout << setfill('-') << std::setw(70) << "" << std::endl;
 
     if(Sample.type == "data"){
-      //if(Sample.type == "mc"){//To run on MC
+   // if(Sample.type == "mc"){//To run on MC
 
       //myCuts += "&& (muTau[0].Isolated == 1) && (tau[muTau[0].tau0Ind].Isolation3Hits == 1.)";
       //myCuts += "&& (muTau[0].Isolated >= 0)";//QCD->Tight
@@ -7331,7 +7361,7 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 
 	float tauPt  = fMT2tree->tau[tauIndex].lv.Pt();
 	
-// 	myQuantity = tauPt;
+	myQuantity = tauPt;
 	float fakeRate    = 0.0;
  	float fakeRateErr = 0.0;
 
@@ -7458,14 +7488,14 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 
 	float tauPt  = fMT2tree->tau[tauIndex].lv.Pt();
 
-// 	myQuantity = tauPt;
+	myQuantity = tauPt;
 
-	if(fMT2tree->tau[tauIndex].MT > 200)
+// 	if(fMT2tree->tau[tauIndex].MT > 200)
 	  h_samples[ii]->Fill(myQuantity, weight);
 
 	tauMTAll->Fill(myQuantity, weight);
 	
-	if(fMT2tree->tau[tauIndex].MT > 200)
+// 	if(fMT2tree->tau[tauIndex].MT > 200)
 	  tauMTPass->Fill(myQuantity, weight);
 	
       }
