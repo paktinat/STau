@@ -1228,7 +1228,7 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 	  
 			   //Same, but with errors
 			   string OverallSamples[NumberOfSamples + 1] = {"QCD","W+jets","Z+Jets","Top","WW+jets","Higgs","SUSY","Data","TOTAL BG"};
-			   for(int os=0; os<8; os++){
+			   for(int os=0; os<=NumberOfSamples; os++){
 			     string tSample = OverallSamples[os];
 			     if(tSample!="TOTAL BG"){
 			       TH1F* clone = (TH1F*) h_composited[os]->Clone();
