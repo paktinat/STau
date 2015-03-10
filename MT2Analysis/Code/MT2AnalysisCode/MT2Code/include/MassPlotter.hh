@@ -423,7 +423,7 @@ private:
   float xMT2bin[NumberOfMT2Bins];//bins of MT2
 
   static const int NumberOfSamples = 8;
-  TH1* MT2[NumberOfSamples];
+  TH1* MT2[NumberOfSamples+1];
 
   TH1F *tauMTPass;
 
