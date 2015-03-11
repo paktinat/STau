@@ -47,10 +47,10 @@ void usage( int status ,TString execname ) {
 class MassPlotterEleTau : public BaseMassPlotter{
 public:
   MassPlotterEleTau(TString outputdir) : BaseMassPlotter( outputdir ) {};
-  void eleTauAnalysis(TList* allcuts, Long64_t nevents,TString myfilename );
+  void eleTauAnalysis(TList* allcuts, Long64_t nevents,TString myfilename , int pu_systematic , int tes_systematic , TString chan);
 };
 
-void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,TString myfileName ){
+void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,TString myfileName , int pu_systematic , int tes_systematic , TString chan){ // pu_systematic == 0 nominal , 1 up , -1 down // tes_systematic == 10 up , -10 down
 
   TTreeFormula* wToLNuW = 0;
 
@@ -66,7 +66,7 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,TString
     ExtendedCut* thecut = (ExtendedCut*)objcut ;
     alllabels.push_back( thecut->Name );
   }  
-  alllabels.push_back("TauPt");
+  //  alllabels.push_back("TauPt");
   alllabels.push_back("MET");
   alllabels.push_back("MinMetJetDPhi");
   alllabels.push_back("MT2");
@@ -81,9 +81,38 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,TString
   TH2D* hsignals_w = new TH2D("h_PN_MLSP_MChi","", 125 , 0 ,  2500 , 125 , 0 , 2500);
   TH2D* hsignals_uw = new TH2D("h_N_MLSP_MChi","", 125 , 0 ,  2500 , 125 , 0 , 2500);
 
+  TFile* pileup_data = new TFile("pileupData.root","READ");
+  TH1F* pileup_data_histo = (TH1F*) pileup_data->Get("pileup");
+
+  TFile* pileup_data_up = new TFile("pileupDataUp.root","READ");
+  TH1F* pileup_data_up_histo = (TH1F*) pileup_data_up->Get("pileup");
+
+  TFile* pileup_data_down = new TFile("pileupDataDown.root","READ");
+  TH1F* pileup_data_down_histo = (TH1F*) pileup_data_down->Get("pileup");
+
+  
+  pileup_data_histo->Scale(1.0/pileup_data_histo->Integral());
+  pileup_data_up_histo->Scale(1.0/pileup_data_up_histo->Integral());
+  pileup_data_down_histo->Scale(1.0/pileup_data_down_histo->Integral());
+  
+  pileup_data_up_histo->Divide(pileup_data_histo);
+  pileup_data_down_histo->Divide(pileup_data_histo);
+//   for(int i = 0; i < pileup_data_up_histo->GetNbinsX();i++){
+//     pileup_data_up_histo->SetBinContent(i+1,  pileup_data_up_histo->GetBinContent(i+1)/pileup_data_histo->GetBinContent(i+1));
+//   }
+
+
+
+//   for(int i = 0; i < pileup_data_down_histo->GetNbinsX();i++){
+//     pileup_data_down_histo->SetBinContent(i+1,  pileup_data_down_histo->GetBinContent(i+1)/pileup_data_histo->GetBinContent(i+1));
+//   }
+
+
   MT2tree* fMT2tree = new MT2tree();
 
   for(int ii = 0; ii < fSamples.size(); ii++){
+
+
     int data = 0;
     sample Sample = fSamples[ii];
 
@@ -97,7 +126,13 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,TString
     if(wToLNuW){
       delete wToLNuW;
     }
+
+    if(chan == "etau")
     wToLNuW = new TTreeFormula("wToLNuW" , "eleTau[0].tauWjetsSF" , Sample.tree );
+
+    else if(chan == "mutau")
+      //    wToLNuW = new TTreeFormula("wToLNuW" , "muTau[0].GetTauWjetsSF()" , Sample.tree );
+    wToLNuW = new TTreeFormula("wToLNuW" , "muTau[0].tauWjetsSF" , Sample.tree );
 
     double Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents*Sample.PU_avg_weight);
     if(data == 1)
@@ -124,6 +159,7 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,TString
     Sample.tree->SetBranchStatus("*NMuons*" , 1 );
     Sample.tree->SetBranchStatus("*ele*" , 1 );
     Sample.tree->SetBranchStatus("*muo*" , 1 );
+    Sample.tree->SetBranchStatus("*mu*" , 1 );
     Sample.tree->SetBranchStatus("*tau*" , 1 );
     Sample.tree->SetBranchStatus("*pfmet*" , 1 );
     Sample.tree->SetBranchStatus("*misc*MET" , 1 );
@@ -134,6 +170,9 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,TString
     Sample.tree->SetBranchStatus("*Susy*MassLSP*" , 1 );
     Sample.tree->SetBranchStatus("*misc*ProcessID*" , 1 );
     Sample.tree->SetBranchStatus("*trigger*HLT_EleTau" , 1 );
+
+    Sample.tree->SetBranchStatus("*trigger*HLT_MuTau" , 1 );
+
     Sample.tree->SetBranchStatus("*SFWeight*BTagCSV40eq0" , 1 );
     Sample.tree->SetBranchStatus("*NBJetsCSVM*" , 1 );
 
@@ -143,6 +182,7 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,TString
     Sample.tree->SetBranchStatus("*NGenLepts" , 1 );
     Sample.tree->SetBranchStatus("*genlept*" , 1 );
 
+    Sample.tree->SetBranchStatus("pileUp*PUtrueNumInt" , 1);
     Sample.tree->SetBranchStatus("pileUp*Weight" , 1);
     Sample.tree->SetBranchStatus("*misc*CrazyHCAL" , 1 );
     Sample.tree->SetBranchStatus("*misc*NegativeJEC" , 1 );
@@ -225,12 +265,27 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,TString
 	cutindex+=1.0;
       }
 
+      if(! pass)
+	continue;
+
       //MET & tauPt RELATED CUTS READY TO CHANGE FOR ESMAEEL
+
+      int nbin_up = pileup_data_up_histo->FindBin(fMT2tree->pileUp.PUtrueNumInt);
+      double pu_up_Weight = pileup_data_up_histo->GetBinContent(nbin_up);
+ 
+      int nbin_down = pileup_data_down_histo->FindBin(fMT2tree->pileUp.PUtrueNumInt);
+      double pu_down_Weight = pileup_data_down_histo->GetBinContent(nbin_down);
+
+      if( pu_systematic == 1 )
+	weight *= pu_up_Weight;
+      else if( pu_systematic == -1 )
+	weight *= pu_down_Weight;
 
       double px_all_up=0;
       double py_all_up=0;
       double pz_all_up=0;
       double E_all_up =0;
+
       for (int l=0; l <fMT2tree->NTaus ; l++){
 	  px_all_up += 0.03*fMT2tree->tau[l].lv.Px();
 	  py_all_up += 0.03*fMT2tree->tau[l].lv.Py();
@@ -243,6 +298,17 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,TString
       TLorentzVector MET_up = fMT2tree->pfmet[0] - tau_delta_up;
       TLorentzVector MET_down = fMT2tree->pfmet[0] - tau_delta_down;
 
+      double tauPt = fMT2tree->tau[ fMT2tree->eleTau[0].GetTauIndex0() ].lv.Pt();
+      double MET = fMT2tree->misc.MET;
+      double MinMetJetDPhi = fMT2tree->misc.MinMetJetDPhiPt40 ;
+      double MT2 = fMT2tree->eleTau[0].GetMT2();
+      double tauMT = fMT2tree->tau[ fMT2tree->eleTau[0].GetTauIndex0() ].MT;
+      double invMass = fMT2tree->eleTau[0].GetLV().M(); 
+
+
+      if (chan == "etau")
+	{
+
       TLorentzVector tau_eletau_up( 1.03*fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].lv.Px() ,
 				    1.03*fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].lv.Py() ,
 				    1.03*fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].lv.Pz() ,
@@ -252,65 +318,127 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,TString
 				      0.97*fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].lv.Py(),
 				      0.97*fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].lv.Pz(),
 				      0.97*fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].lv.E() );
+      if (tes_systematic == 10 )
+	{
+	 tauPt = tau_eletau_up.Pt();
+	 MET = MET_up.Pt();
+         MinMetJetDPhi = fMT2tree->MinMetJetDPhi(0,40,5.0,100);
+	 MT2 = fMT2tree->CalcMT2(0, 0, fMT2tree->ele[ fMT2tree->eleTau[0].GetEleIndex0() ].lv, tau_eletau_up , MET_up);
+         tauMT = fMT2tree->GetMT( tau_eletau_up , 0., MET_up , 0.); 
+	 invMass = (tau_eletau_up+fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv).M();
+	}
+
+      else if (tes_systematic == -10 )
+	{
+	 tauPt = tau_eletau_down.Pt();
+	 MET = MET_down.Pt();
+         MinMetJetDPhi = fMT2tree->MinMetJetDPhi(0,40,5.0,-100);
+	 MT2 = fMT2tree->CalcMT2(0, 0, fMT2tree->ele[ fMT2tree->eleTau[0].GetEleIndex0() ].lv, tau_eletau_down , MET_down);
+         tauMT = fMT2tree->GetMT( tau_eletau_down , 0., MET_down , 0.); 
+	 invMass = (tau_eletau_down+fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv).M();
+	}
+
+	}
 
 
-      double tauPt_nominal = fMT2tree->tau[ fMT2tree->eleTau[0].GetTauIndex0() ].lv.Pt();
-      double tauPt_up = tau_eletau_up.Pt();
-      double tauPt_down = tau_eletau_down.Pt();
+    else if (chan == "mutau")
+	{
 
-      double tauPt = tauPt_up;
-      pass &= tauPt > 20.0;
-      
-      if(pass) cutflowtable.Fill(cutindex , weight); cutindex++;
+      TLorentzVector tau_mutau_up( 1.03*fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Px() ,
+				    1.03*fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Py() ,
+				    1.03*fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pz() ,
+				    1.03*fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.E() );
 
-      double MET = fMT2tree->misc.MET;
-      MET = MET_up.Pt();
+      TLorentzVector tau_mutau_down( 0.97*fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Px(),
+				      0.97*fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Py(),
+				      0.97*fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pz(),
+				      0.97*fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.E() );
+
+
+
+      //       tauPt = fMT2tree->tau[ fMT2tree->muTau[0].GetTauIndex0() ].lv.Pt();
+       MET = fMT2tree->misc.MET;
+       MinMetJetDPhi = fMT2tree->misc.MinMetJetDPhiPt40 ;
+       MT2 = fMT2tree->muTau[0].GetMT2();
+       tauMT = fMT2tree->tau[ fMT2tree->muTau[0].GetTauIndex0() ].MT;
+       invMass = fMT2tree->muTau[0].GetLV().M(); 
+
+      if (tes_systematic == 10 )
+	{
+	  //	 tauPt = tau_mutau_up.Pt();
+	 MET = MET_up.Pt();
+         MinMetJetDPhi = fMT2tree->MinMetJetDPhi(0,40,5.0,100);
+	 MT2 = fMT2tree->CalcMT2(0, 0, fMT2tree->muo[ fMT2tree->muTau[0].GetMuIndex0() ].lv, tau_mutau_up , MET_up);
+         tauMT = fMT2tree->GetMT( tau_mutau_up , 0., MET_up , 0.); 
+	 invMass = (tau_mutau_up+fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv).M();
+	}
+
+      else if (tes_systematic == -10 )
+	{
+	  //	 tauPt = tau_mutau_down.Pt();
+	 MET = MET_down.Pt();
+         MinMetJetDPhi = fMT2tree->MinMetJetDPhi(0,40,5.0,-100);
+	 MT2 = fMT2tree->CalcMT2(0, 0, fMT2tree->muo[ fMT2tree->muTau[0].GetMuIndex0() ].lv, tau_mutau_down , MET_down);
+         tauMT = fMT2tree->GetMT( tau_mutau_down , 0., MET_down , 0.); 
+	 invMass = (tau_mutau_down+fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv).M();
+	}
+
+	}
+
+
+      //      pass &= tauPt > 20.0;
+      //      if(!pass) 
+      //	continue;
+      //      cutflowtable.Fill(cutindex , weight); cutindex++;
+
       pass &= MET > 30.0;
-      if(pass) cutflowtable.Fill(cutindex , weight); cutindex++;
-      
-      double MinMetJetDPhi = fMT2tree->misc.MinMetJetDPhiPt40 ;
-      
-      MinMetJetDPhi = fMT2tree->MinMetJetDPhi(0,40,5.0,100);
+      if(!pass) 
+	continue;
+      cutflowtable.Fill(cutindex , weight); cutindex++;
+
       pass &= MinMetJetDPhi > 1.0;
-      if(pass) cutflowtable.Fill(cutindex , weight); cutindex++;
-
-      double MT2 = fMT2tree->eleTau[0].GetMT2();
-
-      MT2 = fMT2tree->CalcMT2(0, 0, fMT2tree->ele[ fMT2tree->eleTau[0].GetEleIndex0() ].lv, tau_eletau_up , MET_up);
+      if(!pass) 
+	continue;
+      cutflowtable.Fill(cutindex , weight); cutindex++;
 
       pass &= MT2 > 90.0;
-      if(pass) cutflowtable.Fill(cutindex , weight); cutindex++;
-
-      double tauMT = fMT2tree->tau[ fMT2tree->eleTau[0].GetTauIndex0() ].MT;
-
-      tauMT = fMT2tree->GetMT( tau_eletau_up , 0., MET_up , 0.); 
+      if(!pass) 
+	continue;
+      cutflowtable.Fill(cutindex , weight); cutindex++;
 
       pass &= tauMT > 200;
-      if(pass) cutflowtable.Fill(cutindex , weight); cutindex++;
+      if(!pass) 
+	continue;
+      cutflowtable.Fill(cutindex , weight); cutindex++;
 
-      if( pass ){
-	if( data != 1 ){
-	  if( Sample.type == "susy" ){
-	    hsignals_uw->Fill( mglu , mlsp , 1.0 );
-	    hsignals_w->Fill( mglu , mlsp , weight );
-	  }else{
-	    hallBkgs_w->Fill( 10 , weight );
-	    hallBkgs_uw->Fill( 10 , 1.0 );
-	  }
+      pass &= (invMass > 15 && (invMass < 45 || invMass > 75)); 
+      if(!pass) 
+	continue;
+      cutflowtable.Fill(cutindex , weight); cutindex++;
+
+
+      if( data != 1 ){
+	if( Sample.type == "susy" ){
+	  hsignals_uw->Fill( mglu , mlsp , 1.0 );
+	  hsignals_w->Fill( mglu , mlsp , weight );
 	}else{
-	  hallData->Fill( 10 );
+	  hallBkgs_w->Fill( 10 , weight );
+	  hallBkgs_uw->Fill( 10 , 1.0 );
 	}
-	
-	//Fill histogram for selected events, for ESMAEEL
+      }else{
+	hallData->Fill( 10 );
       }
+	
+      //Fill histogram for selected events, for ESMAEEL
     }
-  
+    
   }
+
 
   TString fileName = fOutputDir;
   if(!fileName.EndsWith("/")) fileName += "/";
   Util::MakeOutputDir(fileName);
- 
+  
   TString fileNameY = fileName  + myfileName +"_Yields.root";
   TFile *YieldsFile = new TFile(fileNameY.Data(), "RECREATE");
   hsignals_w->Write();
@@ -331,18 +459,24 @@ int main(int argc, char* argv[]) {
   TString outputfile = "EleTau_Signal_METBJetsCuts"; 
   TString outputdir = "../MassPlots/";
   TString samples = "./samples/samplesMineTauPlusX.dat";
+  TString channel = "etau";
   Long64_t neventperfile = LONG_MAX;
   int verbose = 0;
 
+  int pu_systematic = 0;
+  int tes_systematic = 0;
   // Parse options
   char ch;
-  while ((ch = getopt(argc, argv, "n:f:d:v:s:lh?")) != -1 ) {
+  while ((ch = getopt(argc, argv, "n:p:t:c:f:d:v:s:lh?")) != -1 ) {
     switch (ch) {
     case 'd': outputdir = TString(optarg); break;
     case 's': samples = TString(optarg); break;
     case 'v': verbose = atoi(optarg); break;
     case 'f': outputfile = TString(optarg); break;
     case 'n': neventperfile = atoi(optarg); break;
+    case 'p': pu_systematic = atoi(optarg); break;
+    case 't': tes_systematic = atoi(optarg); break;
+    case 'c': channel = TString(optarg); break;
     case '?':
     case 'h': usage(0,execname); break;
     default:
@@ -371,6 +505,8 @@ int main(int argc, char* argv[]) {
   tA->setVerbose(verbose);
   tA->init(samples);
 
+
+
   TList allCuts;
 
   std::ostringstream cleaning;
@@ -381,48 +517,130 @@ int main(int argc, char* argv[]) {
   ExtendedCut* cleaningcut = new ExtendedCut("Cleaning" , cleaning.str().c_str() , true , false , "" , "" , true , false);
   allCuts.Add( cleaningcut );
 
-  ExtendedCut* triggerCut =new ExtendedCut("Trigger" , "trigger.HLT_EleTau" , true , false , "" , "" , true , false); //trigger sf should be added here 
-  allCuts.Add(triggerCut);
+  if (channel == "etau")
+    {
+  ExtendedCut* triggerCutEleTau =new ExtendedCut("Trigger" , "trigger.HLT_EleTau" , true , false , "" , "" , true , false); //trigger sf should be added here 
+  allCuts.Add(triggerCutEleTau);
 
-  ExtendedCut* bVeto =new ExtendedCut("bVeto" , "NBJets40CSVM == 0" , true , true, "" , "pileUp.Weight * SFWeight.BTagCSV40eq0" ,true , true);
-  allCuts.Add( bVeto );
+  ExtendedCut* bVetoEleTau =new ExtendedCut("bVeto" , "NBJets40CSVM == 0" , true , true, "" , "pileUp.Weight * SFWeight.BTagCSV40eq0" ,true , true);
+  allCuts.Add( bVetoEleTau );
 
   TString myChan = "eleTau[0]";
-  ExtendedCut* tauselection = new ExtendedCut("TauSelection" , std::string(myChan) + ".tau0Ind >=0"  , true , true , "" , "eleTau[0].tauTrgSF" , true , true); //tau id sf should be added here // 
-  allCuts.Add( tauselection );
+  ExtendedCut* tauselectionEleTau = new ExtendedCut("TauSelection" , std::string(myChan) + ".tau0Ind >=0"  , true , true , "" , "eleTau[0].tauTrgSF * eleTau[0].tauEnergySF" , true , true); //tau id sf should be added here // 
+  allCuts.Add( tauselectionEleTau );
 
-  ExtendedCut* tauIsolation = new ExtendedCut("TauIsolation" , "tau[ eleTau[0].tau0Ind ].Isolation3Hits == 1" , true , true , "" , "" , true , true); //tau id sf should be added here //
-  allCuts.Add( tauIsolation );
+  ExtendedCut* tauIsolationEleTau = new ExtendedCut("TauIsolation" , "tau[ eleTau[0].tau0Ind ].Isolation3Hits == 1" , true , true , "" , "" , true , true); //tau id sf should be added here //
+  allCuts.Add( tauIsolationEleTau );
  
-  ExtendedCut* electronselection = new ExtendedCut("ElectronSelection" , std::string(myChan) + ".ele0Ind >=0" , true , true , "" , "eleTau[0].eleTrgSF * eleTau[0].eleIdIsoSF" , true , true); //electron id and iso sf here
-  allCuts.Add( electronselection );
+  ExtendedCut* electronselectionEleTau = new ExtendedCut("ElectronSelection" , std::string(myChan) + ".ele0Ind >=0" , true , true , "" , "eleTau[0].eleTrgSF * eleTau[0].eleIdIsoSF" , true , true); //electron id and iso sf here
+  allCuts.Add( electronselectionEleTau );
 
-  ExtendedCut* ElePTCut = new ExtendedCut("ElePTCut" , "ele[eleTau[0].ele0Ind].lv.Pt() > 25" , true , true, "" , "" ,false , true);
-  allCuts.Add( ElePTCut );
+  ExtendedCut* ElePTCutEleTau = new ExtendedCut("ElePTCut" , "ele[eleTau[0].ele0Ind].lv.Pt() > 25" , true , true, "" , "" ,false , true);
+  allCuts.Add( ElePTCutEleTau );
 
-  ExtendedCut* Isolated =new ExtendedCut("Isolated" , std::string(myChan) + ".Isolated == 1" , true , true, "" , "" , true , true);
-  allCuts.Add(Isolated);
+  ExtendedCut* IsolatedEleTau =new ExtendedCut("Isolated" , std::string(myChan) + ".Isolated == 1" , true , true, "" , "" , true , true);
+  allCuts.Add(IsolatedEleTau);
 
-  ExtendedCut* OS = new ExtendedCut("OS" , std::string(myChan) + ".GetSumCharge() == 0" ,  true , true, "" , "" , true , true); 
-  allCuts.Add( OS );
+  ExtendedCut* OSEleTau = new ExtendedCut("OS" , std::string(myChan) + ".GetSumCharge() == 0" ,  true , true, "" , "" , true , true); 
+  allCuts.Add( OSEleTau );
 
-  ExtendedCut* muveto = new ExtendedCut("MuVeto" , "HasNoVetoMuForEleTau()" ,  true , true, "" , "" , true , true); 
-  allCuts.Add( muveto );
+  ExtendedCut* muvetoEleTau = new ExtendedCut("MuVeto" , "HasNoVetoMuForEleTau()" ,  true , true, "" , "" , true , true); 
+  allCuts.Add( muvetoEleTau );
 
-  ExtendedCut* eleveto = new ExtendedCut("EleVeto" , "HasNoVetoElecForEleTau()" ,  true , true, "" , "" , true , true); 
-  allCuts.Add( eleveto );
+  ExtendedCut* elevetoEleTau = new ExtendedCut("EleVeto" , "HasNoVetoElecForEleTau()" ,  true , true, "" , "" , true , true); 
+  allCuts.Add( elevetoEleTau );
 
-  std::string invmass = std::string(std::string(myChan) + ".lv.M()");
+  //  std::string invmass = std::string(std::string(myChan) + ".lv.M()");
+  //  ExtendedCut* lowmassveto =new ExtendedCut("LowMassVeto" , invmass +  " > 15." , true , true , "" , "" , false , true);
+  //  allCuts.Add( lowmassveto );
+  
+  //  ExtendedCut* ZPeakVeto =new ExtendedCut("ZPeakVeto" ,  invmass + " < 45.0 || " + invmass  + " > 75" , true , true , "" , "" , false , true);
+  //  allCuts.Add( ZPeakVeto );
+
+  //  ExtendedCut* MT2Cut = new ExtendedCut("MT2PreCut" , "eleTau[0].MT2 > 40" , true , true, "" , "" ,false , true); //pileUp.Weight
+  //  allCuts.Add( MT2Cut );
+
+    }
+  //-----------------------------mutau----------------------------------
+  else if (channel == "mutau")
+    {
+  ExtendedCut* triggerCutMuTau =new ExtendedCut("Trigger" ,"trigger.HLT_MuTau",/* "trigger.HLT_EleTau",*/ true , false , "" , "" , true , false); //trigger sf should be added here 
+  allCuts.Add(triggerCutMuTau );
+
+  ExtendedCut* bVetoMuTau  =new ExtendedCut("bVeto" , "NBJets40CSVM == 0" , true , true, "" , "pileUp.Weight * SFWeight.BTagCSV40eq0" ,true , true);
+  allCuts.Add( bVetoMuTau  );
+  //tau[muTau[0].GetTauIndex0()]
+  //  TString myChan = "muTau[0]"/*"eleTau[0]"*/;
+
+//   tauTrgSF  = -.99;
+//   muTrgSF   = -.99;
+//   muIdSF    = -.99;
+//   muIsoSF   = -.99;
+//   tauWjetsSF= -.99;
+//   tauEnergySF= -.99;
+
+//   float GetTauEnergySF(){return tauEnergySF;};
+//   float GetTauTrgSF(){return tauTrgSF;};
+//   float GetMuTrgSF(){return muTrgSF;};
+//   float GetMuIdSF(){return  muIdSF;};
+//   float GetMuIsoSF(){return muIsoSF;};
+//   float GetTauWjetsSF(){return tauWjetsSF;};
+
+//  ExtendedCut* tauselectionMuTau  = new ExtendedCut("TauSelection" ,  ".tau0Ind >=0"  , true , true , "" , "muTau[0].GetTauTrgSF() * muTau[0].GetTauEnergySF()" , true , true); //tau id sf should be added here // 
+  ExtendedCut* tauselectionMuTau  = new ExtendedCut("TauSelection" ,  "muTau[0].tau0Ind >=0"  , true , true , "" , "muTau[0].tauTrgSF * muTau[0].tauEnergySF" , true , true); //tau id sf should be added here // 
+
+  allCuts.Add( tauselectionMuTau );
+
+  ExtendedCut* tauIsolationMuTau  = new ExtendedCut("TauIsolation" , "tau[muTau[0].tau0Ind].Isolation3Hits == 1"/*"tau[ eleTau[0].tau0Ind ].Isolation3Hits == 1"*/ , true , true , "" , "" , true , true); //tau id sf should be added here //
+  allCuts.Add( tauIsolationMuTau  );
+
+
+  //  fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()]
+  //muo[muTau[0].GetMuIndex0()]
+  //  ExtendedCut* muonselectionMuTau  = new ExtendedCut("ElectronSelection" , "muo[muTau[0].mu0Index] >=0"/*".ele0Ind >=0"*/ , true , true , "" , "muTau[0].GetTauTrgSF() * muTau[0].GetMuIdSF() * muTau[0].GetMuIsoSF()" , true , true); //electron id and iso sf here
+  ExtendedCut* muonselectionMuTau  = new ExtendedCut("ElectronSelection" , "muTau[0].mu0Ind >=0" , true , true , "" , "muTau[0].muTrgSF * muTau[0].muIdSF * muTau[0].muIsoSF" , true , true); //electron id and iso sf here
+  allCuts.Add( muonselectionMuTau  );
+
+
+  //  ExtendedCut* ElePTCut = new ExtendedCut("ElePTCut" , "ele[eleTau[0].ele0Ind].lv.Pt() > 25" , true , true, "" , "" ,false , true);
+  //  allCuts.Add( ElePTCut );
+
+  //  ExtendedCut* IsolatedMuTau  =new ExtendedCut("Isolated" , std::string(myChan) + ".GetIsolated() == 1" , true , true, "" , "" , true , true);
+  //  allCuts.Add(IsolatedMuTau );
+
+  ExtendedCut* IsolatedMuTau  =new ExtendedCut("Isolated" , "muTau[0].Isolated == 1" , true , true, "" , "" , true , true);
+  allCuts.Add(IsolatedMuTau );
+
+  //  ExtendedCut* OSMuTau  = new ExtendedCut("OS" , std::string(myChan) + ".GetSumCharge()"/*.chargeSum == 0"*//*".GetSumCharge() == 0"*/ ,  true , true, "" , "" , true , true); 
+
+  ExtendedCut* OSMuTau  = new ExtendedCut("OS" , "muTau[0].chargeSum == 0"/*".GetSumCharge() == 0"*/ ,  true , true, "" , "" , true , true); 
+  allCuts.Add( OSMuTau  );
+
+  ExtendedCut* muveto1MuTau  = new ExtendedCut("MuVeto1" , "HasNoVetoMuForMuTau()"/*"HasNoVetoMuForEleTau()"*/ ,  true , true, "" , "" , true ,  true); 
+  allCuts.Add( muveto1MuTau );
+
+  //  ExtendedCut* muveto2MuTau  = new ExtendedCut("MuVeto2" , "muTau[0].hasNoVetoMu == 0" /*"HasNoVetoElecForEleTau()"*/ ,  true , true, ""  , "" , true , true); 
+  //  allCuts.Add( muveto2MuTau  );
+
+  ExtendedCut* elevetoMuTau  = new ExtendedCut("EleVeto" , "muTau[0].hasNoVetoElec == 0" /*"HasNoVetoElecForEleTau()"*/ ,  true , true, "" , "" , true , true); 
+  allCuts.Add( elevetoMuTau  );
+
+
+  std::string invmass =   "muTau[0].lv.M()";
   ExtendedCut* lowmassveto =new ExtendedCut("LowMassVeto" , invmass +  " > 15." , true , true , "" , "" , false , true);
   allCuts.Add( lowmassveto );
   
   ExtendedCut* ZPeakVeto =new ExtendedCut("ZPeakVeto" ,  invmass + " < 45.0 || " + invmass  + " > 75" , true , true , "" , "" , false , true);
   allCuts.Add( ZPeakVeto );
 
-  ExtendedCut* MT2Cut = new ExtendedCut("MT2PreCut" , "eleTau[0].MT2 > 40" , true , true, "" , "" ,false , true); //pileUp.Weight
+  ExtendedCut* MT2Cut = new ExtendedCut("MT2PreCut" , "muTau[0].MT2 > 40" , true , true, "" , "" ,false , true); //pileUp.Weight
   allCuts.Add( MT2Cut );
+
+  //-------------------------------mutau-------------------------------------
+
+    }
  
-  tA->eleTauAnalysis(&allCuts, neventperfile ,  outputfile  );
+  tA->eleTauAnalysis(&allCuts, neventperfile ,  outputfile , pu_systematic , tes_systematic , channel);
 
   delete tA;
   return 0;

@@ -264,6 +264,11 @@ public:
   void eeWJetsEstimation(TString cuts, TString trigger, TString myfileName);
   void eeVS(Long64_t nevents, TString cuts, TString trigger);
   void miscEfficiency(int sample_index, unsigned int nevents);
+  void eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int nevents, TString myfileName, TString giveStatus );
+  void eeAnalysisPUsys(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
+  void eeAnalysisPUsys();
+  void eeAnalysisCDF(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
+
 
   void setFlags(int flag); //To determine which analysis we look at HighHT/LowHT MT2(b) options are:
   // 5  :: LowHT  MT2  
