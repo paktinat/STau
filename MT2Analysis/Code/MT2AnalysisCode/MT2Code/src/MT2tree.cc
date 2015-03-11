@@ -1255,7 +1255,8 @@ Float_t MT2tree::MinMetJetDPhi(int PFJID, float minJPt, float maxJEta, int met, 
 	for(int i=0; i<NMuons; ++i){
 		MET = MET + muo[i].lv;
 	}
-  } else if( met == 100 ) {// tau energy scale up correction
+  } 
+  else if( met == 100 ) {// tau energy scale up correction
     double px_all_up=0;
     double py_all_up=0;
     double pz_all_up=0;
@@ -1269,7 +1270,7 @@ Float_t MT2tree::MinMetJetDPhi(int PFJID, float minJPt, float maxJEta, int met, 
     TLorentzVector tau_delta_up(px_all_up, py_all_up, pz_all_up, E_all_up);
 
     MET = pfmet[0] - tau_delta_up;
-  } else if( met ==-100 ) {// tau energy scale down correction
+  }  else if( met ==-100 ) {// tau energy scale down correction
     double px_all_up=0;
     double py_all_up=0;
     double pz_all_up=0;
@@ -1283,7 +1284,61 @@ Float_t MT2tree::MinMetJetDPhi(int PFJID, float minJPt, float maxJEta, int met, 
     TLorentzVector tau_delta_down(-px_all_up, -py_all_up, -pz_all_up, -E_all_up);
 
     MET = pfmet[0] - tau_delta_down;
-  }else         return -9;
+  }  else if( met == 200 ) {// tau energy scale up correction
+    double px_all_up_e=0;
+    double py_all_up_e=0;
+    double pz_all_up_e=0;
+    double E_all_up_e =0;
+    for (int l=0; l < NEles ; l++){
+      if(fabs(ele[l].lv.Eta())<1.479)
+	{ 
+	  px_all_up_e += 0.01*ele[l].lv.Px();
+	  py_all_up_e += 0.01*ele[l].lv.Py();
+	  pz_all_up_e += 0.01*ele[l].lv.Pz();
+	  E_all_up_e += 0.01*ele[l].lv.E();
+	}
+      else
+	{ 
+	  px_all_up_e += 0.025*ele[l].lv.Px();
+	  py_all_up_e += 0.025*ele[l].lv.Py();
+	  pz_all_up_e += 0.025*ele[l].lv.Pz();
+	  E_all_up_e += 0.025*ele[l].lv.E();
+	} 
+    }
+    TLorentzVector ele_delta_up(px_all_up_e, py_all_up_e, pz_all_up_e, E_all_up_e);
+
+    MET = pfmet[0] - ele_delta_up;
+  }  
+  else if( met ==-200 ) {// tau energy scale down correction
+
+    double px_all_up_e=0;
+    double py_all_up_e=0;
+    double pz_all_up_e=0;
+    double E_all_up_e =0;
+    for (int l=0; l < NEles ; l++){
+      if(fabs(ele[l].lv.Eta())<1.479)
+	{
+	  px_all_up_e += 0.01*ele[l].lv.Px();
+	  py_all_up_e += 0.01*ele[l].lv.Py();
+	  pz_all_up_e += 0.01*ele[l].lv.Pz();
+	  E_all_up_e += 0.01*ele[l].lv.E();
+	}
+      else
+	{
+	  px_all_up_e += 0.025*ele[l].lv.Px();
+	  py_all_up_e += 0.025*ele[l].lv.Py();
+	  pz_all_up_e += 0.025*ele[l].lv.Pz();
+	  E_all_up_e += 0.025*ele[l].lv.E();
+
+	}
+    }
+    TLorentzVector ele_delta_down(-px_all_up_e, -py_all_up_e, -pz_all_up_e, -E_all_up_e);
+
+    MET = pfmet[0] - ele_delta_down;
+
+  }
+
+ else return -9;
 
   int index = MinMetJetDPhiIndex(PFJID, minJPt, maxJEta, met, njets, onlyCrack);
   if(index >=0) {

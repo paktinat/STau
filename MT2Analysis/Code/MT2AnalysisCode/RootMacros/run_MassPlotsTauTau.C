@@ -83,5 +83,23 @@
 
 //tA->makePlot("doubleTau[0].MT2",cuts_bin1, -10, -10 , -10 , trigger , "M_{T2}"  ,4,40, 140,   true,  true ,  true,   true,  true,  true, 1,true, false, "png");
 //tA->makePlot("doubleTau[0].MT2",cuts_bin2, -10, 0 , -10 , trigger , "M_{T2}"  ,4,40, 140,   true,  true ,  true,   true,  true,  true, 1,true, false, "png");
-  tA->eeAnalysis(cuts_bin1, trigger, 1000000000000000000, "MT2_ditau_bin1_up");
+//  tA->eeAnalysis(cuts_bin1, trigger, 1000000000000000000, "MT2_ditau_bin1_up");
+// tA->eeAnalysis(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_nominal");
+// tA->eeAnalysisTESsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_down_rejApp");
+
+//  tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_nominal_noB_noRej_noMisc_240_40", "ditau_bin1_nominal");
+//     tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_tes_up_noB_noRej_noMisc_240_40", "ditau_bin1_tes_up");
+//      tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_tes_down_noB_noRej_noMisc_240_40", "ditau_bin1_tes_down");
+
+//    tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_nominal_noB_noRej_noMisc_240_40", "ditau_bin2_nominal");
+//     tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_tes_up_noB_noRej_noMisc_240_40", "ditau_bin2_tes_up");
+//        tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_tes_down_noB_noRej_noMisc_240_40", "ditau_bin2_tes_down");
+
+
+
+
+ //----------ditau_bin1_pu_up, ditau_bin1_pu_down, ditau_bin1_tes_up, ditau_bin1_tes_down, ditau_bin2_pu_up, ditau_bin2_pu_down ,ditau_bin2_tes_up, ditau_bin2_tes_down, ditau_bin1_nominal, ditau_bin2_nominal;
+  //
+
+
 }

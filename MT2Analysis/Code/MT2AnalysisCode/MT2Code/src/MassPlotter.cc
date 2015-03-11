@@ -9795,6 +9795,12 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
       double pz_all_up = 0;
       double E_all_up  = 0;
 
+      double px_all_up_e = 0;
+      double py_all_up_e = 0;
+      double pz_all_up_e = 0;
+      double E_all_up_e  = 0;
+
+
    for(int l=0; l <fMT2tree->NTaus; l++)
      {
        px_all_up += 0.03*fMT2tree->tau[l].lv.Px();
@@ -9803,12 +9809,41 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
        E_all_up  += 0.03*fMT2tree->tau[l].lv.E();
      }
 
+   for(int l=0; l <fMT2tree->NEles; l++)
+     {
+       if ( fabs(fMT2tree->ele[l].lv.Eta()) < 1.479)
+
+	 {     
+	   px_all_up_e += 0.01*fMT2tree->ele[l].lv.Px();
+	   py_all_up_e += 0.01*fMT2tree->ele[l].lv.Py();
+	   pz_all_up_e += 0.01*fMT2tree->ele[l].lv.Pz();
+	   E_all_up_e  += 0.01*fMT2tree->ele[l].lv.E();
+	 }
+       else
+	 {
+	   px_all_up_e += 0.025*fMT2tree->ele[l].lv.Px();
+	   py_all_up_e += 0.025*fMT2tree->ele[l].lv.Py();
+	   pz_all_up_e += 0.025*fMT2tree->ele[l].lv.Pz();
+	   E_all_up_e  += 0.025*fMT2tree->ele[l].lv.E();
+	 }
+
+     }
+
+
+
    TLorentzVector tau_delta_up    (px_all_up ,  py_all_up,  pz_all_up,  E_all_up);
    TLorentzVector tau_delta_down  (-px_all_up, -py_all_up, -pz_all_up, -E_all_up);
 
+   TLorentzVector ele_delta_up    (px_all_up_e ,  py_all_up_e,  pz_all_up_e,  E_all_up_e);
+   TLorentzVector ele_delta_down  (-px_all_up_e, -py_all_up_e, -pz_all_up_e, -E_all_up_e);
+   
 
    TLorentzVector MET_up   = fMT2tree->pfmet[0] - tau_delta_up;
    TLorentzVector MET_down = fMT2tree->pfmet[0] - tau_delta_down;
+
+   TLorentzVector MET_up_e   = fMT2tree->pfmet[0] - ele_delta_up;
+   TLorentzVector MET_down_e = fMT2tree->pfmet[0] - ele_delta_down;
+
 
    TLorentzVector tau_mutau_up  (1.03 * fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Px(), 
                                  1.03 * fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Py(),
@@ -9829,6 +9864,37 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
                                   0.97 * fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].lv.Py(),
 	                          0.97 * fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].lv.Pz(),
                                   0.97 * fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].lv.E());
+
+   TLorentzVector ele_etau_up ;
+   TLorentzVector ele_etau_down ;
+   if ( fabs(fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv.Eta()) < 1.479)
+     {
+   
+       ele_etau_up.SetPxPyPzE (1.01 * fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv.Px(), 
+                               1.01 * fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv.Py(), 
+                               1.01 * fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv.Pz(), 
+			       1.01 * fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv.E()) ;
+
+       ele_etau_down.SetPxPyPzE(0.99 * fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv.Px(),
+                                  0.99 * fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv.Py(),
+                                  0.99 * fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv.Pz(),
+				  0.99 * fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv.E());
+
+     }
+
+   else
+     {
+       ele_etau_up.SetPxPyPzE (1.025 * fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv.Px(), 
+                               1.025 * fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv.Py(), 
+                               1.025 * fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv.Pz(), 
+			       1.025 * fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv.E());
+
+       ele_etau_down.SetPxPyPzE(0.975 * fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv.Px(),
+				0.975 * fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv.Py(),
+				0.975 * fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv.Pz(),
+				0.975 * fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv.E());
+
+     }
 
 
    TLorentzVector tau0_ditau_up (1.03 * fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Px(),
@@ -9871,18 +9937,25 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
    double invMass_mutau_up  = (tau_mutau_up   + fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv).M(); 
    double invMass_mutau_down= (tau_mutau_down + fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv).M(); 
 
-   double mt2_etau_up = fMT2tree->CalcMT2(0, false, fMT2tree->muo[fMT2tree->eleTau[0].GetEleIndex0()].lv, tau_etau_up, MET_up);
-   double mt2_etau_down = fMT2tree->CalcMT2(0, false, fMT2tree->muo[fMT2tree->eleTau[0].GetEleIndex0()].lv, tau_etau_down, MET_down);
-   double invMass_etau_up  = (tau_etau_up   + fMT2tree->muo[fMT2tree->eleTau[0].GetEleIndex0()].lv).M(); 
-   double invMass_etau_down= (tau_etau_down + fMT2tree->muo[fMT2tree->eleTau[0].GetEleIndex0()].lv).M(); 
+   double mt2_etau_up = fMT2tree->CalcMT2(0, false, fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv, tau_etau_up, MET_up);
+   double mt2_etau_down = fMT2tree->CalcMT2(0, false, fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv, tau_etau_down, MET_down);
+   double invMass_etau_up  = (tau_etau_up   + fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv).M(); 
+   double invMass_etau_down= (tau_etau_down + fMT2tree->ele[fMT2tree->eleTau[0].GetEleIndex0()].lv).M(); 
+
+   double mt2_etau_up_e = fMT2tree->CalcMT2(0, false, fMT2tree->tau[fMT2tree->eleTau[0].GetEleIndex0()].lv, ele_etau_up, MET_up_e);
+   double mt2_etau_down_e = fMT2tree->CalcMT2(0, false, fMT2tree->tau[fMT2tree->eleTau[0].GetEleIndex0()].lv, ele_etau_down, MET_down_e);
+   double invMass_etau_up_e  = (ele_etau_up   + fMT2tree->tau[fMT2tree->eleTau[0].GetEleIndex0()].lv).M(); 
+   double invMass_etau_down_e= (ele_etau_down + fMT2tree->tau[fMT2tree->eleTau[0].GetEleIndex0()].lv).M(); 
+   double MinMetJetDPhi_up_e   = fMT2tree->MinMetJetDPhi(0,40,5.0,200); 
+   double MinMetJetDPhi_down_e = fMT2tree->MinMetJetDPhi(0,40,5.0,-200);  
 
    double mt2_ditau_up   = fMT2tree->CalcMT2(0, false, tau0_ditau_up, tau1_ditau_up, MET_up);
    double mt2_ditau_down = fMT2tree->CalcMT2(0, false, tau0_ditau_down, tau1_ditau_down, MET_down);
    double invMass_ditau_up    = (tau0_ditau_up + tau1_ditau_up).M();
    double invMass_ditau_down  = (tau0_ditau_down + tau1_ditau_down).M();
 
-   double  MinMetJetDPhi_up   = fMT2tree->MinMetJetDPhi(0,40,5.0,100); 
-   double  MinMetJetDPhi_down = fMT2tree->MinMetJetDPhi(0,40,5.0,-100);  
+   double MinMetJetDPhi_up   = fMT2tree->MinMetJetDPhi(0,40,5.0,100); 
+   double MinMetJetDPhi_down = fMT2tree->MinMetJetDPhi(0,40,5.0,-100);  
 
 
    TString status = giveStatus ;
@@ -10399,7 +10472,7 @@ else if(status == "ditau_bin2_pu_down")
      }
 
 
-
+   //---etauj----
    //----------------------etau_nominal----------------------------
 
    if(status == "etau_nominal")
@@ -10425,12 +10498,18 @@ else if(status == "ditau_bin2_pu_down")
 	   //	     continue;
 	   //	   if (fMT2tree->misc.MinMetJetDPhiPt40 <= 1.0)
 	   //	     continue;
+
 	   if (fMT2tree->misc.MET <= 30)
 	     continue;
 	   if(fMT2tree->eleTau[0].GetMT2() <= 90)
 	     continue;
 	   if(fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].MT <= 200)     
 	     continue;
+	   if(fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].lv.Pt() <= 20)     
+	     continue;
+	   if(fMT2tree->ele[fMT2tree->eleTau[0].GetTauIndex0()].lv.Pt() <= 25)     
+	     continue;
+
 
 
      myQuantity = fMT2tree->eleTau[0].GetMT2();
@@ -10520,6 +10599,94 @@ else if(status == "etau_tes_down")
      myQuantity = mt2_etau_down;
 
      }
+
+
+   //-----------------etau_ees_up--------------------------
+
+else if(status == "etau_ees_up")
+
+     {
+           if(data == 1)
+     	weight = 1.0;
+           else
+     	{
+	
+	  //	  weight *= fMT2tree->SFWeight.BTagCSV40eq0; 
+
+	  if(fPUReweight)
+		    weight *= fMT2tree->pileUp.Weight;
+	weight *=  fMT2tree-> eleTau[0].tauTrgSF * fMT2tree->eleTau[0].eleTrgSF * fMT2tree->eleTau[0].eleIdIsoSF * fMT2tree->eleTau[0].tauEnergySF;
+
+	if(Sample.sname == "Wtolnu")
+	  weight *= fMT2tree->eleTau[0].tauWjetsSF;
+	}
+
+     if (MET_up_e.Pt() <= 30)
+       continue;
+
+     //     if (MinMetJetDPhi_up_e <= 1)
+     //       continue;
+
+     //     if ( invMass_etau_up_e <= 15 || (invMass_etau_up_e >= 45 && invMass_etau_up_e <= 75))
+     //       continue;
+     if(fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].lv.Pt() <= 20)     
+       continue;
+     if (ele_etau_up.Pt() <= 25)
+       continue;
+     if (mt2_etau_up_e <= 90)
+         continue;
+     if(fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].MT <= 200)     
+       continue;
+
+     myQuantity = mt2_etau_up_e;
+
+     }
+
+   //-----------------etau_ees_down--------------------------
+
+else if(status == "etau_ees_down")
+     {
+           if(data == 1)
+     	weight = 1.0;
+           else
+     	{
+	
+	  //	  weight *= fMT2tree->SFWeight.BTagCSV40eq0; 
+
+	  if(fPUReweight)
+		    weight *= fMT2tree->pileUp.Weight;
+
+	weight *=  fMT2tree-> eleTau[0].tauTrgSF * fMT2tree->eleTau[0].eleTrgSF * fMT2tree->eleTau[0].eleIdIsoSF * fMT2tree->eleTau[0].tauEnergySF;
+
+	if(Sample.sname == "Wtolnu")
+	  weight *= fMT2tree->eleTau[0].tauWjetsSF;
+
+	}
+
+
+     if (MET_down_e.Pt() <= 30)
+       continue;
+
+     //     if (MinMetJetDPhi_down_e <= 1)
+     //       continue;
+
+     //     if ( invMass_etau_down_e <= 15 || (invMass_etau_down_e >= 45 && invMass_etau_down_e <= 75))
+     //       continue;
+     if(fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].lv.Pt() <= 20)     
+       continue;
+     if (ele_etau_down.Pt() <= 25)
+       continue;
+     if (mt2_etau_down_e <= 90)
+         continue;
+     if(fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].MT <= 200)     
+       continue;
+
+     myQuantity = mt2_etau_down_e;
+
+
+     }
+
+
 
 
    //----------------------etau_pu_up----------------------------

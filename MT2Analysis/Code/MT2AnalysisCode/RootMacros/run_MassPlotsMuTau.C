@@ -134,6 +134,17 @@
 
 
   tA->eeAnalysis(cuts, trigger, 100000000000000000, "tau_Pt_mutau_down");
+  //--------------------susy_380_0--------------------
+
+  //    tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000, "MT2_mutau_nominal_noB_noRej_noInvMass_noMisc_380_0" , "mutau_nominal" );
+  //    tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000, "MT2_mutau_tes_up_noB_noRej_noInvMass_noMisc_380_0"  , "mutau_tes_up"  );
+    tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000, "MT2_mutau_tes_down_noB_noRej_noInvMass_noMisc_380_0", "mutau_tes_down");
+
+  //--------------------susy_380_0--------------------
+  // tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000, "MT2_mutau_nominal_380_0", "mutau_nominal");
+  //  tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000, "MT2_mutau_tes_up_380_0", "mutau_tes_up");
+    //    tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000, "MT2_mutau_tes_down_380_0", "mutau_tes_down");
+
 
 
 //   myChannelCuts.push_back("abs(tau[muTau[0].tau0Ind].lv.Eta()) < 1.4 ");
