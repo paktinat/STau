@@ -1298,6 +1298,39 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 	  }
 	}
 
+	TH1F *h_PN_Bkg  = (TH1F*)h_mc_sum->Clone();
+	h_PN_Bkg->SetName("h_PN_Bkg");
+	h_PN_Bkg->Rebin(h_PN_Bkg->GetNbinsX());
+ 
+	TH1F *h_PN_Data  = (TH1F*)h_data->Clone();
+	h_PN_Data->SetName("h_PN_Data");
+	h_PN_Data->Rebin(h_PN_Data->GetNbinsX());
+
+ 	h_SMSEvents->Rebin2D(4, 4);
+ 	h_PN_MLSP_MChi->Divide(h_SMSEvents);
+
+	TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
+	h_PN_MLSP_MChi->Multiply(hXsec);
+
+	TString fileName = fOutputDir;
+	if(!fileName.EndsWith("/")) fileName += "/";
+	Util::MakeOutputDir(fileName);
+	fileName = fileName + "countingForExclusion_" + myChannel +"_Histos.root";
+	TFile *savefile = new TFile(fileName.Data(), "RECREATE");
+	savefile ->cd();
+
+	h_stack->SetName("h_stack");
+
+	h_stack->Write();
+	h_PN_Bkg->Write();
+	h_PN_Data->Write();
+	h_PN_MLSP_MChi->Write();
+	h_N_MLSP_MChi->Write();
+
+	savefile->Close();
+  
+	std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
+
 	TString ytitle = "Events";
 
 	TString outname = myChannel;
@@ -1349,38 +1382,6 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
   TGraphAsymmErrors* sig2 = plotSig(h_susy, h_mc_sum, xtitle, "Upper Cut", type, /*sys = */ 0.1);
   sig2->Draw("ACP");
 
-  TH1F *h_PN_Bkg  = (TH1F*)h_mc_sum->Clone();
-  h_PN_Bkg->SetName("h_PN_Bkg");
-  h_PN_Bkg->Rebin(h_PN_Bkg->GetNbinsX());
-  
-  TH1F *h_PN_Data  = (TH1F*)h_data->Clone();
-  h_PN_Data->SetName("h_PN_Data");
-  h_PN_Data->Rebin(h_PN_Data->GetNbinsX());
-
-  TH2D *h_SMSEvent = (TH2D*) fSamples[SusySampleInd].file->Get("h_SMSEvents");
-  h_SMSEvent->Rebin2D(4, 4);
-  h_PN_MLSP_MChi->Divide(h_SMSEvent);
-  TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
-  h_PN_MLSP_MChi->Multiply(hXsec);
-
-  TString fileName = fOutputDir;
-  if(!fileName.EndsWith("/")) fileName += "/";
-  Util::MakeOutputDir(fileName);
-  fileName = fileName + "countingForExclusion_" + myChannel +"_Histos.root";
-  TFile *savefile = new TFile(fileName.Data(), "RECREATE");
-  savefile ->cd();
-  
-  h_stack->SetName("h_stack");
-
-  h_stack->Write();
-  h_PN_Bkg->Write();
-  h_PN_Data->Write();
-  h_PN_MLSP_MChi->Write();
-  h_N_MLSP_MChi->Write();
-
-  savefile->Close();
-  
-  std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
 }
  
 
@@ -2433,35 +2434,39 @@ void MassPlotter::loadSamples(const char* filename){
 			if ( s.name.Contains("T2tt") ) s.nevents = 50000;
 			// DON'T DO THAT AT HOME !!!!
 
-			if ( s.type == "susy" && s.name.Contains("Tau")){
-			  TH2F * h_SMSEvent = NULL ; 
+			if ( s.type == "susy" && s.name.Contains("Stau")){
+			  h_SMSEvents = NULL ; 
 			  
 			  TObjArray *fileElements=((TChain*)(s.tree))->GetListOfFiles();
 			  TIter next(fileElements);
 			  TChainElement *chEl=0;
 			  while (( chEl=(TChainElement*)next() )) {
-			    TFile f(chEl->GetTitle());
+			    TFile* f = TFile::Open(chEl->GetTitle());
 			    
-			    if( h_SMSEvent == NULL )
-			      h_SMSEvent = (TH2F*) (f.Get("h_SMSEvents")->Clone("ClonedhSMSEvents") );
+			    if( h_SMSEvents == NULL ){
+			      gROOT->cd();
+			      h_SMSEvents = (TH2F*) (f->Get("h_SMSEvents")->Clone("ClonedhSMSEvents") );}
 			    else
-			      h_SMSEvents->Add( (TH2F*)(f.Get("h_SMSEvents") ) );
+			      h_SMSEvents->Add( (TH2F*)(f->Get("h_SMSEvents") ) );
 			  }
 
+			  if(fileElements->GetEntries() == 0){
+			    h_SMSEvents=(TH2F*)(s.file->Get("h_SMSEvents"));
+			  }
 
-			  int binNumber = h_SMSEvent->FindBin(150.0, 150.0);//350,50//saeid
+			  int binNumber = h_SMSEvents->FindBin(150.0, 150.0);//350,50//saeid
 			  
-			  s.nevents = h_SMSEvent->GetBinContent(binNumber); //saeid
-			  s.nevents = 1000;//350,50//saeid
+			  s.nevents = h_SMSEvents->GetBinContent(binNumber); //saeid
+			  s.nevents = 10000;//350,50//saeid
 			  s.PU_avg_weight =1;		//saeid	  
 			}//saeid
 			else{
 
 			if ( s.type == "susy" && !s.name.Contains("TStau")){//saeid
-			  TH2F * h_SMSEvent = (TH2F*) s.file->Get("h_SMSEvents");
-			  int binNumber = h_SMSEvent->FindBin(350.0, 50.0);//350,50//saeid
+			  h_SMSEvents = (TH2F*) s.file->Get("h_SMSEvents");
+			  int binNumber = h_SMSEvents->FindBin(350.0, 50.0);//350,50//saeid
 			  
-			  s.nevents = h_SMSEvent->GetBinContent(binNumber); //saeid
+			  s.nevents = h_SMSEvents->GetBinContent(binNumber); //saeid
 			  //			  s.nevents = 128333;//350,50//saeid
 			  s.PU_avg_weight =1;		//saeid	  
 			}//saeid
@@ -5078,7 +5083,6 @@ void MassPlotter::Efficiency(TString mySample){
   TH1F *hDeltaPhiMetTop = new TH1F("DeltaPhiMetTop", "DeltaPhiMetTop", 32, 0, 3.14);
   TH1F *hDeltaPhiMetTopTTBar = new TH1F("DeltaPhiMetTopTTBar", "DeltaPhiMetTopTTBar", 32, 0, 3.14);
 
-  TH2F *h_SMSEvent;
   for(unsigned int ii = 0; ii < fSamples.size(); ii++){
     sample Sample = fSamples[ii];
 
@@ -5131,7 +5135,7 @@ void MassPlotter::Efficiency(TString mySample){
 	}}
       continue;
     }
-    h_SMSEvent    = (TH2F*) Sample.file->Get("h_SMSEvents");
+    h_SMSEvents    = (TH2F*) Sample.file->Get("h_SMSEvents");
 	
     for (unsigned int jentry=0; jentry<nentries;jentry++) {
       Sample.tree->GetEntry(jentry); 
@@ -5243,9 +5247,9 @@ void MassPlotter::Efficiency(TString mySample){
     }}
   
   if(mySample == "SMST2")
-    h_SMSEvent->Rebin2D(5,5);
+    h_SMSEvents->Rebin2D(5,5);
   else
-    h_SMSEvent->Rebin2D(10,10);
+    h_SMSEvents->Rebin2D(10,10);
 
   TH2F* PreSelected = (TH2F*)SMSEvents->Clone();
   PreSelected->SetName("PreSelected");
@@ -5253,7 +5257,7 @@ void MassPlotter::Efficiency(TString mySample){
   TCanvas *MyC = new TCanvas("MyC","MyC");
   MyC->Divide(4,3);
   MyC->cd(1);
-  SMSEvents->Divide(h_SMSEvent);
+  SMSEvents->Divide(h_SMSEvents);
   SMSEvents->Draw("COLZ");
   MyC->cd(2);
   SMSEventsHT->Divide(PreSelected);
@@ -5306,19 +5310,19 @@ void MassPlotter::Efficiency(TString mySample){
   MyC2->Divide(2,2);
 
   MyC2->cd(1);
-  SMSEventsAllCuts4or6->Divide(h_SMSEvent);
+  SMSEventsAllCuts4or6->Divide(h_SMSEvents);
   SMSEventsAllCuts4or6->Draw("COLZ");
 
   MyC2->cd(2);
-  SMSEventsAllCuts4or6MT2_100DelPhi->Divide(h_SMSEvent);
+  SMSEventsAllCuts4or6MT2_100DelPhi->Divide(h_SMSEvents);
   SMSEventsAllCuts4or6MT2_100DelPhi->Draw("COLZ");
 
   MyC2->cd(3);
-  SMSEventsAllCutsHT->Divide(h_SMSEvent);
+  SMSEventsAllCutsHT->Divide(h_SMSEvents);
   SMSEventsAllCutsHT->Draw("COLZ");
 
   MyC2->cd(4);
-  SMSEventsAllCutsHTMT2_100DelPhi->Divide(h_SMSEvent);
+  SMSEventsAllCutsHTMT2_100DelPhi->Divide(h_SMSEvents);
   SMSEventsAllCutsHTMT2_100DelPhi->Draw("COLZ");
 }
 
@@ -7909,9 +7913,9 @@ void MassPlotter::setLimitCounting(TString channels, TString cuts, TString hypot
 
       fSamples[i].tree->Draw(variable, selection, "goff");
 
-      TH2D *h_SMSEvent = (TH2D*) fSamples[i].file->Get("h_SMSEvents");
-      h_SMSEvent->Rebin2D(4, 4);
-      h_PN_MLSP_MChi->Divide(h_SMSEvent);
+      h_SMSEvents = (TH2F*) fSamples[i].file->Get("h_SMSEvents");
+      h_SMSEvents->Rebin2D(4, 4);
+      h_PN_MLSP_MChi->Divide(h_SMSEvents);
       TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
       h_PN_MLSP_MChi->Multiply(hXsec);
 
