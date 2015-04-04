@@ -1,23 +1,14 @@
 {
 TString outputdir = "./results/";
+TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30_NewPU_Stitched.dat";
 
-
-//TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30_NewPU_Stitched.dat";
- TString samples = "samples/samplesMineTauPlusX-susy_ww.dat";
-//TString samples = "./samples/samplesMineTest.dat";
+// TString samples = "samples/samplesMineTauPlusX-susy_ww.dat";
+// TString samples = "./samples/samplesMineTest.dat";
 
 int verbose =3;
 
 gSystem->CompileMacro("../MT2Code/src/MassPlotter.cc", "kf");
 gROOT->ProcessLine(".x SetStyle_PRD.C");
-
-
-int gNMT2bins = 17;
- double gMT2bins[gNMT2bins+1] = {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 200, 300, 400, 550, 800};
-int gNMT2Bbins = 15;
- double gMT2Bbins[gNMT2bins+1] = {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 200, 300, 500};
-int gNMT2bins_l = 14;
- double gMT2bins_l[gNMT2bins+1] = {0, 10, 20, 30, 40, 50, 65, 80, 95, 115, 140, 180, 250, 350, 500};
 
 MassPlotter *tA = new MassPlotter(outputdir , "MassPlots_DoubleEle.root");
 
@@ -47,57 +38,60 @@ std::vector<std::string> myChannelCuts;
 myChannelCuts.push_back(std::string(trigger));
 
 //-------------------------Susy Cuts------------------------------
- myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 100) <= 5.0 && abs(Susy.MassLSP - 0) <= 5.0))");
- //myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 125)  && (Susy.MassGlu - Susy.MassLSP) < 175))");
-//myChannelCuts.push_back("(misc.ProcessID!=10 || (  (Susy.MassLSP < 150) && (Susy.MassGlu < 400) ))");
-//myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 25)  && (Susy.MassGlu - Susy.MassLSP) < 75))");
-//myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 175)  && (Susy.MassGlu - Susy.MassLSP) < 225))");
-//myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP > 325)  && (Susy.MassGlu - Susy.MassLSP) < 375))");
-//myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP == 250)");
-//You need to specify the channel
+
+ myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 380.0 && Susy.MassGlu  < 400.0 && Susy.MassLSP < 20.0))"); 
+ // myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 180.0 && Susy.MassGlu  < 200.0 && Susy.MassLSP >=60 && Susy.MassLSP < 80.0))");
+ // myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 240.0 && Susy.MassGlu  < 260.0 && Susy.MassLSP >=40 && Susy.MassLSP < 60.0))");
+
 TString myChan = "doubleEle[0]";
 
 //------------------------DoubleEle Cuts--------------------------
 
-//   myChannelCuts.push_back("NBJetsCSVM==0");
-//   myChannelCuts.push_back("misc.MinMetJetDPhiPt40 > 1");
-//   myChannelCuts.push_back("misc.MET > 30");
-//   myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele0Ind>=0"));
-//   myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele1Ind>=0"));
-//   myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==1"));
-//   myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)");
+   myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele0Ind>=0"));
+   myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele1Ind>=0"));
+   myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==1"));
+   myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)");
+   myChannelCuts.push_back("((doubleEle[0].lv.M() > 16 && doubleEle[0].lv.M() < 76) || (doubleEle[0].lv.M() > 106))");
 
-//   //   myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 90"));
+   myChannelCuts.push_back("NBJetsCSVM==0");
+   myChannelCuts.push_back("misc.MET > 30");
 
-//   myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 76) || (doubleEle[0].lv.M() > 106))");
-//  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>250");
-//  myChannelCuts.push_back("((misc.MET)+(doubleEle[0].lv.Pt()))>80");
-//  myChannelCuts.push_back("((misc.MET)-(doubleEle[0].lv.Pt()))>-50");
+   myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 30"));
+   myChannelCuts.push_back("misc.MinMetJetDPhiPt40 > 1");
 
 
-myChannelCuts.push_back("0 == 0");	
+   //  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>250");
+   //  myChannelCuts.push_back("((misc.MET)+(doubleEle[0].lv.Pt()))>80");
+   //  myChannelCuts.push_back("((misc.MET)-(doubleEle[0].lv.Pt()))>-50");
+
+
+   myChannelCuts.push_back("0 == 0");	
  
-std::ostringstream cutStream;
-cutStream << " ";
+   std::ostringstream cutStream;
+   cutStream << " ";
 
-  for(unsigned int iCut = 1; iCut < myChannelCuts.size(); iCut++)
-   {
-    cutStream << myChannelCuts[iCut];
-    if(iCut < (myChannelCuts.size() - 1))
-    cutStream	  <<" && ";
-   }
+   for(unsigned int iCut = 1; iCut < myChannelCuts.size(); iCut++)
+     {
+       cutStream << myChannelCuts[iCut];
+       if(iCut < (myChannelCuts.size() - 1))
+	 cutStream	  <<" && ";
+     }
 
-TString cuts = cutStream.str().c_str();
+   TString cuts = cutStream.str().c_str();
 
 //------------------------------Methods-----------------------------------
 
+  //tA->eeAnalysisTESpUsys(cuts, trigger, 1000, "a", "mutau_nominal");
+
+   //tA->eeAnalysis(cuts, trigger, 10000000000000000, "MT2");
+//tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2", 50, 0, 500, false, true, true, true,true, true, 1, true, true,"png",1);
+tA->makePlot("doubleEle[0].lv.M()", cuts, -10, 0, -10, trigger, "Inv Mass", 50, 0, 500, false, true, true, true,true, true, 1, true, true,"png",1);
 //tA->MakeCutFlowTable( myChannelCuts );
 //tA->eeFakeRateRatio(cuts, trigger, 100000000000000000,"fakeRatio-Zveto_ele0in_ele1out-singleData-1");
 //tA->eeWJetsEstimation(cuts, trigger, "2014-12-06/fakeRatio-Zveto_ele0out_ele1in-Wjets-ele1Base_FRHistos.root");
 //tA->eeFakePromptCategory(cuts, trigger, 10000000000000000000000,"fakePrompt-allBigMC_singleFull-tight-ele0outWwindow-ele1inWwindow-noEM");
 
-//tA->eeAnalysis(cuts, trigger, 100000000000,"METJetDPhi-NoMisc-NoBveto-susy95-140-0");
-tA->eeAnalysis(cuts, trigger, 10000,"MinMETJetDPhiPt40-susy_100_0-ZZ");
+//tA->eeAnalysis(cuts, trigger, 10000,"MinMETJetDPhiPt40-susy_100_0-ZZ");
 //tA->SystematicsMisc(cuts,trigger,100000000000,"MinMETJetDPhi");
 //tA->miscEfficiency(3, 100000000000);
 //int NumberOfBins = 17;
@@ -150,7 +144,7 @@ tA->eeAnalysis(cuts, trigger, 10000,"MinMETJetDPhiPt40-susy_100_0-ZZ");
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
+}
 
 
 
@@ -581,5 +575,5 @@ tA->makePlot(vars3[iVar3], cuts, -10, -10 , -10, trigger, vars3[iVar3],20,0,20 ,
 
 
 
-}
+
 
