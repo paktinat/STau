@@ -1,7 +1,7 @@
 {
   TString outputdir = "../MassPlots/";
-  //  TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat"; 
-  TString samples = "./samples/samplesMineTauPlusX_BigFiles_NewPU_Stitching.dat";
+  TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat"; 
+  //  TString samples = "./samples/samplesMineTauPlusX_BigFiles_NewPU_Stitching.dat";
 
   //TString samples = "./samples/samplesMineTauPlusX.dat"; 
   //TString samples = "./samples/samplesMineSingleMu.dat";
@@ -30,7 +30,7 @@
   tA->SetIsPhoton(false);
   //To define the channel and turn on/off the channel specific SF. They are applied by default.
   //void SetMuTauChannel(bool muIdSF = true, bool muIsoSF = true, bool muTrgSF = true, bool tauTrgSF = true, bool tauWjetsSF = true)
-  //  tA->SetMuTauChannel();
+  tA->SetMuTauChannel();
 //  tA->SetStitching(false);
   /*
 * Define preselections including trigger
@@ -67,12 +67,13 @@
   //You need to specify the channel
   TString myChan = "muTau[0]";
   
+ myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 380.0 && Susy.MassGlu  < 400.0 && Susy.MassLSP < 20.0))"); 
+ // myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 180.0 && Susy.MassGlu  < 200.0 && Susy.MassLSP >=60 && Susy.MassLSP < 80.0))");
+ // myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 240.0 && Susy.MassGlu  < 260.0 && Susy.MassLSP >=40 && Susy.MassLSP < 60.0))");
+
   //myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP) < 185.0 && (Susy.MassGlu - Susy.MassLSP) > 135.0))"); 
   //myChannelCuts.push_back("(misc.ProcessID!=10 || ( (Susy.MassGlu - Susy.MassLSP) < 300.0))"); 
  
-  //myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 220.0) <= 10.0 && abs(Susy.MassLSP - 0) <= 10.0))"); 
-  //myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 180.0) <= 5.0 && abs(Susy.MassLSP - 60) <= 5.0))");//0.119
-  myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 380.0) <= 5.0 && abs(Susy.MassLSP - 0) <= 5.0))"); //0.227
   //myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 240.0) <= 5.0 && abs(Susy.MassLSP - 40) <= 5.0))");//0.14986
   //myChannelCuts.push_back("(misc.ProcessID!=10 || (  (Susy.MassLSP < 150) && (Susy.MassGlu < 400) ))"); 
   //You need to carefully define the cut variables based on MT2"Channel".hh
@@ -133,12 +134,12 @@
 
 
 
-  tA->eeAnalysis(cuts, trigger, 100000000000000000, "tau_Pt_mutau_down");
+  //  tA->eeAnalysis(cuts, trigger, 100000000000000000, "tau_Pt_mutau_down");
   //--------------------susy_380_0--------------------
 
-  //    tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000, "MT2_mutau_nominal_noB_noRej_noInvMass_noMisc_380_0" , "mutau_nominal" );
+    tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000, "MT2_mutau_nominal_noB_noRej_noInvMass_noMisc_380_0" , "mutau_nominal" );
   //    tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000, "MT2_mutau_tes_up_noB_noRej_noInvMass_noMisc_380_0"  , "mutau_tes_up"  );
-    tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000, "MT2_mutau_tes_down_noB_noRej_noInvMass_noMisc_380_0", "mutau_tes_down");
+    //    tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000, "MT2_mutau_tes_down_noB_noRej_noInvMass_noMisc_380_0", "mutau_tes_down");
 
   //--------------------susy_380_0--------------------
   // tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000, "MT2_mutau_nominal_380_0", "mutau_nominal");

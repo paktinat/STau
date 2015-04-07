@@ -10,12 +10,23 @@ Name            TStau
 SName           SUSY
 ShapeName       Signal
 File            TauTau_V3_1/SMS-TChipChimStauSnu-mChi-120to500-mLSP-1to480-x-050-TuneZ2star-8TeV-pythia6-tauolapp_NBJetsCSVM0_MET30_NewPU_Stitching.root
-Xsection        0.227 pb
+Xsection        0.0343 pb
 Kfact           1.
 Lumi            19600.0
 Type            susy
 Color           1
 
+#(380, 1)
+#Old XSec = 0.227       
+#New XSec = 0.0343
+
+#(180,60)
+#Old XSec = 0.119       
+#New XSec = 0.0111
+
+#(240,40)
+#Old XSec =  0.14986
+#New XSec = 0.01414
 
 ##------------ QCD-Pt-BCtoE ----------------
 SAMPLE
@@ -658,6 +669,41 @@ Kfact           1.0
 Lumi            19600.0
 Type            mc
 Color		600
+
+## --------- Higgs------------------------
+
+SAMPLE
+Name		VBF_HToTauTau
+SName		Higgs
+ShapeName	Higgs
+File            TauTau_V3_1/VBF_HToTauTau_M-125_8TeV-powheg-pythia6_BigFiles_NewPU_Stitching.root
+Xsection  	0.1 # 1.578 * 0.0632 https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+SAMPLE
+Name		WH_ZH_TTH_HToTauTau
+SName		Higgs
+ShapeName	Higgs
+File            TauTau_V3_1/WH_ZH_TTH_HToTauTau_M-125_8TeV-pythia6-tauola_BigFiles_NewPU_Stitching.root
+Xsection  	0.077 # (0.69669 (WH) + 0.3943 (ZH) + 0.1302 (ttH)) * 0.0632 https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+SAMPLE
+Name		GluGluToHToTauTau
+SName		Higgs
+ShapeName	Higgs
+File            TauTau_V3_1/GluGluToHToTauTau_M-125_8TeV-powheg-pythia6_BigFiles_NewPU_Stitching.root
+Xsection  	1.234 # 19.52 * 0.0632 https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
 
 ## --------- Data ---------------------------
 SAMPLE
