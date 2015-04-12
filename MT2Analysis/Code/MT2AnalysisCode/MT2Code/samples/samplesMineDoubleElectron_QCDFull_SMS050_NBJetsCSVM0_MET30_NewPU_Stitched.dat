@@ -301,7 +301,7 @@ Color		401
 
 ##--------------------Gamma+jets---------------------------------
 
-#SAMPLE
+SAMPLE
 Name		GJets_HT-40To100
 SName		QCD
 ShapeName	QCD
@@ -312,7 +312,7 @@ Lumi            19600.0
 Type            mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		GJets_HT-100To200
 SName		QCD
 ShapeName	QCD
@@ -323,7 +323,7 @@ Lumi            19600.0
 Type            mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		GJets_HT-200To400
 SName		QCD
 ShapeName	QCD
@@ -334,7 +334,7 @@ Lumi            19600.0
 Type            mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		GJets_HT-400ToInf
 SName		QCD
 ShapeName	QCD

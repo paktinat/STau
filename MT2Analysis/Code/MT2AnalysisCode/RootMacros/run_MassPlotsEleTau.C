@@ -51,20 +51,28 @@
   // You need to specify the channel
   TString myChan = "eleTau[0]";
 
+  //("(misc.ProcessID!=10 || (Susy.MassGlu  >= 380.0 && Susy.MassGlu  < 400.0 && Susy.MassLSP < 20.0))"); 
+ // myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 180.0 && Susy.MassGlu  < 200.0 && Susy.MassLSP >=60 && Susy.MassLSP < 80.0))");
+ // myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 240.0 && Susy.MassGlu  < 260.0 && Susy.MassLSP >=40 && Susy.MassLSP < 60.0))");
+
   //  myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 180.0) <= 10.0 && abs(Susy.MassLSP - 60.0) <= 10.0))");//0.119
   myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 380.0 && Susy.MassGlu  < 400.0 && Susy.MassLSP < 20.0))"); 
   //  myChannelCuts.push_back("misc.MET > 30");//
-  //  myChannelCuts.push_back("NBJetsCSVM == 0");//
+  myChannelCuts.push_back("NBJetsCSVM == 0");//
+
   myChannelCuts.push_back(std::string(std::string(myChan) + ".tau0Ind >=0"));//
-  myChannelCuts.push_back("tau[eleTau[0].tau0Ind].Isolation3Hits == 1" );//
   myChannelCuts.push_back(std::string(std::string(myChan) + ".ele0Ind >=0"));//
-  myChannelCuts.push_back("ele[eleTau[0].ele0Ind].lv.Pt() > 25");//
-  //  myChannelCuts.push_back("tau[eleTau[0].tau0Ind].lv.Pt() > 20");//
+
+  myChannelCuts.push_back("tau[eleTau[0].tau0Ind].Isolation3Hits == 1" );//
   myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated == 1"));// std::string(myChan) + ".Isolated == 1" );//
   myChannelCuts.push_back(std::string(std::string(myChan) + ".GetSumCharge() == 0"));//
 
-  //  myChannelCuts.push_back("HasNoVetoMuForEleTau()");//
-  //  myChannelCuts.push_back("HasNoVetoElecForEleTau()");//
+  myChannelCuts.push_back("HasNoVetoMuForEleTau()");//
+  myChannelCuts.push_back("HasNoVetoElecForEleTau()");//
+
+ //  myChannelCuts.push_back("ele[eleTau[0].ele0Ind].lv.Pt() > 25");//
+  //  myChannelCuts.push_back("tau[eleTau[0].tau0Ind].lv.Pt() > 20");//
+ 
 
 //   std::string invmass = std::string(std::string(myChan) + ".lv.M()");
 //   myChannelCuts.push_back( invmass +  " > 15." );
@@ -96,7 +104,12 @@
 
   //tA->TauEfficiency(cuts, 1000000000000, "TauEfficiency" , "DY" );
   //tA->TauEfficiency(cuts, 1000000000000, "TauEfficiency" , "Wtolnu" );
-  //   tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "MT2_etau_nominal_noB_noRej_noInvMass_noMisc_380_0", "etau_nominal");
-  //         tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "MT2_etau_tes_up_noB_noRej_noInvMass_noMisc_380_0", "etau_tes_up");
-	   tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "MT2_etau_tes_down_noB_noRej_noInvMass_noMisc_380_0", "etau_tes_down");
+  //  tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "MT2_etau_nominal_380_1", "etau_nominal");
+  //           tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "MT2_etau_tes_up_noB_noRej_noInvMass_noMisc_380_0", "etau_tes_up");
+  //	   tA->eeAnalysisTESpUsys1(cuts, trigger, 1000000000000000000, "MT2_etau_tes_down_noB_noRej_noInvMass_noMisc_380_0", "etau_tes_down");
+
+    tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "MT2_etau_ees_up_380_1", "etau_ees_up");
+    //    tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "MT2_etau_ees_up_380_1", "etau_ees_down");
+
+
 }

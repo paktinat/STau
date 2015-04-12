@@ -51,24 +51,24 @@ TString myChan = "doubleEle[0]";
  myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele1Ind >= 0"));
 
 //---------------Iso--------------------
- myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated == 1"));//Signal
-   //    myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==0"));//QCD medium
- //     myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==-1"));//QCD nonIso
+// myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated == 1"));//Signal
+ //  myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==0"));//QCD medium
+        myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==-1"));//QCD nonIso
 	 
 //---------------Charge-----------------
  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)");//Signal OS 
-   //     myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge == 2 ) || (ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge == -2 ) )");//SS
+ //   myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge == 2 ) || (ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge == -2 ) )");//SS
 
- myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 71) || (doubleEle[0].lv.M() > 111))");
- myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT < 60) || (ele[doubleEle[0].Ele0Ind].MT > 100)) ");
-   //   myChannelCuts.push_back("((ele[doubleEle[0].Ele1Ind].MT < 60) || (ele[doubleEle[0].Ele1Ind].MT > 100)) ");
+ myChannelCuts.push_back("((doubleEle[0].lv.M() > 20 && doubleEle[0].lv.M() < 71) || (doubleEle[0].lv.M() > 111))");
+ // myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT < 65) || (ele[doubleEle[0].Ele0Ind].MT > 95)) ");
+ // myChannelCuts.push_back("((ele[doubleEle[0].Ele1Ind].MT < 60) || (ele[doubleEle[0].Ele1Ind].MT > 100)) ");
 
  myChannelCuts.push_back("NBJetsCSVL == 0");
  myChannelCuts.push_back("misc.MET > 30");
  myChannelCuts.push_back("misc.MinMetJetDPhiPt40 > 1");
 
- myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 40"));
-
+ myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 20"));
+ // myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 120"));
 
  //  myChannelCuts.push_back("HasNoVetoMuForEleTau()");//
                                                                                             
@@ -97,9 +97,8 @@ TString myChan = "doubleEle[0]";
 
   //tA->eeAnalysisTESpUsys(cuts, trigger, 1000, "a", "mutau_nominal");
 
-   tA->eeAnalysis(cuts, trigger, 10000000000000000, "MT2");
-   //tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2-nonIso-SS", 50, 0, 500, false, true, true, true,true, true, 1, true, true,"root",1);
-//tA->makePlot("muTau[0].MT2",     cuts, -10, 0, -10 ,trigger, "MT2", 18, 30, 120,false, true, true, true,true, true, 1, true, false, "C", 3); 
+   //   tA->eeAnalysis(cuts, trigger, 10000000000000000, "MT2");
+tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2", 50, 0, 500, false, true, true, true,true, true, 1, true, true,"root",1);
 //tA->makePlot("doubleEle[0].lv.M()", cuts, -10, 0, -10, trigger, "Inv Mass", 50, 0, 500, false, true, true, true,true, true, 1, true, true,"png",1);
 //tA->MakeCutFlowTable( myChannelCuts );
 //tA->eeFakeRateRatio(cuts, trigger, 100000000000000000,"fakeRatio-Zveto_ele0in_ele1out-singleData-1");

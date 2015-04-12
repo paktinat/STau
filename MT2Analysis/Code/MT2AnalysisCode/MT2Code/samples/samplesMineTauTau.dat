@@ -734,7 +734,7 @@ ShapeName	Higgs
 File            TauTau_V3_1/VBF_HToTauTau_M-125_8TeV-powheg-pythia6_BigFiles_NewPU_Stitching.root
 Xsection  	0.1 # 1.578 * 0.0632 https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013
 Kfact           1.0
-Lumi            19600.0
+Lumi            18100.0
 Type		mc
 Color		401
 
@@ -745,7 +745,7 @@ ShapeName	Higgs
 File            TauTau_V3_1/WH_ZH_TTH_HToTauTau_M-125_8TeV-pythia6-tauola_BigFiles_NewPU_Stitching.root
 Xsection  	0.077 # (0.69669 (WH) + 0.3943 (ZH) + 0.1302 (ttH)) * 0.0632 https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013
 Kfact           1.0
-Lumi            19600.0
+Lumi            18100.0
 Type		mc
 Color		401
 
@@ -756,7 +756,7 @@ ShapeName	Higgs
 File            TauTau_V3_1/GluGluToHToTauTau_M-125_8TeV-powheg-pythia6_BigFiles_NewPU_Stitching.root
 Xsection  	1.234 # 19.52 * 0.0632 https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013
 Kfact           1.0
-Lumi            19600.0
+Lumi            18100.0
 Type		mc
 Color		401
 
