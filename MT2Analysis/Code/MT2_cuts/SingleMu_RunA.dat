@@ -13,9 +13,14 @@ NJets40_min                                      0
 NLeptons_min                                     0
 JESUpDown                                        0
 # ------------ Trigger --------------------------#
+HLT_required                    HLT_Mu15_eta2p1_v1
+HLT_required                    HLT_Mu15_eta2p1_v2
 HLT_required                    HLT_Mu15_eta2p1_v3
 HLT_required                    HLT_Mu15_eta2p1_v4
 HLT_required                    HLT_Mu15_eta2p1_v5
+HLT_required                    HLT_Mu15_eta2p1_v6
+HLT_required                    HLT_Mu15_eta2p1_v7
+HLT_required                    HLT_Mu15_eta2p1_v8
 # ----------- Run -------------------------------#
 Run_min                                          0
 Run_max                                    9999999
