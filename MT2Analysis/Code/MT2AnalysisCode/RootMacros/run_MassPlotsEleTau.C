@@ -56,7 +56,9 @@
  // myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 240.0 && Susy.MassGlu  < 260.0 && Susy.MassLSP >=40 && Susy.MassLSP < 60.0))");
 
   //  myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 180.0) <= 10.0 && abs(Susy.MassLSP - 60.0) <= 10.0))");//0.119
-  myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 380.0 && Susy.MassGlu  < 400.0 && Susy.MassLSP < 20.0))"); 
+  //  myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 380.0 && Susy.MassGlu  < 400.0 && Susy.MassLSP < 20.0))"); 
+  myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 380.0) <= 10.0 && abs(Susy.MassLSP - 1) <= 10.0))");
+
   //  myChannelCuts.push_back("misc.MET > 30");//
   myChannelCuts.push_back("NBJetsCSVM == 0");//
 
@@ -104,12 +106,12 @@
 
   //tA->TauEfficiency(cuts, 1000000000000, "TauEfficiency" , "DY" );
   //tA->TauEfficiency(cuts, 1000000000000, "TauEfficiency" , "Wtolnu" );
-  //  tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "MT2_etau_nominal_380_1", "etau_nominal");
-  //           tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "MT2_etau_tes_up_noB_noRej_noInvMass_noMisc_380_0", "etau_tes_up");
-  //	   tA->eeAnalysisTESpUsys1(cuts, trigger, 1000000000000000000, "MT2_etau_tes_down_noB_noRej_noInvMass_noMisc_380_0", "etau_tes_down");
+    tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "MT2_etau_nominal_380_1", "etau_nominal");
+  //             tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "MT2_etau_tes_up_noB_noRej_noInvMass_noMisc_380_0", "etau_tes_up");
+    //	   tA->eeAnalysisTESpUsys1(cuts, trigger, 1000000000000000000, "MT2_etau_tes_down_noB_noRej_noInvMass_noMisc_380_0", "etau_tes_down");
 
-    tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "MT2_etau_ees_up_380_1", "etau_ees_up");
-    //    tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "MT2_etau_ees_up_380_1", "etau_ees_down");
+  //    tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "MT2_etau_ees_up_380_1", "etau_ees_up");
+  //    tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "MT2_etau_ees_up_380_1", "etau_ees_down");
 
 
 }

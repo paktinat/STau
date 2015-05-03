@@ -3919,12 +3919,12 @@ Float_t MT2tree::eePVisibleZeta(){//temporary solution for makePlot. No need to 
 }
 
 
-float MT2tree::eeDiLepPtRatio(){//temporary solution for makePlot. No need to be moved to the next versions.
+Float_t MT2tree::eeDiLepPtRatio(){//temporary solution for makePlot. No need to be moved to the next versions.
   return DiLepPtRatio(ele[doubleEle[0].Ele0Ind].lv , ele[doubleEle[0].Ele1Ind].lv);
 }
 
 
-float MT2tree::eePositiveChargedLeptonDecayAngleinZframe(){
+Float_t MT2tree::eePositiveChargedLeptonDecayAngleinZframe(){
   TLorentzVector LepPluslv;
   TLorentzVector LepNeglv;
 
@@ -3940,12 +3940,12 @@ float MT2tree::eePositiveChargedLeptonDecayAngleinZframe(){
 }
 
 
-float MT2tree::eeMinMetLepDPhi(){//temporary solution for makePlot. No need to be moved to the next versions.
+Float_t MT2tree::eeMinMetLepDPhi(){//temporary solution for makePlot. No need to be moved to the next versions.
   return MinMetLepDPhi(doubleEle[0].lv = ele[doubleEle[0].Ele0Ind].lv , ele[doubleEle[0].Ele1Ind].lv);
 }
 
 
-float MT2tree::eePositiveChargedLepWithZBeamPlane(){
+Float_t MT2tree::eePositiveChargedLepWithZBeamPlane(){
   TLorentzVector LepPluslv;
   TLorentzVector LepNeglv;
 
@@ -3960,7 +3960,7 @@ float MT2tree::eePositiveChargedLepWithZBeamPlane(){
   return PositiveChargedLepWithZBeamPlane(LepPluslv, LepNeglv);
 }
   
-float MT2tree::eeMCT(){
+Float_t MT2tree::eeMCT(){
 
   TVector2 pmiss_vector2;
   TLorentzVector downstream(0.,0.,0.,0.); // no particles are downstream, i.e. not selected jets are upstream. 
@@ -3968,7 +3968,7 @@ float MT2tree::eeMCT(){
   double MCT = GetMCTcorr(ele[doubleEle[0].Ele0Ind].lv, ele[doubleEle[0].Ele1Ind].lv, downstream, pmiss_vector2);
   return MCT;
 }
-float MT2tree::eeMCTImb(){
+Float_t MT2tree::eeMCTImb(){
   TVector2 pmiss_vector2;
   TLorentzVector downstream(0.,0.,0.,0.); // no particles are downstream, i.e. not selected jets are upstream.
   pmiss_vector2.Set(-doubleEle[0].lv.Px(), -doubleEle[0].lv.Py());
@@ -3976,42 +3976,92 @@ float MT2tree::eeMCTImb(){
   return MCTImbalanced;
 }
 
-float MT2tree::eeMETMinusPtZ(){
+Float_t MT2tree::eeMETMinusPtZ(){
   TLorentzVector A = pfmet[0]-doubleEle[0].lv;
   double B = A.Pt();
   return B;
 
 }
-float MT2tree::eeMETPlusPtZ(){
+Float_t MT2tree::eeMETPlusPtZ(){
   TLorentzVector A = pfmet[0]+doubleEle[0].lv;
   double B = A.Pt();
   return B;
 }
 
 
-float MT2tree::eeJZBInDirect(){
+Float_t MT2tree::eeJZBInDirect(){
   TLorentzVector A = -pfmet[0]-doubleEle[0].lv;
   double B = A.Pt();
   double C = B-doubleEle[0].lv.Pt();
   return C;
 }
-float MT2tree::eeabsJZBInDirect(){
+Float_t MT2tree::eeabsJZBInDirect(){
   TLorentzVector A = -pfmet[0]-doubleEle[0].lv;
   double B = A.Pt();
   double C = B-doubleEle[0].lv.Pt();
   return fabs(C);
 }
 
-float MT2tree::eeDeltaR(){
+Float_t MT2tree::eeDeltaR(){
 float deltaR = Util::GetDeltaR(ele[doubleEle[0].Ele0Ind].lv.Eta(),ele[doubleEle[0].Ele1Ind].lv.Eta(),ele[doubleEle[0].Ele0Ind].lv.Phi(),ele[doubleEle[0].Ele1Ind].lv.Phi());
 return deltaR;
 }
 
-float MT2tree::eeDeltaRJet0E0(){
+Float_t MT2tree::eeDeltaRJet0E0(){
 float deltaR = Util::GetDeltaR(ele[0].lv.Eta(),jet[0].lv.Eta(),ele[0].lv.Phi(),jet[0].lv.Phi());
 return deltaR;
  cout << "deltaR..." << deltaR << endl; 
 }
+
+Bool_t MT2tree::eeRejE2(){
+
+  bool RejE2_ee = false;
+  for (int i=0 ; i < NEles ; i++){
+    if (i != doubleEle[0].Ele0Ind && i != doubleEle[0].Ele1Ind)
+      {
+	if(ele[i].Iso04 < 0.5 && ele[i].lv.Eta() < 1.479 && ele[i].lv.Pt() > 10 )//RejE2_EE)
+ 		{		
+ 		  RejE2_ee = true;
+ 		  break;
+ 		}
+ 	      }
+ 	  }
+
+return RejE2_ee;
+}
+
+Bool_t MT2tree::eeRejMu(){
+
+  bool RejMu_ee = false;
+  for (int i=0 ; i < NMuons ; i++){
+    if(muo[i].Iso04 < 0.5 && muo[i].lv.Eta() < 1.479 && muo[i].lv.Pt() > 10)
+ 		{		
+ 		  RejMu_ee = true;
+ 		  break;
+ 		}
+ 	  }
+
+return RejMu_ee;
+}
+
+Bool_t MT2tree::eeIsoMedium01to05(){
+    
+  bool a = false;   
+  if((ele[doubleEle[0].Ele0Ind].Iso04 < 0.5 && ele[doubleEle[0].Ele0Ind].Iso04 > 0.1) && (ele[doubleEle[0].Ele1Ind].Iso04 < 0.5 && ele[doubleEle[0].Ele1Ind].Iso04 > 0.1))
+    a = true; 
+  
+  return a;
+}
+
+Bool_t MT2tree::eeIsoMedium01to10(){
+    
+  bool a = false;   
+  if((ele[doubleEle[0].Ele0Ind].Iso04 < 1.0 && ele[doubleEle[0].Ele0Ind].Iso04 > 0.1) && (ele[doubleEle[0].Ele1Ind].Iso04 < 1.0 && ele[doubleEle[0].Ele1Ind].Iso04 > 0.1))
+    a = true; 
+  
+  return a;
+}
+
 
 // ----------------------------------------------------------------------------------------------------------
 ClassImp(MT2Susy)

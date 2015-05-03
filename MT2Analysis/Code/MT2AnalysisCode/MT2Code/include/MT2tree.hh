@@ -948,6 +948,11 @@ public:
   Float_t eeabsJZBInDirect();
   Float_t eeDeltaR();
   Float_t eeDeltaRJet0E0();
+  Bool_t  eeRejE2();
+  Bool_t  eeRejMu();
+  Bool_t  eeIsoMedium01to05();
+  Bool_t  eeIsoMedium01to10();
+
   //----------------------------------
 
 

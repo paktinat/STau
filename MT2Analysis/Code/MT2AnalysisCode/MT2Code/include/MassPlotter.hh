@@ -269,6 +269,7 @@ public:
   void eeAnalysisPUsys(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
   void eeAnalysisPUsys();
   void eeAnalysisCDF(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
+  void eeZInOut(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
 
 
   void setFlags(int flag); //To determine which analysis we look at HighHT/LowHT MT2(b) options are:

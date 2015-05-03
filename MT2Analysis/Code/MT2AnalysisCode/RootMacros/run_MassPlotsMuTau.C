@@ -67,7 +67,10 @@
   //You need to specify the channel
   TString myChan = "muTau[0]";
   
- myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 380.0 && Susy.MassGlu  < 400.0 && Susy.MassLSP < 20.0))"); 
+  // myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 380.0 && Susy.MassGlu  < 400.0 && Susy.MassLSP < 20.0))"); 
+
+ myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 380.0) <= 10.0 && abs(Susy.MassLSP - 1) <= 10.0))");
+
  // myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 180.0 && Susy.MassGlu  < 200.0 && Susy.MassLSP >=60 && Susy.MassLSP < 80.0))");
  // myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 240.0 && Susy.MassGlu  < 260.0 && Susy.MassLSP >=40 && Susy.MassLSP < 60.0))");
 
@@ -137,9 +140,9 @@
   //  tA->eeAnalysis(cuts, trigger, 100000000000000000, "tau_Pt_mutau_down");
   //--------------------susy_380_0--------------------
 
-    tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000, "MT2_mutau_nominal_noB_noRej_noInvMass_noMisc_380_0" , "mutau_nominal" );
+    tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000, "MT2_mutau_nominal_380_1" , "mutau_nominal" );
   //    tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000, "MT2_mutau_tes_up_noB_noRej_noInvMass_noMisc_380_0"  , "mutau_tes_up"  );
-    //    tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000, "MT2_mutau_tes_down_noB_noRej_noInvMass_noMisc_380_0", "mutau_tes_down");
+    //       tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000, "MT2_mutau_tes_down_noB_noRej_noInvMass_noMisc_380_0", "mutau_tes_down");
 
   //--------------------susy_380_0--------------------
   // tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000, "MT2_mutau_nominal_380_0", "mutau_nominal");

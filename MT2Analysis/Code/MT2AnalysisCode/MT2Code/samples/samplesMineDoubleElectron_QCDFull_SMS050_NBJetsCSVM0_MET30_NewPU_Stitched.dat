@@ -10,24 +10,32 @@ SAMPLE
 Name            TStau
 SName           SUSY
 ShapeName       Signal
-File            TauTau_V3_1/SMS-TChipChimStauSnu-mChi-120to500-mLSP-1to480-x-050-TuneZ2star-8TeV-pythia6-tauolapp_NBJetsCSVM0_MET30_NewPU_Stitching.root
-Xsection        0.0343
+File            TauTau_V3_1/SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part*_Part*_NBJetsCSVM0_MET30_NewPU_Stitching.root
+Xsection        0.00189
 Kfact           1.0
 Lumi            19600.0
 Type            susy
 Color           1
 
+#TauTau_V3_1/SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part*_Part*_NBJetsCSVM0_MET30_NewPU_Stitching.root
+#TauTau_V3_1/SMS-TChipChimStauSnu-mChi-120to500-mLSP-1to480-x-050-TuneZ2star-8TeV-pythia6-tauolapp_NBJetsCSVM0_MET30_NewPU_Stitching.root
+
 #(380, 1)
-#Old XSec = 0.227       
-#New XSec = 0.0343
+#Old   XSec = 0.227       
+#New   XSec = 0.0343
+#Newer Xsec = 0.00189
+
 
 #(180,60)
-#Old XSec = 0.119       
-#New XSec = 0.0111
+#Old    XSec = 0.119       
+#New    XSec = 0.0111
+#Newer  Xsec = 0.00993
+
 
 #(240,40)
-#Old XSec =  0.14986
-#New XSec = 0.01414
+#Old   XSec =  0.14986
+#New   XSec = 0.01414
+#Newer Xsec = 0.01249
 
 ##------------ QCD-Pt-BCtoE ----------------
 
@@ -99,7 +107,7 @@ Color		401
 
 ##-------------- QCD-Pt-EMEnriched --------------------
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-20-30-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -110,7 +118,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-30-80-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -121,7 +129,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-80-170-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -132,7 +140,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-170-250-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -143,7 +151,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-250-350-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -154,146 +162,12 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-350-EMEnriched
 SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_350_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	89.1   #CMS AN-12-468 Cross sections are LO
-Kfact           1.0
-Lumi            19600.0
-Type		mc
-Color		401
-
-##------------ QCD-Pt-MuEnriched ----------------
-
-#SAMPLE
-Name		QCD-Pt-15-20-MuEnriched
-SName		QCD
-ShapeName	QCD
-File            TauTau_V3_1/QCD_Pt-15to20_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
-Xsection  	2.73858E06 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
-Kfact           1.0
-Lumi            19600 
-Type		mc
-Color		401
-
-#SAMPLE
-Name		QCD-Pt-20-30-MuEnriched
-SName		QCD
-ShapeName	QCD
-File            TauTau_V3_1/QCD_Pt-20to30_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
-Xsection  	1.8655E06 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
-Kfact           1.0
-Lumi            19600.0
-Type		mc
-Color		401
-
-#SAMPLE
-Name		QCD-Pt-30-50-MuEnriched
-SName		QCD
-ShapeName	QCD
-File            TauTau_V3_1/QCD_Pt-30to50_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
-Xsection  	806298.0 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
-Kfact           1.0
-Lumi            19600.0
-Type		mc
-Color		401
-
-#SAMPLE
-Name		QCD-Pt-50-80-MuEnriched
-SName		QCD
-ShapeName	QCD
-File            TauTau_V3_1/QCD_Pt-50to80_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
-Xsection  	176187.6 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
-Kfact           1.0
-Lumi            19600.0
-Type		mc
-Color		401
-
-#SAMPLE
-Name		QCD-Pt-80-120-MuEnriched
-SName		QCD
-ShapeName	QCD
-File            TauTau_V3_1/QCD_Pt-80to120_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
-Xsection  	40448 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
-Kfact           1.0
-Lumi            19600.0
-Type		mc
-Color		401
-
-#SAMPLE
-Name		QCD-Pt-120-170-MuEnriched
-SName		QCD
-ShapeName	QCD
-File            TauTau_V3_1/QCD_Pt-120to170_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
-Xsection  	7463.94 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
-Kfact           1.0
-Lumi            19600.0
-Type		mc
-Color		401
-
-#SAMPLE
-Name		QCD-Pt-170-300-MuEnriched
-SName		QCD
-ShapeName	QCD
-File            TauTau_V3_1/QCD_Pt-170to300_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
-Xsection  	2299.752 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
-Kfact           1.0
-Lumi            19600.0
-Type		mc
-Color		401
-
-#SAMPLE
-Name		QCD-Pt-300-470-MuEnriched
-SName		QCD
-ShapeName	QCD   
-File            TauTau_V3_1/QCD_Pt-300to470_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
-Xsection  	151.8048 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications  
-Kfact           1.0
-Lumi            19600.0
-Type		mc
-Color		401
-
-#SAMPLE
-Name		QCD-Pt-470-600-MuEnriched
-SName		QCD
-ShapeName	QCD
-File            TauTau_V3_1/QCD_Pt-470to600_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
-Xsection  	11.79648 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
-Kfact           1.0
-Lumi            19600.0
-Type		mc
-Color		401
-
-#SAMPLE
-Name		QCD-Pt-600-800-MuEnriched
-SName		QCD
-ShapeName	QCD
-File            TauTau_V3_1/QCD_Pt-600to800_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
-Xsection  	2.690196 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
-Kfact           1.0
-Lumi            19600.0
-Type		mc
-Color		401
-
-#SAMPLE
-Name		QCD-Pt-800-1000-MuEnriched
-SName		QCD
-ShapeName	QCD
-File            TauTau_V3_1/QCD_Pt-800to1000_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
-Xsection  	0.368781 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications 
-Kfact           1.0
-Lumi            19600.0
-Type		mc
-Color		401
-
-#SAMPLE
-Name		QCD-Pt-1000-MuEnriched
-SName		QCD
-ShapeName	QCD
-File            TauTau_V3_1/QCD_Pt-1000_MuEnrichedPt5_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
-Xsection  	0.0849078 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications  
 Kfact           1.0
 Lumi            19600.0
 Type		mc

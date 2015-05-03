@@ -1058,8 +1058,7 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
                   ChannelSpecificSF += "*eleMu[0].EleIdIsoSF";
 
 		 }
-      
-      
+            
 
 		  if(fStitching && (Samples[i].sname == "Wtolnu" || (Samples[i].shapename == "ZJetsToLL" && Samples[i].name != "DYToLL_M10To50"))){
 		    weight = Samples[i].lumi;
@@ -9183,11 +9182,21 @@ void MassPlotter::eeAnalysis(TString cuts, TString trigger, unsigned int nevents
 
   TH1::SetDefaultSumw2();
 
+  TH2D *h_PN_MLSP_MChi = new TH2D("h_PN_MLSP_MChi", "", 125, 0, 2500, 125, 0, 2500);
+  h_PN_MLSP_MChi->Sumw2();
+
+  TH2D *h_N_MLSP_MChi = new TH2D("h_N_MLSP_MChi", "", 125, 0, 2500, 125, 0, 2500);
+  h_N_MLSP_MChi->Sumw2();
+
+
   TString  cnames[NumberOfSamples+1] = {"QCD", "W", "ZX", "Top", "WW", "Higgs", "MC", "SUSY", "data" };
   int      ccolor[NumberOfSamples+1] = { 401 , 417,  419,   855,  603,    kRed,  603,      1,    632 };
 
-  static const int nbins = 10;
-  double bins[nbins+1] = {-1000.0, 0.0, 20.0, 40.0, 60.0, 90.0, 120.0, 150.0, 200.0, 300.0, 1000.0};
+  static const int nbins = 4;
+  double bins[nbins+1] = {0, 50, 100, 200, 1000};
+
+  //  static const int nbins = 8;
+  //  double bins[nbins+1] = {0.0, 20.0, 40.0, 60.0, 90.0, 120.0, 150.0, 200.0, 500.0};
 
   TString varname = "MT2";
   for (int i=0; i <= (NumberOfSamples) ; i++){
@@ -9247,12 +9256,6 @@ void MassPlotter::eeAnalysis(TString cuts, TString trigger, unsigned int nevents
 
       unsigned int nentries = myEvtList->GetN();//Sample.tree->GetEntries();
 
-
-      //     if (Sample.name == "QCD-Pt-15-20-MuEnriched")
-      //       fPUReweight = false;
-      //     else
-      //    fPUReweight = true;
-
       float Weight=0.0;
     
       //      if(fPUReweight) 
@@ -9263,35 +9266,39 @@ void MassPlotter::eeAnalysis(TString cuts, TString trigger, unsigned int nevents
       for ( unsigned int jentry=0 ; jentry<min(nentries , nevents);jentry++ )
 	{
 
-	  bool RejMu_ee = false;
-	  for(int i=0; i<fMT2tree->NMuons; i++){ 
-	    if(fMT2tree->muo[i].RejMu_EE)
-	      {
-		RejMu_ee = true;
-		break;
-	      }
-	  }
-	  //	  cout << "RejMu_ee" << RejMu_ee << endl; 
+// 	  bool RejMu_ee = false;
+// 	  for(int i=0; i<fMT2tree->NMuons; i++){ 
+// 	    if(fMT2tree->muo[i].RejMu_EE)
+// 	      {
+// 		RejMu_ee = true;
+// 		break;
+// 	      }
+// 	  }
+// 	  //	  cout << "RejMu_ee" << RejMu_ee << endl; 
 
 
-	  bool RejE_ee = false;
-	  for (int i=0 ; i < fMT2tree->NEles ; i++){
-	    if (i != fMT2tree->doubleEle[0].Ele0Ind && i != fMT2tree->doubleEle[0].Ele1Ind)
-	      {
-	      if ( fMT2tree->ele[i].PassE1_EE )
-		{		
-		  RejE_ee = true;
-		  break;
-		}
-	      }
-	  }
-	  //	  cout << "Reje_ee" << Reje_ee << endl; 
+//  	  bool RejE_ee = false;
+//  	  for (int i=0 ; i < fMT2tree->NEles ; i++){
+//  	    if (i != fMT2tree->doubleEle[0].Ele0Ind && i != fMT2tree->doubleEle[0].Ele1Ind)
+//  	      {
+// 		if(fMT2tree->ele[i].RejE2_EE)// ( fMT2tree->ele[i].Iso04 < 0.5 && fMT2tree->ele[i].lv.Eta() < 1.479 )
+//  		{		
+//  		  RejE_ee = true;
+//  		  break;
+//  		}
+//  	      }
+//  	  }
+//  	  //	  cout << "Reje_ee" << Reje_ee << endl; 
 
-	  if (RejMu_ee == true)
-	    continue;
+// 	  // 	  if (RejMu_ee == true)
+// 	  // 	    continue;
+//  	  if (RejE_ee == true)
+//  	    continue;
 
-	  if (RejE_ee == true)
-	    continue;
+//	  if (fMT2tree->NMuons > 0)
+//          continue;                                                                                                                                 
+//	  if (fMT2tree->NEles > 2)
+//          continue;                                                                                                                                 
 
 
 	  //Sample.tree->GetEntry(jentry);
@@ -9478,10 +9485,10 @@ void MassPlotter::eeAnalysis(TString cuts, TString trigger, unsigned int nevents
 	    MT2[NumberOfSamples]->Fill(myQuantity, weight);//data
 	    
 	  }else{
-	    if(Sample.sname == "SUSY")
-	      MT2[NumberOfSamples-1]->Fill(myQuantity, weight);
-	    else
-	      MT2[NumberOfSamples-2]->Fill(myQuantity, weight);
+ 	    if(Sample.sname == "SUSY")
+ 	      MT2[NumberOfSamples-1]->Fill(myQuantity, weight);
+ 	    else
+ 	      MT2[NumberOfSamples-2]->Fill(myQuantity, weight);
 	    
 	    if(Sample.sname == "Top")
 	      MT2[3]->Fill(myQuantity, weight);
@@ -9500,7 +9507,22 @@ void MassPlotter::eeAnalysis(TString cuts, TString trigger, unsigned int nevents
 		    else
 		      if(Sample.sname == "Higgs")
 			MT2[5]->Fill(myQuantity, weight);
+
 	  }
+
+
+	  if(Sample.type=="susy"){
+	    
+	    TString SUSYselection = TString::Format("(%s)", weight, myCuts.Data());
+	    TString SUSYvariable = TString::Format("Susy.MassLSP:Susy.MassGlu>>+%s", h_PN_MLSP_MChi->GetName());
+	    Sample.tree->Draw(SUSYvariable, SUSYselection, "goff");
+	    
+	    SUSYselection = TString::Format(" (%s)", myCuts.Data()); 
+	    SUSYvariable = TString::Format("Susy.MassLSP:Susy.MassGlu>>+%s", h_N_MLSP_MChi->GetName());
+	    Sample.tree->Draw(SUSYvariable, SUSYselection, "goff");
+	    
+	  }
+	  
 
 
 	  //       if(data == 1)
@@ -9556,6 +9578,7 @@ void MassPlotter::eeAnalysis(TString cuts, TString trigger, unsigned int nevents
 
   for(int j = 0; j <= (NumberOfSamples); j++){
     AddOverAndUnderFlow(MT2[j], true, true);
+    //AddOverAndUnderFlow(MT2[j], true, true);
   }
    printYield();
 
@@ -9617,10 +9640,45 @@ void MassPlotter::eeAnalysis(TString cuts, TString trigger, unsigned int nevents
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
   
+  
+  TH1F *h_PN_Bkg  = (TH1F*)MT2[NumberOfSamples-2]->Clone();
+  h_PN_Bkg->SetName("h_PN_Bkg");
+  h_PN_Bkg->Rebin(h_PN_Bkg->GetNbinsX());
+  
+  TH1F *h_PN_Data  = (TH1F*)MT2[NumberOfSamples]->Clone();
+  h_PN_Data->SetName("h_PN_Data");
+  h_PN_Data->Rebin(h_PN_Data->GetNbinsX());
+
+  h_SMSEvents->Rebin2D(4, 4);
+  h_PN_MLSP_MChi->Divide(h_SMSEvents);
+  
+  TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
+  h_PN_MLSP_MChi->Multiply(hXsec);
+  
+  TString fileName1 = fOutputDir;
+  if(!fileName1.EndsWith("/")) fileName1 += "/";
+  Util::MakeOutputDir(fileName1);
+  fileName1 = fileName1 + "countingForExclusion_" + myfileName +"_Histos.root";
+  TFile *savefile1 = new TFile(fileName1.Data(), "RECREATE");
+  savefile1 ->cd();
+  
+  h_stack->SetName("h_stack");
+  
+  h_stack->Write();
+  h_PN_Bkg->Write();
+  h_PN_Data->Write();
+  h_PN_MLSP_MChi->Write();
+  h_N_MLSP_MChi->Write();
+  
+  savefile1->Close();	
+  std::cout << "Saved histograms in " << savefile1->GetName() << std::endl;
+	  
   printHisto(h_stack, MT2[NumberOfSamples], MT2[NumberOfSamples-2], MT2[NumberOfSamples-1], Legend1 , myfileName, "hist", true, myfileName, "Events", 0, -10, 2, true);
   
   plotRatioStack(h_stack, MT2[NumberOfSamples-2], MT2[NumberOfSamples], MT2[NumberOfSamples-1], true, false, myfileName, Legend1, myfileName, "Events", 0, -10, 2, true, "C");
   
+
+
   //   printHisto(h_stack, MT2[7], MT2[5], MT2[6], Legend1 , myfileName, "hist", true, myfileName, "Events", -10, 0, -10, true);                        
   //   plotRatioStack(h_stack, MT2[5], MT2[7], MT2[6], true, false, myfileName, Legend1, myfileName, "Events", -10, 0, -10, true);    
 
@@ -9774,6 +9832,14 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 
   TH1::SetDefaultSumw2();
 
+
+  TH2D *h_PN_MLSP_MChi = new TH2D("h_PN_MLSP_MChi", "", 125, 0, 2500, 125, 0, 2500);
+  h_PN_MLSP_MChi->Sumw2();
+
+  TH2D *h_N_MLSP_MChi = new TH2D("h_N_MLSP_MChi", "", 125, 0, 2500, 125, 0, 2500);
+  h_N_MLSP_MChi->Sumw2();
+
+
   TFile* pileup_data = new TFile("pileupData.root","READ");
   
   TH1F* pileup_data_histo = (TH1F*) pileup_data->Get("pileup");
@@ -9791,14 +9857,16 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
   pileup_data_up_histo->Scale(1.0/pileup_data_up_histo->Integral());
   pileup_data_down_histo->Scale(1.0/pileup_data_down_histo->Integral());
 
+  pileup_data_up_histo->Divide(pileup_data_histo);
+  pileup_data_down_histo->Divide(pileup_data_histo);
 
-  for(int i = 0; i < pileup_data_up_histo->GetNbinsX();i++){
-    pileup_data_up_histo->SetBinContent(i+1,  pileup_data_up_histo->GetBinContent(i+1)/pileup_data_histo->GetBinContent(i+1));
-  }
+//   for(int i = 0; i < pileup_data_up_histo->GetNbinsX();i++){
+//     pileup_data_up_histo->SetBinContent(i+1,  pileup_data_up_histo->GetBinContent(i+1)/pileup_data_histo->GetBinContent(i+1));
+//   }
 
-  for(int i = 0; i < pileup_data_down_histo->GetNbinsX();i++){
-    pileup_data_down_histo->SetBinContent(i+1,  pileup_data_down_histo->GetBinContent(i+1)/pileup_data_histo->GetBinContent(i+1));
-  }
+//   for(int i = 0; i < pileup_data_down_histo->GetNbinsX();i++){
+//     pileup_data_down_histo->SetBinContent(i+1,  pileup_data_down_histo->GetBinContent(i+1)/pileup_data_histo->GetBinContent(i+1));
+//   }
 
 
   //-------------------added-------------------
@@ -10029,13 +10097,13 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	   weight *= fMT2tree->pileUp.Weight;
 	 }
        
-       if (tau0_ditau_up.Pt() <= 45 && tau1_ditau_up.Pt() <= 45)
+       if (tau0_ditau_up.Pt() <= 45 || tau1_ditau_up.Pt() <= 45)
 	 continue;
        if (invMass_ditau_up <= 15 || (invMass_ditau_up >= 55  && invMass_ditau_up <= 85  ))
        	 continue;
        if (MinMetJetDPhi_up <= 1)
 	 continue;
-       if(mt2_ditau_up <= 90)
+       if (mt2_ditau_up <= 90)
        	 continue;
 
       myQuantity = mt2_ditau_up;
@@ -10052,13 +10120,13 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	   weight *= fMT2tree->pileUp.Weight;
 	 }
        
-       if (tau0_ditau_down.Pt() <= 45 && tau1_ditau_down.Pt() <= 45)
+       if (tau0_ditau_down.Pt() <= 45 || tau1_ditau_down.Pt() <= 45)
 	 continue;
        if (invMass_ditau_down <= 15 || (invMass_ditau_down >= 55  && invMass_ditau_down <= 85  ))
 	 continue;
        if (MinMetJetDPhi_down <= 1)
 	 continue;
-       if(mt2_ditau_down <= 90)
+       if (mt2_ditau_down <= 90)
 	 continue;
        
        myQuantity = mt2_ditau_down;
@@ -10076,7 +10144,7 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	   weight *= fMT2tree->pileUp.Weight;
 	 }
        
-       if (tau0_ditau_up.Pt() <= 45 && tau1_ditau_up.Pt() <= 45)
+       if (tau0_ditau_up.Pt() <= 45 || tau1_ditau_up.Pt() <= 45)
 	 continue;
        if (invMass_ditau_up <= 15 || (invMass_ditau_up >= 55  && invMass_ditau_up <= 85  ))
 	 continue;
@@ -10102,7 +10170,7 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	   weight *= fMT2tree->pileUp.Weight;
 	 }
 
-       if (tau0_ditau_down.Pt() <= 45 && tau1_ditau_down.Pt() <= 45)
+       if (tau0_ditau_down.Pt() <= 45 || tau1_ditau_down.Pt() <= 45)
 	 continue;
        if (invMass_ditau_down <= 15 || (invMass_ditau_down >= 55  && invMass_ditau_down <= 85  ))
 	 continue;
@@ -10340,11 +10408,6 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	      weight *= fMT2tree->eleTau[0].tauWjetsSF;
        }
 
-// 	cout  << "MET_up_e............." << MET_up_e.Pt() << endl; 
-// 	cout  << "MinMetJetDPhi_up_e..." << MinMetJetDPhi_up_e << endl; 
-// 	cout  << "invMass_etau_up_e...." << invMass_etau_up_e << endl; 
-// 	cout  << "ele_etau_up.Pt......." << ele_etau_up.Pt() << endl; 
-// 	cout  << "mt2_etau_up_e........" << mt2_etau_up_e << endl; 
      
 	if(MET_up_e.Pt() <= 30)
 	  continue;
@@ -10381,11 +10444,6 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	      weight *= fMT2tree->eleTau[0].tauWjetsSF;
 	  }
 	
-// 	cout  << "MET_down_e............." << MET_down_e.Pt() << endl; 
-// 	cout  << "MinMetJetDPhi_down_e..." << MinMetJetDPhi_down_e << endl; 
-// 	cout  << "invMass_etau_down_e...." << invMass_etau_down_e << endl; 
-// 	cout  << "ele_etau_down.Pt......." << ele_etau_down.Pt() << endl; 
-// 	cout  << "mt2_etau_down_e........" << mt2_etau_down_e << endl; 
 
 	if(MET_down_e.Pt() <= 30)
 	  continue;
@@ -10847,6 +10905,22 @@ else if(status == "etau_pu_down")
 		    MT2[5]->Fill(myQuantity, weight);
       }
 
+
+  
+
+		  if(Sample.type=="susy"){
+
+		    TString SUSYselection = TString::Format("(%s)", weight, myCuts.Data());
+		    TString SUSYvariable = TString::Format("Susy.MassLSP:Susy.MassGlu>>+%s", h_PN_MLSP_MChi->GetName());
+		    Sample.tree->Draw(SUSYvariable, SUSYselection, "goff");
+
+		    SUSYselection = TString::Format(" (%s)", myCuts.Data()); 
+		    SUSYvariable = TString::Format("Susy.MassLSP:Susy.MassGlu>>+%s", h_N_MLSP_MChi->GetName());
+		    Sample.tree->Draw(SUSYvariable, SUSYselection, "goff");
+		  
+		  }
+
+
 //-------------------added----------------------------^
 
 
@@ -10916,8 +10990,8 @@ else if(status == "etau_pu_down")
 	
 
     
-      }
-//For(events)
+      
+      }//For(events)
 
     double e1 =0;
    for(int m = 0; m <= NumberOfSamples; m++){
@@ -10935,7 +11009,8 @@ else if(status == "etau_pu_down")
 
 
   for(int j = 0; j <= NumberOfSamples; j++){
-     AddOverAndUnderFlow(MT2[j], true, true);
+    AddOverAndUnderFlow(MT2[j], true, true);
+    //     AddOverAndUnderFlow(MT2[j], true, true);
      //          AddOverAndUnderFlow(MT2[j]);
 //        MT2[j]->Multiply(pileup_data_up_histo);
    }
@@ -11047,6 +11122,41 @@ else if(status == "etau_pu_down")
 
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
+
+
+
+  TH1F *h_PN_Bkg  = (TH1F*)MT2[NumberOfSamples-2]->Clone();
+  h_PN_Bkg->SetName("h_PN_Bkg");
+  h_PN_Bkg->Rebin(h_PN_Bkg->GetNbinsX());
+  
+  TH1F *h_PN_Data  = (TH1F*)MT2[NumberOfSamples]->Clone();
+  h_PN_Data->SetName("h_PN_Data");
+  h_PN_Data->Rebin(h_PN_Data->GetNbinsX());
+
+  h_SMSEvents->Rebin2D(4, 4);
+  h_PN_MLSP_MChi->Divide(h_SMSEvents);
+  
+  TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
+  h_PN_MLSP_MChi->Multiply(hXsec);
+
+  TString fileName1 = fOutputDir;
+  if(!fileName1.EndsWith("/")) fileName1 += "/";
+  Util::MakeOutputDir(fileName1);
+  fileName1 = fileName1 + "countingForExclusion_" + myfileName +"_Histos.root";
+  TFile *savefile1 = new TFile(fileName1.Data(), "RECREATE");
+  savefile1 ->cd();
+  
+  h_stack->SetName("h_stack");
+  
+  h_stack->Write();
+  h_PN_Bkg->Write();
+  h_PN_Data->Write();
+  h_PN_MLSP_MChi->Write();
+  h_N_MLSP_MChi->Write();
+  savefile1->Close();
+	
+  std::cout << "Saved histograms in " << savefile1->GetName() << std::endl;
+
 
   printHisto(h_stack, MT2[8], MT2[6], MT2[7], Legend1 , myfileName, "hist", true, myfileName, "Events", -10, 0, -10, true);
 
@@ -13161,7 +13271,7 @@ void MassPlotter::miscEfficiency(int sample_index, unsigned int nevents){
 	enum counters_t { count_begin, met0to30=count_begin, met30to60, met60to100, met100to150, met150to200, met200to1000,  count_end };
 	Monitor counters[count_end];
 	TString lablx[count_end] = {"met0to30", "met30to60" , "met60to100", "met100to150", "met150to200", "met200to1000"};
-
+	//	TString lablx[count_end] = {"0<=MT2<40", "40<=MT2<80" , "80<=MT2<120", "120<=MT2"};
 
 	fMT2tree = new MT2tree();
 	Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
@@ -13177,12 +13287,12 @@ void MassPlotter::miscEfficiency(int sample_index, unsigned int nevents){
 
 		if (fMT2tree->misc.MinMetJetDPhiPt40 > 1) acceptance=true;
 
-Double_t weight = fMT2tree->pileUp.Weight;
+		Double_t weight = fMT2tree->pileUp.Weight;
 
 
-if(Sample.sname=="VV")
-
-  {
+		if(Sample.sname=="VV")
+		  
+		  {
 
 		if(fMT2tree->misc.MET                     < 30    )
 		  {counters[met0to30].fill("met0to30", weight);
@@ -13341,3 +13451,314 @@ else  {
 // 	delete h_acc;
 // 	delete col;
 }
+
+void MassPlotter::eeZInOut(TString cuts, TString trigger, unsigned int nevents, TString myfileName){
+
+  TH1::SetDefaultSumw2();
+
+  //  TString  cnames[NumberOfSamples+1] = {"QCD", "W", "ZX", "Top", "WW", "Higgs", "MC", "SUSY", "data" };
+  //  int      ccolor[NumberOfSamples+1] = { 401 , 417,  419,   855,  603,    kRed,  603,      1,    632 };
+
+  //    TString  cnames[3] = {"sumMT>250", "All", "Efficiency"};
+    TString  cnames[3] = {"Zin", "Zout", "Outin_Efficiency"};
+  //  int      ccolor1[NumberOfSamples+1] = { 401 , 417,  419,   855,  603,    kRed,  603,      1,    632 };
+      //    double bins[nbins+1] = {0.0, 10.0, 20.0, 30.0, 40.0, 45.0, 50.0, 55.0, 60.0, 75.0, 90.0};
+
+  static const int nbins = 4;
+  double bins[nbins+1] = {40, 60, 100, 160, 1000};
+
+
+    TH1D* in  = new TH1D("in","in", nbins, bins);
+    TH1D* out_b = new TH1D("out","out", nbins, bins);
+    TH1D* out_a = new TH1D("efficiency","efficiency", nbins, bins);
+
+  //  TString varname = "MT2";
+  for (int i=0; i <= 2 ; i++){
+    MT2[i] = new TH1D("","",nbins, bins);
+//     MT2[i] -> SetFillColor (ccolor[i]);
+//     MT2[i] -> SetLineColor (ccolor[i]);
+//     MT2[i] -> SetLineWidth (2);
+//     MT2[i] -> SetMarkerColor(ccolor[i]);
+//     MT2[i] -> SetStats(false);
+  }
+
+//   MT2[NumberOfSamples] -> SetMarkerStyle(20);
+//   MT2[NumberOfSamples] -> SetMarkerColor(kBlack);
+//   MT2[NumberOfSamples] -> SetLineColor(kBlack);
+  
+//   MT2[NumberOfSamples-2] -> SetFillStyle(3004);
+//   MT2[NumberOfSamples-2] -> SetFillColor(kBlack);
+  
+//   MT2[NumberOfSamples-1] -> SetMarkerStyle(20);
+//   MT2[NumberOfSamples-1] -> SetMarkerColor(kRed-4);
+//   MT2[NumberOfSamples-1] -> SetLineColor(kRed-4);
+//   MT2[NumberOfSamples-1] -> SetLineWidth(3);
+
+//   TString varname1 = "MT21";
+//   vector<TH1D*> MT21; 
+//   for (int i=0; i <= (NumberOfSamples) ; i++){
+//     MT21[i] = new TH1D(varname1+"_"+cnames[i],"",nbins, bins);
+//     MT21[i] -> SetFillColor (ccolor[i]);
+//     MT21[i] -> SetLineColor (ccolor[i]);
+//     MT21[i] -> SetLineWidth (2);
+//     MT21[i] -> SetMarkerColor(ccolor[i]);
+//     MT21[i] -> SetStats(false);
+//   }
+
+//   MT21[NumberOfSamples] -> SetMarkerStyle(20);
+//   MT21[NumberOfSamples] -> SetMarkerColor(kBlack);
+//   MT21[NumberOfSamples] -> SetLineColor(kBlack);
+  
+//   MT21[NumberOfSamples-2] -> SetFillStyle(3004);
+//   MT21[NumberOfSamples-2] -> SetFillColor(kBlack);
+  
+//   MT21[NumberOfSamples-1] -> SetMarkerStyle(20);
+//   MT21[NumberOfSamples-1] -> SetMarkerColor(kRed-4);
+//   MT21[NumberOfSamples-1] -> SetLineColor(kRed-4);
+//   MT21[NumberOfSamples-1] -> SetLineWidth(3);
+
+  cout<<" trigger "<<trigger<<endl;
+  cout<<" cuts "<<cuts<<endl;
+
+  for(unsigned int ii = 0; ii < fSamples.size(); ii++)
+    {
+
+
+
+      TString myCuts = cuts;
+      
+      int data = 0;
+      sample Sample = fSamples[ii];
+
+    /////////////////////////
+      //    if(Sample.sname != "Wtolnu")
+      //      continue;
+    //////////////////////////
+
+
+      if(Sample.type == "data")
+	{
+	  data = 1;
+	  myCuts += " && " + trigger;
+	}
+
+      fMT2tree = new MT2tree();
+      Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
+      
+      std::cout << setfill('=') << std::setw(70) << "" << std::endl;
+      cout << "looping over :     " <<endl;	
+      cout << "   Name:           " << Sample.name << endl;
+      cout << "   File:           " << (Sample.file)->GetName() << endl;
+      cout << "   Events:         " << Sample.nevents  << endl;
+      cout << "   Events in tree: " << Sample.tree->GetEntries() << endl; 
+      cout << "   Xsection:       " << Sample.xsection << endl;
+      cout << "   kfactor:        " << Sample.kfact << endl;
+      cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
+      cout << "   Weight:         " << Weight <<endl;
+      std::cout << setfill('-') << std::setw(70) << "" << std::endl;
+      
+      Sample.tree->Draw(">>selList", myCuts);
+      TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
+
+      unsigned int nentries = myEvtList->GetN();
+      float Weight=0.0;
+
+	Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents*Sample.PU_avg_weight);
+
+      for ( unsigned int jentry=0 ; jentry<min(nentries , nevents);jentry++ )
+	{
+
+	  Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
+
+	  if (fVerbose>2 && jentry % 100000 == 0 )
+	    {
+	      fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+	      fflush(stdout);
+	    }
+
+	  if(fStitching && (Sample.sname == "Wtolnu" || (Sample.shapename == "ZJetsToLL" && Sample.name != "DYToLL_M10To50")))
+	    {
+	      Weight = Sample.lumi;
+	      Weight /= Sample.PU_avg_weight;
+	    }
+
+	  float weight = Weight;
+	  
+	  if(data == 1)
+	    weight = 1.0;
+	  else
+	    {
+	
+	      weight *= fMT2tree->SFWeight.BTagCSV40eq0; 
+	      weight *= fMT2tree->pileUp.Weight;
+	      weight *= fMT2tree->doubleEle[0].Ele0IdIsoSF * fMT2tree->doubleEle[0].Ele1IdIsoSF * fMT2tree->doubleEle[0].DiEleTrgSF;	      
+
+	    }
+
+
+	  double myQuantity = fMT2tree->doubleTau[0].GetMT2();//doubleEle[0].MT2;
+
+
+	  //	  	  if((fMT2tree->doubleEle[0].lv.M() > 15 && fMT2tree->doubleEle[0].lv.M() < 76) || fMT2tree->doubleEle[0].lv.M() > 106)
+	  MT2[1]->Fill(myQuantity, weight);//data
+
+		  //	  if((fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].MT + fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].MT) > 250.0)
+	    //	    if(fMT2tree->misc.MinMetJetDPhiPt40 > 1)
+	  if((fMT2tree->doubleEle[0].lv.M() > 15 && fMT2tree->doubleEle[0].lv.M() < 76) || fMT2tree->doubleEle[0].lv.M() > 106)
+	    {
+		 
+// 	  if(data == 1){
+      
+	      MT2[0]->Fill(myQuantity, weight);//data
+	    
+// 	  }else{
+//  	    if(Sample.sname != "SUSY")
+//   	      MT2[1]->Fill(myQuantity, weight);
+
+// 	   if(Sample.sname == "DY")	
+// 	      MT2[2]->Fill(myQuantity, weight);
+
+// 	  }
+	  
+
+	    }
+	  
+	    //	  if(fMT2tree->doubleEle[0].lv.M() >= 76 && fMT2tree->doubleEle[0].lv.M() <= 106)     
+
+
+		 
+// 	  if(data == 1){
+      
+
+	    
+// 	  }else{
+//  	    if(Sample.sname != "SUSY")
+//   	      MT2[11]->Fill(myQuantity, weight);
+
+// 	   if(Sample.sname == "DY")	
+// 	      MT2[12]->Fill(myQuantity, weight);
+
+// 	  }
+
+
+	 	
+	}
+      
+    }  //for(samples)
+  
+
+  in->Add(MT2[10], +1);
+  in->Add(MT2[11], -1);
+  in->Add(MT2[12], +1);
+
+  out_b->Add(MT2[0], +1);
+  out_b->Add(MT2[1], -1);
+  out_b->Add(MT2[2], +1);
+
+  
+
+
+
+//  AddOverAndUnderFlow(out, true, true);
+//  AddOverAndUnderFlow(in, true, true);
+
+//  AddOverAndUnderFlow(MT2[0], true, true);
+//  AddOverAndUnderFlow(MT2[1], true, true);
+
+
+
+  //  TFile *f = new TFile("hsimple.root");
+ 
+  //  TH1F *hpx = (TH1F*)f->Get("hpx");
+ 
+  //create a function with 3 parameters in the range [-3,3]
+  //  TF1 *func = new TF1("fit",fitf,-3,3,3);
+  //  func->SetParameters(500,hpx->GetMean(),hpx->GetRMS());
+  //  func->SetParNames("Constant","Mean_value","Sigma");
+
+
+//  double out1 = out->Integral();
+//  double in1 = in->Integral();
+//  cout << "sumMtgt250 / " << out1 / in1 << endl ;
+//  MT2[2]->Divide(MT2[0],MT2[1]);
+
+  //  MT2[3]->Multiply(MT2[1],MT2[2]);
+
+  //  cout << "Wjets estimation:.." << MT2[3]->Integral() << endl;
+
+    double e = 0;
+    double f = 0;
+    double g = 0;
+    double h = 0;
+    double i = 0;
+    double j = 0;
+
+  for(int kk = 0; kk <= 1 ; kk++){
+    
+    
+    for(int mm = 0; mm < nbins+1 ; mm++){
+      
+      e = in->GetBinContent(mm);      
+      f = out_b->GetBinContent(mm);
+
+      g = in->GetBinError(mm);
+      h = out_b->GetBinError(mm);
+      
+      cout << cnames[kk]<<": " <<bins[mm] <<"-" << bins[mm+1] <<":.. " << e <<"__error:.."<< g << endl;
+      cout << cnames[kk]<<": " <<bins[mm] <<"-" << bins[mm+1] <<":.. " << f <<"__error:.."<< h << endl;
+
+    } 
+
+  }
+
+
+  double in_yield, out_b_yield, eff_yield = 0.0;
+  double in_err, out_b_err, eff_err = 0.0 ;
+
+  in_yield = in -> IntegralAndError(0, nbins, in_err) ;
+  out_b_yield = out_b -> IntegralAndError(0, nbins, out_b_err) ;
+
+  cout << cnames[0] << "-yield:.." << in_yield  <<"__error:..." << in_err  << endl ;
+  cout << cnames[1] << "-yield:.." << out_b_yield <<"__error:.."  << out_b_err << endl ;
+
+  out_a->Divide(in, out_b);
+
+    for(int mm = 0; mm < nbins+1 ; mm++){
+      
+      i = out_a->GetBinContent(mm);
+      j = out_a->GetBinError(mm)  ;
+
+      cout << cnames[2]<<": " <<bins[mm] <<"-" << bins[mm+1] <<":.. " << i <<"__error:.."<< j << endl;
+
+    } 
+
+    eff_yield = out_a -> IntegralAndError(0, nbins, eff_err); 
+  cout << cnames[2] << "-yield:.." << eff_yield <<"__error:.."  << eff_err << endl ;
+
+
+  out_a->Fit("pol0");
+
+  cout<<" trigger "<<trigger<<endl;
+  cout<<" cuts "<<cuts<<endl;
+    
+  TString fileName = fOutputDir;
+  if(!fileName.EndsWith("/")) fileName += "/";
+  Util::MakeOutputDir(fileName);
+  fileName = fileName + myfileName +".root";
+  TFile *savefile = new TFile(fileName.Data(), "RECREATE");
+  savefile ->cd();
+  in->Write();
+  out_b->Write();
+  out_a->Write();
+
+
+   //  MT2[3]->Write();
+  //MT2[0]->Fit("pol0");
+  //  MT2[2]->Draw();
+
+  savefile->Close();
+  std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
+
+
+}
+
