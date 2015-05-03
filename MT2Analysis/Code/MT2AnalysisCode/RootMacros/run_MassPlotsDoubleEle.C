@@ -67,7 +67,7 @@ myChannelCuts.push_back(std::string(trigger));
  // myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge == 2 ) || (ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge == -2 ) )");//SS
 
  //------------------Inv Mass------------
-  myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 76) || (doubleEle[0].lv.M() > 106))");
+ //  myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 76) || (doubleEle[0].lv.M() > 106))");
   //  myChannelCuts.push_back("(doubleEle[0].lv.M() >= 76 && doubleEle[0].lv.M() <= 106)");
 
  myChannelCuts.push_back("NBJetsCSVM == 0");

@@ -13473,7 +13473,7 @@ void MassPlotter::eeZInOut(TString cuts, TString trigger, unsigned int nevents, 
     TH1D* out_a = new TH1D("efficiency","efficiency", nbins, bins);
 
   //  TString varname = "MT2";
-  for (int i=0; i <= 2 ; i++){
+  for (int i=0; i <= 12 ; i++){
     MT2[i] = new TH1D("","",nbins, bins);
 //     MT2[i] -> SetFillColor (ccolor[i]);
 //     MT2[i] -> SetLineColor (ccolor[i]);
@@ -13599,61 +13599,59 @@ void MassPlotter::eeZInOut(TString cuts, TString trigger, unsigned int nevents, 
 	  double myQuantity = fMT2tree->doubleTau[0].GetMT2();//doubleEle[0].MT2;
 
 
-	  //	  	  if((fMT2tree->doubleEle[0].lv.M() > 15 && fMT2tree->doubleEle[0].lv.M() < 76) || fMT2tree->doubleEle[0].lv.M() > 106)
-	  MT2[1]->Fill(myQuantity, weight);//data
-
-		  //	  if((fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].MT + fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].MT) > 250.0)
+  //	  if((fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].MT + fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].MT) > 250.0)
 	    //	    if(fMT2tree->misc.MinMetJetDPhiPt40 > 1)
-	  if((fMT2tree->doubleEle[0].lv.M() > 15 && fMT2tree->doubleEle[0].lv.M() < 76) || fMT2tree->doubleEle[0].lv.M() > 106)
+
+	  if(fMT2tree->doubleEle[0].lv.M() >= 76 && fMT2tree->doubleEle[0].lv.M() <= 106)     
+
 	    {
 		 
-// 	  if(data == 1){
-      
+	      if(data == 1){
+		
 	      MT2[0]->Fill(myQuantity, weight);//data
-	    
-// 	  }else{
-//  	    if(Sample.sname != "SUSY")
-//   	      MT2[1]->Fill(myQuantity, weight);
 
-// 	   if(Sample.sname == "DY")	
-// 	      MT2[2]->Fill(myQuantity, weight);
-
-// 	  }
-	  
-
+	      }
+	      else{
+		
+		if(Sample.sname != "SUSY")
+		  MT2[1]->Fill(myQuantity, weight);
+		
+		if(Sample.sname == "DY")	
+		  MT2[2]->Fill(myQuantity, weight);
+		
+	      }
 	    }
-	  
-	    //	  if(fMT2tree->doubleEle[0].lv.M() >= 76 && fMT2tree->doubleEle[0].lv.M() <= 106)     
 
-
-		 
-// 	  if(data == 1){
-      
-
-	    
-// 	  }else{
-//  	    if(Sample.sname != "SUSY")
-//   	      MT2[11]->Fill(myQuantity, weight);
-
-// 	   if(Sample.sname == "DY")	
-// 	      MT2[12]->Fill(myQuantity, weight);
-
-// 	  }
-
-
-	 	
+	  if((fMT2tree->doubleEle[0].lv.M() > 15 && fMT2tree->doubleEle[0].lv.M() < 76) || fMT2tree->doubleEle[0].lv.M() > 106)
+	    {
+	      
+	      if(data == 1){
+		
+		MT2[10]->Fill(myQuantity, weight);//data
+		
+	      }
+	      else{
+		if(Sample.sname != "SUSY")
+		  MT2[11]->Fill(myQuantity, weight);
+		
+		if(Sample.sname == "DY")	
+		  MT2[12]->Fill(myQuantity, weight);
+		
+	      }
+	    }
+		
 	}
       
     }  //for(samples)
   
 
-  in->Add(MT2[10], +1);
-  in->Add(MT2[11], -1);
-  in->Add(MT2[12], +1);
+  in->Add(MT2[0], +1);
+  in->Add(MT2[1], -1);
+  in->Add(MT2[2], +1);
 
-  out_b->Add(MT2[0], +1);
-  out_b->Add(MT2[1], -1);
-  out_b->Add(MT2[2], +1);
+  out_b->Add(MT2[10], +1);
+  out_b->Add(MT2[11], -1);
+  out_b->Add(MT2[12], +1);
 
   
 
