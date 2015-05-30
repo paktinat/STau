@@ -205,6 +205,7 @@ void ExtendedObjectProperty::Print(TString option ) const{
 
     for( int cut=1; cut<nBins+1 ; cut++){
       //cout << cut << endl;
+      // cout << 
       //allHistos.begin()->second->Print("ALL");
       cout << "|" << allHistos.begin()->second->GetXaxis()->GetBinLabel( cut ) << "|";
       for( int i=0 ; i<NumberOfHistos ; i++)
@@ -233,8 +234,8 @@ ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, 
   TH1::SetDefaultSumw2();
    
 
-  vector<TString>  cnames = {"QCD", "Wtolnu","VV", "DY", "Top", "MC", "SUSY" , "data" };
-  vector<int>      ccolor = {  401,     417, kGreen-7 , 419,   600,  500, 1 , 632 };
+  vector<TString>  cnames = {"QCD", "W", "ZX", "Top","WW","Higgs" , "MC", "SUSY" , "data" };
+  vector<int>      ccolor = {  401,     417,  419,   855, 603, kRed , 500, 1 , 632 };
 
   //vector<TString>  cnames = {"BCtoE", "EMEnriched" , "MuEnriched" , "GJets" , "VV" , "Wtolnu", "DY", "Top" ,"TTV" , "STop" , "MC", "SUSY" , "data" };
   //vector<int>      ccolor = {  kYellow, kYellow+3 , kYellow-9 , kYellow-6 , kGreen-7 ,  kGreen+3,   kOrange-3 , kBlue  ,kBlue-7  , kCyan-2,  500, kBlack , kRed };
@@ -303,8 +304,8 @@ ExtendedObjectProperty::ExtendedObjectProperty( TString cutname , TString name, 
   TH1::SetDefaultSumw2();
    
 
-  vector<TString>  cnames = {"QCD", "Wtolnu","VV", "DY", "Top", "MC", "SUSY" , "data" };
-  vector<int>      ccolor = {  401,     417, kGreen-7 , 419,   600,  500, 1 , 632 };
+  vector<TString>  cnames = {"QCD", "W", "ZX", "Top","WW","Higgs" , "MC", "SUSY" , "data" };
+  vector<int>      ccolor = {  401,     417,  419,   855, 603, kRed , 500, 1 , 632 };
 
   //vector<TString>  cnames = {"BCtoE", "EMEnriched" , "MuEnriched" , "GJets" , "VV" , "Wtolnu", "DY", "Top" ,"TTV" , "STop" , "MC", "SUSY" , "data" };
   //vector<int>      ccolor = {  kYellow, kYellow+3 , kYellow-9 , kYellow-6 , kGreen-7 ,  kGreen+3,   kOrange-3 , kBlue  ,kBlue-7  , kCyan-2,  500, kBlack , kRed };
@@ -430,7 +431,8 @@ void ExtendedObjectProperty::Fill(double w){
       TString sushistname = "SUSY_" + suscatname ;
       isString ? allHistos[ sushistname ]->Fill( sVal , w ) : allHistos[ sushistname ]->Fill( dVal , w );
     }
-  }
+  }else
+    cout << CurrentSampleSName << "::" << CurrentSampleType << " histogram wasn't found" << endl;
 
   if( theMCH )
     isString ? theMCH->Fill(sVal , w) : theMCH->Fill(dVal , w);
@@ -443,8 +445,10 @@ void ExtendedObjectProperty::Fill(double w){
     SystHistos2D[ SampleNameForSyst ]->Fill( dVal , w );
 
   for(auto ws : WSyst){
-    SystHistos[ ws.first ]->Fill( dVal , ws.second ); 
-    SystHistos2D[ ws.first ]->Fill( dVal , ws.second ); 
+    if( isfinite(ws.second ) ) {
+      SystHistos[ ws.first ]->Fill( dVal , ws.second ); 
+      SystHistos2D[ ws.first ]->Fill( dVal , ws.second ); 
+    }
   }
 }
 
@@ -534,7 +538,18 @@ TCanvas* ExtendedObjectProperty::plotRatioStack(THStack* hstack, TH1* h1_orig, T
   // draw overlay plot
   p_plot ->cd();
 
-  if(logflag) gPad->SetLogy(1);
+  if(logflag) {
+    double xxmin, xxmax , yymin, yymax ;
+    gPad->GetRangeAxis(xxmin , yymin , xxmax , yymax );
+    if( yymin == 0.0 )
+      cout << name << " plot y axis starts from zero" << endl;
+    yymin = 0.000001 ;
+    if( yymax < yymin )
+      yymax = 100* yymin ;
+
+    gPad->RangeAxis( xxmin , yymin , xxmax , yymax );
+    gPad->SetLogy(1);
+  }
   gPad->SetFillStyle(0);
 		
   // Scaling
@@ -739,18 +754,18 @@ void ExtendedObjectProperty::Write( TDirectory* dir , int lumi ,bool plotratiost
   if(plotratiostack){
     //plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], allHistos["SUSY"] , logy, false, Name + "_ratio", Legend1, Name, "Events", -10, -10, 2, true , "" , lumi)->Write();    
     //for(uint i =0 ; i<SUSYNames.size() ; i++){
-    TCanvas* ccc = plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], susycolors , true, false, Name + "_ratio"+ "_AllSUSY", Legend1, Name, "Events", -10, -10, 2, true , "" , lumi ) ; // , allHistos["SUSY_" + SUSYNames[1]] );
+    TCanvas* ccc = plotRatioStack(h_stack, allHistos["MC"] , allHistos["data"], susycolors , logy, false, Name + "_ratio"+ "_AllSUSY", Legend1, Name, "Events", -10, -10, 2, true , "" , lumi ) ; // , allHistos["SUSY_" + SUSYNames[1]] );
     //if(Name == "One")
     //cout << CutName << "--" << allHistos["SUSY_"+SUSYNames[0] ]->GetEntries() << endl;
 
     //ccc->cd(0);
     //allHistos["SUSY_" + SUSYNames[1]]->Draw("SAME");
     ccc->Write();
-    gSystem->mkdir( CutName );
-    ccc->SetName( Name );
+    //gSystem->mkdir( CutName );
+    //ccc->SetName( Name );
     
-    ccc->SaveAs(CutName + "/" + Name + ".C" );
-    ccc->SaveAs(CutName + "/" + Name + ".png" );
+    //ccc->SaveAs(CutName + "/" + Name + ".C" );
+    //ccc->SaveAs(CutName + "/" + Name + ".png" );
     //}
   }
   for( std::vector< TGraph* >::const_iterator itr = AllSignificances.begin() ; itr != AllSignificances.end() ; itr++)
@@ -764,7 +779,10 @@ void ExtendedObjectProperty::Write( TDirectory* dir , int lumi ,bool plotratiost
       SystHistos[ ws.first ]->Add( theH , -1 ); 
       SystHistos[ ws.first ]->Multiply( SystHistos[ ws.first ] );
       for(int binii = 1 ; binii <= theH->GetNbinsX()  ; binii ++ ){
-	SystHistos[ ws.first ]->SetBinContent( binii , sqrt( SystHistos[ ws.first ]->GetBinContent(binii) )/theH->GetBinContent(binii) );
+	if( theH->GetBinContent(binii) == 0 )
+	  SystHistos[ ws.first ]->SetBinContent( binii , sqrt( SystHistos[ ws.first ]->GetBinContent(binii) ) );
+	else
+	  SystHistos[ ws.first ]->SetBinContent( binii , sqrt( SystHistos[ ws.first ]->GetBinContent(binii) )/theH->GetBinContent(binii) );
 	SystHistos[ ws.first ]->SetBinError( binii , 0.0001 );
       }
       SystHistos2D[ ws.first ]->Write();
@@ -885,7 +903,7 @@ void ExtendedCut::SetTree( TTree* tree , TString samplename , TString samplesnam
 
     TIter nextprop( &Props );
     TObject* objtemp;
-    cout << Props.GetSize() << endl; 
+    //cout << Props.GetSize() << endl; 
     while( (objtemp = nextprop()) ){
       ((ExtendedObjectProperty*)objtemp)->SetTree( tree , sampletype , samplesname , Name );
       if( Verbose > 1 )

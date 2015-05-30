@@ -254,6 +254,8 @@ struct sample{
   float lumi;
   int color;
 
+  TH2* h_SMSEvents;
+
   void Print(double Weight);
   void ReconstructSName();
 };

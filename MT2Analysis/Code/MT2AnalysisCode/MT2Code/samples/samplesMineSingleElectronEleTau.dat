@@ -350,6 +350,7 @@ Name		WJetsToLNu
 SName		Wtolnu
 ShapeName	WJets
 File            TauTau_V3_1/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball_NBJetsCSVM0_MET30_NewPU_Stitching.root
+#WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball_v2_Part*_BigFiles_NewPU_Stitching.root
 Xsection  	36257.2
 Kfact           1.
 Lumi            7250.0
@@ -362,6 +363,7 @@ Name		W1JetsToLNu
 SName		Wtolnu
 ShapeName	WJets
 File            TauTau_V3_1/W1JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
+#BigFiles_NewPU_Stitching.root
 Xsection  	1.23 * 5400
 Kfact           1.
 Lumi            7250.0
@@ -373,6 +375,7 @@ Name		W2JetsToLNu
 SName		Wtolnu
 ShapeName	WJets
 File            TauTau_V3_1/W2JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
+#BigFiles_NewPU_Stitching.root
 Xsection  	1.23 * 1750
 Kfact           1.
 Lumi            7250.0
@@ -384,6 +387,7 @@ Name		W3JetsToLNu
 SName		Wtolnu
 ShapeName	WJets
 File            TauTau_V3_1/W3JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
+#BigFiles_NewPU_Stitching.root
 Xsection  	1.23 * 519
 Kfact           1.
 Lumi            7250.0
@@ -395,6 +399,7 @@ Name		W4JetsToLNu
 SName		Wtolnu
 ShapeName	WJets
 File            TauTau_V3_1/W4JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
+#BigFiles_NewPU_Stitching.root
 Xsection  	1.23 * 214
 Kfact           1.
 Lumi            7250.0
@@ -665,7 +670,7 @@ Color		600
 
 ## --------- Single Electron Data ---------------------------
 
-SAMPLE
+#SAMPLE
 Name		Run2012D_SingleElectron
 SName		SingleElectron-Data
 ShapeName	Data
