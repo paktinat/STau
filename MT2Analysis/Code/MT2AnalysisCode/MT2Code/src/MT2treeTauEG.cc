@@ -2,6 +2,89 @@
 #include "helper/Utilities.hh"
 #include "Corrector.h"
 
+bool MT2tree::isPromptEleFakeTauFromJet( int eleId , int tauId ){
+  TLorentzVector lvTau = tau[ tauId ].lv;
+  TLorentzVector lvEle = ele[ eleId ].lv;
+  
+  bool isElePrompt = false;
+  enum{
+    TAU_unspec,
+    TAU_prompt,
+    TAU_ele,
+    TAU_muon,
+    TAU_jet
+  }TauSource = TAU_unspec; // prompt = 0, from ele = 1 , from muon = 2 , from jet = 3 
+
+  int nGenLepFromW = 0;
+  int genEleIndex = -1;
+  int genTauIndex = -1;
+  int genMuoIndex = -1;
+
+  for(int i=0; i<NGenLepts; ++i){
+    if( genEleIndex == -1 && abs(genlept[i].ID) == 11 ) 
+      if( abs( genlept[i].MID ) == 24 ){
+	genEleIndex = i;
+	nGenLepFromW ++;
+      }
+	    
+    if( genMuoIndex == -1 && abs(genlept[i].ID) == 13 ) 
+      if( abs( genlept[i].MID ) == 24 ){
+	genMuoIndex = i;
+	nGenLepFromW ++;
+      }
+
+    if( genTauIndex == -1 && abs(genlept[i].ID) == 15 ) 
+      if( abs( genlept[i].MID ) == 24 ){
+	nGenLepFromW ++;
+	genTauIndex = i;
+	for(int j=0; j<NGenLepts; ++j){
+	  if( abs(genlept[j].ID) == 11 && abs(genlept[j].MID) == 15 &&  abs(genlept[j].GMID) == 24 ){
+	    genEleIndex =  j;
+	    genTauIndex = -1;
+	  }else if( abs(genlept[j].ID) == 13 && abs(genlept[j].MID) == 15 && abs(genlept[j].GMID) == 24 ){
+	    genMuoIndex =  j;
+	    genTauIndex = -1;
+	  }
+	}
+      }	    
+  }
+  switch( nGenLepFromW == 1){
+  case 0:
+    cout << "no w->lepton is found" << endl;
+    isElePrompt = false;
+    TauSource = TAU_jet;
+    break;
+  case 1:
+    isElePrompt = ( (genEleIndex != -1) && lvEle.DeltaR( genlept[genEleIndex].lv ) < 0.2 );
+    if( genTauIndex != -1 && lvTau.DeltaR( genlept[ genTauIndex ].lv ) < 0.4 )
+      TauSource = TAU_prompt ;
+    else if( genEleIndex != -1 && lvTau.DeltaR( genlept[ genEleIndex ].lv ) < 0.3 )
+      TauSource = TAU_ele ;
+    else if( genMuoIndex != -1 && lvTau.DeltaR( genlept[ genMuoIndex ].lv ) < 0.3 )
+      TauSource = TAU_muon ;
+    else
+      TauSource = TAU_jet ;
+    break;
+  default:
+    cout << "more than one w->lepton is found" << endl;
+    isElePrompt = ( (genEleIndex != -1) && lvEle.DeltaR( genlept[genEleIndex].lv ) < 0.2 );
+    if( genTauIndex != -1 && lvTau.DeltaR( genlept[ genTauIndex ].lv ) < 0.4 )
+      TauSource = TAU_prompt ;
+    else if( genEleIndex != -1 && lvTau.DeltaR( genlept[ genEleIndex ].lv ) < 0.3 )
+      TauSource = TAU_ele ;
+    else if( genMuoIndex != -1 && lvTau.DeltaR( genlept[ genMuoIndex ].lv ) < 0.3 )
+      TauSource = TAU_muon ;
+    else
+      TauSource = TAU_jet ;
+    break;
+  }
+
+  return true;
+
+  //(isElePrompt) &&
+  return ( (TauSource == TAU_jet) ) ; //|| (TauSource == TAU_prompt) || (TauSource == TAU_muon) || (TauSource == TAU_ele) );
+}
+
 int MT2tree::DeltaREleTau(int elec_method , double minDR , int& elecindex , double minElePt , bool SS , int& oldRET){
   bool ele_found = false;
   TLorentzVector electron;
