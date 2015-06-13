@@ -17,6 +17,8 @@
 
 using namespace std;
 
+TGraphAsymmErrors* theXSecGraph;
+
 // MT2Misc -----------------------------------
 MT2Misc::MT2Misc(){
   Reset();
@@ -113,11 +115,13 @@ void MT2Top::Reset(){
 // MT2Susy
 MT2Susy::MT2Susy(){
   Reset();
-}
+  
+  if(theXSecGraph)
+    delete theXSecGraph;
 
-double MT2Susy::XSectionCharginoLSP() const{
-  int nbins = 17 ;
-  int masses[] = {100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500} ;
+
+  int nbins = 29 ;
+  int masses[] = {100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500,525,550,575,600,625,650,670,700,725,750,775,800} ;
   double vals100[]={5823.40, 0.0 , +3.4 , -.6 , -3.2};
   double vals125[]={2434.10, 0.0, 3.6 , -.6 , -3.5 };
   double vals150[]={1194.60, 0.3, +3.9 , -.5 , -3.8};
@@ -135,20 +139,37 @@ double MT2Susy::XSectionCharginoLSP() const{
   double vals450[]={9.66, 0.0 , 7.5 , -.5 , -6.7};
   double vals475[]={7.28 , 0.1 , 7.8, -1 , -6.8};
   double vals500[]={5.53 , 0.0 , 8.1 , -.9 , -7.0};
-  double* vals[] = {vals100,vals125,vals150,vals175,vals200,vals225,vals250,vals275,vals300,vals325,vals350,vals375,vals400,vals425,vals450,vals475,vals500} ;
+  double vals525[]={4.23 , 0.0 , 0.0 , 0.0 , 0.0};
+  double vals550[]={3.26 , 0.0 , 0.0 , 0.0 , 0.0};
+  double vals575[]={2.52 , 0.0 , 0.0 , 0.0 , 0.0};
+  double vals600[]={1.96 , 0.0 , 0.0 , 0.0 , 0.0};
+  double vals625[]={1.54 , 0.0 , 0.0 , 0.0 , 0.0};
+  double vals650[]={1.21 , 0.0 , 0.0 , 0.0 , 0.0};
+  double vals675[]={0.96 , 0.0 , 0.0 , 0.0 , 0.0};
+  double vals700[]={0.76 , 0.0 , 0.0 , 0.0 , 0.0};
+  double vals725[]={0.6 , 0.0 , 0.0 , 0.0 , 0.0};
+  double vals750[]={0.48 , 0.0 , 0.0 , 0.0 , 0.0};
+  double vals775[]={0.39 , 0.0 , 0.0 , 0.0 , 0.0};
+  double vals800[]={0.31 , 0.0 , 0.0 , 0.0 , 0.0};
+  double* vals[] = {vals100,vals125,vals150,vals175,vals200,vals225,vals250,vals275,vals300,vals325,vals350,vals375,vals400,vals425,vals450,vals475,vals500,vals525,vals550,vals575,vals600,vals625,vals650,vals675,vals700,vals725,vals750,vals775,vals800} ;
   gROOT->cd();
-  TGraphAsymmErrors theXSecGraph( nbins );
+  theXSecGraph = new TGraphAsymmErrors( nbins );
   for(int i = 0 ; i< nbins ; i++){
-    theXSecGraph.SetPoint( i , masses[i] , vals[i][0] );
+    theXSecGraph->SetPoint( i , masses[i] , vals[i][0] );
 //     double errh = hypot( vals[i][1] , vals[i][2] );
 //     double errl = hypot( vals[i][3] , vals[i][4] );
 //     theXSecGraph.SetPointError( i , errl , errh , 12.5 , 12.5 );
   }
 
-  return theXSecGraph.Eval(MassGlu);
 }
+
+double MT2Susy::XSectionCharginoLSP() const{
+  return theXSecGraph->Eval(MassGlu);
+}
+
 int MT2Susy::Category( ) const{
-  vector< pair<int,int> > susypoints = { {180 , 60} , {380 , 0} , {240 , 60} , {240 , 80} };
+  //vector< pair<int,int> > susypoints = { {180 , 60} , {380 , 0} , {240 , 60} , {240 , 80} };
+  vector< pair<int,int> > susypoints = { {380 , 0} };
   int ret = 0;
   for( auto pair : susypoints ){
     if( MassGlu >= pair.first && MassGlu < pair.first+20 && MassLSP < pair.second+20 && (MassLSP) >= pair.second )
@@ -3919,7 +3940,7 @@ Float_t MT2tree::eePVisibleZeta(){//temporary solution for makePlot. No need to 
 }
 
 
-Float_t MT2tree::eeDiLepPtRatio(){//temporary solution for makePlot. No need to be moved to the next versions.
+float MT2tree::eeDiLepPtRatio(){//temporary solution for makePlot. No need to be moved to the next versions.
   return DiLepPtRatio(ele[doubleEle[0].Ele0Ind].lv , ele[doubleEle[0].Ele1Ind].lv);
 }
 

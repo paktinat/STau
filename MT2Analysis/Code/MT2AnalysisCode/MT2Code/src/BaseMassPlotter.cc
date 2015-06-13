@@ -4,6 +4,7 @@
 #include "BaseMassPlotter.hh"
 #include <vector>
 #include "TChain.h"
+#include "TChainElement.h"
 
 BaseMassPlotter::BaseMassPlotter(TString outputdir){
   fOutputDir = Util::MakeOutputDir(outputdir);
@@ -74,7 +75,7 @@ void BaseMassPlotter::loadSamples(const char* filename){
       ((TChain*)(s.tree))->Add( file , 0 );
       ((TChain*)(s.tree))->LoadTree(0);
 
-      cout << s.tree->GetEntries() << endl;
+      //cout << s.tree->GetEntries() << endl;
       s.file = ((TChain*)(s.tree))->GetFile() ;
 
 			
@@ -99,8 +100,35 @@ void BaseMassPlotter::loadSamples(const char* filename){
       s.color = ParValue;
 
       if(s.type!="data"){
-	TH1F *h_PUWeights = (TH1F*) s.file->Get("h_PUWeights");
-	TH1F *h_Events    = (TH1F*) s.file->Get("h_Events");
+	TH1F *h_PUWeights = NULL;
+	TH1F *h_Events    = NULL;
+	
+	TObjArray *fileElements=((TChain*)(s.tree))->GetListOfFiles();
+	TIter next(fileElements);
+	TChainElement *chEl=0;
+	while (( chEl=(TChainElement*)next() )) {
+	  TFile* f = TFile::Open(chEl->GetTitle());
+	  //   cout<<chEl->GetTitle()<<endl;
+	  //    f.Print("ALL");
+	  if( h_PUWeights == NULL ){
+	    gROOT->cd();
+	    h_PUWeights = (TH1F*)(f->Get("h_PUWeights")->Clone("ClonedhPUWeights"));
+	  }
+	  else
+	    h_PUWeights->Add( (TH1F*)(f->Get("h_PUWeights") ) );
+	  
+	  // 	    h_PUWeights->Print("");
+	  
+	  if( h_Events == NULL )
+	    h_Events = (TH1F*) (f->Get("h_Events")->Clone("ClonedhEvents") ) ;
+	  else
+	    h_Events->Add( (TH1F*) (f->Get("h_Events")) );
+	  delete f;
+	}
+	if(fileElements->GetEntries() == 0){
+	  h_PUWeights =(TH1F*) s.file->Get("h_PUWeights") ;
+	  h_Events = (TH1F*) s.file->Get("h_Events") ;
+	}
 	if(h_PUWeights==0 || h_Events==0){
 	  cout << "ERROR: sample " << (s.file)->GetName() << " does not have PU and NEvents histos! " << endl;
 	  exit(1);
@@ -113,29 +141,49 @@ void BaseMassPlotter::loadSamples(const char* filename){
 	s.PU_avg_weight =1;
 	s.nevents       =1;
       }
-
+      
       // DON'T DO THIS AT HOME !!!!
       if ( s.name == "T1tttt_mGlu-1000_mLSP-400" ) s.nevents = 20000;
       if ( s.name.Contains("T2bb") ) s.nevents = 10000;
       if ( s.name.Contains("T2tt") ) s.nevents = 50000;
       // DON'T DO THAT AT HOME !!!!
 
-      if ( s.type == "susy" && s.name.Contains("Tau")){
-	TH2F * h_SMSEvents = (TH2F*) s.file->Get("h_SMSEvents");
-	int binNumber = h_SMSEvents->FindBin(150.0, 150.0);//350,50//saeid
+      s.h_SMSEvents = NULL ; 
+      //cout << s.type << endl;
+      if ( s.type == "susy" && s.name.Contains("tau")){
+	//cout << "TAU" << endl;
+	TObjArray *fileElements=((TChain*)(s.tree))->GetListOfFiles();
+	TIter next(fileElements);
+	TChainElement *chEl=0;
+	while (( chEl=(TChainElement*)next() )) {
+	  TFile* f = TFile::Open(chEl->GetTitle());
+	  //cout << chEl->GetTitle() << endl;
+	  if( s.h_SMSEvents == NULL ){
+	    gROOT->cd();
+	    s.h_SMSEvents = (TH2F*) (f->Get("h_SMSEvents")->Clone("ClonedhSMSEvents") );}
+	  else
+	    s.h_SMSEvents->Add( (TH2F*)(f->Get("h_SMSEvents") ) );
+	}
+
+	if(fileElements->GetEntries() == 0){
+	  s.h_SMSEvents=(TH2F*)(s.file->Get("h_SMSEvents"));
+	  //cout << "ZERO !!!!" << endl;
+	}
+
+	int binNumber = s.h_SMSEvents->FindBin(150.0, 150.0);//350,50//saeid
 			  
-	s.nevents = h_SMSEvents->GetBinContent(binNumber); //saeid
-	s.nevents = 1000;//350,50//saeid
+	s.nevents = s.h_SMSEvents->GetBinContent(binNumber); //saeid
+	s.nevents = 10000;//350,50//saeid
 	s.PU_avg_weight =1;		//saeid	  
       }//saeid
       else{
 
 	if ( s.type == "susy" && !s.name.Contains("TStau")){//saeid
-	  TH2F * h_SMSEvents = (TH2F*) s.file->Get("h_SMSEvents");
-	  int binNumber = h_SMSEvents->FindBin(350.0, 50.0);//350,50//saeid
+	  s.h_SMSEvents = (TH2F*) s.file->Get("h_SMSEvents");
+	  int binNumber = s.h_SMSEvents->FindBin(350.0, 50.0);//350,50//saeid
 			  
-	  s.nevents = h_SMSEvents->GetBinContent(binNumber); //saeid
-	  //			  s.nevents = 128333;//350,50//saeid
+	  s.nevents = s.h_SMSEvents->GetBinContent(binNumber); //saeid
+	  //s.nevents = 128333;//350,50//saeid
 	  s.PU_avg_weight =1;		//saeid	  
 	}//saeid
 	else
