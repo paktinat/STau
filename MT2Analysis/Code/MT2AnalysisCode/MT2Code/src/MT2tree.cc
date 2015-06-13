@@ -3941,7 +3941,7 @@ Float_t MT2tree::eePositiveChargedLeptonDecayAngleinZframe(){
 
 
 Float_t MT2tree::eeMinMetLepDPhi(){//temporary solution for makePlot. No need to be moved to the next versions.
-  return MinMetLepDPhi(doubleEle[0].lv = ele[doubleEle[0].Ele0Ind].lv , ele[doubleEle[0].Ele1Ind].lv);
+  return MinMetLepDPhi(ele[doubleEle[0].Ele0Ind].lv , ele[doubleEle[0].Ele1Ind].lv);
 }
 
 
@@ -4013,13 +4013,14 @@ return deltaR;
  cout << "deltaR..." << deltaR << endl; 
 }
 
-Bool_t MT2tree::eeRejE2(){
+Bool_t MT2tree::eeRejE2_flag(){
 
   bool RejE2_ee = false;
   for (int i=0 ; i < NEles ; i++){
     if (i != doubleEle[0].Ele0Ind && i != doubleEle[0].Ele1Ind)
       {
-	if(ele[i].Iso04 < 0.5 && ele[i].lv.Eta() < 1.479 && ele[i].lv.Pt() > 10 )//RejE2_EE)
+	//	if(ele[i].Iso04 < 0.5 && ele[i].lv.Eta() < 1.479 && ele[i].lv.Pt() > 10 )//RejE2_EE)
+	  if(ele[i].RejE2_EE)
  		{		
  		  RejE2_ee = true;
  		  break;
@@ -4030,7 +4031,26 @@ Bool_t MT2tree::eeRejE2(){
 return RejE2_ee;
 }
 
-Bool_t MT2tree::eeRejMu(){
+Bool_t MT2tree::eeRejE2_defined(){
+
+  bool RejE2_ee = false;
+  for (int i=0 ; i < NEles ; i++){
+    if (i != doubleEle[0].Ele0Ind && i != doubleEle[0].Ele1Ind)
+      {
+		if(ele[i].Iso04 < 0.5 && ele[i].lv.Eta() < 1.479 && ele[i].lv.Pt() > 10 )
+		  //  if(ele[i].RejE2_EE)
+ 		{		
+ 		  RejE2_ee = true;
+ 		  break;
+ 		}
+ 	      }
+ 	  }
+
+return RejE2_ee;
+}
+
+
+Bool_t MT2tree::eeRejMu_defined(){
 
   bool RejMu_ee = false;
   for (int i=0 ; i < NMuons ; i++){
@@ -4044,14 +4064,53 @@ Bool_t MT2tree::eeRejMu(){
 return RejMu_ee;
 }
 
-Bool_t MT2tree::eeIsoMedium01to05(){
+Bool_t MT2tree::eeIsoMedium01to04(){
     
   bool a = false;   
-  if((ele[doubleEle[0].Ele0Ind].Iso04 < 0.5 && ele[doubleEle[0].Ele0Ind].Iso04 > 0.1) && (ele[doubleEle[0].Ele1Ind].Iso04 < 0.5 && ele[doubleEle[0].Ele1Ind].Iso04 > 0.1))
+  if((ele[doubleEle[0].Ele0Ind].Iso04 < 0.4 && ele[doubleEle[0].Ele0Ind].Iso04 > 0.1) && (ele[doubleEle[0].Ele1Ind].Iso04 < 0.4 && ele[doubleEle[0].Ele1Ind].Iso04 > 0.1))
     a = true; 
   
   return a;
 }
+
+Bool_t MT2tree::ee_e0Loose01to04_e1Tight01(){
+    
+  bool a = false;   
+  if((ele[doubleEle[0].Ele0Ind].Iso04 > 0.1 && ele[doubleEle[0].Ele0Ind].Iso04 < 0.4) && (ele[doubleEle[0].Ele1Ind].Iso04 < 0.1))
+    a = true; 
+  
+  return a;
+}
+
+Bool_t MT2tree::ee_e0Tight01_e1Loose01to04(){
+    
+  bool a = false;   
+  if((ele[doubleEle[0].Ele0Ind].Iso04 < 0.1) && (ele[doubleEle[0].Ele1Ind].Iso04 > 0.1 && ele[doubleEle[0].Ele1Ind].Iso04 < 0.4))
+    a = true; 
+  
+  return a;
+}
+
+
+Bool_t MT2tree::ee_e0Loose01to04(){
+    
+  bool a = false;   
+  if(ele[doubleEle[0].Ele0Ind].Iso04 > 0.1 && ele[doubleEle[0].Ele0Ind].Iso04 < 0.4)
+    a = true; 
+  
+  return a;
+}
+
+Bool_t MT2tree::ee_e1Loose01to04(){
+    
+  bool a = false;   
+  if(ele[doubleEle[0].Ele1Ind].Iso04 > 0.1 && ele[doubleEle[0].Ele1Ind].Iso04 < 0.4)
+    a = true; 
+  
+  return a;
+}
+
+
 
 Bool_t MT2tree::eeIsoMedium01to10(){
     
@@ -4060,6 +4119,36 @@ Bool_t MT2tree::eeIsoMedium01to10(){
     a = true; 
   
   return a;
+}
+
+Int_t MT2tree::e0MedSel(){
+  int q = -10; 
+  for (int i=0 ; i <= NEles ; i++){
+
+    if  (ele[i].PassQCDMediumE0_EE)//PassE0_EE)
+      {
+	//     doubleEle[0].Ele0Ind = i ;
+	q = i;
+        break;
+      }
+  }
+	return q;
+}
+
+Int_t MT2tree::e1MedSel(){
+
+  int p = -10 ;
+  for (int j = e0MedSel()+1 ; j <= NEles ; j++){
+
+  if  (ele[j].PassQCDMediumE1_EE)//PassE1_EE)
+      {
+	//        doubleEle[0].Ele1Ind = j ;
+	p = j ;
+        break;
+      }
+
+  }
+return p;
 }
 
 

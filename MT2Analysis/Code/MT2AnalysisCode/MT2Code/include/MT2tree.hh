@@ -948,11 +948,18 @@ public:
   Float_t eeabsJZBInDirect();
   Float_t eeDeltaR();
   Float_t eeDeltaRJet0E0();
-  Bool_t  eeRejE2();
-  Bool_t  eeRejMu();
-  Bool_t  eeIsoMedium01to05();
+  Bool_t  eeRejE2_flag();
+  Bool_t  eeRejE2_defined();
+  Bool_t  eeRejMu_defined();
+  Bool_t  eeIsoMedium01to04();
   Bool_t  eeIsoMedium01to10();
-
+  Bool_t  ee_e0Loose01to04_e1Tight01();
+  Bool_t  ee_e0Tight01_e1Loose01to04();
+  Bool_t  ee_e0Loose01to04();
+  Bool_t  ee_e1Loose01to04();
+  Int_t   e0MedSel();
+  Int_t   e1MedSel();
+      
   //----------------------------------
 
 

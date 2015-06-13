@@ -260,7 +260,7 @@ public:
 
   void eeFakeRateRatio(TString cuts, TString trigger, unsigned int nevents, TString myfilename);
   void eeFakePromptCategory(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
-  void eeAnalysis(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
+  void eeAnalysis(TString cuts, TString trigger, unsigned int nevents, TString action, TString variable, TString myfileName);
   void eeWJetsEstimation(TString cuts, TString trigger, TString myfileName);
   void eeVS(Long64_t nevents, TString cuts, TString trigger);
   void miscEfficiency(int sample_index, unsigned int nevents);
@@ -270,6 +270,7 @@ public:
   void eeAnalysisPUsys();
   void eeAnalysisCDF(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
   void eeZInOut(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
+  void eeQCDCtoBRatio(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
 
 
   void setFlags(int flag); //To determine which analysis we look at HighHT/LowHT MT2(b) options are:

@@ -1,100 +1,155 @@
 {
-TString outputdir = "./results/";
-TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30_NewPU_Stitched.dat";
-
-// TString samples = "samples/samplesMineTauPlusX-susy_ww.dat";
-// TString samples = "./samples/samplesMineTest.dat";
-
-int verbose =3;
-
-gSystem->CompileMacro("../MT2Code/src/MassPlotter.cc", "kf");
-gROOT->ProcessLine(".x SetStyle_PRD.C");
-
-MassPlotter *tA = new MassPlotter(outputdir , "MassPlots_DoubleEle.root");
-
-tA->SetSave(false);
-tA->SetIsPhoton(false);
-tA->SetPileUpReweight(true);
-tA->SetbSFWeights(true);   
-tA->setVerbose(verbose);
-tA->init(samples);
-tA->SetEEChannel();
-
-//------------------------Trigger--------------------------
-std::ostringstream triggerStream;
-triggerStream << "( "
-              <<" misc.ProcessID != 0 || ((misc.CrazyHCAL==0 && misc.NegativeJEC==0 " <<"&&"
-              <<" misc.CSCTightHaloIDFlag==0 && misc.HBHENoiseFlag==0 " <<"&&"
-              <<" misc.hcalLaserEventFlag==0 && misc.trackingFailureFlag==0 " <<"&&"
-              <<" misc.eeBadScFlag==0 && misc.EcalDeadCellTriggerPrimitiveFlag==0 )" <<"&&("
-              <<"(trigger.HLT_DiElectrons) "<<"&&"
-//            <<"(doubleEle[0].MT2 < 80) "
-              <<"(0==0)"
-              << ")))";
- 
-TString trigger = triggerStream.str().c_str();
+  TString outputdir = "./results/";
+  //  TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30_NewPU_Stitched.dat";
+     TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_BigFiles_NewPU_Stitching.root";
   
-std::vector<std::string> myChannelCuts;
-myChannelCuts.push_back(std::string(trigger));
+  //TString samples = "samples/samplesMineTauPlusX-susy_ww.dat";
+  //TString samples = "./samples/samplesMineTest.dat";
+  
+  int verbose =3;
+  
+  gSystem->CompileMacro("../MT2Code/src/MassPlotter.cc", "kf");
+  gROOT->ProcessLine(".x SetStyle_PRD.C");
 
-//-------------------------Susy Cuts------------------------------
+  MassPlotter *tA = new MassPlotter(outputdir , "MassPlots_DoubleEle.root");
+  
+  tA->SetSave(false);
+  tA->SetIsPhoton(false);
+  tA->SetPileUpReweight(true);
+  tA->SetbSFWeights(true);   
+  tA->setVerbose(verbose);
+  tA->init(samples);
+  tA->SetEEChannel();
 
-// myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 380.0 && Susy.MassGlu  < 400.0 && Susy.MassLSP < 20.0))"); 
-// myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 180.0 && Susy.MassGlu  < 200.0 && Susy.MassLSP >=60 && Susy.MassLSP < 80.0))");
-//  myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 120.0 && Susy.MassGlu  < 140.0 && Susy.MassLSP >=60 && Susy.MassLSP < 80.0))");
- // myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 240.0 && Susy.MassGlu  < 260.0 && Susy.MassLSP >=40 && Susy.MassLSP < 60.0))");
+ //------------------------Trigger--------------------------
+  std::ostringstream triggerStream;
+  triggerStream << "( "
+		<<" misc.ProcessID != 0 || ((misc.CrazyHCAL==0 && misc.NegativeJEC==0 " <<"&&"
+		<<" misc.CSCTightHaloIDFlag==0 && misc.HBHENoiseFlag==0 " <<"&&"
+		<<" misc.hcalLaserEventFlag==0 && misc.trackingFailureFlag==0 " <<"&&"
+		<<" misc.eeBadScFlag==0 && misc.EcalDeadCellTriggerPrimitiveFlag==0 )" <<"&&("
+		<<"(trigger.HLT_DiElectrons) "<<"&&"
+    //            <<"(doubleEle[0].MT2 < 80) "
+		<<"(0==0)"
+		<< ")))";
+ 
+  TString trigger = triggerStream.str().c_str();
+  
+  std::vector<std::string> myChannelCuts;
+  myChannelCuts.push_back(std::string(trigger));
 
-//  myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 120.0) <= 10.0 && abs(Susy.MassLSP - 60.0) <= 10.0))");//0.119              
 
- myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 380.0) <= 10.0 && abs(Susy.MassLSP - 1) <= 10.0))");
+  //    myChannelCuts.push_back("NBJetsCSVM >= 2");
+  myChannelCuts.push_back("NBJetsCSVL >= 2");
+  //  myChannelCuts.push_back("NBJetsCSVM == 0 ");
+  //  myChannelCuts.push_back("NBJetsCSVL == 0");
+  myChannelCuts.push_back("misc.MET > 30");
+
+  //-------------------------Susy Cuts------------------------------
+
+  // myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 380.0 && Susy.MassGlu  < 400.0 && Susy.MassLSP < 20.0))"); 
+  // myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 180.0 && Susy.MassGlu  < 200.0 && Susy.MassLSP >=60 && Susy.MassLSP < 80.0))");
+  // myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 120.0 && Susy.MassGlu  < 140.0 && Susy.MassLSP >=60 && Susy.MassLSP < 80.0))");
+  // myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 120.0) <= 10.0 && abs(Susy.MassLSP - 60.0) <= 10.0))");//0.119              
+  // myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 380.0) <= 10.0 && abs(Susy.MassLSP - 1) <= 10.0))");
+  // myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 240.0) <= 10.0 && abs(Susy.MassLSP - 40) <= 10.0))");
+  // myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 180) <= 10.0 && abs(Susy.MassLSP - 60) <= 10.0))");
+  
+  TString myChan = "doubleEle[0]";
+ 
+  //------------------------DoubleEle Cuts--------------------------
+  
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele0Ind >= 0"));
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele1Ind >= 0"));
+
+  //  myChannelCuts.push_back("e0MedSel() >= 0");
+  //  myChannelCuts.push_back("e1MedSel() >= 0");
+  
+  //---------------Iso--------------------
+
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated == 1"));//Signal
+  // myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==0"));//QCD medium
+  // myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==-1"));//QCD nonIso
 
 
- TString myChan = "doubleEle[0]";
+  // myChannelCuts.push_back("eeIsoMedium01to04()"); 
+  // myChannelCuts.push_back("eeIsoMedium01to10()"); 
+  
+  // myChannelCuts.push_back("ee_e0Loose01to04_e1Tight01()");
+  // myChannelCuts.push_back("ee_e0Loose01to04()");
+  // myChannelCuts.push_back("ee_e1Loose01to04()");
+ 
+  //---------------Charge-----------------
 
-//------------------------DoubleEle Cuts--------------------------
 
- myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele0Ind >= 0"));
- myChannelCuts.push_back(std::string(std::string(myChan) + ".Ele1Ind >= 0"));
-
-//---------------Iso--------------------
- myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated == 1"));//Signal
- //        myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==0"));//QCD medium
- //           myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==-1"));//QCD nonIso
- //  myChannelCuts.push_back("eeIsoMedium01to05()"); 
- //   myChannelCuts.push_back("eeIsoMedium01to10()"); 
-//---------------Charge-----------------
  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)");//Signal OS 
- // myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge == 2 ) || (ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge == -2 ) )");//SS
+ //   myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge == 2 ) || (ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge == -2 ))");//SS
 
- //------------------Inv Mass------------
- //  myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 76) || (doubleEle[0].lv.M() > 106))");
-  //  myChannelCuts.push_back("(doubleEle[0].lv.M() >= 76 && doubleEle[0].lv.M() <= 106)");
 
- myChannelCuts.push_back("NBJetsCSVM == 0");
- myChannelCuts.push_back("misc.MET > 50");
+  //------------------Extra Leoton Veto
+  //   myChannelCuts.push_back("HasNoVetoMuForEleTau()");//
+  myChannelCuts.push_back("!(eeRejE2_defined())");//                                      
+  myChannelCuts.push_back("!(eeRejMu_defined())");//                                      
+  
+  //------------------Inv Mass------------
+
+  myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 71) || (doubleEle[0].lv.M() > 111))");
+   //    myChannelCuts.push_back("(doubleEle[0].lv.M() >= 71 && doubleEle[0].lv.M() <= 111)");
+
+  //  myChannelCuts.push_back("eeJZBInDirect() < 0");//
+     //        myChannelCuts.push_back("eeJZBInDirect() < -20");//
+  myChannelCuts.push_back("eeJZBInDirect() < -50");//
+  //       myChannelCuts.push_back("eeJZBInDirect() < -100");//
+         
+  //	   myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 40"));
+  //  myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 90"));
+  //      myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 < 40"));
+   //   myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 120"));
+  //----------------250-350------------------
+	   //   myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>250");
+	  //       myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))<350");
+
+   //  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>350");
+
+   //----------------250-400------------------
+  //  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>250");
+  //  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))<400");
+    myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>400");
+
+
+  //----------------250-450------------------
+      //      myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>250");
+      //      myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))<450");
+
+      //       myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>450");
+
+
+
+  //  myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 100"));
+  //  myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 < 100"));
+
+   // myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 76) || (doubleEle[0].lv.M() > 106))");  
  
- myChannelCuts.push_back("HasNoVetoMuForEleTau()");//
- myChannelCuts.push_back("!(eeRejE2())");//                                      
-
-
-
- //  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT >= 60) && (ele[doubleEle[0].Ele0Ind].MT <= 100)) ");
- // myChannelCuts.push_back("((ele[doubleEle[0].Ele1Ind].MT < 60) || (ele[doubleEle[0].Ele1Ind].MT > 100)) ");
-
- // myChannelCuts.push_back("misc.MinMetJetDPhiPt40 > 1");
-
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 40"));
- // myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 <= 120"));
-
+  //  myChannelCuts.push_back("NJetsIDLoose == 0");
  
+ // myChannelCuts.push_back("!(eeRejE2_flag())");//                                      
+  
+
+  // myChannelCuts.push_back("((ele[doubleEle[0].Ele1Ind].MT < 60) || (ele[doubleEle[0].Ele1Ind].MT > 100)) ");
+  
+ //  myChannelCuts.push_back("misc.MinMetJetDPhiPt40 > 1");
+  // myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 <= 120"));
+  
   //  myChannelCuts.push_back("eeRejMu()");//                                      
- //  myChannelCuts.push_back("HasNoVetoElecForEleTau()");// 
+  //  myChannelCuts.push_back("HasNoVetoElecForEleTau()");// 
+  
 
-    //  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>250");
    //  myChannelCuts.push_back("((misc.MET)+(doubleEle[0].lv.Pt()))>80");
    //  myChannelCuts.push_back("((misc.MET)-(doubleEle[0].lv.Pt()))>-50");
-
-
+   //  myChannelCuts.push_back("((ele[e0MedSel()].Charge + ele[e0MedSel()].Charge) == 0)");//Signal OS 
+      //    myChannelCuts.push_back("(((ele[e0MedSel()].Charge + ele[e1MedSel()].Charge) == 2) || ((ele[e0MedSel()].Charge + ele[e1MedSel()].Charge) == -2))");//Signal OS 
+  
+  //  myChannelCuts.push_back("NEles >= 2");
    myChannelCuts.push_back("0 == 0");	
  
    std::ostringstream cutStream;
@@ -109,22 +164,66 @@ myChannelCuts.push_back(std::string(trigger));
 
    TString cuts = cutStream.str().c_str();
 
-//------------------------------Methods-----------------------------------
+   //------------------------------Methods-----------------------------------
 
-  //tA->eeAnalysisTESpUsys(cuts, trigger, 1000, "a", "mutau_nominal");
+   //  tA->makePlot("misc.MET", cuts, -10, 0, -10, trigger, "MET-preSel-invMass_gt15_71to111", 50, 0, 500, false, true, true, true,true, true, 1, true, true, "png",1);
+   // tA->makePlot("doubleEle[0].lv.M()", cuts, -10, 0, -10, trigger, "InvMass-preSel-invMass_gt15_71to111", 50, 0, 500, false, true, true, true,true, true, 1, true, true,"png",1);//
 
- // tA->eeAnalysis(cuts, trigger, 10000000000000000, "MT2-out");
-  tA->eeZInOut(cuts, trigger, 100000000000000000000, "MT2-OutIn-OS");
-  //  tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2-CSVM-MET50", 23, 40, 500, false, true, true, true,true, true, 1, true, true,"png",3);
+   // tA->makePlot("doubleEle[0].MT2", cuts, -10, -10, -10, trigger, "MT2-preSel-BinI_noMT2", 20, 0, 300, false,true, true, true,true, true, 1, true, true,"png",1);
 
-   //   tA->makePlot("NEles", cuts, -10, 0, -10, trigger, "NEles", 10, 0, 10, false, true, true, true,true, true, 1, true, true,"png",1); 
+   // tA->makePlot("doubleEle[0].MT2", cuts, -10, -10, -10, trigger, "MT2-preSel_nBCSVMgte2-JZBltm50-MT240to90-top1", 10, 40, 90, false,true, true, true,true, true, 1, true, true,"png",1);
+ //    tA->makePlot("doubleEle[0].MT2", cuts, -10, -10, -10, trigger, "MT2-preSel_nBCSVLgte2-JZBltm50-MT2gt40lt90-top", 5, 40, 90, false,true, true, true,true, true, 1, true, true,"png",1);
+
+   //-------------------380_1-----------------  
+   //   tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2-preSel-JZBltm50-MT2gt90-sumMT250to450", 8, 40, 200, false,true, true, true,true, true, 1, true, true,"png",1);
+   //      tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2-preSel-JZBltm50-MT2gt90-sumMTgt450", 8, 40, 200, false,true, true, true,true, true, 1, true, true,"png",1);
+
+   //-------------------240_40-----------------  
+   //   tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2-preSelection-JZBltm50_MT2gt90-sumMT250to400-240_40", 8, 40, 200, false,true, true, true,true, true, 1, true, true,"png",1);
+   //   tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2-preSelection-JZBltm50_MT2gt90-sumMTgt400-240_40", 8, 40, 200, false,true, true, true,true, true, 1, true, true,"png",1);
+
+   //-------------------180_60-----------------  
+   //   tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2-preSelection-JZBltm50_MT2gt90-sumMT250to400-180_60", 8, 40, 200, false,true, true, true,true, true, 1, true, true,"png",1);
+   //   tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2-preSelection-JZBltm50_MT2gt90-sumMTgt400-180_60", 8, 40, 200, false,true, true, true,true, true, 1, true, true,"png",1);
+
+   //-----------------------------------------
+
+   //   tA->makePlot("eeJZBInDirect()", cuts, -10, 0, -10, trigger, "JZB-preSel-invMass71to111-MT2gt80-CSVL", 100, -500, 500, false, true, true, true,true, true, 1, true, true,"png",3);//
+
+
+
+   //    tA->makePlot("misc.MinMetJetDPhiPt40", cuts, -10, 0, -10, trigger, "misc-preSel-invMass-misc", 35, 0, 3.5, false, true, true, true,true, true, 1, true, true,"png",3);
+   //      tA->makePlot("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))", cuts, -10, 0, -10, trigger, "sumMT-preSelection-JZBltm50_MT2gt40-180_60", 50, 0, 500, false, true, true, true,true, true, 1, true, true,"png",3);
+
+//   tA->eeVS(1000000000000,  cuts,  trigger);
+
+//tA->eeAnalysisTESpUsys(cuts, trigger, 1000, "a", "mutau_nominal");
+   //
+
+ // void MassPlotter::eeAnalysis(TString cuts, TString trigger, unsigned int nevents, TString action, TString variable, TString myfileName)
+
+  tA->eeAnalysis(cuts, trigger, 100000000000000000000, "topValid", "MT2", "MT2-preSel_nBCSVLgte2-BinII_noMT2");
+   //            tA->eeZInOut(cuts, trigger, 100000000000000000000, "Ratio_Zoutin-JZBlt50_MT2gt40");
+    //         tA->eeQCDCtoBRatio(cuts, trigger, 100000000000000000000, "Ratio_CtoB-JZBltm50-MT2lt90-binII");
+
+
+//     tA->makePlot("eeMinMetLepDPhi()", cuts, -10, 0, -10, trigger, "eeMinMetLepDPhi", 35, 0, 3.5, false, true, true, true,true, true, 1, true, true,"png",3);
+   
+//   tA->makePlot("NEles", cuts, -10, 0, -10, trigger, "NEles", 10, 0, 10, false, true, true, true,true, true, 1, true, true,"png",1); 
    //   tA->makePlot("NMuons", cuts, -10, 0, -10, trigger, "NMuons", 10, 0, 10, false, true, true, true,true, true, 1, true, true,"png",1); 
-   //   tA->makePlot("ele[doubleEle[0].Ele0Ind].Iso04", cuts, -10, 0, -10, trigger, "Ele0-Iso04", 30, 0, 3, false, true, true, true,true, true, 1, true, true,"png",1); 
-   //   tA->makePlot("ele[doubleEle[0].Ele1Ind].Iso04", cuts, -10, 0, -10, trigger, "Ele1-Iso04", 30, 0, 3, false, true, true, true,true, true, 1, true, true,"png",1); 
+   //     tA->makePlot("ele[doubleEle[0].Ele0Ind].Iso04", cuts, -10, 0, -10, trigger, "Ele0-Iso04", 25, 0, 5, false, true, true, true,true, true, 1, true, true,"png",1); 
+   //   tA->makePlot("ele[doubleEle[0].Ele1Ind].Iso04", cuts, -10, 0, -10, trigger, "Ele1-Iso04", 25, 0, 5, false, true, true, true,true, true, 1, true, true,"png",1); 
 
- // tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2-IsoSS", 25, 0, 500, false, true, true, true,true, true, 1, true, true,"png",1);
- // tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2-medIsoSS-noRej", 25, 0, 500, false, true, true, true,true, true, 1, true, true,"png",1);
-   // tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2-MedIso_0.1to0.5-OS-noRej", 25, 0, 500, false, true, true, true,true, true, 1, true, true,"png",1);
+
+   
+   
+   //  tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2-e0MedIso-SS-MT2lt100-noMET", 25, 0, 500, false, true, true, true,true, true, 1, true, true,"png",1);
+    // tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2-Iso-OS-MT2lt100-noMET", 25, 0, 500, false, true, true, true,true, true, 1, true, true,"png",1);
+ 
+ // tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2-e0MedIso-SS-MT2gt100-noMET", 25, 0, 500, false, true, true, true,true, true, 1, true, true,"png",1);
+ 
+
+
    //   tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2-MedIso_0.1to1.0-SS-noRej", 25, 0, 500, false, true, true, true,true, true, 1, true, true,"png",1);
 
  //tA->makePlot("doubleEle[0].lv.Eta()", cuts, -10, 0, -10, trigger, "System Eta", 20, 0, 5, false, true, true, true,true, true, 1, true, true,"png",1);

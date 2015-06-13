@@ -151,7 +151,13 @@ run_makeLimitPlot() {
     TH2D* h01 = (TH2D*) TFile::Open(sgnStrFile)->Get("hSgmP1");
     TH2D* h02 = (TH2D*) TFile::Open(sgnStrFile)->Get("hSgmP2");
 
+    h00->Scale(0.025);
+    h01->Scale(0.025);
+    h02->Scale(0.025);
+
     TH2D* hXsecUp = getXsecUp(h00, hXsec);
+
+
 
     fixTH2D(h00, 3, kBlue, 1);
     //    h00->SetFillStyle(3007);

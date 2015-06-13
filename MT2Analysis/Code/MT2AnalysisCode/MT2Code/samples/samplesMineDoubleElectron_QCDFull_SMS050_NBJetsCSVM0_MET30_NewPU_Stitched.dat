@@ -11,7 +11,7 @@ Name            TStau
 SName           SUSY
 ShapeName       Signal
 File            TauTau_V3_1/SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part*_Part*_NBJetsCSVM0_MET30_NewPU_Stitching.root
-Xsection        0.00189
+Xsection        0.00189 
 Kfact           1.0
 Lumi            19600.0
 Type            susy
@@ -45,7 +45,7 @@ SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_20_30_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	167400.0 # at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
-Kfact           1.0
+Kfact           0.0025
 Lumi            19600.0
 Type		mc
 Color		401
@@ -56,7 +56,7 @@ SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_30_80_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	167000.0 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
-Kfact           1.0
+Kfact           0.0025
 Lumi            19600.0
 Type		mc
 Color		401
@@ -67,7 +67,7 @@ SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_80_170_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	12980.0 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
-Kfact           1.0
+Kfact           0.0025
 Lumi            19600.0
 Type		mc
 Color		401
@@ -78,7 +78,7 @@ SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_170_250_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	632.0 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
-Kfact           1.0
+Kfact           0.0025
 Lumi            19600.0
 Type		mc
 Color		401
@@ -89,7 +89,7 @@ SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_250_350_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	103.3 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
-Kfact           1.0
+Kfact           0.0025
 Lumi            19600.0
 Type		mc
 Color		401
@@ -100,7 +100,7 @@ SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_350_BCtoE_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	23.92 #at LO -CMS AN-12-468: http://cms.cern.ch/iCMS/jsp/iCMS.jsp?mode=single&block=publications
-Kfact           1.0
+Kfact           0.0025
 Lumi            19600.0
 Type		mc
 Color		401
@@ -113,7 +113,7 @@ SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_20_30_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	2915000.0     #CMS AN-12-468 Cross sections are LO
-Kfact           1.0
+Kfact           0.0025
 Lumi            19600.0
 Type		mc
 Color		401
@@ -124,7 +124,7 @@ SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_30_80_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	4616000.0 #CMS AN-12-468 Cross sections are LO
-Kfact           1.0
+Kfact           0.0025
 Lumi            19600.0
 Type		mc
 Color		401
@@ -135,7 +135,7 @@ SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_80_170_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	183300.0 #CMS AN-12-468 Cross sections are LO
-Kfact           1.0
+Kfact           0.0025
 Lumi            19600.0
 Type		mc
 Color		401
@@ -146,7 +146,7 @@ SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_170_250_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	4587.0 #CMS AN-12-468  Cross sections are LO
-Kfact           1.0
+Kfact           0.0025
 Lumi            19600.0
 Type		mc
 Color		401
@@ -157,7 +157,7 @@ SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_250_350_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	556.8 #CMS AN-12-468 Cross sections are LO
-Kfact           1.0
+Kfact           0.0025
 Lumi            19600.0
 Type		mc
 Color		401
@@ -168,7 +168,7 @@ SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/QCD_Pt_350_EMEnriched_TuneZ2star_8TeV_pythia6_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	89.1   #CMS AN-12-468 Cross sections are LO
-Kfact           1.0
+Kfact           0.0025
 Lumi            19600.0
 Type		mc
 Color		401
@@ -181,7 +181,7 @@ SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/GJets_HT-40To100_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	20930.00 #http://cms.cern.ch/iCMS/jsp/mcprod/admin/requestmanagement.jsp? Cross sections are LO
-Kfact           1.0	
+Kfact           0.0025	
 Lumi            19600.0
 Type            mc
 Color		401
@@ -192,7 +192,7 @@ SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/GJets_HT-100To200_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	5290.00   #http://cms.cern.ch/iCMS/jsp/mcprod/admin/requestmanagement.jsp?    Cross sections are LO
-Kfact           1.0	
+Kfact           0.0025	
 Lumi            19600.0
 Type            mc
 Color		401
@@ -203,7 +203,7 @@ SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/GJets_HT-200To400_8TeV-madgraph_v2_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	960.5 #http://cms.cern.ch/iCMS/jsp/mcprod/admin/requestmanagement.jsp?    Cross sections are LO
-Kfact           1.0	
+Kfact           0.0025	
 Lumi            19600.0
 Type            mc
 Color		401
@@ -214,7 +214,7 @@ SName		QCD
 ShapeName	QCD
 File            TauTau_V3_1/GJets_HT-400ToInf_8TeV-madgraph_v3_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	107.5 #http://cms.cern.ch/iCMS/jsp/mcprod/admin/requestmanagement.jsp?    Cross sections are LO
-Kfact           1.0	
+Kfact           0.0025	
 Lumi            19600.0
 Type            mc
 Color		401
