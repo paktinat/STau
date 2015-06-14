@@ -4058,7 +4058,7 @@ Bool_t MT2tree::eeRejE2_defined(){
   for (int i=0 ; i < NEles ; i++){
     if (i != doubleEle[0].Ele0Ind && i != doubleEle[0].Ele1Ind)
       {
-		if(ele[i].Iso04 < 0.5 && ele[i].lv.Eta() < 1.479 && ele[i].lv.Pt() > 10 )
+	if(ele[i].Iso04 < 0.5 && ele[i].lv.Eta() < 2.3 /*1.479*/ && ele[i].lv.Pt() > 10 )
 		  //  if(ele[i].RejE2_EE)
  		{		
  		  RejE2_ee = true;
@@ -4075,7 +4075,7 @@ Bool_t MT2tree::eeRejMu_defined(){
 
   bool RejMu_ee = false;
   for (int i=0 ; i < NMuons ; i++){
-    if(muo[i].Iso04 < 0.5 && muo[i].lv.Eta() < 1.479 && muo[i].lv.Pt() > 10)
+    if(muo[i].Iso04 < 0.5 && muo[i].lv.Eta() < 2.3 /*1.479*/ && muo[i].lv.Pt() > 10)
  		{		
  		  RejMu_ee = true;
  		  break;

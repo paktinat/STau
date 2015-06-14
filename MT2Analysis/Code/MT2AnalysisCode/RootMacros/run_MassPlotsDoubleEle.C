@@ -82,8 +82,8 @@
   //---------------Charge-----------------
 
 
- myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)");//Signal OS 
- //   myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge == 2 ) || (ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge == -2 ))");//SS
+  // myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)");//Signal OS 
+ myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge == 2 ) || (ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge == -2 ))");//SS
 
 
   //------------------Extra Leoton Veto
@@ -112,9 +112,9 @@
    //  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>350");
 
    //----------------250-400------------------
-  //  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>250");
-  //  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))<400");
-    myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>400");
+  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>250");
+  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))<400");
+  //   myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>400");
 
 
   //----------------250-450------------------
@@ -202,7 +202,7 @@
 
  // void MassPlotter::eeAnalysis(TString cuts, TString trigger, unsigned int nevents, TString action, TString variable, TString myfileName)
 
-  tA->eeAnalysis(cuts, trigger, 100000000000000000000, "topValid", "MT2", "MT2-preSel_nBCSVLgte2-BinII_noMT2");
+  tA->eeAnalysis(cuts, trigger, 100000000000000000000, "topValid", "MT2", "MT2-preSel_nBCSVLgte2_SS-BinI_noMT2");
    //            tA->eeZInOut(cuts, trigger, 100000000000000000000, "Ratio_Zoutin-JZBlt50_MT2gt40");
     //         tA->eeQCDCtoBRatio(cuts, trigger, 100000000000000000000, "Ratio_CtoB-JZBltm50-MT2lt90-binII");
 
