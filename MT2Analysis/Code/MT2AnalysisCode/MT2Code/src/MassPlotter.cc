@@ -881,7 +881,7 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 
 	//saeid
 // 	TString nBJets = "NBJets40CSVM";    // nbjets = -10  --> >=0 b-tags
-	TString nBJets = "NBJetsCSVT";    // nbjets = -10  --> >=0 b-tags
+	TString nBJets = "NBJetsCSVL";    // nbjets = -10  --> >=0 b-tags
 	//saeid
 	nBJets += nbjets < 0 ? ">=" : "==";
 	nBJets += nbjets==-10 ? "0" : TString::Format("%d",abs(nbjets));
@@ -10549,13 +10549,304 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	myQuantity = mt2_etau_down_e;
       }
   }
+
+  else if (status == "ee_binI_ees_up" || status == "ee_binI_ees_down" || status == "ee_binI_ees_down" || status == "ee_binII_ees_down") {
+
+    //-----------------ees-------------------
+    
+    double px_all_up_e = 0;
+    double py_all_up_e = 0;
+    double pz_all_up_e = 0;
+    double E_all_up_e  = 0;
+
+    for(int l=0; l <fMT2tree->NEles; l++)
+      {
+	if (fabs(fMT2tree->ele[l].lv.Eta()) < 1.479)
+	  {     
+	    px_all_up_e += 0.01*fMT2tree->ele[l].lv.Px();
+	    py_all_up_e += 0.01*fMT2tree->ele[l].lv.Py();
+	    pz_all_up_e += 0.01*fMT2tree->ele[l].lv.Pz();
+	    E_all_up_e  += 0.01*fMT2tree->ele[l].lv.E();
+	  }
+	else
+	  {
+	    px_all_up_e += 0.025*fMT2tree->ele[l].lv.Px();
+	    py_all_up_e += 0.025*fMT2tree->ele[l].lv.Py();
+	    pz_all_up_e += 0.025*fMT2tree->ele[l].lv.Pz();
+	    E_all_up_e  += 0.025*fMT2tree->ele[l].lv.E();
+	  }
+      }
+    
+    TLorentzVector ele_delta_up    (px_all_up_e ,  py_all_up_e,  pz_all_up_e,  E_all_up_e);
+    TLorentzVector ele_delta_down  (-px_all_up_e, -py_all_up_e, -pz_all_up_e, -E_all_up_e);
+    
+    TLorentzVector MET_up   = fMT2tree->pfmet[0] - ele_delta_up;
+    TLorentzVector MET_down = fMT2tree->pfmet[0] - ele_delta_down;
+    
+    TLorentzVector ele0_ee_up  (0,0,0,0) ;
+    TLorentzVector ele0_ee_down(0,0,0,0) ;
+
+    TLorentzVector ele1_ee_up  (0,0,0,0) ;
+    TLorentzVector ele1_ee_down(0,0,0,0) ;
+
+    if (fabs(fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.Eta()) < 1.479)
+      {
+        ele0_ee_up.SetPxPyPzE(1.01 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.Px(), 
+			       1.01 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.Py(), 
+			       1.01 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.Pz(), 
+			       1.01 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.E()) ;
+	
+	ele0_ee_down.SetPxPyPzE(0.99 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.Px(),
+				 0.99 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.Py(),
+				 0.99 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.Pz(),
+				 0.99 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.E());
+      }
+
+    else
+      {
+	ele0_ee_up.SetPxPyPzE(1.025 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.Px(), 
+			       1.025 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.Py(), 
+			       1.025 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.Pz(), 
+			       1.025 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.E());
+	
+	ele0_ee_down.SetPxPyPzE(0.975 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.Px(),
+				 0.975 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.Py(),
+				 0.975 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.Pz(),
+				 0.975 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.E());
+      }
+
+
+    if (fabs(fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Eta()) < 1.479)
+      {
+        ele1_ee_up.SetPxPyPzE(1.01 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Px(), 
+			       1.01 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Py(), 
+			       1.01 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Pz(), 
+			       1.01 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.E()) ;
+	
+	ele1_ee_down.SetPxPyPzE(0.99 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Px(),
+				 0.99 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Py(),
+				 0.99 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Pz(),
+				 0.99 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.E());
+      }
+
+    else
+      {
+	ele1_ee_up.SetPxPyPzE(1.025 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Px(), 
+			       1.025 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Py(), 
+			       1.025 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Pz(), 
+			       1.025 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.E());
+	
+	ele1_ee_down.SetPxPyPzE(0.975 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Px(),
+				 0.975 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Py(),
+				 0.975 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Pz(),
+				 0.975 * fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.E());
+      }
+
+
+    double mt2_ee_up   = fMT2tree->CalcMT2(0, false, ele0_ee_up  , ele1_ee_up   , MET_up  );
+    double mt2_ee_down = fMT2tree->CalcMT2(0, false, ele0_ee_down, ele1_ee_down , MET_down);
+
+    double invMass_ee_up   = (ele0_ee_up   + ele1_ee_up  ).M(); 
+    double invMass_ee_down = (ele0_ee_down + ele1_ee_down).M(); 
+
+    double JZB_ee_up   = (-MET_up   - ele0_ee_up   - ele1_ee_up  ).Pt() - (ele0_ee_up   + ele1_ee_up  ).Pt() ;
+    double JZB_ee_down = (-MET_down - ele0_ee_down - ele1_ee_down).Pt() - (ele0_ee_down + ele1_ee_down).Pt() ;
+    double sumMT_ee_up = fMT2tree->GetMT(ele0_ee_up , 0.0, MET_up , 0.0) + fMT2tree->GetMT(ele1_ee_up , 0.0, MET_up , 0.0);
+    double sumMT_ee_down = fMT2tree->GetMT(ele0_ee_down , 0.0, MET_down , 0.0) + fMT2tree->GetMT(ele1_ee_down , 0.0, MET_down , 0.0);
+    //    double MinMetJetDPhi_up_e = fMT2tree->MinMetJetDPhi(0,40,5.0,200); 
+    //    double MinMetJetDPhi_down_e = fMT2tree->MinMetJetDPhi(0,40,5.0,-200);  
+
+    //-----------------ee_binI_ees_up--------------------------
+    
+    if(status == "ee_binI_ees_up")
+      {
+	if(data == 1)
+	  weight = 1.0;
+	else
+	  {
+	    weight *= fMT2tree->SFWeight.BTagCSV40eq0; 
+	    weight *= fMT2tree->pileUp.Weight;
+	    weight *= fMT2tree->doubleEle[0].Ele0IdIsoSF * fMT2tree->doubleEle[0].Ele1IdIsoSF * fMT2tree->doubleEle[0].DiEleTrgSF;	      
+	  }
+
+     
+	if(MET_up.Pt() <= 30)
+	  continue;
+	if(invMass_ee_up <= 15 || (invMass_ee_up >= 71 && invMass_ee_up <= 111))
+	  continue;
+	if(ele0_ee_up.Pt() <= 20)
+	  continue;
+	if(ele1_ee_up.Pt() <= 10)
+	  continue;
+	if(mt2_ee_up <= 90)
+	  continue;
+	if(sumMT_ee_up <= 250 || sumMT_ee_up >= 400 )     
+	  continue;
+	
+	myQuantity = mt2_ee_up;
+   }
+
+    //-----------------ee_binI_ees_down--------------------------
+
+    if(status == "ee_binI_ees_down")
+      {
+	if(data == 1)
+	  weight = 1.0;
+	else
+	  {
+	    weight *= fMT2tree->SFWeight.BTagCSV40eq0; 
+	    weight *= fMT2tree->pileUp.Weight;
+	    weight *= fMT2tree->doubleEle[0].Ele0IdIsoSF * fMT2tree->doubleEle[0].Ele1IdIsoSF * fMT2tree->doubleEle[0].DiEleTrgSF;	      
+	  }
+
+     
+	if(MET_down.Pt() <= 30)
+	  continue;
+	if(invMass_ee_down <= 15 || (invMass_ee_down >= 71 && invMass_ee_down <= 111))
+	  continue;
+	if(ele0_ee_down.Pt() <= 20)
+	  continue;
+	if(ele1_ee_down.Pt() <= 10)
+	  continue;
+	if(mt2_ee_down <= 90)
+	  continue;
+	if(sumMT_ee_down <= 250 || sumMT_ee_down >= 400 )     
+	  continue;
+	
+	myQuantity = mt2_ee_down;
+   }
+
+    //-----------------ee_binII_ees_up--------------------------
+    
+    if(status == "ee_binII_ees_up")
+      {
+	if(data == 1)
+	  weight = 1.0;
+	else
+	  {
+	    weight *= fMT2tree->SFWeight.BTagCSV40eq0; 
+	    weight *= fMT2tree->pileUp.Weight;
+	    weight *= fMT2tree->doubleEle[0].Ele0IdIsoSF * fMT2tree->doubleEle[0].Ele1IdIsoSF * fMT2tree->doubleEle[0].DiEleTrgSF;	      
+	  }
+
+     
+	if(MET_up.Pt() <= 30)
+	  continue;
+	if(invMass_ee_up <= 15 || (invMass_ee_up >= 71 && invMass_ee_up <= 111))
+	  continue;
+	if(ele0_ee_up.Pt() <= 20)
+	  continue;
+	if(ele1_ee_up.Pt() <= 10)
+	  continue;
+	if(mt2_ee_up <= 90)
+	  continue;
+	if(sumMT_ee_up <= 400 )     
+	  continue;
+	
+	myQuantity = mt2_ee_up;
+   }
+
+    //-----------------ee_binII_ees_down--------------------------
+
+    if(status == "ee_binII_ees_down")
+      {
+	if(data == 1)
+	  weight = 1.0;
+	else
+	  {
+	    weight *= fMT2tree->SFWeight.BTagCSV40eq0; 
+	    weight *= fMT2tree->pileUp.Weight;
+	    weight *= fMT2tree->doubleEle[0].Ele0IdIsoSF * fMT2tree->doubleEle[0].Ele1IdIsoSF * fMT2tree->doubleEle[0].DiEleTrgSF;	      
+	  }
+
+     
+	if(MET_down.Pt() <= 30)
+	  continue;
+	if(invMass_ee_down <= 15 || (invMass_ee_down >= 71 && invMass_ee_down <= 111))
+	  continue;
+	if(ele0_ee_down.Pt() <= 20)
+	  continue;
+	if(ele1_ee_down.Pt() <= 10)
+	  continue;
+	if(mt2_ee_down <= 90)
+	  continue;
+	if(sumMT_ee_down <= 400 )     
+	  continue;
+	
+	myQuantity = mt2_ee_down;
+   }
+
+
+  }
   
   else
     {
+    //----------------------ee_binI_nominal----------------------------
+    if(status == "ee_binI_nominal")
+      {
+	if(data == 1)
+	  weight = 1.0;
+	else
+	  {
+	    weight *= fMT2tree->SFWeight.BTagCSV40eq0; 
+	    weight *= fMT2tree->pileUp.Weight;
+	    weight *= fMT2tree->doubleEle[0].Ele0IdIsoSF * fMT2tree->doubleEle[0].Ele1IdIsoSF * fMT2tree->doubleEle[0].DiEleTrgSF;	      
+	  }
+	
+	if (fMT2tree->misc.MET <= 30)
+	  continue;
+	if(fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.Pt() <=20)
+	  continue; 
+	if(fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Pt() <=10)
+	  continue; 
+	if(fMT2tree->doubleEle[0].lv.M() <= 15 || (fMT2tree->doubleEle[0].lv.M() >= 71 &&  fMT2tree->doubleEle[0].lv.M() <= 111))
+          continue;
+	if(fMT2tree->eeJZBInDirect() >= -50)
+	  continue;
+	if(fMT2tree->doubleEle[0].MT2 <= 90)                                                                     
+          continue;
+	if((fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].MT + fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].MT<=250 ) || (fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].MT + fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].MT >=400))
+         continue;
+
+	myQuantity = fMT2tree->doubleEle[0].MT2 ;
+      }
     
+
+    //----------------------ee_binII_nominal----------------------------
+    else if(status == "ee_binII_nominal")
+      {
+	if(data == 1)
+	  weight = 1.0;
+	else
+	  {
+	    weight *= fMT2tree->SFWeight.BTagCSV40eq0; 
+	    weight *= fMT2tree->pileUp.Weight;
+	    weight *= fMT2tree->doubleEle[0].Ele0IdIsoSF * fMT2tree->doubleEle[0].Ele1IdIsoSF * fMT2tree->doubleEle[0].DiEleTrgSF;	      
+	  }
+	
+	if (fMT2tree->misc.MET <= 30)
+	  continue;
+	if(fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.Pt() <=20)
+	  continue; 
+	if(fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Pt() <=10)
+	  continue; 
+	if(fMT2tree->doubleEle[0].lv.M() <= 15 || (fMT2tree->doubleEle[0].lv.M() >= 71 &&  fMT2tree->doubleEle[0].lv.M() <= 111))
+          continue;
+	if(fMT2tree->eeJZBInDirect()  >= -50)
+	  continue;
+	if(fMT2tree->doubleEle[0].MT2 <=  90)                                                                     
+          continue;
+	if(fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].MT + fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].MT <= 400) 
+         continue;
+
+	myQuantity = fMT2tree->doubleEle[0].MT2 ;
+      }
+    
+
+
     //----------------------ditau_bin1_nominal----------------------------
 
-    if(status == "ditau_bin1_nominal")
+    else if(status == "ditau_bin1_nominal")
       {
 	if(data == 1)
 	  weight = 1.0;
