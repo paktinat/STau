@@ -10,13 +10,13 @@ TLegend* legend() {
 
 TH2D* getXsecUp(TH2D* hRatio, TH2D* hXsec) {
     TH2D* hXsecUp = (TH2D*) hRatio->Clone("hXsecUp");
-
+    
     hXsecUp->Multiply(hRatio, hXsec);
 
     //    hXsecUp->GetXaxis()->SetRangeUser(0, 600);
     //    hXsecUp->GetYaxis()->SetRangeUser(0, 600);
-    hXsecUp->GetXaxis()->SetRangeUser(100, 500);
-    hXsecUp->GetYaxis()->SetRangeUser(0, 400);
+    hXsecUp->GetXaxis()->SetRangeUser(100, 700);
+    hXsecUp->GetYaxis()->SetRangeUser(0, 700);
     hXsecUp->GetZaxis()->SetRangeUser(0.001, 100);
 
     hXsecUp->GetXaxis()->SetTitle("m_{#tilde{#chi}} [GeV/c]");
@@ -56,7 +56,7 @@ TGraph* accRange() {
     g00->SetPoint(0, 200, 0);
     g00->SetPoint(1, 120, 80);
     g00->SetPoint(2, 120, 100);
-    g00->SetPoint(3, 500, 480);
+    g00->SetPoint(3, 700, 680);
 
     return g00;
 }
@@ -94,7 +94,7 @@ struct vGraph {
 
     void draw() {
         for (int i = 0; i < n; i++)
-            g[i]->Draw("C");
+            g[i]->Draw("");
     }
 };
 
@@ -142,33 +142,74 @@ run_makeLimitPlot() {
             }
     }
 
+//     TH2D* hXsecUp = (TH2D*) TFile::Open("/dataLOCAL/MT2Tau/share/muTauNewOptimizationsPreSelectionMinMetJDPhi40/Bin1_3_MT2g90_tauMTg200.root")->Get("h_PN_MLSP_MChi");
+//     hXsecUp->Add( (TH2D*) TFile::Open("/dataLOCAL/MT2Tau/share/eleTauNewOptimizationsPreSelectionMinMetJDPhi40/Bin1_3.root")->Get("h_PN_MLSP_MChi") );
+//     hXsecUp->Add( (TH2D*) TFile::Open("/dataLOCAL/MT2Tau/share/TauTau/counting_TBTTalk_23Jan/counting_firstBin/maxMT_gt_200/countingForExclusion_TBD_Histos.root")->Get("h_PN_MLSP_MChi") );
+//     hXsecUp->Add( (TH2D*) TFile::Open("/dataLOCAL/MT2Tau/share/TauTau/counting_TBTTalk_23Jan/counting_secondBin/countingForExclusion_TBD_Histos.root")->Get("h_PN_MLSP_MChi") );
+
+
+//     for (int iy = 0; iy < hXsecUp->GetNbinsY(); iy++) {
+//       for (int ix = 0; ix < hXsecUp->GetNbinsX(); ix++) {
+// 	double content = hXsecUp->GetBinContent(ix, iy);
+// 	double error   = hXsecUp->GetBinError(ix, iy);
+	
+// 	if(content != 0)
+// 	  hXsecUp->SetBinContent(ix, iy, error/content);
+//       }
+//     }
+    
+ //    hXsecUp->GetXaxis()->SetRangeUser(100, 500);
+//     hXsecUp->GetYaxis()->SetRangeUser(0, 400);
+//     hXsecUp->GetZaxis()->SetRangeUser(0.1, 0.6);
+
+
     TString sgnStrFile = sin[0];
     TString sgnStrName = sin[1];
 
     TH2D* hXsec = (TH2D*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
 
     TH2D* h00 = (TH2D*) TFile::Open(sgnStrFile)->Get("hMdn");
+    TH2D* hOb = (TH2D*) TFile::Open(sgnStrFile)->Get("hObs");
     TH2D* h01 = (TH2D*) TFile::Open(sgnStrFile)->Get("hSgmP1");
     TH2D* h02 = (TH2D*) TFile::Open(sgnStrFile)->Get("hSgmP2");
+    TH2D* h_1 = (TH2D*) TFile::Open(sgnStrFile)->Get("hSgmM1");
+    TH2D* h_2 = (TH2D*) TFile::Open(sgnStrFile)->Get("hSgmM2");
 
-    h00->Scale(0.025);
-    h01->Scale(0.025);
-    h02->Scale(0.025);
+    
+    //For HybridNew hSgmP2 is the median
+ //     h00 = h02 ;
+//      h02 = h01 ;
+  
+    //For HybridNew hSgmP2 is the hSgmP1
+//     h01 = h02 ;
+//     h02 = h00 ;
+    float a = 1.0;//0.2;
+    h00->Scale(a);
+    hOb->Scale(a);
+    h01->Scale(a);
+    h02->Scale(a);
+    h_1->Scale(a);
+    h_2->Scale(a);
 
+    
     TH2D* hXsecUp = getXsecUp(h00, hXsec);
 
-
-
     fixTH2D(h00, 3, kBlue, 1);
+    fixTH2D(hOb, 2, kBlack, 9);
     //    h00->SetFillStyle(3007);
     //    h00->SetFillColor(kBlue - 7);
     fixTH2D(h01, 2, kBlue, 2);
     fixTH2D(h02, 1, kBlue, 7);
+    fixTH2D(h_1, 2, kBlue, 2);
+    fixTH2D(h_2, 1, kBlue, 7);
 
-    vGraph vg00, vg01, vg02;
+    vGraph vg00, vgOb, vg01, vg02, vg_1, vg_2;
     Contour2Graph(h00, vg00);
+    Contour2Graph(hOb, vgOb);
     Contour2Graph(h01, vg01);
     Contour2Graph(h02, vg02);
+    Contour2Graph(h_1, vg_1);
+    Contour2Graph(h_2, vg_2);
     
     TGraph* g00 = accRange();
     TGraph* g01 = atlasGraph();
@@ -187,8 +228,11 @@ run_makeLimitPlot() {
 //    h01->Draw("cont3same");
 //    h02->Draw("cont3same");
     vg00.draw();
+    vgOb.draw();
     vg01.draw();
-    vg02.draw();
+//     vg02.draw();
+    vg_1.draw();
+//     vg_2.draw();
 
     g00->Draw();
     g01->Draw("C");
@@ -196,8 +240,9 @@ run_makeLimitPlot() {
 
     TLegend* leg = legend();
     leg->AddEntry(h00, sgnStrName, "lpf");
-    leg->AddEntry(h01, (sgnStrName+" + 1#sigma"), "lpf");
-    leg->AddEntry(h02, (sgnStrName+" + 2#sigma"), "lpf");
+    leg->AddEntry(h01, (sgnStrName+" #pm 1#sigma"), "lpf");
+//      leg->AddEntry(h02, (sgnStrName+" + 2#sigma"), "lpf");
+    leg->AddEntry(hOb, "Observed", "lpf");
     leg->AddEntry(g01, ("ATLAS Expected"), "lpf");
     //leg->AddEntry(g00, "Accepted Range", "lpf");
     leg->Draw();

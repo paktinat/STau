@@ -16,8 +16,18 @@ void makeCard(double N, double S, double dS, double B, double dB, string sOut) {
     fOut << "bin              b1     b1" << std::endl;
     fOut << "process         SMS    All" << std::endl;
     fOut << "process          0     1  " << std::endl;
+    
+//     int nSig = int(B/0.0001 + 0.5);
+    
+//     B = nSig * 0.0001;
+    
     fOut << "rate           " << S << "\t" << B << std::endl;
     fOut << "---" << std::endl;
+
+    
+//     fOut << "StatS"<<sOut.c_str()<<"  gmN    " << nSig <<"\t"<< 0.0001 << "\t-" << std::endl;
+//     fOut << "StatB"<<sOut.c_str()<<"  gmN    " << nSig <<"\t"<< "\t- " << 0.0001 << std::endl;
+
     fOut << "dS  lnN    " << 1 + dS << "\t-" << std::endl;
     fOut << "dB  lnN    - \t " << 1 + dB << std::endl;
     fOut.close();
@@ -27,7 +37,7 @@ void makeCard(double N, double S, double dS, double B, double dB, string sOut) {
 bool isOUT(double x, double y) {
 
     if (x < 120.) return true;
-    if (x > 520.) return true;
+    if (x > 500.) return true;
 
     double a = (100. - 480.) / (120. - 500.);
     double b = -a * 120. + 100.;
@@ -92,9 +102,19 @@ run_setUpperLimit() {
                 
                 TH1* hBkg = fin->GetObjectChecked("h_PN_Bkg", "TH1");
                 Double_t B = hBkg->GetBinContent(1);
+//                 Double_t statB = hBkg->GetBinError(1);
+		
+// 		if(B!= 0)
+// 		  dB = sqrt(dB * dB + (statB * statB/(B*B)));
+		
 
                 TH2* hSgn = fin->GetObjectChecked("h_PN_MLSP_MChi", "TH2*");
                 Double_t S = hSgn->GetBinContent(ix, iy);
+                Double_t statS = hSgn->GetBinError(ix, iy);
+
+// 		if(S!= 0)
+// 		  dS = sqrt(dS * dS + (statS * statS/(S*S)));
+// 		  dS = sqrt((statS * statS/(S*S)));
 
                 fin->Close("R");
 
@@ -109,11 +129,12 @@ run_setUpperLimit() {
 
             if (!(std::ifstream("datacard_0")).good()) continue;
             system("combineCards.py datacard_* > datacard");
-            system("rm -f datacard_*");
-            system("combine -M Asymptotic datacard");
-
+ 	    system("rm -f datacard_*");
+	    system("combine -M Asymptotic datacard");
+            //system("combine -M HybridNew --rule CLs --testStat LHC datacard");
             TTree* tree;
-            TFile * flimit = new TFile("higgsCombineTest.Asymptotic.mH120.root");
+	    TFile * flimit = new TFile("higgsCombineTest.Asymptotic.mH120.root");
+            //TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.root");
             flimit->GetObject("limit", tree);
 
             Double_t limit;
@@ -131,18 +152,21 @@ run_setUpperLimit() {
                 cout << ">> quantileExpected: " << quantileExpected << "\tlimit: " << limit << endl;
                 vLimit.push_back(limit);
             }
-
-            double SgmP2(vLimit[0]), SgmP1(vLimit[1]), Mdn(vLimit[2]), SgmM1(vLimit[3]), SgmM2(vLimit[4]), Obs(vLimit[5]);
-            hObs->SetBinContent(ix, iy, Obs);
-            hMdn->SetBinContent(ix, iy, Mdn);
-            hSgmP1->SetBinContent(ix, iy, SgmP1);
-            hSgmM1->SetBinContent(ix, iy, SgmM1);
-            hSgmP2->SetBinContent(ix, iy, SgmP2);
-            hSgmM2->SetBinContent(ix, iy, SgmM2);
-
-            system("rm -f higgsCombineTest.Asymptotic.mH120.root");
-            system("rm -f datacard");
-            system("rm -f roostats-*");
+	    if(nEntrs != 0){
+	      double SgmP2(vLimit[0]), SgmP1(vLimit[1]), Mdn(vLimit[2]), SgmM1(vLimit[3]), SgmM2(vLimit[4]), Obs(vLimit[5]);
+	      hObs->SetBinContent(ix, iy, Obs);
+	      hMdn->SetBinContent(ix, iy, Mdn);
+	      hSgmP1->SetBinContent(ix, iy, SgmP1);
+	      hSgmM1->SetBinContent(ix, iy, SgmM1);
+	      hSgmP2->SetBinContent(ix, iy, SgmP2);
+	      hSgmM2->SetBinContent(ix, iy, SgmM2);
+	    }else
+	      cout<<" There is 0 entry "<<endl;
+// 	    system("mv  roostats-* roostats-*.root");
+          system("rm -f higgsCombineTest.Asymptotic.mH120.root");
+	  //	    system("rm -f higgsCombineTest.HybridNew.mH120.root");
+	    system("rm -f datacard");
+	    system("rm -f roostats-*");
 
         }//iy
     }//ix

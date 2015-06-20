@@ -1,6 +1,7 @@
-{
+big{
 //   TString outputdir = "../MassPlots/";
   TString outputdir = "/";
+//  TString outputdir = "/dataLOCAL/MT2Tau/RootFiles/TauTau_V3_1";
   TString samples = "./samples/samplesMineSmall.dat"; 
   //TString samples = "./samples/samplesMineQCD.dat";
   //TString samples = "./samples/samplesMineTest.dat";  
@@ -38,7 +39,8 @@
 		<<" misc.CSCTightHaloIDFlag==0 && misc.HBHENoiseFlag==0 " <<"&&"
 		<<" misc.hcalLaserEventFlag==0 && misc.trackingFailureFlag==0 " <<"&&"
 		<<" misc.eeBadScFlag==0 && misc.EcalDeadCellTriggerPrimitiveFlag==0 )" <<"&&("
-// 		<< "(trigger.HLT_MuTau) " << "&&" 
+    //  		<< "(trigger.HLT_MuTau) " << "&&" 
+ //   		<< "(trigger.HLT_DiTau) " << "&&" 
 		<< "( 0 == 0 ) " << ")))"; //Channel specific trigger
     
 
@@ -54,36 +56,67 @@
   /*
 * Define selection cuts and fill the cutflow input vector
 */
-
-
-  /*
-  myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP) < 175.0 && (Susy.MassGlu - Susy.MassLSP) > 125.0))"); 
-  // You need to carefully define the cut variables based on MT2"Channel".hh
+  //You need to specify the channel
+  TString myChan = "muTau[0]";
+  //MuTauPreselectionTauTightID
   myChannelCuts.push_back(std::string(std::string(myChan) + ".tau0Ind >=0")); // First lepton index, channel specific
   myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0Ind >=0")); // Second lepton index, channel specific
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".chargeSum == 0"));
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".signalMuTau"));
-
-  //myChannelCuts.push_back(std::string(std::string(myChan) + ".qcdMuTau")); 
  
   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoElec"));
   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoMu"));
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated == 1 "));
-  //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0QCDInd != -1")); // First lepton index, channel specific
-  //myChannelCuts.push_back(std::string(std::string(myChan) + ".mu1QCDInd != -1"));
   myChannelCuts.push_back("(muTau[0].lv.M() < 45 || muTau[0].lv.M() > 75)");
-    myChannelCuts.push_back("muTau[0].lv.M() > 15");
-  //    myChannelCuts.push_back(std::string(std::string(myChan) + ".DPhi < 2.5"));
-
-  */
-
-  myChannelCuts.push_back(" ((muTau[0].tau0Ind >=0 && muTau[0].mu0Ind >=0) || (eleTau[0].tau0Ind >=0 && eleTau[0].ele0Ind >=0) || (doubleEle[0].Ele0Ind >=0 && doubleEle[0].Ele1Ind >=0) || (eleMu[0].ele0Ind >=0 && eleMu[0].mu0Ind >=0)) ");
+  myChannelCuts.push_back("muTau[0].lv.M() > 15");
   myChannelCuts.push_back("misc.MET > 30"); //Place holder for MET requirements
   myChannelCuts.push_back("NBJetsCSVM == 0");
-  //myChannelCuts.push_back("misc.Jet0Pass");
-  //myChannelCuts.push_back("misc.LeadingJPt > 350");
+  //MuTauPreselectionTauTightID
 
+
+  //myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated == 1 "));
+  //myChannelCuts.push_back(std::string(std::string(myChan) + ".signalMuTau"));
+  //myChannelCuts.push_back(std::string(std::string(myChan) + ".chargeSum == 0"));
+ 
+
+    //_NBJetsCSVM0_MET30_
+//   myChannelCuts.push_back(" ((muTau[0].tau0Ind >=0 && muTau[0].mu0Ind >=0) || (eleTau[0].tau0Ind >=0 && eleTau[0].ele0Ind >=0) || (doubleEle[0].Ele0Ind >=0 && doubleEle[0].Ele1Ind >=0) || (eleMu[0].ele0Ind >=0 && eleMu[0].mu0Ind >=0)) ");
+//   myChannelCuts.push_back("misc.MET > 30"); //Place holder for MET requirements
+//   myChannelCuts.push_back("NBJetsCSVM == 0");
+  //_NBJetsCSVM0_MET30_
+
+
+
+//_MuTauWJetsEstimation
+  //myChannelCuts.push_back("muTau[0].tau0Ind >=0 && muTau[0].mu0Ind >=0 && muTau[0].chargeSum == 0 &&muTau[0].Isolated >= 0 && muTau[0].hasNoVetoElec && muTau[0].hasNoVetoMu && HasNoVetoMuForMuTau() && misc.MinMetJetDPhiPt40 > 1.0"); 
+  //myChannelCuts.push_back("(muTau[0].lv.M() < 45 || muTau[0].lv.M() > 75)");  
+  //myChannelCuts.push_back("muTau[0].lv.M() > 15");                         
+  //_MuTauWJetsEstimation
+
+//   myChannelCuts.push_back("(tau[muTau[0].tau0Ind].Isolation3Hits <= 1.)");//Tau Tight ID 
+
+        //myChannelCuts.push_back("misc.Jet0Pass");
+  //myChannelCuts.push_back("misc.LeadingJPt > 350");
+  
   //myChannelCuts.push_back("muo[muTau[0].mu0Ind].MT > 125.0");
+  /*  
+  //BigFiles_NewPU_Stitching_DoubleTauRelaxed
+   TString myChan = "doubleTau[0]";
+   myChannelCuts.push_back(std::string(std::string(myChan) + ".tau0Ind >=0"));
+   myChannelCuts.push_back(std::string(std::string(myChan) + ".tau1Ind >=0"));
+   myChannelCuts.push_back(std::string(std::string(myChan) + ".lv.M() > 12"));
+  //BigFiles_NewPU_Stitching_DoubleTauRelaxed
+  */
+  //BigFiles_NewPU_Stitching_DoubleTau
+//   TString myChan = "doubleTau[0]";
+//   myChannelCuts.push_back(std::string(std::string(myChan) + ".tau0Ind >=0"));
+//   myChannelCuts.push_back(std::string(std::string(myChan) + ".tau1Ind >=0"));
+//   myChannelCuts.push_back(std::string(std::string(myChan) + ".lv.M() > 12"));
+//   myChannelCuts.push_back(std::string(std::string(myChan) + ".chargeSum == 0"));
+//   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoElec"));
+//   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoMu"));
+  //BigFiles_NewPU_Stitching_DoubleTau
+
+
+
+
   myChannelCuts.push_back("0 == 0");	//Place holder for Jet requirements
 
   // We need to make the cut stream
@@ -213,7 +246,7 @@
 //    tA->makePlot(vars[iVar], cuts, -10, -10 , -10, trigger, vars[iVar], 20, 0, 300, false, true, true, true, true, true, 1, true, true, "png");
 //   }
 
-//   tA->makePlot("doubleMu[0].MT2()",     cuts,    -10,  -10 , -10 ,   trigger , "doubleMu[0].lv.M()"            ,20,0,400,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
+//    tA->makePlot("doubleTau[0].MT2",     cuts,    -10,  -10 , -10 ,   trigger , "doubleMu[0].lv.M()"            ,20,0,400,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 
 //   tA->makePlot("misc.Run",     cuts,    -10,  -10 , -10 ,   trigger , "Run"            ,19000,190000, 209000,          false,        true ,  true,   true,  true,  true, 1,true, false, "png");
 
