@@ -144,8 +144,7 @@ void MT2tree::FillEleMu(){
       }else{
 	eleMu[0].PlusLepZAngle=PositiveChargedLeptonDecayAngleinZframe(ele[eleMu[0].ele0Ind].lv,muo[eleMu[0].mu0Ind].lv);
 	 eleMu[0].PlusLepZBeamAngle=PositiveChargedLepWithZBeamPlane(ele[eleMu[0].ele0Ind].lv,muo[eleMu[0].mu0Ind].lv);
-}  
-
+}
       eleMu[0].MuTrgSF=(muo[eleMu[0].mu0Ind].mutrgSFeleMu);
       eleMu[0].MuIdIsoSF=(muo[eleMu[0].mu0Ind].muidisoSFeleMu);
       eleMu[0].EleTrgSF=(ele[eleMu[0].ele0Ind].eletrgSFeleMu);

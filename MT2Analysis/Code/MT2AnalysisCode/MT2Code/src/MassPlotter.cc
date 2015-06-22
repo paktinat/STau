@@ -881,7 +881,7 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 
 	//saeid
 // 	TString nBJets = "NBJets40CSVM";    // nbjets = -10  --> >=0 b-tags
-	TString nBJets = "NBJetsCSVL";    // nbjets = -10  --> >=0 b-tags
+	TString nBJets = "NBJetsCSVT";    // nbjets = -10  --> >=0 b-tags
 	//saeid
 	nBJets += nbjets < 0 ? ">=" : "==";
 	nBJets += nbjets==-10 ? "0" : TString::Format("%d",abs(nbjets));
@@ -1314,7 +1314,7 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 	TString fileName = fOutputDir;
 	if(!fileName.EndsWith("/")) fileName += "/";
 	Util::MakeOutputDir(fileName);
-	fileName = fileName + "countingForExclusion_" + xtitle +"_Histos.root";
+	fileName = fileName + "countingForExclusion_" + myChannel +"_Histos.root";
 	TFile *savefile = new TFile(fileName.Data(), "RECREATE");
 	savefile ->cd();
 
@@ -3717,7 +3717,7 @@ void MassPlotter::printYield(){
       binNumber1     = MT2[NumberOfSamples-2]->FindBin(xMT2bin[i] + 0.1);
       int binNumber2 = MT2[NumberOfSamples-2]->FindBin(xMT2bin[i+1] - 0.1);
 
-      MT2[5]->IntegralAndError(binNumber1, binNumber2,err);
+      MT2[NumberOfSamples-2]->IntegralAndError(binNumber1, binNumber2,err);
       cout<<"$"<<xMT2bin[i]<<"-"<<xMT2bin[i+1]<<"$ &      "<<MT2[0]->Integral(binNumber1, binNumber2)<< " & "<<MT2[2]->Integral(binNumber1, binNumber2) <<" & "<<MT2[1]->Integral(binNumber1, binNumber2) <<" & "<<MT2[3]->Integral(binNumber1, binNumber2)<<" & "<<MT2[4]->Integral(binNumber1, binNumber2)<<" & "<<MT2[5]->Integral(binNumber1, binNumber2)<<" & "<<MT2[NumberOfSamples-2]->Integral(binNumber1, binNumber2)<<" $pm$ "<<err<<" & "<<MT2[NumberOfSamples]->Integral(binNumber1, binNumber2)<<" & "<<MT2[NumberOfSamples-1]->Integral(binNumber1, binNumber2)<<"\\"<<endl;
     }
 }
@@ -6189,7 +6189,8 @@ void MassPlotter::TauFakeRate(TString cuts, TString trigger, unsigned int nevent
       TLorentzVector LeadingMuon;
        
       for(int i=0; i<fMT2tree->NMuons; ++i){ 
-	if(fMT2tree->muo[i].PassMu0_TauMu == 1 && fMT2tree->muo[i].lv.Pt() > 27.0 && chargeMu == 0){
+//	if(fMT2tree->muo[i].PassMu0_TauMu == 1 && fMT2tree->muo[i].lv.Pt() > 27.0 && chargeMu == 0){
+	if(fMT2tree->muo[i].PassMu0_TauMu == 1 && fMT2tree->muo[i].lv.Pt() > 20.0 && chargeMu == 0){
 	  LeadingMuon = fMT2tree->muo[i].lv;
 	  chargeMu = fMT2tree->muo[i].Charge;
 	}
@@ -6313,9 +6314,9 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, unsigned int neve
   int      ccolor[NumberOfSamples+1] = { 401,      417,     419,   855,         603,     kRed,    603,      1, 632};
   TString varname = "MT2";
   for (int i=0; i<=(NumberOfSamples); i++){
-    //MT2[i] = new TH1D(varname+"_"+cnames[i], "", 50, 0, 250);
+    MT2[i] = new TH1D(varname+"_"+cnames[i], "", 50, 0, 5);
     //following to check the promptness and faking of the events
-    MT2[i] = new TH1D(varname+"_"+cnames[i], "", 8, 0, 8);
+    //MT2[i] = new TH1D(varname+"_"+cnames[i], "", 8, 0, 8);
     MT2[i] -> SetFillColor (ccolor[i]);
     MT2[i] -> SetLineColor (ccolor[i]);
     MT2[i] -> SetLineWidth (2);
@@ -6323,9 +6324,9 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, unsigned int neve
     MT2[i] -> SetStats(false);
 
     //following to check the promptness and faking of the events: 
-    TString  genStatus[8] = {"pp", "pf", "fp", "ff", "tp", "tf", "nothing", "wrong"};
-    for(int k = 0; k < MT2[i]->GetNbinsX(); k++)
-      MT2[i] ->GetXaxis()->SetBinLabel(k+1,genStatus[k]);
+//     TString  genStatus[8] = {"pp", "pf", "fp", "ff", "tp", "tf", "nothing", "wrong"};
+//     for(int k = 0; k < MT2[i]->GetNbinsX(); k++)
+//       MT2[i] ->GetXaxis()->SetBinLabel(k+1,genStatus[k]);
     
 }
 
@@ -6417,7 +6418,8 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, unsigned int neve
 // 	if(fMT2tree->tau[i].PassQCDTau_MuTau && fMT2tree->tau[i].Isolation > 0 && i != fMT2tree->muTau[0].GetTauIndex0())//
 // 	  nExtraTaus++;
 //       }
-      
+        cout<<fMT2tree->misc.Run<<" "<<fMT2tree->misc.LumiSection<<" "<< fMT2tree->misc.Event<<" "<<fMT2tree->muTau[0].GetMT2() <<" " <<fMT2tree->muTau[0].GetLV().M()<<" "<<fMT2tree->muTau[0].GetLV().Pt()<<" "<<fMT2tree->muTau[0].GetLV().Eta()<<" "<<fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt()<<" "<<fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Eta()<<" "<<fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv.Pt()<<" "<<" "<<fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv.Eta()<<" "<<fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT<<" "<<fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].MT<<" "<<fMT2tree->muTau[0].GetDPhi()<<" "<<fMT2tree->misc.MinMetJetDPhiPt40<<endl;
+
       
       int chargeMu = 0;      
       TLorentzVector LeadingMuon;
@@ -6482,8 +6484,21 @@ void MassPlotter::muTauAnalysis(TString cuts, TString trigger, unsigned int neve
       //myQuantity = fMT2tree->pileUp.NVertices;//nExtraTaus;
 
       //following to check the promptness and faking of the events:
-      TString myQuantity = fMT2tree->GenLeptonAnalysisInterpretation(0,1,1, false);
+ //      TString myQuantity = fMT2tree->GenLeptonAnalysisInterpretation(0,1,1, false);
+      float myQuantity = 100.0;
       
+      for(int j=0; j<fMT2tree->NJets; ++j){ 
+	if (!((fMT2tree->jet[j].lv.Pt() > 20)  &&  fabs(fMT2tree->jet[j].lv.Eta()<2.3)))  
+	  continue;
+
+	float deltaR = Util::GetDeltaR(LeadingMuon.Eta(), fMT2tree->jet[j].lv.Eta(), LeadingMuon.Phi(), fMT2tree->jet[j].lv.Phi());
+	if(deltaR < myQuantity)
+	  myQuantity = deltaR;
+	
+      }
+	
+    
+
       //if(fMT2tree->tau[TauInd].PassTau_MuTau != 1 || fMT2tree->tau[TauInd].Isolation3Hits != 1.)
       //  continue;
 
@@ -7088,9 +7103,8 @@ float FRWeight(float fakeRate, float promptRate, int isolated){
 }
 
 
-
 void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString myfileName, bool calculateTauMTPass, float sysFR, float sysPR, float sysMT2W, float sysTauMT){
-  
+
   TH1::SetDefaultSumw2();
   setFlags(10);
   TString fileName = fOutputDir;
@@ -7140,7 +7154,10 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
   static const int nbins = 6;//3;//11
   //  double bins[nbins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};      //MT2
   //  double bins[nbins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,100.0,120.0,200.0};      //MT2
-  double bins[nbins+1] = {0.0,20.0,40.0,50.0,70.0,90.0,300.0};      //MT2
+    double bins[nbins+1] = {0.0,20.0,40.0,50.0,70.0,90.0,300.0};      //MT2
+
+  //double bins[nbins+1] = {40.0,50.0,60.0,70.0,80.0,90.0,100.0,110.0,120.0,130.0,140.0,150.0};      //MT2
+
   //double bins[nbins+1] = {0.0,18.0,36.0,54.0,72.0,90.0,300.0};      //MT2
   //double bins[nbins+1] = {0.0, 50.0, 100.0, 1000.0};
   //    double binsTauPt[nbins+1] = {-20.0,40.0,60.0,80.0,100.0,150,1300.0};      //tauPt
@@ -7186,6 +7203,10 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
  
   TString  cnames[NumberOfSamples+1] = {"QCD",     "W",    "ZX",  "Top",       "WW",  "Higgs",   "MC", "susy","data"};
   int      ccolor[NumberOfSamples+1] = { 401,      417,     419,   855,         603,     kRed,    603,      1, 632};
+
+  TH1D *LooseNonTight = new TH1D("LooseNonTight", "LooseNonTight", nbins, bins);
+  TH1D *Tight = new TH1D("Tight", "Tight", nbins, bins);
+
 
   TString varname = "MT2";
   for (int i=0; i<=(NumberOfSamples); i++){
@@ -7390,30 +7411,57 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
  	  fakeRateErr   = hPt2Pass->GetBinError(binNumber);
 	}
 
+	TH1F fakeRateOS_SSCorrection("", "", 1, 0, 1);
+	TH1F fakeRateUnCorrected("", "", 1, 0, 1);
+
+	//PtEta_MuTauTight_Over_Loose_pfOnly_WJets_OppSign_ExtraLepVeto_MET_NBJets_Weighted_FRHistos.root  0.489688 +/- 0.003775
+	//PtEta_MuTauTight_Over_Loose_pfOnly_WJets_SameSign_ExtraLepVeto_MET_NBJets_Weighted_FRHistos.root 0.428217 +/- 0.00647227
+	fakeRateOS_SSCorrection.SetBinContent(1, 1.14355);
+	fakeRateOS_SSCorrection.SetBinError(1, 0.0194);
+
+	//PtEta_MuTauTight_Over_Loose_pfOnly_WJets_OppSign_ExtraLepVeto_MT2gt40_ZVeto_minDPhi_MET_NBJets_Weighted_FRHistos.root 0.467944 +/- 0.00564925
+	//PtEta_MuTauTight_Over_Loose_pfOnly_WJets_SameSign_ExtraLepVeto_MT2gt40_ZVeto_minDPhi_MET_NBJets_Weighted_FRHistos.root 0.41091 +/- 0.0090992
+// 	fakeRateOS_SSCorrection.SetBinContent(1, 1.138799);
+// 	fakeRateOS_SSCorrection.SetBinError(1, 0.02872);
+
+
 // PtEta_MuTauTight_Over_Loose_SingleMu_SameSign_ExtraLepVeto_MET_NBJets_Weighted_FRHistos.root
 // 0.4464 +/- 0.0062
-// 	fakeRate      = 0.4464;
-// 	fakeRateErr   = 0.0062;
+  	fakeRate      = 0.4464;
+	fakeRateErr   = 0.0062;
+
 
 // PtEta_MuTauTight_Over_Loose_pfOnly_WJets_SameSign_ExtraLepVeto_MET_NBJets_Weighted_FRHistos.root
 // 0.4282 +/- 0.0065
-	fakeRate      = 0.4282;
-	fakeRateErr   = 0.0065;
+// 	fakeRate      = 0.4282;
+// 	fakeRateErr   = 0.0065;
+// PtEta_MuTauTight_Over_Loose_pfOnly_WJets_SameSign_ExtraLepVeto_MT2gt40_ZVeto_minDPhi_MET_NBJets_Weighted_FRHistos.root
+// 0.41091 +/- 0.0090992
+//	fakeRate      = 0.41091;  
+//	fakeRateErr   = 0.0090992;
 
-	
-	sysFR = sqrt(fakeRateErr * fakeRateErr + sysFR * sysFR * fakeRate * fakeRate);
+	fakeRateUnCorrected.SetBinContent(1, fakeRate);
+	fakeRateUnCorrected.SetBinError(1, fakeRateErr);
+
+ 	fakeRateUnCorrected.Multiply(&fakeRateOS_SSCorrection);
+
+	fakeRate = fakeRateUnCorrected.GetBinContent(1);
+	fakeRateErr = fakeRateUnCorrected.GetBinError(1);
+
+	float SysFR = sqrt(fakeRateErr * fakeRateErr + sysFR * sysFR * fakeRate * fakeRate);
 
 	// P +  F = Loose
 	//pP + fF = Loose - LooseNonTight
 	//FakeContribution = f * F 
 	//F * (f - p) = (1 - p) Loose - LooseNonTight
+	//F * (f - p) = (1 - p) Tight - p * LooseNonTight
 
 	float promptRate = 0.52;// 0.5349 +- 0.0031 QCD To Tight MT2_MuTau_Over_QCDMuTau_SignalSelectionNoZVeto_DYToLL_M50_TauTightIso_DY_PRHistos.root
 	promptRate = 0.77; //0.7659 +- 0.0032  Loose to Tight MT2_MuTauTight_Over_Loose_SignalSelectionNoZVeto_DYToLL_M50_DY_PRHistos.root
 
 	float promptRateErr = 0.0032;
 
-	sysPR = sqrt(promptRateErr * promptRateErr + sysPR * sysPR * promptRate * promptRate);
+	float SysPR = sqrt(promptRateErr * promptRateErr + sysPR * sysPR * promptRate * promptRate);
 
 	int isolated = 0;//fMT2tree->muTau[0].GetIsolated();
 
@@ -7426,9 +7474,14 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 	
 	WeightsFakeRate->Fill(fakeRate, fRweight);
 
-	MT2[NumberOfSamples]->Fill(myQuantity, fRweight * weight);
-
-	float fRweightFRUp = FRWeight(fakeRate*(1 + sysFR), promptRate, isolated);
+ 	MT2[NumberOfSamples]->Fill(myQuantity, fRweight * weight);
+	
+	if(isolated == 1)
+	  Tight->Fill(myQuantity, weight);
+	else
+	  LooseNonTight->Fill(myQuantity, weight);
+	
+	float fRweightFRUp = FRWeight((fakeRate + SysFR), promptRate, isolated);
 
 	myWeights->Fill(fRweightFRUp);
 
@@ -7438,7 +7491,7 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 
 // 	float fRweightFRUp2 = fRweightFRUp * fRweightFRUp;
 
- 	float fRweightFRDown = FRWeight(fakeRate*(1 - sysFR), promptRate, isolated);
+ 	float fRweightFRDown = FRWeight((fakeRate - SysFR), promptRate, isolated);
 
 // 	fRweightFRDown -= fRweight;
 
@@ -7447,7 +7500,7 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 // 	EstimFRDown->Fill(myQuantity, 0.5 * (fRweightFRUp2 + fRweightFRDown2) * weight);
  	EstimFRDown->Fill(myQuantity, fRweightFRDown * weight);
  
- 	float fRweightPRUp = FRWeight(fakeRate, promptRate*(1 + sysPR), isolated);
+ 	float fRweightPRUp = FRWeight(fakeRate, (promptRate + SysPR), isolated);
 
 	EstimPRUp->Fill(myQuantity, fRweightPRUp * weight);
  
@@ -7455,7 +7508,7 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 
 // 	float fRweightPRUp2 = fRweightPRUp * fRweightPRUp;
 
- 	float fRweightPRDown = FRWeight(fakeRate, promptRate*(1 - sysPR), isolated);
+ 	float fRweightPRDown = FRWeight(fakeRate, (promptRate - SysPR), isolated);
 
 // 	fRweightPRDown -= fRweight;
 
@@ -7516,12 +7569,12 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 
 // 	myQuantity = tauPt;
 
- 	if(fMT2tree->tau[tauIndex].MT > 200)
+//  	if(fMT2tree->tau[tauIndex].MT > 200)
 	  h_samples[ii]->Fill(myQuantity, weight);
 
 	tauMTAll->Fill(myQuantity, weight);
 	
- 	if(fMT2tree->tau[tauIndex].MT > 200)
+  	if(fMT2tree->tau[tauIndex].MT > 200)
 	  tauMTPass->Fill(myQuantity, weight);
 	
       }
@@ -7566,8 +7619,10 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
   
   int p = 0;
   Cout(p++, EstimPRDown);
+  Cout(p++, EstimPRUp);
   Cout(p++, EstimFRDown);
-
+  Cout(p++, EstimFRUp);
+  /*
   EstimPRDown->Divide(MT2Weight);
   EstimPRUp->Divide(MT2Weight);
 
@@ -7575,19 +7630,32 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
   EstimFRUp->Divide(MT2Weight);
 
   Sigma_wi2->Divide(MT2Weight);
+  */
   Cout(p++, EstimPRDown);
+  Cout(p++, EstimPRUp);
   Cout(p++, EstimFRDown);
+  Cout(p++, EstimFRUp);
 
 
   Cout(p++, MT2[NumberOfSamples]); 
   //MT2[NumberOfSamples]->Divide(MT2Weight);
   cout<<"estimation corrected by MT2 Weights "<<endl;
+
   Cout(p++, MT2[NumberOfSamples]); 
+  Cout(p++, Tight);
+  Cout(p++, LooseNonTight);
 
   if(calculateTauMTPass){
 
     for(int j = 0; j <= (NumberOfSamples); j++){
       AddOverAndUnderFlow(MT2[j], true, true);
+
+  //     for(int i = 1; i <= MT2[j]->GetNbinsX(); i++){
+// 	float val = MT2[j]->GetBinContent(i);
+// 	float err = MT2[j]->GetBinError(i);
+	
+// 	MT2[j]->SetBinError(i, sqrt(err * err + 0.25 * 0.25 * val * val));
+//       }
     }
 
     AddOverAndUnderFlow(tauMTAll,  true, true);
@@ -7600,6 +7668,21 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
     
     tauMTPass->Divide(tauMTAll);
     
+    tauMTPass->SetBinContent(0,0.00541489);
+    tauMTPass->SetBinContent(1,0.002377618);
+    tauMTPass->SetBinContent(2,0.002377618);
+    tauMTPass->SetBinContent(3,0.002897278);
+    tauMTPass->SetBinContent(4,0.008198583);
+    tauMTPass->SetBinContent(5,0.04965259);
+    tauMTPass->SetBinContent(6,0.06136292);
+    tauMTPass->SetBinError(0,0.001346403);
+    tauMTPass->SetBinError(1,0.0009614156);
+    tauMTPass->SetBinError(2,0.0009614156);
+    tauMTPass->SetBinError(3,0.000607802);
+    tauMTPass->SetBinError(4,0.001363476);
+    tauMTPass->SetBinError(5,0.010027);
+    tauMTPass->SetBinError(6,0.02594956);
+
     Cout(p++, tauMTPass);
 
     for(int j = 0; j < tauMTPass->GetNbinsX(); j++){
@@ -7628,13 +7711,14 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
     std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
 
     Cout(p++, MT2[NumberOfSamples]); 
-
+    /*
     MT2[NumberOfSamples]->Multiply(tauMTPass);
     EstimPRDown->Multiply(tauMTPass);
     EstimPRUp->Multiply(tauMTPass);
     EstimFRDown->Multiply(tauMTPass);
     EstimFRUp->Multiply(tauMTPass);
     Sigma_wi2->Multiply(tauMTPass);
+    */
   }else{
     TString fileName = fOutputDir;
     if(!fileName.EndsWith("/")) fileName += "/";
@@ -7679,7 +7763,9 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, TString my
 
   Cout(p++, MT2[NumberOfSamples]); 
   Cout(p++, EstimPRDown);
-  Cout(p++, EstimFRDown);
+  Cout(p++, EstimFRUp);
+  Cout(p++, EstimPRDown);
+  Cout(p++, EstimFRUp);
 
   for(int j = 0; j < MT2[NumberOfSamples]->GetNbinsX(); j++){
     float totalError = MT2[NumberOfSamples]->GetBinError(j+1);

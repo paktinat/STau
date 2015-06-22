@@ -5,21 +5,27 @@ ________________________________________________________________________________
 # list of samples
 
 ## -------- SMS --------
+#SAMPLE
+Name            TStau
+SName           SUSY
+ShapeName       Signal
+File            TauTau_V3_1/SMS-TChipChimStauSnu-mChi-120to500-mLSP-1to480-x-050-TuneZ2star-8TeV-pythia6-tauolapp_NBJetsCSVM0_MET30_NewPU_Stitching.root
+Xsection        0.0343 pb
+Kfact           1.
+Lumi            19600.0
+Type            susy
+Color           1
 
 SAMPLE
 Name            TStau
 SName           SUSY
 ShapeName       Signal
 File            TauTau_V3_1/SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part*_Part*_NBJetsCSVM0_MET30_NewPU_Stitching.root
-Xsection        0.00189
-Kfact           1.0
+Xsection        0.00189 pb
+Kfact           1.
 Lumi            19600.0
 Type            susy
 Color           1
-
-#TauTau_V3_1/SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part*_Part*_NBJetsCSVM0_MET30_NewPU_Stitching.root
-#TauTau_V3_1/SMS-TChipChimStauSnu-mChi-120to500-mLSP-1to480-x-050-TuneZ2star-8TeV-pythia6-tauolapp_NBJetsCSVM0_MET30_NewPU_Stitching.root
-
 #(380, 1)
 #Old   XSec = 0.227       
 #New   XSec = 0.0343
@@ -37,6 +43,7 @@ Color           1
 #New   XSec = 0.01414
 #Newer Xsec = 0.01249
 
+#No QCD after muTau preselection
 ##------------ QCD-Pt-BCtoE ----------------
 SAMPLE
 Name		QCD-Pt-20-30-BCtoE
@@ -105,7 +112,7 @@ Type		mc
 Color		401
 
 ##-------------- QCD-Pt-EMEnriched --------------------
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-20-30-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -116,7 +123,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-30-80-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -127,7 +134,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-80-170-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -138,7 +145,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-170-250-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -149,7 +156,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-250-350-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -160,7 +167,7 @@ Lumi            19600.0
 Type		mc
 Color		401
 
-#SAMPLE
+SAMPLE
 Name		QCD-Pt-350-EMEnriched
 SName		QCD
 ShapeName	QCD
@@ -352,9 +359,45 @@ Color		401
 
 
 # -------- electroweak --------
+ 
+SAMPLE
+Name		VBF_HToTauTau
+SName		Higgs
+ShapeName	Higgs
+File            TauTau_V3_1/VBF_HToTauTau_M-125_8TeV-powheg-pythia6_BigFiles_NewPU_Stitching.root
+Xsection  	0.1 pb # 1.578 * 0.0632 https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+
+SAMPLE
+Name		WH_ZH_TTH_HToTauTau
+SName		Higgs
+ShapeName	Higgs
+File            TauTau_V3_1/WH_ZH_TTH_HToTauTau_M-125_8TeV-pythia6-tauola_BigFiles_NewPU_Stitching.root
+Xsection  	0.077 pb # (0.69669 (WH) + 0.3943 (ZH) + 0.1302 (ttH)) * 0.0632 https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+SAMPLE
+Name		GluGluToHToTauTau
+SName		Higgs
+ShapeName	Higgs
+File            TauTau_V3_1/GluGluToHToTauTau_M-125_8TeV-powheg-pythia6_BigFiles_NewPU_Stitching.root
+Xsection  	1.234 pb # 19.52 * 0.0632 https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+
 SAMPLE
 Name		WWJetsTo2L2Nu
-SName		WW
+SName		VV
 ShapeName	WJets  
 File            TauTau_V3_1/WWJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	5.8   #4.7 pb 
@@ -365,7 +408,7 @@ Color		417
 
 SAMPLE
 Name		WJetsToLNu
-SName		W
+SName		Wtolnu
 ShapeName	WJets
 File            TauTau_V3_1/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	36257.2
@@ -376,7 +419,7 @@ Color		417
 
 SAMPLE
 Name		W1JetsToLNu
-SName		W
+SName		Wtolnu
 ShapeName	WJets
 File            TauTau_V3_1/W1JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.23 * 5400
@@ -387,7 +430,7 @@ Color		417
 
 SAMPLE
 Name		W2JetsToLNu
-SName		W
+SName		Wtolnu
 ShapeName	WJets
 File            TauTau_V3_1/W2JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.23 * 1750
@@ -398,7 +441,7 @@ Color		417
 
 SAMPLE
 Name		W3JetsToLNu
-SName		W
+SName		Wtolnu
 ShapeName	WJets
 File            TauTau_V3_1/W3JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.23 * 519
@@ -409,7 +452,7 @@ Color		417
 
 SAMPLE
 Name		W4JetsToLNu
-SName		W
+SName		Wtolnu
 ShapeName	WJets
 File            TauTau_V3_1/W4JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.23 * 214
@@ -422,7 +465,7 @@ Color		417
 #----------------DY----------------
 SAMPLE
 Name		DYToLL_M10To50
-SName		ZX
+SName		DY
 ShapeName	ZJetsToLL
 File            TauTau_V3_1/DYJetsToLL_M-10To50filter_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	876.8
@@ -433,7 +476,7 @@ Color		419
 
 SAMPLE
 Name		DYToLL_M50
-SName		ZX
+SName		DY
 ShapeName	ZJetsToLL
 File            TauTau_V3_1/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.187695 * 2950
@@ -444,7 +487,7 @@ Color		419
                   
 SAMPLE
 Name		DY1ToLL_M50
-SName		ZX
+SName		DY
 ShapeName	ZJetsToLL
 File            TauTau_V3_1/DY1JetsToLL_M-50_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.187695 * 561
@@ -455,7 +498,7 @@ Color		419
                   
 SAMPLE
 Name		DY2ToLL_M50
-SName		ZX
+SName		DY
 ShapeName	ZJetsToLL
 File            TauTau_V3_1/DY2JetsToLL_M-50_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.187695 * 181
@@ -466,7 +509,7 @@ Color		419
                   
 SAMPLE
 Name		DY3ToLL_M50
-SName		ZX
+SName		DY
 ShapeName	ZJetsToLL
 File            TauTau_V3_1/DY3JetsToLL_M-50_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.187695 * 51.1
@@ -477,7 +520,7 @@ Color		419
                   
 SAMPLE
 Name		DY4ToLL_M50
-SName		ZX
+SName		DY
 ShapeName	ZJetsToLL
 File            TauTau_V3_1/DY4JetsToLL_M-50_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.187695 * 23
@@ -489,7 +532,7 @@ Color		419
 
 SAMPLE
 Name		ZZJetsTo2L2Nu
-SName		ZX
+SName		DY
 ShapeName	ZZJetsTo2L2Nu
 File            TauTau_V3_1/ZZJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	0.7   #0.28 pb 
@@ -500,7 +543,7 @@ Color		419
  
 SAMPLE
 Name		ZZJetsTo2L2Q
-SName		ZX
+SName		DY
 ShapeName	ZZJetsTo2L2Q
 File            TauTau_V3_1/ZZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	2.5     #0.91 pb
@@ -511,7 +554,7 @@ Color		419
     
 SAMPLE
 Name		ZZJetsTo4L
-SName		ZX
+SName		DY
 ShapeName	ZZJetsTo4L
 File            TauTau_V3_1/ZZJetsTo4L_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	0.2 #0.1296 pb
@@ -522,7 +565,7 @@ Color		419
  
 SAMPLE
 Name		WZJetsTo3LNu
-SName		ZX
+SName		DY
 ShapeName	WZJetsTo3LNu
 File            TauTau_V3_1/WZJetsTo3LNu_TuneZ2_8TeV-madgraph-tauola_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.1     #0.8674 pb
@@ -533,7 +576,7 @@ Color		419
 
 SAMPLE
 Name		WZJetsTo2L2Q
-SName		ZX
+SName		DY
 ShapeName	WZJetsTo2L2Q
 File            TauTau_V3_1/WZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	2.2     #1.755 pb
@@ -679,41 +722,6 @@ Lumi            19600.0
 Type            mc
 Color		600
 
-## --------- Higgs------------------------
-
-SAMPLE
-Name		VBF_HToTauTau
-SName		Higgs
-ShapeName	Higgs
-File            TauTau_V3_1/VBF_HToTauTau_M-125_8TeV-powheg-pythia6_BigFiles_NewPU_Stitching.root
-Xsection  	0.1 # 1.578 * 0.0632 https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013
-Kfact           1.0
-Lumi            19600.0
-Type		mc
-Color		401
-
-SAMPLE
-Name		WH_ZH_TTH_HToTauTau
-SName		Higgs
-ShapeName	Higgs
-File            TauTau_V3_1/WH_ZH_TTH_HToTauTau_M-125_8TeV-pythia6-tauola_BigFiles_NewPU_Stitching.root
-Xsection  	0.077 # (0.69669 (WH) + 0.3943 (ZH) + 0.1302 (ttH)) * 0.0632 https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013
-Kfact           1.0
-Lumi            19600.0
-Type		mc
-Color		401
-
-SAMPLE
-Name		GluGluToHToTauTau
-SName		Higgs
-ShapeName	Higgs
-File            TauTau_V3_1/GluGluToHToTauTau_M-125_8TeV-powheg-pythia6_BigFiles_NewPU_Stitching.root
-Xsection  	1.234 # 19.52 * 0.0632 https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013
-Kfact           1.0
-Lumi            19600.0
-Type		mc
-Color		401
-
 ## --------- Data ---------------------------
 SAMPLE
 Name		Run2012A_TauPlusX
@@ -748,7 +756,6 @@ Lumi            1.
 Type            data
 Color		1
 
-
 SAMPLE
 Name		Run2012D_TauPlusX
 SName		TauPlusX-Data
@@ -761,7 +768,7 @@ Type            data
 Color	        1
 
 
-###SAMPLE
+######SAMPLE
 Name		Run2012D_SingleMu
 SName		SingleMu-Data
 ShapeName	Data
@@ -771,43 +778,6 @@ Kfact           1.
 Lumi            1.
 Type            data
 Color	        1
-
-
-
-#####SAMPLE
-Name		VBF_HToTauTau
-SName		QCD
-ShapeName	QCD
-File            TauTau_V3_1/VBF_HToTauTau_M-125_8TeV-powheg-pythia6_BigFiles_NewPU_Stitching.root
-Xsection  	0.1 pb # 1.578 * 0.0632 https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013
-Kfact           1.0
-Lumi            19600.0
-Type		mc
-Color		401
-
-
-#####SAMPLE
-Name		WH_ZH_TTH_HToTauTau
-SName		QCD
-ShapeName	QCD
-File            TauTau_V3_1/WH_ZH_TTH_HToTauTau_M-125_8TeV-pythia6-tauola_BigFiles_NewPU_Stitching.root
-Xsection  	0.077 pb # (0.69669 (WH) + 0.3943 (ZH) + 0.1302 (ttH)) * 0.0632 https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013
-Kfact           1.0
-Lumi            19600.0
-Type		mc
-Color		401
-
-#####SAMPLE
-Name		GluGluToHToTauTau
-SName		Higgs
-ShapeName	Higgs
-File            TauTau_V3_1/GluGluToHToTauTau_M-125_8TeV-powheg-pythia6_BigFiles_NewPU_Stitching.root
-Xsection  	1.234 pb # 19.52 * 0.0632 https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013
-Kfact           1.0
-Lumi            19600.0
-Type		mc
-Color		401
-
 
 
 #SAMPLE
@@ -866,15 +836,3 @@ Lumi            19600.0
 Type            data
 Color		417
 
-
-
-###SAMPLE
-Name		WJetsToLNu2
-SName		Wtolnu
-ShapeName	WJets
-File            TauTau_V3_1/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30_NewPU_Stitching_MuTauPreselectionTauTightID.root
-Xsection  	1.23 * 214
-Kfact           1.
-Lumi            19600.0
-Type            data
-Color		417
