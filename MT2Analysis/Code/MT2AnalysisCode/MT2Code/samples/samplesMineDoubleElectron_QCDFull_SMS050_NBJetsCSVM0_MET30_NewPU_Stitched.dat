@@ -17,7 +17,7 @@ Lumi            19600.0
 Type            susy
 Color           1
 
-#TauTau_V3_1/SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part*_Part*_NBJetsCSVM0_MET30_NewPU_Stitching.root
+#TauTau_V3_1/SMS-TChipChimStauSnu_mChi-100to500_mLSP-1to480_x-095_TuneZ2star_8TeV-pythia6-tauolapp_BigFiles_NewPU_Stitching.root
 #TauTau_V3_1/SMS-TChipChimStauSnu-mChi-120to500-mLSP-1to480-x-050-TuneZ2star-8TeV-pythia6-tauolapp_NBJetsCSVM0_MET30_NewPU_Stitching.root
 
 #(380, 1)
@@ -280,7 +280,7 @@ Color		417
 
 SAMPLE
 Name		WWJetsTo2L2Nu
-SName		VV
+SName		WW
 ShapeName	WJets  
 File            TauTau_V3_1/WWJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	5.8   #4.7 

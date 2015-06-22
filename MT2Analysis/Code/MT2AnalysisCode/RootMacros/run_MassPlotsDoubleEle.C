@@ -1,7 +1,7 @@
 {
   TString outputdir = "./results/";
   TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30_NewPU_Stitched.dat";
-  //      TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_BigFiles_NewPU_Stitching.root";
+  //       TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_BigFiles_NewPU_Stitching.root";
   
   //TString samples = "samples/samplesMineTauPlusX-susy_ww.dat";
   //TString samples = "./samples/samplesMineTest.dat";
@@ -39,11 +39,6 @@
   myChannelCuts.push_back(std::string(trigger));
 
 
-  //    myChannelCuts.push_back("NBJetsCSVM >= 2");
-  //  myChannelCuts.push_back("NBJetsCSVL >= 2");
-  //  myChannelCuts.push_back("NBJetsCSVM == 0 ");
-  myChannelCuts.push_back("NBJetsCSVL == 0");
-  //  myChannelCuts.push_back("misc.MET > 30");
 
   //-------------------------Susy Cuts------------------------------
 
@@ -52,10 +47,13 @@
   // myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 120.0 && Susy.MassGlu  < 140.0 && Susy.MassLSP >=60 && Susy.MassLSP < 80.0))");
   // myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 120.0) <= 10.0 && abs(Susy.MassLSP - 60.0) <= 10.0))");//0.119              
 
-  myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 380.0) <= 10.0 && abs(Susy.MassLSP - 1) <= 10.0))");
+      myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 380.0) <= 10.0 && abs(Susy.MassLSP - 1) <= 10.0))");
   // myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 240.0) <= 10.0 && abs(Susy.MassLSP - 40) <= 10.0))");
   // myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 180) <= 10.0 && abs(Susy.MassLSP - 60) <= 10.0))");
   
+
+  //  myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 100.0) <= 10.0 && abs(Susy.MassLSP - 1) <= 10.0))");
+
   TString myChan = "doubleEle[0]";
  
   //------------------------DoubleEle Cuts--------------------------
@@ -72,14 +70,6 @@
   // myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==0"));//QCD medium
   // myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated==-1"));//QCD nonIso
 
-
-  // myChannelCuts.push_back("eeIsoMedium01to04()"); 
-  // myChannelCuts.push_back("eeIsoMedium01to10()"); 
-  
-  // myChannelCuts.push_back("ee_e0Loose01to04_e1Tight01()");
-  // myChannelCuts.push_back("ee_e0Loose01to04()");
-  // myChannelCuts.push_back("ee_e1Loose01to04()");
- 
   //---------------Charge-----------------
 
 
@@ -91,17 +81,33 @@
   //   myChannelCuts.push_back("HasNoVetoMuForEleTau()");//
   myChannelCuts.push_back("!(eeRejE2_defined())");//                                      
   myChannelCuts.push_back("!(eeRejMu_defined())");//                                      
+
+  // myChannelCuts.push_back("eeIsoMedium01to04()"); 
+  // myChannelCuts.push_back("eeIsoMedium01to10()"); 
+  
+  // myChannelCuts.push_back("ee_e0Loose01to04_e1Tight01()");
+  // myChannelCuts.push_back("ee_e0Loose01to04()");
+  // myChannelCuts.push_back("ee_e1Loose01to04()");
+
   
   //------------------Inv Mass------------
 
   //  myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 71) || (doubleEle[0].lv.M() > 111))");
    //    myChannelCuts.push_back("(doubleEle[0].lv.M() >= 71 && doubleEle[0].lv.M() <= 111)");
 
+  //    myChannelCuts.push_back("NBJetsCSVM >= 2");
+  //  myChannelCuts.push_back("NBJetsCSVL >= 2");
+  //  myChannelCuts.push_back("NBJetsCSVM == 0 ");
+
+    myChannelCuts.push_back("NBJetsCSVL == 0");
+  //  myChannelCuts.push_back("misc.MET > 30");
+
+
   //  myChannelCuts.push_back("eeJZBInDirect() < 0");//
      //        myChannelCuts.push_back("eeJZBInDirect() < -20");//
-  //  myChannelCuts.push_back("eeJZBInDirect() < -50");//
+  //      myChannelCuts.push_back("eeJZBInDirect() < -50");//
   //       myChannelCuts.push_back("eeJZBInDirect() < -100");//
-         
+        
   //  myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 40"));
   //  myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 90"));
   //      myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 < 40"));
@@ -115,12 +121,12 @@
    //----------------250-400------------------
   //  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>250");
   //  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))<400");
-  //   myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>400");
+  //     myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT) >250) && ((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT)<400)");
+
+  //  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>400");
 
 
   //----------------250-450------------------
-      //      myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>250");
-      //      myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))<450");
 
       //       myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>450");
 
@@ -165,16 +171,41 @@
 
    TString cuts = cutStream.str().c_str();
 
+   //tA->MakeCutFlowTable( myChannelCuts );
    //------------------------------Methods-----------------------------------
+int nbins = 1;
+double xbin[nbins+1] = {-2000, 2000};      //MT2
+//int NumberOfBins = 8;
+//double xbin[NumberOfBins+1] = {0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0}; //Mass
+//tA->DrawMyPlots("2014-12-05/fakePrompt-allBigMC_singleFull-tight-ele0outWwindow-ele1inWwindow-noEM_Histos.root", xbin, NumberOfBins);
+
+//double xbin[NumberOfBins+1] = {-700,-620,-550,-490,-440,-400,-360,-320,-280,-240,-200,-180,-160,-140,-120,-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,0,10,20,30,40,50,60,70,80,90,100,120,140,160,180,200,240,280,320,360,400,440,490,550,620,700};      //MT2
+//double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,115.0,130.0,145.0,160.0,180.0,200.0};      //MT2
+//double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
+//double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
+
+// void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int nevents, TString myfileName, TString giveStatus, TString sampleName, TString variable, double *xbin, int nbins)
+
+//tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binI_nominal", "ee_binI_nominal", "", "MT2", xbin, nbins);
+// tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binI_ees_up", "ee_binI_ees_up", "", "MT2_up", xbin, nbins);
+//tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binI_ees_down", "ee_binI_ees_down", "", "MT2_down", xbin, nbins);
+
+//tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binII_nominal", "ee_binII_nominal", "", "MT2", xbin, nbins);
+// tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binII_ees_up", "ee_binII_ees_up", "", "MT2_up", xbin, nbins);
+ tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binII_ees_down", "ee_binII_ees_down", "", "MT2_down", xbin, nbins);
 
    //tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "ee_binI_nominal", "ee_binI_nominal");
    //tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "ee_binI_ees_up", "ee_binI_ees_up");
-tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "ee_binI_ees_down", "ee_binI_ees_down");
+//tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "ee_binI_ees_down", "ee_binI_ees_down");
   
- //  tA->makePlot("misc.MET", cuts, -10, 0, -10, trigger, "MET-preSel-invMass_gt15_71to111", 50, 0, 500, false, true, true, true,true, true, 1, true, true, "png",1);
+//tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "ee_binII_nominal", "ee_binII_nominal");
+//tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "ee_binII_ees_up", "ee_binII_ees_up");
+//tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "ee_binII_ees_down", "ee_binII_ees_down");
+
+//   tA->makePlot("misc.MET", cuts, -10, -10, -10, trigger, "MET-all", 50, 0, 500, false, true, true, true,true, true, 1, true, true, "png",1);
    // tA->makePlot("doubleEle[0].lv.M()", cuts, -10, 0, -10, trigger, "InvMass-preSel-invMass_gt15_71to111", 50, 0, 500, false, true, true, true,true, true, 1, true, true,"png",1);//
 
-   // tA->makePlot("doubleEle[0].MT2", cuts, -10, -10, -10, trigger, "MT2-preSel-BinI_noMT2", 20, 0, 300, false,true, true, true,true, true, 1, true, true,"png",1);
+   // tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2 binII", 8, 40, 200, false,true, true, true,true, true, 1, true, true,"png",1);
 
    //   tA->makePlot("doubleEle[0].MT2", cuts, -10, -10, -10, trigger, "MT2-preSel_nBCSVMgte2-JZBltm50-MT240to90-top1", 10, 40, 90, false,true, true, true,true, true, 1, true, true,"png",1);
    //     tA->makePlot("doubleEle[0].MT2", cuts, -10, -2, -10, trigger, "MT2-preSel_SS_nBCSVLgte2-binII-top", 8, 40, 240, false,true, true, true,true, true, 1, true, true,"png",1);
@@ -236,7 +267,7 @@ tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "ee_binI_ees_down", "
    //tA->makePlot("misc.MinMetJetDPhiPt40", cuts, -10, 0, -10, trigger, "MinMetJetDPhiPt40", 10, 0, 3, false, true, true, true,true, true, 1, true, true, "png",3);
 //tA->makePlot("misc.MET", cuts, -10, 0, -10, trigger, "MET", 50, 0, 500, false, true, true, true,true, true, 1, true, true, "png",0);
 //tA->makePlot("(ele[doubleEle[0].Ele0Ind].Pt()+ele[doubleEle[0].Ele1Ind].Pt())", cuts, -10, 0, -10, trigger, "SumPt", 25, 0, 500, false, true, true, true,true, true, 1, true, true, "png",1);
-//tA->MakeCutFlowTable( myChannelCuts );
+
 //tA->eeFakeRateRatio(cuts, trigger, 100000000000000000,"fakeRatio-Zveto_ele0in_ele1out-singleData-1");
 //tA->eeWJetsEstimation(cuts, trigger, "2014-12-06/fakeRatio-Zveto_ele0out_ele1in-Wjets-ele1Base_FRHistos.root");
 //tA->eeFakePromptCategory(cuts, trigger, 10000000000000000000000,"fakePrompt-allBigMC_singleFull-tight-ele0outWwindow-ele1inWwindow-noEM");
@@ -244,16 +275,6 @@ tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "ee_binI_ees_down", "
 //tA->eeAnalysis(cuts, trigger, 10000,"MinMETJetDPhiPt40-susy_100_0-ZZ");
 //tA->SystematicsMisc(cuts,trigger,100000000000,"MinMETJetDPhi");
 //tA->miscEfficiency(3, 100000000000);
-//int NumberOfBins = 17;
-//double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0,300.0,400.0};      //MT2
-//int NumberOfBins = 8;
-//double xbin[NumberOfBins+1] = {0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0}; //Mass
-//tA->DrawMyPlots("2014-12-05/fakePrompt-allBigMC_singleFull-tight-ele0outWwindow-ele1inWwindow-noEM_Histos.root", xbin, NumberOfBins);
-
-//double xbin[NumberOfBins+1] = {-700,-620,-550,-490,-440,-400,-360,-320,-280,-240,-200,-180,-160,-140,-120,-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,0,10,20,30,40,50,60,70,80,90,100,120,140,160,180,200,240,280,320,360,400,440,490,550,620,700};      //MT2
-//double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,115.0,130.0,145.0,160.0,180.0,200.0};      //MT2
-//double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
-//double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
 
 //void MassPlotter::makePlot(TString var, TString cuts, int njets, int nbjets, int nleps, TString HLT,  TString xtitle,
 //const int nbins, const double min, const double max,

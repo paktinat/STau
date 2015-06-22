@@ -5801,7 +5801,7 @@ void MassPlotter::MakeCutFlowTable( std::vector<std::string> all_cuts ){
       full_cut += ("&&" + *cut);
 
       TString btagweight = "1.00"; //stored btag weights up to >=3, default is weight==1 to avoid non-existing weights
-      if(full_cut.find("NBJetsCSVM") != string::npos ) btagweight = TString::Format("SFWeight.BTagCSV40eq%d",abs(0));
+      if(full_cut.find("NBJetsCSVL") != string::npos ) btagweight = TString::Format("SFWeight.BTagCSV40eq%d",abs(0));
 
       TString ChannelSpecificSF = "1.00";
 		  
@@ -9913,7 +9913,7 @@ void MassPlotter::eeAnalysis(TString cuts, TString trigger, unsigned int nevents
 
 }
 
-void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int nevents, TString myfileName, TString giveStatus ){
+void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int nevents, TString myfileName, TString giveStatus, TString sampleName, TString variable, double *xbin, int nbins){
 
 
   TH1::SetDefaultSumw2();
@@ -9968,12 +9968,14 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 //   int      ccolor[11] = { 401, 417, 419, 855, 603, 650, 670, 840, 230, 584, 632};
 
 
-  static const int nbins = 10;
-  double bins[nbins+1] = {-2000.0, 0.0, 20.0, 40.0, 60.0, 90.0, 120.0, 150.0, 200.0, 500.0 , 2000.0};
+//  static const int nbins = NumberOfBins;
+  //  double bins[nbins+1] = {0.0};
+  //  bins[nbins+1] = xbin;
+  //{-2000.0, 0.0, 20.0, 40.0, 60.0, 90.0, 120.0, 150.0, 200.0, 500.0 , 2000.0};
 
   TString varname = "MT2";
   for (int i=0; i <= NumberOfSamples ; i++){
-    MT2[i] = new TH1D(varname+"_"+cnames[i],"",nbins, bins);
+    MT2[i] = new TH1D(varname+"_"+cnames[i],"",nbins, xbin);
     MT2[i] -> SetFillColor (ccolor[i]);
     MT2[i] -> SetLineColor (ccolor[i]);
     MT2[i] -> SetLineWidth (2);
@@ -9998,12 +10000,22 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 
   for(unsigned int ii = 0; ii < fSamples.size(); ii++)
     {
- 
+
 
     TString myCuts = cuts;
  
     int data = 0;
     sample Sample = fSamples[ii];
+
+      if (sampleName != "")
+	
+	{
+       if(Sample.sname != sampleName)
+          continue;
+	}
+
+      else
+
 
     /////////////////////////
     //    if(Sample.sname != "DY")
@@ -10069,8 +10081,51 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
    TString status = giveStatus ;
    //   TString mutau_pu_up, mutau_pu_down, mutau_tes_up, mutau_tes_down, ditau_bin1_pu_up, ditau_bin1_pu_down, ditau_bin1_tes_up, ditau_bin1_tes_down, ditau_bin2_pu_up, ditau_bin2_pu_down ,ditau_bin2_tes_up, ditau_bin2_tes_down, mutau_nominal, ditau_bin1_nominal, ditau_bin2_nominal; 
 
-   double myQuantity = 0;
  
+	  double myQuantity=0; 
+
+
+// 	  if(variable == "MT2")
+// 	    myQuantity = mt2_ditau_up;       
+// 	  if(variable == "MT2")
+// 	    myQuantity = mt2_ditau_down;
+//      	  if(variable == "MT2")
+// 	    myQuantity = mt2_ditau_up;
+//        	  if(variable == "MT2")
+// 	    myQuantity = mt2_ditau_down;
+//      	  if(variable == "MT2")
+// 	    myQuantity = mt2_mutau_up;
+//        	  if(variable == "MT2")
+// 	    myQuantity = mt2_mutau_down;
+//        	  if(variable == "MT2")
+// 	    myQuantity = mt2_etau_up;
+//        	  if(variable == "MT2")
+// 	    myQuantity = mt2_etau_down;
+// 	  if(variable == "MT2")
+// 	    myQuantity = mt2_etau_up_e;
+// 	  if(variable == "MT2")
+// 	    myQuantity = mt2_etau_down_e;
+// 	  if(variable == "MT2")
+// 	    myQuantity = mt2_ee_up;
+// 	  if(variable == "MT2")
+// 	    myQuantity = mt2_ee_down;
+// 	  if(variable == "MT2")
+// 	    myQuantity = mt2_ee_up;
+// 	  if(variable == "MT2")
+// 	    myQuantity = mt2_ee_down;
+// 	  if(variable == "MT2")
+// 	    myQuantity = fMT2tree->doubleEle[0].MT2 ;
+// 	  if(variable == "MT2")
+// 	    myQuantity = fMT2tree->doubleTau[0].GetMT2();//
+// 	  if(variable == "MT2")
+// 	    myQuantity = fMT2tree->doubleTau[0].GetMT2();
+// 	  if(variable == "MT2")
+// 	    myQuantity = fMT2tree->muTau[0].GetMT2();
+// 	  if(variable == "MT2")
+// 	    myQuantity = fMT2tree->eleTau[0].GetMT2();
+
+		    
+		    
 
  
       float weight = Weight;
@@ -10192,7 +10247,7 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
        if (mt2_ditau_up <= 90)
        	 continue;
 
-      myQuantity = mt2_ditau_up;
+
      }
 
  //-----------------ditau_bin1_tes_down--------------------------
@@ -10214,8 +10269,6 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	 continue;
        if (mt2_ditau_down <= 90)
 	 continue;
-       
-       myQuantity = mt2_ditau_down;
      }
 
  //-----------------ditau_bin2_tes_up--------------------------
@@ -10240,8 +10293,6 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	 continue;
        if (sumMT_up <= 250)
 	 continue;
-     
-       myQuantity = mt2_ditau_up;
      }
 
    //-----------------ditau_bin2_tes_down--------------------------
@@ -10266,8 +10317,6 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	 continue;
        if (sumMT_down <= 250)
 	 continue;
-       
-       myQuantity = mt2_ditau_down;
      }
 
    //-----------------mutau_tes_up--------------------------
@@ -10299,8 +10348,7 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	 continue;
        if (tau_MT_mutau_up <= 200)
 	 continue;
-     
-     myQuantity = mt2_mutau_up;
+
      }
 
    //-----------------mutau_tes_down--------------------------
@@ -10333,8 +10381,6 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	 continue;
        if (tau_MT_mutau_down <= 200)
 	 continue;
-       
-       myQuantity = mt2_mutau_down;
      }
 
    //-----------------etau_tes_up--------------------------
@@ -10368,8 +10414,6 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
          continue;
        if (tau_MT_etau_up <= 200)
 	 continue;
-       
-       myQuantity = mt2_etau_up;
      }
 
    //-----------------etau_tes_down--------------------------
@@ -10403,8 +10447,8 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	 continue;
        if (tau_MT_etau_down <= 200)
 	 continue;
-       
-       myQuantity = mt2_etau_down;
+
+
      }
     }
   
@@ -10509,8 +10553,6 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	  continue;
 	if(fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].MT <= 200)     
 	  continue;
-	
-	myQuantity = mt2_etau_up_e;
    }
 
     //-----------------etau_ees_down--------------------------
@@ -10545,12 +10587,12 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	  continue;
 	if(fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].MT <= 200)     
 	  continue;
-	
-	myQuantity = mt2_etau_down_e;
+
+
       }
   }
 
-  else if (status == "ee_binI_ees_up" || status == "ee_binI_ees_down" || status == "ee_binI_ees_down" || status == "ee_binII_ees_down") {
+  else if (status == "ee_binI_ees_up" || status == "ee_binI_ees_down" || status == "ee_binII_ees_up" || status == "ee_binII_ees_down") {
 
     //-----------------ees-------------------
     
@@ -10656,8 +10698,43 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
     //    double MinMetJetDPhi_up_e = fMT2tree->MinMetJetDPhi(0,40,5.0,200); 
     //    double MinMetJetDPhi_down_e = fMT2tree->MinMetJetDPhi(0,40,5.0,-200);  
 
-    //-----------------ee_binI_ees_up--------------------------
-    
+
+	  if(variable == "MT2")
+	   myQuantity = fMT2tree->doubleEle[0].MT2;
+	  if(variable == "MT2_up")
+	   myQuantity = mt2_ee_up;
+	  if(variable == "MT2_down")
+	   myQuantity = mt2_ee_down;
+
+	  if(variable == "MET")
+	    myQuantity = fMT2tree->misc.MET;
+	  if(variable == "MET_up")
+	    myQuantity = MET_up.Pt();
+	  if(variable == "MET_down")
+	    myQuantity = MET_down.Pt();
+
+	  if(variable == "JZB")
+	    myQuantity = fMT2tree->eeJZBInDirect();
+	  if(variable == "JZB_up")
+	    myQuantity = JZB_ee_up;
+	  if(variable == "JZB_down")
+	    myQuantity = JZB_ee_down;
+
+	  if(variable == "SUMMT")
+	    myQuantity = fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].MT + fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].MT;
+	  if(variable == "SUMMT_up")
+	    myQuantity = sumMT_ee_up;
+	  if(variable == "SUMMT_down")
+	    myQuantity = sumMT_ee_down;
+
+    	  if(variable == "INVMASS")
+	    myQuantity = fMT2tree->doubleEle[0].lv.M();
+	  if(variable == "INVMASS_up")
+	    myQuantity = invMass_ee_up;
+	  if(variable == "INVMASS_down")
+	    myQuantity = invMass_ee_down;
+
+
     if(status == "ee_binI_ees_up")
       {
 	if(data == 1)
@@ -10669,26 +10746,26 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	    weight *= fMT2tree->doubleEle[0].Ele0IdIsoSF * fMT2tree->doubleEle[0].Ele1IdIsoSF * fMT2tree->doubleEle[0].DiEleTrgSF;	      
 	  }
 
-     
-	if(MET_up.Pt() <= 30)
-	  continue;
-	if(invMass_ee_up <= 15 || (invMass_ee_up >= 71 && invMass_ee_up <= 111))
-	  continue;
 	if(ele0_ee_up.Pt() <= 20)
 	  continue;
 	if(ele1_ee_up.Pt() <= 10)
 	  continue;
+	if(MET_up.Pt() <= 30)
+	  continue;
+	if(invMass_ee_up <= 15 || (invMass_ee_up >= 71 && invMass_ee_up <= 111))
+	  continue;
+        if(JZB_ee_up >= -50)
+          continue;
 	if(mt2_ee_up <= 90)
 	  continue;
 	if(sumMT_ee_up <= 250 || sumMT_ee_up >= 400 )     
 	  continue;
 	
-	myQuantity = mt2_ee_up;
    }
 
     //-----------------ee_binI_ees_down--------------------------
 
-    if(status == "ee_binI_ees_down")
+   else if(status == "ee_binI_ees_down")
       {
 	if(data == 1)
 	  weight = 1.0;
@@ -10699,26 +10776,26 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	    weight *= fMT2tree->doubleEle[0].Ele0IdIsoSF * fMT2tree->doubleEle[0].Ele1IdIsoSF * fMT2tree->doubleEle[0].DiEleTrgSF;	      
 	  }
 
-     
-	if(MET_down.Pt() <= 30)
-	  continue;
-	if(invMass_ee_down <= 15 || (invMass_ee_down >= 71 && invMass_ee_down <= 111))
-	  continue;
 	if(ele0_ee_down.Pt() <= 20)
 	  continue;
 	if(ele1_ee_down.Pt() <= 10)
 	  continue;
+	if(MET_down.Pt() <= 30)
+	  continue;
+	if(invMass_ee_down <= 15 || (invMass_ee_down >= 71 && invMass_ee_down <= 111))
+	  continue;
+        if(JZB_ee_down >= -50)
+          continue;
 	if(mt2_ee_down <= 90)
 	  continue;
 	if(sumMT_ee_down <= 250 || sumMT_ee_down >= 400 )     
 	  continue;
-	
-	myQuantity = mt2_ee_down;
-   }
+
+      }
 
     //-----------------ee_binII_ees_up--------------------------
     
-    if(status == "ee_binII_ees_up")
+   else if(status == "ee_binII_ees_up")
       {
 	if(data == 1)
 	  weight = 1.0;
@@ -10729,26 +10806,26 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	    weight *= fMT2tree->doubleEle[0].Ele0IdIsoSF * fMT2tree->doubleEle[0].Ele1IdIsoSF * fMT2tree->doubleEle[0].DiEleTrgSF;	      
 	  }
 
-     
-	if(MET_up.Pt() <= 30)
-	  continue;
-	if(invMass_ee_up <= 15 || (invMass_ee_up >= 71 && invMass_ee_up <= 111))
-	  continue;
 	if(ele0_ee_up.Pt() <= 20)
 	  continue;
 	if(ele1_ee_up.Pt() <= 10)
 	  continue;
+	if(MET_up.Pt() <= 30)
+	  continue;
+	if(invMass_ee_up <= 15 || (invMass_ee_up >= 71 && invMass_ee_up <= 111))
+	  continue;
+        if(JZB_ee_up >= -50)
+          continue;
 	if(mt2_ee_up <= 90)
 	  continue;
 	if(sumMT_ee_up <= 400 )     
 	  continue;
-	
-	myQuantity = mt2_ee_up;
+
    }
 
     //-----------------ee_binII_ees_down--------------------------
 
-    if(status == "ee_binII_ees_down")
+   else if(status == "ee_binII_ees_down")
       {
 	if(data == 1)
 	  weight = 1.0;
@@ -10759,22 +10836,22 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	    weight *= fMT2tree->doubleEle[0].Ele0IdIsoSF * fMT2tree->doubleEle[0].Ele1IdIsoSF * fMT2tree->doubleEle[0].DiEleTrgSF;	      
 	  }
 
-     
-	if(MET_down.Pt() <= 30)
-	  continue;
-	if(invMass_ee_down <= 15 || (invMass_ee_down >= 71 && invMass_ee_down <= 111))
-	  continue;
+
 	if(ele0_ee_down.Pt() <= 20)
 	  continue;
 	if(ele1_ee_down.Pt() <= 10)
 	  continue;
+	if(MET_down.Pt() <= 30)
+	  continue;
+	if(invMass_ee_down <= 15 || (invMass_ee_down >= 71 && invMass_ee_down <= 111))
+	  continue;
+        if(JZB_ee_down >= -50)
+          continue;
 	if(mt2_ee_down <= 90)
 	  continue;
 	if(sumMT_ee_down <= 400 )     
 	  continue;
-	
-	myQuantity = mt2_ee_down;
-   }
+      }
 
 
   }
@@ -10793,12 +10870,12 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	    weight *= fMT2tree->doubleEle[0].Ele0IdIsoSF * fMT2tree->doubleEle[0].Ele1IdIsoSF * fMT2tree->doubleEle[0].DiEleTrgSF;	      
 	  }
 	
-	if (fMT2tree->misc.MET <= 30)
-	  continue;
 	if(fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.Pt() <=20)
 	  continue; 
 	if(fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Pt() <=10)
 	  continue; 
+	if (fMT2tree->misc.MET <= 30)
+	  continue;
 	if(fMT2tree->doubleEle[0].lv.M() <= 15 || (fMT2tree->doubleEle[0].lv.M() >= 71 &&  fMT2tree->doubleEle[0].lv.M() <= 111))
           continue;
 	if(fMT2tree->eeJZBInDirect() >= -50)
@@ -10808,7 +10885,7 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	if((fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].MT + fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].MT<=250 ) || (fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].MT + fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].MT >=400))
          continue;
 
-	myQuantity = fMT2tree->doubleEle[0].MT2 ;
+	
       }
     
 
@@ -10824,12 +10901,12 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	    weight *= fMT2tree->doubleEle[0].Ele0IdIsoSF * fMT2tree->doubleEle[0].Ele1IdIsoSF * fMT2tree->doubleEle[0].DiEleTrgSF;	      
 	  }
 	
-	if (fMT2tree->misc.MET <= 30)
-	  continue;
 	if(fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].lv.Pt() <=20)
 	  continue; 
 	if(fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Pt() <=10)
 	  continue; 
+	if (fMT2tree->misc.MET <= 30)
+	  continue;
 	if(fMT2tree->doubleEle[0].lv.M() <= 15 || (fMT2tree->doubleEle[0].lv.M() >= 71 &&  fMT2tree->doubleEle[0].lv.M() <= 111))
           continue;
 	if(fMT2tree->eeJZBInDirect()  >= -50)
@@ -10839,7 +10916,6 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	if(fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].MT + fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].MT <= 400) 
          continue;
 
-	myQuantity = fMT2tree->doubleEle[0].MT2 ;
       }
     
 
@@ -10865,8 +10941,6 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	  continue;
 	if(fMT2tree->doubleTau[0].GetMT2() <= 90)
 	  continue;
-	
-	myQuantity = fMT2tree->doubleTau[0].GetMT2();//
      }
     
     //----------------------ditau_bin2_nominal----------------------------
@@ -10892,7 +10966,6 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	if((fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].MT) + (fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].MT) <= 250)     
 	  continue;
 
-	myQuantity = fMT2tree->doubleTau[0].GetMT2();
       }     
 
     //----------------------mutau_nominal----------------------------
@@ -10926,7 +10999,6 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	if(fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT <= 200)     
 	  continue;
 
-	myQuantity = fMT2tree->muTau[0].GetMT2();
       }     
 
     //----------------------etau_nominal----------------------------
@@ -10960,8 +11032,7 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	  continue;
 	if(fMT2tree->tau[fMT2tree->eleTau[0].GetTauIndex0()].MT <= 200)     
 	  continue;
-	
-	myQuantity = fMT2tree->eleTau[0].GetMT2();
+
       }     
 
    //----------------------ditau_bin1_pu_up----------------------------
@@ -11285,17 +11356,17 @@ else if(status == "etau_pu_down")
 
   
 
-		  if(Sample.type=="susy"){
+ // 		  if(Sample.type=="susy"){
 
-		    TString SUSYselection = TString::Format("(%s)", weight, myCuts.Data());
-		    TString SUSYvariable = TString::Format("Susy.MassLSP:Susy.MassGlu>>+%s", h_PN_MLSP_MChi->GetName());
-		    Sample.tree->Draw(SUSYvariable, SUSYselection, "goff");
+// 		    TString SUSYselection = TString::Format("(%s)", weight, myCuts.Data());
+// 		    TString SUSYvariable = TString::Format("Susy.MassLSP:Susy.MassGlu>>+%s", h_PN_MLSP_MChi->GetName());
+// 		    Sample.tree->Draw(SUSYvariable, SUSYselection, "goff");
 
-		    SUSYselection = TString::Format(" (%s)", myCuts.Data()); 
-		    SUSYvariable = TString::Format("Susy.MassLSP:Susy.MassGlu>>+%s", h_N_MLSP_MChi->GetName());
-		    Sample.tree->Draw(SUSYvariable, SUSYselection, "goff");
+// 		    SUSYselection = TString::Format(" (%s)", myCuts.Data()); 
+// 		    SUSYvariable = TString::Format("Susy.MassLSP:Susy.MassGlu>>+%s", h_N_MLSP_MChi->GetName());
+// 		    Sample.tree->Draw(SUSYvariable, SUSYselection, "goff");
 		  
-		  }
+// 		  }
 
 
 //-------------------added----------------------------^
@@ -11439,7 +11510,7 @@ else if(status == "etau_pu_down")
       e = 0;
       f = 0;
 
-   for(int mm = 0; mm < nbins; mm++){
+   for(int mm = 0; mm < nbins+1 ; mm++){
 
 
      e += MT2[kk]->GetBinContent(mm);
@@ -11480,7 +11551,7 @@ else if(status == "etau_pu_down")
   TString fileName2 = fOutputDir;
   if(!fileName2.EndsWith("/")) fileName2 += "/";
   Util::MakeOutputDir(fileName2);
-  fileName2 = fileName2 + myfileName +"_eeA"+".root";
+  fileName2 = fileName2 + myfileName +"_ee"+".root";
   TFile *savefile2 = new TFile(fileName2.Data(), "RECREATE");
   savefile2 ->cd();
   h_stack->Write();
@@ -11502,37 +11573,37 @@ else if(status == "etau_pu_down")
 
 
 
-  TH1F *h_PN_Bkg  = (TH1F*)MT2[NumberOfSamples-2]->Clone();
-  h_PN_Bkg->SetName("h_PN_Bkg");
-  h_PN_Bkg->Rebin(h_PN_Bkg->GetNbinsX());
+//   TH1F *h_PN_Bkg  = (TH1F*)MT2[NumberOfSamples-2]->Clone();
+//   h_PN_Bkg->SetName("h_PN_Bkg");
+//   h_PN_Bkg->Rebin(h_PN_Bkg->GetNbinsX());
   
-  TH1F *h_PN_Data  = (TH1F*)MT2[NumberOfSamples]->Clone();
-  h_PN_Data->SetName("h_PN_Data");
-  h_PN_Data->Rebin(h_PN_Data->GetNbinsX());
+//   TH1F *h_PN_Data  = (TH1F*)MT2[NumberOfSamples]->Clone();
+//   h_PN_Data->SetName("h_PN_Data");
+//   h_PN_Data->Rebin(h_PN_Data->GetNbinsX());
 
-  h_SMSEvents->Rebin2D(4, 4);
-  h_PN_MLSP_MChi->Divide(h_SMSEvents);
+//   h_SMSEvents->Rebin2D(4, 4);
+//   h_PN_MLSP_MChi->Divide(h_SMSEvents);
   
-  TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
-  h_PN_MLSP_MChi->Multiply(hXsec);
+//   TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
+//   h_PN_MLSP_MChi->Multiply(hXsec);
 
-  TString fileName1 = fOutputDir;
-  if(!fileName1.EndsWith("/")) fileName1 += "/";
-  Util::MakeOutputDir(fileName1);
-  fileName1 = fileName1 + "countingForExclusion_" + myfileName +"_Histos.root";
-  TFile *savefile1 = new TFile(fileName1.Data(), "RECREATE");
-  savefile1 ->cd();
+//   TString fileName1 = fOutputDir;
+//   if(!fileName1.EndsWith("/")) fileName1 += "/";
+//   Util::MakeOutputDir(fileName1);
+//   fileName1 = fileName1 + "countingForExclusion_" + myfileName +"_Histos.root";
+//   TFile *savefile1 = new TFile(fileName1.Data(), "RECREATE");
+//   savefile1 ->cd();
   
-  h_stack->SetName("h_stack");
+//   h_stack->SetName("h_stack");
   
-  h_stack->Write();
-  h_PN_Bkg->Write();
-  h_PN_Data->Write();
-  h_PN_MLSP_MChi->Write();
-  h_N_MLSP_MChi->Write();
-  savefile1->Close();
+//   h_stack->Write();
+//   h_PN_Bkg->Write();
+//   h_PN_Data->Write();
+//   h_PN_MLSP_MChi->Write();
+//   h_N_MLSP_MChi->Write();
+//   savefile1->Close();
 	
-  std::cout << "Saved histograms in " << savefile1->GetName() << std::endl;
+//   std::cout << "Saved histograms in " << savefile1->GetName() << std::endl;
 
 
   printHisto(h_stack, MT2[8], MT2[6], MT2[7], Legend1 , myfileName, "hist", true, myfileName, "Events", -10, 0, -10, true);
