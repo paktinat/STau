@@ -4172,6 +4172,26 @@ Int_t MT2tree::e1MedSel(){
 return p;
 }
 
+float MT2tree::DeltaReleMuChannel(){
+float deltaR = Util::GetDeltaR(muo[eleMu[0].mu0Ind].lv.Eta(),ele[eleMu[0].ele0Ind].lv.Eta(),muo[eleMu[0].mu0Ind].lv.Phi(),ele[eleMu[0].ele0Ind].lv.Phi());
+return deltaR;
+
+
+
+}
+
+float MT2tree::SumMTeleMuChannel(){
+float SumMT=muo[eleMu[0].mu0Ind].MT+ele[eleMu[0].ele0Ind].MT;
+return SumMT;
+
+}
+
+float MT2tree::SumMTTauTauChannel(){
+float SumMT= tau[doubleTau[0].GetTauIndex0()].MT + tau[doubleTau[0].GetTauIndex1()].MT ;
+return SumMT;
+
+}
+
 
 // ----------------------------------------------------------------------------------------------------------
 ClassImp(MT2Susy)

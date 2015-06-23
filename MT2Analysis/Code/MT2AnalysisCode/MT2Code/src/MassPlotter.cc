@@ -14667,3 +14667,932 @@ void MassPlotter::eeQCDCtoBRatio(TString cuts, TString trigger, unsigned int nev
 
 }
 
+void MassPlotter::QCDEstimationinTauTau(TString cuts, TString trigger, unsigned int nevents, TString myfileName ){
+
+TH1::SetDefaultSumw2();
+
+int NumberOfBins =5;
+//float xbin[] = {40,50,65,90,140};
+float xbin[] = {100,125,150,200,250,300};
+
+
+
+TH1D  *hdatainregionA  = new TH1D("hdatainregionA  ", "hdatainregionA ", NumberOfBins ,xbin);
+TH1D  *hnonQCDinregionA  = new TH1D("hnonQCDinregionA",  "hnonQCDinregionA", NumberOfBins ,xbin);
+
+
+TH1D  *hdatainregionB  = new TH1D("hdatainregionB",  "hdatainregionB", NumberOfBins ,xbin);
+TH1D  *hnonQCDinregionB  = new TH1D("hnonQCDinregionB" , "hnonQCDinregionB",NumberOfBins ,xbin);
+
+
+TH1D  *hdatainregionC  = new TH1D("hdatainregionC",  "hdatainregionC", NumberOfBins,xbin);
+TH1D  *hnonQCDinregionC  = new TH1D("hnonQCDinregionC",  "hnonQCDinregionC", NumberOfBins,xbin);
+
+TH1D  *hdatainregionQ1  = new TH1D("hdatainregionQ1",  "hdatainregionQ1", NumberOfBins,xbin);
+TH1D  *hnonQCDinregionQ1  = new TH1D("hnonQCDinregionQ1",  "hnonQCDinregionQ1",NumberOfBins ,xbin);
+
+TH1D  *hdatainregionQ2  = new TH1D("hdatainregionQ2",  "hdatainregionQ2",NumberOfBins ,xbin);
+TH1D  *hnonQCDinregionQ2 = new TH1D("hnonQCDinregionQ2",  "hnonQCDinregionQ2", NumberOfBins,xbin);
+
+TH1D  *hQCDinAllregion = new TH1D("hQCDinAllregion",  "hQCDinAllregion", NumberOfBins,xbin);
+TH1D  *hQCDinregionC1 = new TH1D("hQCDinregionC1",  "hQCDinregionC1", NumberOfBins,xbin);
+TH1D  *hQCDinregionC2 = new TH1D("hQCDinregionC2",  "hQCDinregionC2", NumberOfBins,xbin);
+TH1D  *hQCDinregionC3 = new TH1D("hQCDinregionC3",  "hQCDinregionC3", NumberOfBins,xbin);
+
+
+TH1D  *hQCDinregionQ3 = new TH1D("hQCDinregionQ3",  "hQCDinregionQ3", NumberOfBins,xbin);
+
+
+
+ for(unsigned int ii = 0; ii < fSamples.size(); ii++){
+    
+   TString myCuts = cuts;
+ 
+   int data = 0;
+   sample Sample = fSamples[ii];
+    
+   if(Sample.type == "data"){
+     data = 1;
+     myCuts += " && " + trigger;
+   }
+    if(Sample.type == "susy")
+    continue;
+
+
+   fMT2tree = new MT2tree();
+   Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
+
+   float Weight;
+    
+    if(fPUReweight) Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents*Sample.PU_avg_weight);
+    else            Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
+
+    std::cout << setfill('=') << std::setw(70) << "" << std::endl;
+    cout << "looping over :     " <<endl;	
+    cout << "   Name:           " << Sample.name << endl;
+    cout << "   File:           " << (Sample.file)->GetName() << endl;
+    cout << "   Events:         " << Sample.nevents  << endl;
+    cout << "   Events in tree: " << Sample.tree->GetEntries() << endl; 
+    cout << "   Xsection:       " << Sample.xsection << endl;
+    cout << "   kfactor:        " << Sample.kfact << endl;
+    cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
+    cout << "   Weight:         " << Weight <<endl;
+    std::cout << setfill('-') << std::setw(70) << "" << std::endl;
+        Sample.tree->Draw(">>selList", myCuts);
+    TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
+
+    unsigned int nentries =  myEvtList->GetN();
+
+    for (unsigned int jentry=0; jentry<min(nentries, nevents);jentry++) {
+       
+      Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
+
+      if ( fVerbose>2 && jentry % 100000 == 0 ){  
+	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+	fflush(stdout);
+      }
+
+   
+     if(fStitching && (Sample.sname == "Wtolnu" || (Sample.shapename == "ZJetsToLL" && Sample.name != "DYToLL_M10To50"))){
+
+	Weight = Sample.lumi;
+	if(fPUReweight) Weight /= Sample.PU_avg_weight;
+      
+      }
+ 
+      float weight = Weight;
+
+      if(data == 1)
+      weight = 1.0;
+      else{
+
+	
+       weight *= fMT2tree->SFWeight.BTagCSV40eq0 ;
+
+	if(fPUReweight)
+	weight *= fMT2tree->pileUp.Weight;
+	  }
+
+
+     float myQuantity = fMT2tree->SumMTTauTauChannel();
+       
+
+
+   int TauIsolation= fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].Isolation3Hits+fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].Isolation3Hits;
+
+	 
+             if(Sample.type == "data"  && (TauIsolation>=8) && fMT2tree->SumMTTauTauChannel()>250 && fMT2tree->doubleTau[0].GetSumCharge() !=0
+
+		    ) {
+         
+          hdatainregionA  ->Fill (myQuantity,weight);
+	  }
+
+      if(Sample.type == "data"  && (TauIsolation >=8)&& fMT2tree->doubleTau[0].GetSumCharge() !=0
+		   ){
+          hdatainregionB  ->Fill (myQuantity,weight);
+          }
+
+       if(Sample.type == "data"  && TauIsolation<=6 &&(fMT2tree->doubleTau[0].GetSumCharge() ==0) ){
+          
+          hdatainregionC  ->Fill (myQuantity,weight);
+	  }  
+
+
+       if(Sample.type != "data"  && Sample.sname != "QCD"  &&(TauIsolation>=8)	&& fMT2tree->SumMTTauTauChannel()>250&& fMT2tree->doubleTau[0].GetSumCharge() !=0
+		 ){
+          
+          hnonQCDinregionA->Fill (myQuantity,weight);
+	   }
+
+        if(Sample.type != "data"  && Sample.sname != "QCD" && (TauIsolation>=8)	 && fMT2tree->doubleTau[0].GetSumCharge() !=0  ){
+         
+          hnonQCDinregionB->Fill (myQuantity,weight);
+	  }  
+
+       if(Sample.type != "data"  && Sample.sname != "QCD" && (TauIsolation<=6 )&& (fMT2tree->doubleTau[0].GetSumCharge() ==0)){
+         
+          hnonQCDinregionC->Fill (myQuantity,weight);
+	  }
+
+  
+
+        if(Sample.type == "data"  && fMT2tree->misc.MinMetJetDPhiPt40 > 1 && (TauIsolation >=8)&& fMT2tree->doubleTau[0].GetSumCharge() !=0
+		   ){
+          hdatainregionQ1  ->Fill (myQuantity,weight);
+
+	  }  
+
+        if(Sample.type != "data"  && Sample.sname != "QCD" && fMT2tree->misc.MinMetJetDPhiPt40 > 1 &&(TauIsolation >=8)&& fMT2tree->doubleTau[0].GetSumCharge() !=0)
+		   {
+          hnonQCDinregionQ1  ->Fill (myQuantity,weight);
+
+	  }   
+	
+        if(Sample.type == "data"  && fMT2tree->misc.MinMetJetDPhiPt40 > 1 && (TauIsolation <=6)  && (fMT2tree->doubleTau[0].GetSumCharge() ==0)
+		   ){
+          hdatainregionQ2  ->Fill (myQuantity,weight);
+
+	  }  
+
+        if(Sample.type != "data"  && Sample.sname != "QCD" && fMT2tree->misc.MinMetJetDPhiPt40 > 1 &&(TauIsolation <=6) && (fMT2tree->doubleTau[0].GetSumCharge() ==0))
+		   {
+          hnonQCDinregionQ2  ->Fill (myQuantity,weight);
+
+	   }
+          }
+        }
+
+      
+      cout<<"data"<<hdatainregionA->GetBinContent(5)<<" +- "<<hdatainregionA->GetBinError(5)<<endl;
+      cout<<"hnonQCDinregionA"<<hnonQCDinregionA->GetBinContent(5)<<" +- "<<hnonQCDinregionA->GetBinError(5)<<endl;
+      float errstatnonQCDA= hnonQCDinregionA->GetBinError(5);
+      float nonQCDA= hnonQCDinregionA->GetBinContent(5);
+      float errsysnonQCDA = nonQCDA*0.25;
+      hnonQCDinregionA->SetBinError(5,sqrt(errsysnonQCDA * errsysnonQCDA + errstatnonQCDA * errstatnonQCDA));
+      cout<<"hnonQCDinregionA"<<hnonQCDinregionA->GetBinContent(5)<<" +- "<<hnonQCDinregionA->GetBinError(5)<<endl;
+      hdatainregionA->Add(hnonQCDinregionA, -1);
+      TH1D *hQCDinregionA = (TH1D*)hdatainregionA->Clone();
+      cout<<"hQCDinregionA"<<hQCDinregionA->GetBinContent(5)<<" +- "<<hQCDinregionA->GetBinError(5)<<endl;
+      
+      float nonQCDB=0;
+    //  float err=0;
+      float newerrB=0;
+     float newerrB2=0;
+   //  float errstatnonQCDB[NumberOfBins-1];
+   //   float errsysnonQCDB[NumberOfBins-1];
+      
+      for(int j=0;j<NumberOfBins;j++){
+      
+      float errstatnonQCDB=hnonQCDinregionB->GetBinError(j);
+   //  errstatnonQCDB[j-1]=hnonQCDinregionB->GetBinError(j);
+      float errsysnonQCDB=0.25*(hnonQCDinregionB->GetBinContent(j));
+ //    errsysnonQCDB[j-1]=0.25*(hnonQCDinregionB->GetBinContent(j));
+       
+      //cout<<"errsys"<<errsysnonQCDB[j-1]<<endl;
+       cout<<"errsys"<<errsysnonQCDB<<endl;
+  //    hnonQCDinregionB->SetBinError(j,sqrt(errsysnonQCDB[j-1] * errsysnonQCDB[j-1]+ errstatnonQCDB[j-1] * errstatnonQCDB[j-1]));
+        //hnonQCDinregionB->SetBinError(j,sqrt(errsysnonQCDB * errsysnonQCDB+ errstatnonQCDB * errstatnonQCDB));
+hnonQCDinregionB->SetBinError(j,sqrt(hnonQCDinregionB->GetBinError(j)*hnonQCDinregionB->GetBinError(j) + 0.25*(hnonQCDinregionB->GetBinContent(j)) * 0.25*(hnonQCDinregionB->GetBinContent(j))));
+
+
+       nonQCDB += hnonQCDinregionB->GetBinContent(j);
+       cout<<"nonQCDB"<<nonQCDB<<endl;
+       newerrB+= hnonQCDinregionB->GetBinError(j);
+       newerrB2+= (hnonQCDinregionB->GetBinError(j) *hnonQCDinregionB->GetBinError(j));
+          }
+
+       cout<<"nonQCDB"<<nonQCDB<<endl;
+       cout<<"newerrB"<<newerrB<<endl;
+      cout<<"newerrB2"<<sqrt(newerrB2)<<endl;
+      
+      hdatainregionB->Add(hnonQCDinregionB, -1);
+      TH1D *hQCDinregionB = (TH1D*)hdatainregionB->Clone();
+       double err;
+      hQCDinregionB->IntegralAndError(1,4,err);
+      cout<<"QCD in region B"<<hQCDinregionB->IntegralAndError(1,4,err)<<"+-"<<err<<endl;
+
+
+     float nonQCDC=0;
+     float newerrC=0;
+     float newerrC2=0;
+     for(int j=0;j<NumberOfBins;j++){
+      
+      float errstatnonQCDC=hnonQCDinregionC->GetBinError(j);
+      float errsysnonQCDC=0.25*(hnonQCDinregionC->GetBinContent(j));
+
+   hnonQCDinregionC->SetBinError(j,sqrt(hnonQCDinregionC->GetBinError(j)*hnonQCDinregionC->GetBinError(j) + 0.25*(hnonQCDinregionC->GetBinContent(j)) * 0.25*(hnonQCDinregionC->GetBinContent(j))));
+
+
+       nonQCDC += hnonQCDinregionC->GetBinContent(j);
+       cout<<"nonQCDC"<<nonQCDC<<endl;
+       newerrC+= hnonQCDinregionC->GetBinError(j);
+       newerrC+= (hnonQCDinregionC->GetBinError(j) *hnonQCDinregionC->GetBinError(j));
+          }
+
+       cout<<"nonQCDC"<<nonQCDC<<endl;
+       cout<<"newerrC"<<newerrC<<endl;
+      cout<<"newerrC2"<<sqrt(newerrC2)<<endl;
+
+
+
+
+      hdatainregionC->Add(hnonQCDinregionC, -1);
+      TH1D *hQCDinregionC = (TH1D*)hdatainregionC->Clone();
+
+hQCDinregionC->IntegralAndError(1,4,err);
+   cout<<"QCD in region C"<<hQCDinregionC->IntegralAndError(1,4,err)<<"+-"<<err<<endl;
+      
+       hQCDinregionC1->Divide(hQCDinregionC,hQCDinregionB);
+    
+      
+ /*  TF1 *func = new TF1("func","pol1");
+      func->SetRange(100,250);
+      hQCDinregionC1->Fit("func","R");
+      double b0= func->GetParameter(0);
+      double Deltab0=func->GetParError(0);
+      double b1= func->GetParameter(1);
+      double Deltab1=func->GetParError(1);
+      cout<<">>>>"<<b0<<"+-"<<Deltab0<<endl;
+      cout<<">>>>"<<b1<<"+-"<<Deltab1<<endl;
+
+      for (int j=0;j<NumberOfBins+1;j++){
+      hQCDinregionC3->SetBinContent(j,func->GetParameter(0));
+      hQCDinregionC3->SetBinError(j,func->GetParError(0));
+      hQCDinregionC2->SetBinContent(j,func->GetParameter(1));
+      hQCDinregionC2->SetBinError(j,func->GetParError(1));
+        }
+       hQCDinregionC2->Scale(250);
+          hQCDinregionC2->Add(hQCDinregionC3);
+
+     
+      cout<<"<<<<<<<<<"<<hQCDinregionC2->GetBinContent(3)<<" +- "<<hQCDinregionC2->GetBinError(3)<<endl;*/
+
+   TF1 *func = new TF1("func","pol0");
+      func->SetRange(100,250);
+      hQCDinregionC1->Fit("func","R");
+  for (int j=0;j<NumberOfBins+1;j++){
+     hQCDinregionC1->SetBinContent(j,func->GetParameter(0));
+      hQCDinregionC1->SetBinError(j,func->GetParError(0));}
+      cout<<"<<<<<<<<<"<<hQCDinregionC1->GetBinContent(3)<<" +- "<<hQCDinregionC1->GetBinError(3)<<endl;
+
+ // for(int j=0;j<NumberOfBins+1;j++){
+  //  hQCDinregionC1->SetBinContent(j,hQCDinregionC1->GetBinContent(3));
+ //   hQCDinregionC1->SetBinError(j,hQCDinregionC1->GetBinError(3));
+ // }
+ 
+       cout<<"TransferFactor"<<hQCDinregionC1->GetBinContent(1)<<" +- "<<hQCDinregionC1->GetBinError(1)<<endl;
+      cout<<"TransferFactor"<<hQCDinregionC1->GetBinContent(2)<<" +- "<<hQCDinregionC1->GetBinError(2)<<endl;
+      cout<<"TransferFactor"<<hQCDinregionC1->GetBinContent(3)<<" +- "<<hQCDinregionC1->GetBinError(3)<<endl;
+      cout<<"TransferFactor"<<hQCDinregionC1->GetBinContent(4)<<" +- "<<hQCDinregionC1->GetBinError(4)<<endl;
+  //      cout<<"TransferFactor"<<hQCDinregionC1->GetBinContent(5)<<" +- "<<hQCDinregionC1->GetBinError(5)<<endl;
+
+  
+             hdatainregionQ1->Add(hnonQCDinregionQ1, -1);
+             hdatainregionQ2->Add(hnonQCDinregionQ2, -1);
+
+             TH1D *hQCDinregionQ1=(TH1D*) hdatainregionQ1->Clone();
+             TH1D *hQCDinregionQ2=(TH1D*) hdatainregionQ2->Clone();
+    
+              hQCDinregionQ1->Add(hQCDinregionQ2);
+              TH1D *hQCDinregionB1 = (TH1D*)hQCDinregionB->Clone();
+       
+
+   
+
+
+              hQCDinregionB->Add(hQCDinregionC);
+
+               
+              hQCDinregionQ1->Divide(hQCDinregionB);
+        
+ /*         
+      TF1 *func2 = new TF1("func2","pol1");
+      func2->SetRange(40,90);
+      hQCDinregionQ1->Fit("func2","R");
+      double a0= func2->GetParameter(0);
+      double Deltaa0=func2->GetParError(0);
+      double a1= func2->GetParameter(1);
+      double Deltaa1=func2->GetParError(1);
+      cout<<">>>>"<<a0<<"+-"<<Deltaa0<<endl;
+      cout<<">>>>"<<a1<<"+-"<<Deltaa1<<endl;
+      
+      for (int j=0;j<NumberOfBins+1;j++){
+      hQCDinregionQ3->SetBinContent(j,func2->GetParameter(0));
+      hQCDinregionQ3->SetBinError(j,func2->GetParError(0));
+      hQCDinregionQ2->SetBinContent(j,func2->GetParameter(1));
+      hQCDinregionQ2->SetBinError(j,func2->GetParError(1));
+}
+    
+     hQCDinregionQ2->Scale(90);
+     hQCDinregionQ2->Add(hQCDinregionQ3);
+
+    */  
+     // double err;
+      //cout<<">>>>>>"<<hQCDinregionQ2->IntegralAndError(8,9,err);
+      
+  //    cout<<"<<<<<<<<<"<<hQCDinregionQ2->GetBinContent(6)<<" +- "<<hQCDinregionQ2->GetBinError(6)<<endl;
+
+  /*  TF1 *func2 = new TF1("func2","pol0");
+      func2->SetRange(40,90);
+     hQCDinregionQ1->Fit("func2","R");
+     for (int j=0;j<NumberOfBins+1;j++){
+    hQCDinregionQ1->SetBinContent(j,func2->GetParameter(0));
+      hQCDinregionQ1->SetBinError(j,func2->GetParError(0));}
+      cout<<"<<<<<<<<<"<<hQCDinregionQ1->GetBinContent(3)<<" +- "<<hQCDinregionQ1->GetBinError(3)<<endl;*/
+
+
+
+
+
+    
+       
+for(int j=0;j<NumberOfBins+1;j++){
+  hQCDinregionQ1->SetBinContent(j,hQCDinregionQ1->GetBinContent(j));
+  hQCDinregionQ1->SetBinError(j,hQCDinregionQ1->GetBinError(j));
+}
+         
+   
+cout<<"EfficiencyQ1 "<<hQCDinregionQ1->GetBinContent(1)<<" +- "<<hQCDinregionQ1->GetBinError(1)<<endl; 
+cout<<"Efficiency"<<hQCDinregionQ1->GetBinContent(2)<<" +- "<<hQCDinregionQ1->GetBinError(2)<<endl; 
+cout<<"Efficiency"<<hQCDinregionQ1->GetBinContent(3)<<" +- "<<hQCDinregionQ1->GetBinError(3)<<endl;       
+cout<<"Efficiency"<<hQCDinregionQ1->GetBinContent(4)<<" +- "<<hQCDinregionQ1->GetBinError(4)<<endl;
+
+
+for (int j=0;j<NumberOfBins+1;j++){
+hQCDinregionA->SetBinContent(j,hQCDinregionA->GetBinContent(5));
+hQCDinregionA->SetBinError(j,hQCDinregionA->GetBinError(5));
+}
+
+   
+cout<<"QCDinregionA"<<hQCDinregionA->GetBinContent(5)<<" +- "<<hQCDinregionA->GetBinError(5)<<endl; 
+ 
+         
+      hQCDinAllregion-> Multiply(hQCDinregionB1,hQCDinregionC1);
+      hQCDinAllregion-> Multiply(hQCDinregionQ1);
+     
+     cout<<"QCDinAllregion"<<hQCDinAllregion->GetBinContent(1)<<" +- "<<hQCDinAllregion->GetBinError(1)<<endl; 
+ cout<<"QCDinAllregion"<<hQCDinAllregion->GetBinContent(2)<<" +- "<<hQCDinAllregion->GetBinError(2)<<endl; 
+ cout<<"QCDinAllregion"<<hQCDinAllregion->GetBinContent(3)<<" +- "<<hQCDinAllregion->GetBinError(3)<<endl; 
+ cout<<"QCDinAllregion"<<hQCDinAllregion->GetBinContent(4)<<" +- "<<hQCDinAllregion->GetBinError(4)<<endl;
+
+  
+  
+
+     hQCDinregionA->Multiply(hQCDinregionC1);
+     hQCDinregionA->Multiply(hQCDinregionQ1);
+
+
+
+         
+       cout<<"QCDinregionD"<<hQCDinregionA->GetBinContent(4)<<" +- "<<hQCDinregionA->GetBinError(4)<<endl; 
+ 
+ 
+       TCanvas *MyC = new TCanvas("QCDEstimation","QCDEstimation");
+        MyC->Divide(1,1);
+        MyC->cd(1);
+        hQCDinregionQ1->GetXaxis()->SetTitle("M_{T2}");
+        hQCDinregionQ1->GetYaxis()->SetTitle("#Delta #Phi_{4}^{min}");
+        hQCDinregionQ1->Draw();
+  
+
+     
+  TString fileName = fOutputDir;
+  if(!fileName.EndsWith("/")) fileName += "/";
+  Util::MakeOutputDir(fileName);
+  fileName = fileName + myfileName +"_Histos.root";
+  TFile *savefile = new TFile(fileName.Data(), "RECREATE");
+  savefile ->cd();  
+  hQCDinregionB1->Write();	  
+  hQCDinregionC1->Write();	
+  hQCDinregionQ1->Write();
+  hQCDinAllregion->Write();
+  savefile->Close();
+  std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
+  
+  cout<<" trigger "<<trigger<<endl;
+  cout<<" cuts "<<cuts<<endl;
+
+	  }  
+
+void MassPlotter::TauTauAnalysisbin2(TString cuts,TString trigger,unsigned int nevents, TString myfileName){
+  
+  TH1::SetDefaultSumw2();
+  
+  setFlags(10);
+
+  /*TString fileName = fOutputDir;
+  if(!fileName.EndsWith("/")) fileName += "/";
+  fileName = fileName + myfileName;
+  TFile *myfile1 = new TFile(fileName.Data(), "READ");
+
+  //TH1D* hdatainregionB  = (TH1D*) myfile1->Get("hdatainregionB");
+//  TH1D* hdatainregionC  = (TH1D*) myfile1->Get("hdatainregionC");
+  TH1D* hQCDinAllregion = (TH1D*) myfile1->Get("hQCDinAllregion");*/
+  //  TFile *myfile1 = new TFile("../MassPlots/MT2_TauTau_Histos.root", "READ");
+TFile *myfile1 = new TFile("../MassPlots/MT2_TauTau_QCDestimation_Bin2_Histos.root", "READ");
+TH1D* hQCDinAllregion = (TH1D*) myfile1->Get("hQCDinAllregion");
+
+   static const int nbins =5;
+   //double bins[nbins+1] ={40,50,65,90,140};
+double bins[nbins+1] ={100,125,150,200,250,1000};
+//{"QCD", "W", "ZX", "Top", "WW", "Higgs", "MC", "susy","data"};
+//int ccolor[NumberOfSamples+1] = { 401, 417, 419, 855, 603, kRed, 603, 1, 632};
+
+
+  TString  cnames[NumberOfSamples+1] = {"Higgs",  "WW", "Top", "ZX","W", "QCD","MC", "susy", "data"};
+  int      ccolor[NumberOfSamples+1] = { kRed,    603,    855, 419 , 417, 401, 500,     1, 632};
+   
+   TString varname = "MT2";
+  for (int i=0; i<=(NumberOfSamples+1); i++){
+    MT2[i] = new TH1D(varname+"_"+cnames[i], "", nbins, bins);
+    MT2[i] -> SetFillColor (ccolor[i]);
+    MT2[i] -> SetLineColor (ccolor[i]);
+    MT2[i] -> SetLineWidth (2);
+    MT2[i] -> SetMarkerColor(ccolor[i]);
+    MT2[i] -> SetStats(false);
+  }
+
+   MT2[NumberOfSamples] -> SetMarkerStyle(20);
+   MT2[NumberOfSamples] -> SetMarkerColor(kBlack);
+   MT2[NumberOfSamples] -> SetLineColor(kBlack);
+   MT2[NumberOfSamples-2] -> SetFillStyle(3004);
+   MT2[NumberOfSamples-2] -> SetFillColor(kBlack);
+
+cout<<" trigger "<<trigger<<endl;
+cout<<" cuts "<<cuts<<endl;
+ 
+
+ 
+  
+  vector<TH1D*> h_samples;
+
+   
+
+  for(unsigned int ii = 0; ii < fSamples.size(); ii++){
+
+    TString myCuts = cuts;
+
+    int data = 0;
+    sample Sample = fSamples[ii];
+    
+    if(Sample.type == "data"){
+      data = 1;
+      myCuts += " && " + trigger;
+    }
+
+   
+ 
+    h_samples.push_back(new TH1D(varname+"_"+Sample.name, "", nbins, bins));
+    h_samples[ii] -> Sumw2();
+    h_samples[ii] -> SetLineColor(Sample.color);
+   
+    h_samples[ii] -> SetMarkerColor(Sample.color);
+    h_samples[ii] -> SetStats(false);
+    if(Sample.type == "susy" ){
+    h_samples[ii] -> SetLineColor(kBlack);
+    h_samples[ii] -> SetLineStyle(kDotted);
+    }
+
+  
+    fMT2tree = new MT2tree();
+    Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
+
+
+    float Weight;
+   
+    if(fPUReweight) Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents*Sample.PU_avg_weight);
+    else            Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
+
+    std::cout << setfill('=') << std::setw(70) << "" << std::endl;
+    cout << "   looping over :     " <<endl;	
+    cout << "   Name:           " << Sample.name << endl;
+    cout << "   File:           " << (Sample.file)->GetName() << endl;
+    cout << "   Events:         " << Sample.nevents  << endl;
+    cout << "   Events in tree: " << Sample.tree->GetEntries() << endl; 
+    cout << "   Xsection:       " << Sample.xsection << endl;
+    cout << "   kfactor:        " << Sample.kfact << endl;
+    cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
+    cout << "   Weight:         " << Weight <<endl;
+    std::cout << setfill('-') << std::setw(70) << "" << std::endl;
+
+int TauIsolation= fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].Isolation3Hits+fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].Isolation3Hits;    
+
+ 
+      Sample.tree->Draw(">>selList", myCuts);
+      TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
+   //   Sample.tree->SetEventList(myEvtList);
+
+      unsigned int nentries = myEvtList->GetN();//Sample.tree->GetEntries();
+
+      for (unsigned int jentry=0; jentry<nentries;jentry++) {
+    
+      Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
+
+	if ( fVerbose>2 && jentry % 100000 == 0 ){
+	  fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+	  fflush(stdout);
+	}
+
+	 if(fStitching && (Sample.sname == "Wtolnu" || (Sample.shapename == "ZJetsToLL" && Sample.name != "DYToLL_M10To50"))){
+	  
+	  Weight = Sample.lumi;
+	  if(fPUReweight) Weight /= Sample.PU_avg_weight;
+	  
+	}
+
+        float weight = Weight;
+	if(data == 1)
+	weight = 1.0;
+        else{
+	
+	
+	weight *= fMT2tree->SFWeight.BTagCSV40eq0;  
+
+	if(fPUReweight)
+	  weight *= fMT2tree->pileUp.Weight;  }   
+        
+        float myQuantity=fMT2tree->SumMTTauTauChannel();
+ 
+          h_samples[ii]->Fill(myQuantity, weight);
+             
+      } 
+        AddOverAndUnderFlow(h_samples[ii]);
+
+
+
+        
+	if(data == 1){
+        MT2[NumberOfSamples]->Add(h_samples[ii]);//data
+}
+else if(Sample.sname == "SUSY")
+MT2[NumberOfSamples-1]->Add(h_samples[ii]);
+
+else if(Sample.sname == "Top")
+MT2[2]->Add(h_samples[ii]);
+else
+if(Sample.sname == "DY")
+MT2[3]->Add(h_samples[ii]);
+else
+if(Sample.sname == "Wtolnu"){
+MT2[4]->Add(h_samples[ii]);}
+
+else
+if(Sample.sname == "VV")
+MT2[1]->Add(h_samples[ii]);
+else
+if(Sample.sname == "Higgs")
+MT2[0]->Add(h_samples[ii]);
+
+else if (Sample.sname  == "QCD")    {    
+ for (int j=0;j<nbins+1;j++){ 
+MT2[5]->SetBinContent(1,hQCDinAllregion->GetBinContent(1));
+MT2[5]->SetBinError(1,hQCDinAllregion->GetBinError(1)); 
+MT2[5]->SetBinContent(2,hQCDinAllregion->GetBinContent(2));
+MT2[5]->SetBinError(2,hQCDinAllregion->GetBinError(2));
+MT2[5]->SetBinContent(3,hQCDinAllregion->GetBinContent(3));
+MT2[5]->SetBinError(3,hQCDinAllregion->GetBinError(3));
+MT2[5]->SetBinContent(4,hQCDinAllregion->GetBinContent(4) );
+MT2[5]->SetBinError(4,hQCDinAllregion->GetBinError(4));
+
+MT2[5]->SetBinContent(5,0.82);
+MT2[5]->SetBinError(5,0.72);
+                               
+                  }          
+                 
+             }
+
+  }
+  Cout(0,MT2[NumberOfSamples-1]);
+	Cout(0,MT2[0]);    
+
+
+MT2[NumberOfSamples-2]->Add(MT2[0]);
+MT2[NumberOfSamples-2]->Add(MT2[1]);
+MT2[NumberOfSamples-2]->Add(MT2[2]);
+MT2[NumberOfSamples-2]->Add(MT2[3]);
+MT2[NumberOfSamples-2]->Add(MT2[4]);
+MT2[NumberOfSamples-2]->Add(MT2[5]);
+
+        cout<<">>>>>>>>>>>"<<hQCDinAllregion->GetBinContent(1)<<" +- "<<hQCDinAllregion->GetBinError(1)<<endl;
+        cout<<">>>>>>>>>>>"<<hQCDinAllregion->GetBinContent(2)<<" +- "<<hQCDinAllregion->GetBinError(2)<<endl;
+        cout<<">>>>>>>>>>>"<<hQCDinAllregion->GetBinContent(3)<<" +- "<<hQCDinAllregion->GetBinError(3)<<endl;
+       cout<<">>>>>>>>>>>"<<hQCDinAllregion->GetBinContent(4)<<" +- "<<hQCDinAllregion->GetBinError(4)<<endl;
+     
+
+  
+        cout<<">>>>>>>>>>>"<<MT2[5]->GetBinContent(1)<<" +- "<<MT2[5]->GetBinError(1)<<endl;
+        cout<<">>>>>>>>>>>"<<MT2[5]->GetBinContent(2)<<" +- "<<MT2[5]->GetBinError(2)<<endl;
+        cout<<">>>>>>>>>>>"<<MT2[5]->GetBinContent(3)<<" +- "<<MT2[5]->GetBinError(3)<<endl;
+        cout<<">>>>>>>>>>>"<<MT2[5]->GetBinContent(4)<<" +- "<<MT2[5]->GetBinError(4)<<endl;
+   
+  Cout(1,MT2[NumberOfSamples-1]);
+	Cout(1,MT2[0]);    
+
+
+AddOverAndUnderFlow(MT2[0], true, true);
+AddOverAndUnderFlow(MT2[1], true, true);
+AddOverAndUnderFlow(MT2[2], true, true);
+AddOverAndUnderFlow(MT2[3], true, true);
+AddOverAndUnderFlow(MT2[4], true, true);
+AddOverAndUnderFlow(MT2[5], true, true);
+AddOverAndUnderFlow(MT2[NumberOfSamples-1], true, true);
+AddOverAndUnderFlow(MT2[NumberOfSamples-2], true, true);
+AddOverAndUnderFlow(MT2[NumberOfSamples], true, true);
+  
+ Cout(2,MT2[NumberOfSamples-1]);
+	Cout(2,MT2[0]);    
+
+
+  printYield();
+
+  THStack* h_stack = new THStack(varname, "");
+  for(int j = 0; j <= (NumberOfSamples+1); j++){
+  if(j <= (NumberOfSamples - 3))
+    h_stack -> Add(MT2[j]);
+      
+  }
+
+  TLegend* Legend1 = new TLegend(.71,.54,.91,.92);
+Legend1->AddEntry(MT2[0], "Higgs", "f");
+Legend1->AddEntry(MT2[1], "WW", "f");
+Legend1->AddEntry(MT2[2], "Top", "f");
+Legend1->AddEntry(MT2[3], "ZX", "f");
+Legend1->AddEntry(MT2[4], "W", "f");
+Legend1->AddEntry(MT2[5], "QCD", "f");
+Legend1->AddEntry(MT2[NumberOfSamples-1], "SMS", "l");
+Legend1->AddEntry(MT2[NumberOfSamples], "data", "l");
+ 
+  
+ 
+  
+  cout<<" trigger "<<trigger<<endl;
+  cout<<" cuts "<<cuts<<endl;
+
+ 
+  printHisto(h_stack, MT2[NumberOfSamples], MT2[NumberOfSamples-2], MT2[NumberOfSamples-1], Legend1 , "MTC", "hist", true, "#Sigma m_{T}^{#tau_{i}}", "Events", 0, -10, 2, true);
+plotRatioStack(h_stack, MT2[NumberOfSamples-2], MT2[NumberOfSamples], MT2[NumberOfSamples-1], true, false, "MT2_ratio", Legend1, "#Sigma m_{T}^{#tau_{i}}", "Events", 0, -10, 2, true, "C");
+
+}
+
+void MassPlotter::TauTauAnalysisbin1(TString cuts,TString trigger,unsigned int nevents, TString myfileName){
+  
+  TH1::SetDefaultSumw2();
+  
+  setFlags(10);
+
+  /*TString fileName = fOutputDir;
+  if(!fileName.EndsWith("/")) fileName += "/";
+  fileName = fileName + myfileName;
+  TFile *myfile1 = new TFile(fileName.Data(), "READ");
+
+  //TH1D* hdatainregionB  = (TH1D*) myfile1->Get("hdatainregionB");
+//  TH1D* hdatainregionC  = (TH1D*) myfile1->Get("hdatainregionC");
+  TH1D* hQCDinAllregion = (TH1D*) myfile1->Get("hQCDinAllregion");*/
+  //  TFile *myfile1 = new TFile("../MassPlots/MT2_TauTau_Histos.root", "READ");
+TFile *myfile1 = new TFile("../MassPlots/MT2_TauTau_QCDestimation_Bin1_Histos.root", "READ");
+TH1D* hQCDinAllregion = (TH1D*) myfile1->Get("hQCDinAllregion");
+
+   static const int nbins =4;
+   double bins[nbins+1] ={40,50,65,90,140};
+//double bins[nbins+1] ={100,125,150,200,250,300};
+//{"QCD", "W", "ZX", "Top", "WW", "Higgs", "MC", "susy","data"};
+//int ccolor[NumberOfSamples+1] = { 401, 417, 419, 855, 603, kRed, 603, 1, 632};
+
+
+  TString  cnames[NumberOfSamples+1] = {"Higgs",  "WW", "Top", "ZX","W", "QCD","MC", "susy", "data"};
+  int      ccolor[NumberOfSamples+1] = { kRed,    603,    855, 419 , 417, 401, 500,     1, 632};
+   
+   TString varname = "MT2";
+  for (int i=0; i<=(NumberOfSamples); i++){
+    MT2[i] = new TH1D(varname+"_"+cnames[i], "", nbins, bins);
+    MT2[i] -> SetFillColor (ccolor[i]);
+    MT2[i] -> SetLineColor (ccolor[i]);
+    MT2[i] -> SetLineWidth (2);
+    MT2[i] -> SetMarkerColor(ccolor[i]);
+    MT2[i] -> SetStats(false);
+  }
+
+   MT2[NumberOfSamples] -> SetMarkerStyle(20);
+   MT2[NumberOfSamples] -> SetMarkerColor(kBlack);
+   MT2[NumberOfSamples] -> SetLineColor(kBlack);
+   MT2[NumberOfSamples-2] -> SetFillStyle(3004);
+   MT2[NumberOfSamples-2] -> SetFillColor(kBlack);
+
+cout<<" trigger "<<trigger<<endl;
+cout<<" cuts "<<cuts<<endl;
+ 
+
+ 
+  
+  vector<TH1D*> h_samples;
+
+   
+
+  for(unsigned int ii = 0; ii < fSamples.size(); ii++){
+
+    TString myCuts = cuts;
+
+    int data = 0;
+    sample Sample = fSamples[ii];
+    
+    if(Sample.type == "data"){
+      data = 1;
+      myCuts += " && " + trigger;
+    }
+
+   
+ 
+    h_samples.push_back(new TH1D(varname+"_"+Sample.name, "", nbins, bins));
+    h_samples[ii] -> Sumw2();
+    h_samples[ii] -> SetLineColor(Sample.color);
+   
+    h_samples[ii] -> SetMarkerColor(Sample.color);
+    h_samples[ii] -> SetStats(false);
+    if(Sample.type == "susy" ){
+    h_samples[ii] -> SetLineColor(kBlack);
+    h_samples[ii] -> SetLineStyle(kDotted);
+    }
+
+  
+    fMT2tree = new MT2tree();
+    Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
+
+
+    float Weight;
+   
+    if(fPUReweight) Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents*Sample.PU_avg_weight);
+    else            Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
+
+    std::cout << setfill('=') << std::setw(70) << "" << std::endl;
+    cout << "   looping over :     " <<endl;	
+    cout << "   Name:           " << Sample.name << endl;
+    cout << "   File:           " << (Sample.file)->GetName() << endl;
+    cout << "   Events:         " << Sample.nevents  << endl;
+    cout << "   Events in tree: " << Sample.tree->GetEntries() << endl; 
+    cout << "   Xsection:       " << Sample.xsection << endl;
+    cout << "   kfactor:        " << Sample.kfact << endl;
+    cout << "   avg PU weight:  " << Sample.PU_avg_weight << endl;
+    cout << "   Weight:         " << Weight <<endl;
+    std::cout << setfill('-') << std::setw(70) << "" << std::endl;
+
+int TauIsolation= fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].Isolation3Hits+fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].Isolation3Hits;    
+
+ 
+      Sample.tree->Draw(">>selList", myCuts);
+      TEventList *myEvtList = (TEventList*)gDirectory->Get("selList");
+   //   Sample.tree->SetEventList(myEvtList);
+
+      unsigned int nentries = myEvtList->GetN();//Sample.tree->GetEntries();
+
+      for (unsigned int jentry=0; jentry<nentries;jentry++) {
+    
+      Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
+
+	if ( fVerbose>2 && jentry % 100000 == 0 ){
+	  fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+	  fflush(stdout);
+	}
+
+	 if(fStitching && (Sample.sname == "Wtolnu" || (Sample.shapename == "ZJetsToLL" && Sample.name != "DYToLL_M10To50"))){
+	  
+	  Weight = Sample.lumi;
+	  if(fPUReweight) Weight /= Sample.PU_avg_weight;
+	  
+	}
+
+        float weight = Weight;
+	if(data == 1)
+	weight = 1.0;
+        else{
+	
+	
+	//weight *= fMT2tree->SFWeight.BTagCSV40eq0;  
+
+	if(fPUReweight)
+	  weight *= fMT2tree->pileUp.Weight;  }   
+        
+        float myQuantity=fMT2tree->doubleTau[0].GetMT2();
+ 
+          h_samples[ii]->Fill(myQuantity, weight);
+             
+         } 
+        AddOverAndUnderFlow(h_samples[ii]);
+        
+	if(data == 1){
+        MT2[NumberOfSamples]->Add(h_samples[ii]);//data
+}
+else if(Sample.sname == "SUSY")
+MT2[NumberOfSamples-1]->Add(h_samples[ii]);
+
+else if(Sample.sname == "Top")
+MT2[2]->Add(h_samples[ii]);
+else
+if(Sample.sname == "DY")
+MT2[3]->Add(h_samples[ii]);
+else
+if(Sample.sname == "Wtolnu"){
+MT2[4]->Add(h_samples[ii]);}
+
+else
+if(Sample.sname == "VV")
+MT2[1]->Add(h_samples[ii]);
+else
+if(Sample.sname == "Higgs")
+MT2[0]->Add(h_samples[ii]);
+
+else if (Sample.sname  == "QCD")    {    
+ for (int j=0;j<nbins+1;j++){ 
+MT2[5]->SetBinContent(1,hQCDinAllregion->GetBinContent(1));
+MT2[5]->SetBinError(1,hQCDinAllregion->GetBinError(1)); 
+MT2[5]->SetBinContent(2,hQCDinAllregion->GetBinContent(2));
+MT2[5]->SetBinError(2,hQCDinAllregion->GetBinError(2));
+MT2[5]->SetBinContent(3,hQCDinAllregion->GetBinContent(3));
+MT2[5]->SetBinError(3,hQCDinAllregion->GetBinError(3));
+MT2[5]->SetBinContent(4,0.15 );
+MT2[5]->SetBinError(4,0.35);
+
+//MT2[0]->SetBinContent(5,0.82);
+//MT2[0]->SetBinError(5,0.72);
+                               
+                  }          
+                 
+             }
+
+  }
+MT2[NumberOfSamples-2]->Add(MT2[0]);
+MT2[NumberOfSamples-2]->Add(MT2[1]);
+MT2[NumberOfSamples-2]->Add(MT2[2]);
+MT2[NumberOfSamples-2]->Add(MT2[3]);
+MT2[NumberOfSamples-2]->Add(MT2[4]);
+MT2[NumberOfSamples-2]->Add(MT2[5]);
+
+        cout<<">>>>>>>>>>>"<<hQCDinAllregion->GetBinContent(1)<<" +- "<<hQCDinAllregion->GetBinError(1)<<endl;
+        cout<<">>>>>>>>>>>"<<hQCDinAllregion->GetBinContent(2)<<" +- "<<hQCDinAllregion->GetBinError(2)<<endl;
+        cout<<">>>>>>>>>>>"<<hQCDinAllregion->GetBinContent(3)<<" +- "<<hQCDinAllregion->GetBinError(3)<<endl;
+       cout<<">>>>>>>>>>>"<<hQCDinAllregion->GetBinContent(4)<<" +- "<<hQCDinAllregion->GetBinError(4)<<endl;
+     
+
+  
+        cout<<">>>>>>>>>>>"<<MT2[5]->GetBinContent(1)<<" +- "<<MT2[5]->GetBinError(1)<<endl;
+        cout<<">>>>>>>>>>>"<<MT2[5]->GetBinContent(2)<<" +- "<<MT2[5]->GetBinError(2)<<endl;
+        cout<<">>>>>>>>>>>"<<MT2[5]->GetBinContent(3)<<" +- "<<MT2[5]->GetBinError(3)<<endl;
+        cout<<">>>>>>>>>>>"<<MT2[5]->GetBinContent(4)<<" +- "<<MT2[5]->GetBinError(4)<<endl;
+   
+       
+
+for(int j = 0; j <= (NumberOfSamples); j++){
+    AddOverAndUnderFlow(MT2[j], true, true);
+  }
+
+
+  printYield();
+
+  THStack* h_stack = new THStack(varname, "");
+  for(int j = 0; j <= (NumberOfSamples); j++){
+  if(j <= (NumberOfSamples - 3))
+    h_stack -> Add(MT2[j]);
+      
+  }
+
+  TLegend* Legend1 = new TLegend(.71,.54,.91,.92);
+Legend1->AddEntry(MT2[0], "Higgs", "f");
+Legend1->AddEntry(MT2[1], "WW", "f");
+Legend1->AddEntry(MT2[2], "Top", "f");
+Legend1->AddEntry(MT2[3], "ZX", "f");
+Legend1->AddEntry(MT2[4], "W", "f");
+Legend1->AddEntry(MT2[5], "QCD", "f");
+Legend1->AddEntry(MT2[NumberOfSamples-1], "SMS", "l");
+Legend1->AddEntry(MT2[NumberOfSamples], "data", "l");
+ 
+  
+ 
+  
+  cout<<" trigger "<<trigger<<endl;
+  cout<<" cuts "<<cuts<<endl;
+
+ 
+  printHisto(h_stack, MT2[NumberOfSamples], MT2[NumberOfSamples-2], MT2[NumberOfSamples-1], Legend1 , "MTC", "hist", true, "M_{T2}", "Events", 0, -10, 2, true);
+plotRatioStack(h_stack, MT2[NumberOfSamples-2], MT2[NumberOfSamples], MT2[NumberOfSamples-1], true, false, "MT2_ratio", Legend1, "M_{T2}", "Events", 0, -10, 2, true, "C");
+
+}

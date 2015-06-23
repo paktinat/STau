@@ -273,8 +273,12 @@ public:
   void eeZInOut(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
   void eeQCDCtoBRatio(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
 
+   void QCDEstimationinTauTau(TString cuts, TString trigger, unsigned int nevents, TString myfileName );
+  
+void TauTauAnalysisbin1(TString cuts,TString trigger,unsigned int nevents, TString myfileName);
+void TauTauAnalysisbin2(TString cuts, TString trigger, unsigned int nevents,TString myfileName);
 
-  void setFlags(int flag); //To determine which analysis we look at HighHT/LowHT MT2(b) options are:
+void setFlags(int flag); //To determine which analysis we look at HighHT/LowHT MT2(b) options are:
   // 5  :: LowHT  MT2  
   // 7  :: HighHT MT2 
   // 15 :: LowHT  MT2b 

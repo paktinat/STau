@@ -1082,6 +1082,11 @@ public:
   Float_t GenPhotonAndLeadingJetPt();
   Float_t PhotonToJetPtRatio();
   Float_t MinGenBosonJetsDR();
+Float_t DeltaReleMuChannel();
+Float_t SumMTeleMuChannel();
+Float_t SumMTTauTauChannel();
+
+
 
   // PrintOut 
   Bool_t   PrintOut(Bool_t logfile);
