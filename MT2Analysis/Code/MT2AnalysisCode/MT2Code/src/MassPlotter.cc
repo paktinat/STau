@@ -9428,14 +9428,14 @@ void MassPlotter::eeAnalysis(TString cuts, TString trigger, unsigned int nevents
 	  else
 	    {
 
-	 if(fMT2tree->NBJetsCSVL == 0)// || fMT2tree->NBJetsCSVM == 0 || fMT2tree->NBJetsCSVT == 0)
+	      //	 if(fMT2tree->NBJetsCSVL == 0)// || fMT2tree->NBJetsCSVM == 0 || fMT2tree->NBJetsCSVT == 0)
 	   weight *=fMT2tree->SFWeight.BTagCSV40eq0;
-	 if(fMT2tree->NBJetsCSVL == 1)// || fMT2tree->NBJetsCSVM == 1 || fMT2tree->NBJetsCSVT == 1)
-	   weight *=fMT2tree->SFWeight.BTagCSV40eq1;
-	 if(fMT2tree->NBJetsCSVL == 2)// || fMT2tree->NBJetsCSVM == 2 || fMT2tree->NBJetsCSVT == 2)
-	   weight *=fMT2tree->SFWeight.BTagCSV40eq2;
-	 if(fMT2tree->NBJetsCSVL >= 3)// || fMT2tree->NBJetsCSVM >= 3 || fMT2tree->NBJetsCSVT >= 3)
-	   weight *=fMT2tree->SFWeight.BTagCSV40ge3;
+	   //	 if(fMT2tree->NBJetsCSVL == 1)// || fMT2tree->NBJetsCSVM == 1 || fMT2tree->NBJetsCSVT == 1)
+	   //	   weight *=fMT2tree->SFWeight.BTagCSV40eq1;
+	   //	 if(fMT2tree->NBJetsCSVL == 2)// || fMT2tree->NBJetsCSVM == 2 || fMT2tree->NBJetsCSVT == 2)
+	   //	   weight *=fMT2tree->SFWeight.BTagCSV40eq2;
+	   //	 if(fMT2tree->NBJetsCSVL >= 3)// || fMT2tree->NBJetsCSVM >= 3 || fMT2tree->NBJetsCSVT >= 3)
+	   //	   weight *=fMT2tree->SFWeight.BTagCSV40ge3;
 
 	
 	 //	      weight *= fMT2tree->SFWeight.BTagCSV40eq0; 
@@ -9746,7 +9746,7 @@ void MassPlotter::eeAnalysis(TString cuts, TString trigger, unsigned int nevents
   double e ;
   double f ;
   
-  for(int kk = 0; kk <= (NumberOfSamples); kk++){
+  for(int kk = 0; kk <= NumberOfSamples; kk++){
     
     e = 0;
     f = 0;
@@ -9768,14 +9768,14 @@ void MassPlotter::eeAnalysis(TString cuts, TString trigger, unsigned int nevents
 
     std::cout << setfill('#') << std::setw(50) << "" << std::endl;
 
-  for(int kk = 0; kk <= (NumberOfSamples); kk++){
+  for(int ll = 0; ll <= NumberOfSamples ; ll++){
     
     double err[NumberOfSamples+1];
     
     std::cout << setfill('-') << std::setw(50) << "" << std::endl;
-    cout << "sample:" << cnames[kk] << endl;
-    cout << "all_bin_content:..."<< MT2[kk]-> IntegralAndError(0, MT2[kk]->GetNbinsX()+1, err[kk]) << endl;   
-    cout << "all_bin_error:..."<< err[kk] << endl;   
+    cout << "sample:" << cnames[ll] << endl;
+    cout << "all_bin_content:..."<< MT2[ll]-> IntegralAndError(0, MT2[ll]->GetNbinsX()+1, err[ll]) << endl;   
+    cout << "all_bin_error:..."<< err[ll] << endl;   
   }
 
 
@@ -9846,9 +9846,9 @@ void MassPlotter::eeAnalysis(TString cuts, TString trigger, unsigned int nevents
   //  savefile1->Close();	
   //  std::cout << "Saved histograms in " << savefile1->GetName() << std::endl;
 	  
-  printHisto(h_stack, MT2[NumberOfSamples], MT2[NumberOfSamples-2], MT2[NumberOfSamples-1], Legend1 , myfileName, "hist", true, myfileName, "Events", -10, -10, -10, true);
+  printHisto(h_stack, MT2[NumberOfSamples], MT2[NumberOfSamples-2], MT2[NumberOfSamples-1], Legend1 , myfileName, "hist", true, myfileName, "Events", -10, 0, -10, true);
   
-  plotRatioStack(h_stack, MT2[NumberOfSamples-2], MT2[NumberOfSamples], MT2[NumberOfSamples-1], true, false, myfileName, Legend1, myfileName, "Events", -10, -10, -10, true, "C");
+  plotRatioStack(h_stack, MT2[NumberOfSamples-2], MT2[NumberOfSamples], MT2[NumberOfSamples-1], true, false, myfileName, Legend1, myfileName, "Events", -10, 0, -10, true, "C");
   
 
 
@@ -10779,18 +10779,10 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 
     double JZB_ee_up   = (-MET_up   - ele0_ee_up   - ele1_ee_up  ).Pt() - (ele0_ee_up   + ele1_ee_up  ).Pt() ;
     double JZB_ee_down = (-MET_down - ele0_ee_down - ele1_ee_down).Pt() - (ele0_ee_down + ele1_ee_down).Pt() ;
+
     double sumMT_ee_up = fMT2tree->GetMT(ele0_ee_up , 0.0, MET_up , 0.0) + fMT2tree->GetMT(ele1_ee_up , 0.0, MET_up , 0.0);
     double sumMT_ee_down = fMT2tree->GetMT(ele0_ee_down , 0.0, MET_down , 0.0) + fMT2tree->GetMT(ele1_ee_down , 0.0, MET_down , 0.0);
-    //    double MinMetJetDPhi_up_e = fMT2tree->MinMetJetDPhi(0,40,5.0,200); 
-    //    double MinMetJetDPhi_down_e = fMT2tree->MinMetJetDPhi(0,40,5.0,-200);  
 
-
-	  if(variable == "MT2")
-	   myQuantity = fMT2tree->doubleEle[0].MT2;
-	  if(variable == "MT2_up")
-	   myQuantity = mt2_ee_up;
-	  if(variable == "MT2_down")
-	   myQuantity = mt2_ee_down;
 
 	  if(variable == "MET")
 	    myQuantity = fMT2tree->misc.MET;
@@ -10799,6 +10791,13 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	  if(variable == "MET_down")
 	    myQuantity = MET_down.Pt();
 
+    	  if(variable == "INVMASS")
+	    myQuantity = fMT2tree->doubleEle[0].lv.M();
+	  if(variable == "INVMASS_up")
+	    myQuantity = invMass_ee_up;
+	  if(variable == "INVMASS_down")
+	    myQuantity = invMass_ee_down;
+
 	  if(variable == "JZB")
 	    myQuantity = fMT2tree->eeJZBInDirect();
 	  if(variable == "JZB_up")
@@ -10806,19 +10805,19 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	  if(variable == "JZB_down")
 	    myQuantity = JZB_ee_down;
 
+	  if(variable == "MT2")
+	   myQuantity = fMT2tree->doubleEle[0].MT2;
+	  if(variable == "MT2_up")
+	   myQuantity = mt2_ee_up;
+	  if(variable == "MT2_down")
+	   myQuantity = mt2_ee_down;
+
 	  if(variable == "SUMMT")
 	    myQuantity = fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].MT + fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].MT;
 	  if(variable == "SUMMT_up")
 	    myQuantity = sumMT_ee_up;
 	  if(variable == "SUMMT_down")
 	    myQuantity = sumMT_ee_down;
-
-    	  if(variable == "INVMASS")
-	    myQuantity = fMT2tree->doubleEle[0].lv.M();
-	  if(variable == "INVMASS_up")
-	    myQuantity = invMass_ee_up;
-	  if(variable == "INVMASS_down")
-	    myQuantity = invMass_ee_down;
 
 
     if(status == "ee_binI_ees_up")
@@ -10836,16 +10835,17 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	  continue;
 	if(ele1_ee_up.Pt() <= 10)
 	  continue;
+
 	if(MET_up.Pt() <= 30)
 	  continue;
 	if(invMass_ee_up <= 15 || (invMass_ee_up >= 71 && invMass_ee_up <= 111))
 	  continue;
-        if(JZB_ee_up >= -50)
-          continue;
+	if(JZB_ee_up >= -50)
+	  continue;
 	if(mt2_ee_up <= 90)
 	  continue;
 	if(sumMT_ee_up <= 250 || sumMT_ee_up >= 400 )     
-	  continue;
+ 	  continue;
 	
    }
 
@@ -10866,16 +10866,17 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	  continue;
 	if(ele1_ee_down.Pt() <= 10)
 	  continue;
+
 	if(MET_down.Pt() <= 30)
 	  continue;
 	if(invMass_ee_down <= 15 || (invMass_ee_down >= 71 && invMass_ee_down <= 111))
 	  continue;
-        if(JZB_ee_down >= -50)
-          continue;
+	if(JZB_ee_down >= -50)
+	  continue;
 	if(mt2_ee_down <= 90)
 	  continue;
-	if(sumMT_ee_down <= 250 || sumMT_ee_down >= 400 )     
-	  continue;
+ 	if(sumMT_ee_down <= 250 || sumMT_ee_down >= 400 )     
+ 	  continue;
 
       }
 
@@ -10896,16 +10897,17 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	  continue;
 	if(ele1_ee_up.Pt() <= 10)
 	  continue;
+
 	if(MET_up.Pt() <= 30)
 	  continue;
 	if(invMass_ee_up <= 15 || (invMass_ee_up >= 71 && invMass_ee_up <= 111))
 	  continue;
-        if(JZB_ee_up >= -50)
-          continue;
+	if(JZB_ee_up >= -50)
+	  continue;
 	if(mt2_ee_up <= 90)
 	  continue;
-	if(sumMT_ee_up <= 400 )     
-	  continue;
+ 	if(sumMT_ee_up <= 400 )     
+ 	  continue;
 
    }
 
@@ -10927,16 +10929,17 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	  continue;
 	if(ele1_ee_down.Pt() <= 10)
 	  continue;
+
 	if(MET_down.Pt() <= 30)
 	  continue;
 	if(invMass_ee_down <= 15 || (invMass_ee_down >= 71 && invMass_ee_down <= 111))
 	  continue;
-        if(JZB_ee_down >= -50)
-          continue;
+	if(JZB_ee_down >= -50)
+	  continue;
 	if(mt2_ee_down <= 90)
 	  continue;
-	if(sumMT_ee_down <= 400 )     
-	  continue;
+ 	if(sumMT_ee_down <= 400 )     
+ 	  continue;
       }
 
 
@@ -10960,16 +10963,17 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	  continue; 
 	if(fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Pt() <=10)
 	  continue; 
+
 	if (fMT2tree->misc.MET <= 30)
 	  continue;
 	if(fMT2tree->doubleEle[0].lv.M() <= 15 || (fMT2tree->doubleEle[0].lv.M() >= 71 &&  fMT2tree->doubleEle[0].lv.M() <= 111))
-          continue;
+	  continue;
 	if(fMT2tree->eeJZBInDirect() >= -50)
 	  continue;
 	if(fMT2tree->doubleEle[0].MT2 <= 90)                                                                     
+	  continue;
+ 	if((fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].MT + fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].MT<=250 ) || (fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].MT + fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].MT >=400))
           continue;
-	if((fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].MT + fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].MT<=250 ) || (fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].MT + fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].MT >=400))
-         continue;
 
 	
       }
@@ -10991,16 +10995,17 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	  continue; 
 	if(fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].lv.Pt() <=10)
 	  continue; 
+
 	if (fMT2tree->misc.MET <= 30)
 	  continue;
 	if(fMT2tree->doubleEle[0].lv.M() <= 15 || (fMT2tree->doubleEle[0].lv.M() >= 71 &&  fMT2tree->doubleEle[0].lv.M() <= 111))
-          continue;
+	  continue;
 	if(fMT2tree->eeJZBInDirect()  >= -50)
 	  continue;
 	if(fMT2tree->doubleEle[0].MT2 <=  90)                                                                     
+	  continue;
+ 	if(fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].MT + fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].MT <= 400) 
           continue;
-	if(fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].MT + fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].MT <= 400) 
-         continue;
 
       }
     

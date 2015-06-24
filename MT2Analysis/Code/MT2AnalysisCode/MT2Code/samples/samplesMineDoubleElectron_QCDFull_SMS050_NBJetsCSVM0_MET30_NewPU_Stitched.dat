@@ -280,7 +280,7 @@ Color		417
 
 SAMPLE
 Name		WWJetsTo2L2Nu
-SName		WW
+SName		VV
 ShapeName	WJets  
 File            TauTau_V3_1/WWJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	5.8   #4.7 

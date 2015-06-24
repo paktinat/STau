@@ -98,8 +98,9 @@
   //    myChannelCuts.push_back("NBJetsCSVM >= 2");
   //  myChannelCuts.push_back("NBJetsCSVL >= 2");
   //  myChannelCuts.push_back("NBJetsCSVM == 0 ");
+  myChannelCuts.push_back("NBJetsCSVL == 0");
 
-    myChannelCuts.push_back("NBJetsCSVL == 0");
+
   //  myChannelCuts.push_back("misc.MET > 30");
 
 
@@ -173,26 +174,33 @@
 
    //tA->MakeCutFlowTable( myChannelCuts );
    //------------------------------Methods-----------------------------------
-int nbins = 1;
-double xbin[nbins+1] = {-2000, 2000};      //MT2
+   int nbins = 1;
+  double xbin[nbins+1] = {-2000, 2000};      //MT2
 //int NumberOfBins = 8;
 //double xbin[NumberOfBins+1] = {0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0}; //Mass
 //tA->DrawMyPlots("2014-12-05/fakePrompt-allBigMC_singleFull-tight-ele0outWwindow-ele1inWwindow-noEM_Histos.root", xbin, NumberOfBins);
 
 //double xbin[NumberOfBins+1] = {-700,-620,-550,-490,-440,-400,-360,-320,-280,-240,-200,-180,-160,-140,-120,-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,0,10,20,30,40,50,60,70,80,90,100,120,140,160,180,200,240,280,320,360,400,440,490,550,620,700};      //MT2
-//double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,115.0,130.0,145.0,160.0,180.0,200.0};      //MT2
+//   int nbins = 16;
+//double xbin[nbins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,115.0,130.0,145.0,160.0,180.0,200.0};      //MT2
 //double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
 //double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
+
+//  tA->eeAnalysis(cuts, trigger, 100000000000000000000, "", "MET", "MET-eeAnal");
+  //            tA->eeZInOut(cuts, trigger, 100000000000000000000, "Ratio_Zoutin-JZBlt50_MT2gt40");
+  //         tA->eeQCDCtoBRatio(cuts, trigger, 100000000000000000000, "Ratio_CtoB-JZBltm50-MT2lt90-binII");
+  
 
 // void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int nevents, TString myfileName, TString giveStatus, TString sampleName, TString variable, double *xbin, int nbins)
 
-//tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binI_nominal", "ee_binI_nominal", "", "MT2", xbin, nbins);
-// tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binI_ees_up", "ee_binI_ees_up", "", "MT2_up", xbin, nbins);
-//tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binI_ees_down", "ee_binI_ees_down", "", "MT2_down", xbin, nbins);
+//tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binI_ees_down-bigFiles", "ee_binI_ees_down", "", "MT2_down", xbin, nbins);
+//tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binI_nominal-bigFiles", "ee_binI_nominal", "", "MT2", xbin, nbins);
+//tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binI_ees_up-bigFiles", "ee_binI_ees_up", "", "MT2_up", xbin, nbins);
 
-//tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binII_nominal", "ee_binII_nominal", "", "MT2", xbin, nbins);
-// tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binII_ees_up", "ee_binII_ees_up", "", "MT2_up", xbin, nbins);
- tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binII_ees_down", "ee_binII_ees_down", "", "MT2_down", xbin, nbins);
+
+//tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binII_nominal-noRej-noB", "ee_binII_nominal", "", "MT2", xbin, nbins);
+//tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binII_ees_up-noRej-noB", "ee_binII_ees_up", "", "MT2_up", xbin, nbins);
+// tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binII_ees_down-noRej-noB", "ee_binII_ees_down", "", "MT2_down", xbin, nbins);
 
    //tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "ee_binI_nominal", "ee_binI_nominal");
    //tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "ee_binI_ees_up", "ee_binI_ees_up");
@@ -202,7 +210,7 @@ double xbin[nbins+1] = {-2000, 2000};      //MT2
 //tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "ee_binII_ees_up", "ee_binII_ees_up");
 //tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "ee_binII_ees_down", "ee_binII_ees_down");
 
-//   tA->makePlot("misc.MET", cuts, -10, -10, -10, trigger, "MET-all", 50, 0, 500, false, true, true, true,true, true, 1, true, true, "png",1);
+//tA->makePlot("misc.MET", cuts, -10, 0, -10, trigger, "MET", 5, 40, 200, false, true, true, true,true, true, 1, true, true, "png",1);
    // tA->makePlot("doubleEle[0].lv.M()", cuts, -10, 0, -10, trigger, "InvMass-preSel-invMass_gt15_71to111", 50, 0, 500, false, true, true, true,true, true, 1, true, true,"png",1);//
 
    // tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2 binII", 8, 40, 200, false,true, true, true,true, true, 1, true, true,"png",1);
@@ -236,11 +244,8 @@ double xbin[nbins+1] = {-2000, 2000};      //MT2
 
    //
 
- // void MassPlotter::eeAnalysis(TString cuts, TString trigger, unsigned int nevents, TString action, TString variable, TString myfileName)
+// void MassPlotter::eeAnalysis(TString cuts, TString trigger, unsigned int nevents, TString action, TString variable, TString myfileName)
 
-   //  tA->eeAnalysis(cuts, trigger, 100000000000000000000, "topValid", "MT2", "MT2-preSel_nBCSVLgte2_SS-BinI_noMT2");
-   //            tA->eeZInOut(cuts, trigger, 100000000000000000000, "Ratio_Zoutin-JZBlt50_MT2gt40");
-    //         tA->eeQCDCtoBRatio(cuts, trigger, 100000000000000000000, "Ratio_CtoB-JZBltm50-MT2lt90-binII");
 
 
 //     tA->makePlot("eeMinMetLepDPhi()", cuts, -10, 0, -10, trigger, "eeMinMetLepDPhi", 35, 0, 3.5, false, true, true, true,true, true, 1, true, true,"png",3);

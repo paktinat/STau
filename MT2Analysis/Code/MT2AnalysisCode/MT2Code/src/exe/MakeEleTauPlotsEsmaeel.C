@@ -170,7 +170,6 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,TString
     Sample.tree->SetBranchStatus("*Susy*MassLSP*" , 1 );
     Sample.tree->SetBranchStatus("*misc*ProcessID*" , 1 );
     Sample.tree->SetBranchStatus("*trigger*HLT_EleTau" , 1 );
-
     Sample.tree->SetBranchStatus("*trigger*HLT_MuTau" , 1 );
 
     Sample.tree->SetBranchStatus("*SFWeight*BTagCSV40eq0" , 1 );
@@ -193,6 +192,8 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,TString
     Sample.tree->SetBranchStatus("*misc*eeBadScFlag" , 1 );
     Sample.tree->SetBranchStatus("*misc*EcalDeadCellTriggerPrimitiveFlag" , 1 );
 
+    Sample.tree->SetBranchStatus("*trigger*HLT_DiElectrons" , 1 );
+    Sample.tree->SetBranchStatus("*NBJetsCSVL*" , 1 );
     string lastFileName = "";
 
     Long64_t nentries =  Sample.tree->GetEntries();
@@ -639,6 +640,100 @@ int main(int argc, char* argv[]) {
   //-------------------------------mutau-------------------------------------
 
     }
+ else if (channel == "eebinI")
+    {
+  ExtendedCut* triggerCutEE =new ExtendedCut("Trigger" , "trigger.HLT_DiElectrons" , true , false , "" , "" , true , false); //trigger sf should be added here 
+  allCuts.Add(triggerCutEE);
+
+  ExtendedCut* bVetoEE =new ExtendedCut("bVeto" , "NBJetsCSVL == 0" , true , true, "" , "pileUp.Weight * SFWeight.BTagCSV40eq0" ,true , true);
+  allCuts.Add( bVetoEE );
+
+  TString myChan = "doubleEle[0]";
+  ExtendedCut* E0selectionEE = new ExtendedCut("E0Selection" , std::string(myChan) + ".Ele0Ind >=0"  , true , true , "" , "" , true , true); //tau id sf should be added here // 
+  allCuts.Add( E0selectionEE );
+  ExtendedCut* E1selectionEE = new ExtendedCut("E1Selection" , std::string(myChan) + ".Ele1Ind >=0"  , true , true , "" , "" , true , true); //tau id sf should be added here // 
+  allCuts.Add( E0selectionEE );
+
+  ExtendedCut* E0E1IsolationEE = new ExtendedCut("E0E1Isolation" , std::string(myChan) +".Isolated == 1" , true , true , "" , "doubleEle[0].Ele0IdIsoSF * doubleEle[0].Ele1IdIsoSF * doubleEle[0].DiEleTrgSF" , true , true); //tau id sf should be added here //
+  allCuts.Add( E0E1IsolationEE );
+ 
+  ExtendedCut* OSEE = new ExtendedCut("OS" , "((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)" ,  true , true, "" , "" , true , true); 
+  allCuts.Add( OSEE );
+
+  ExtendedCut* muvetoEE = new ExtendedCut("MuVeto" , "!(eeRejMu_defined())" ,  true , true, "" , "" , true , true); 
+  allCuts.Add( muvetoEE );
+
+  ExtendedCut* elevetoEE = new ExtendedCut("EleVeto" , "!(eeRejE2_defined())" ,  true , true, "" , "" , true , true); 
+  allCuts.Add( elevetoEE );
+
+  std::string invmass = std::string(std::string(myChan) + ".lv.M()");
+  ExtendedCut* lowmassveto =new ExtendedCut("LowMassVeto" , invmass +  " > 15." , true , true , "" , "" , false , true);
+  allCuts.Add( lowmassveto );
+  
+  ExtendedCut* ZPeakVeto =new ExtendedCut("ZPeakVeto" ,  invmass + " <= 71.0 || " + invmass  + " >= 111.0 " , true , true , "" , "" , false , true);
+  allCuts.Add( ZPeakVeto );
+
+  ExtendedCut* JZBCut = new ExtendedCut("JZB" , "eeJZBInDirect() < -50" , true , true, "" , "" ,false , true); 
+  allCuts.Add( JZBCut );
+
+  ExtendedCut* MT2Cut = new ExtendedCut("MT2Pre" , std::string(myChan) +".MT2 > 40" , true , true, "" , "" ,false , true); 
+  allCuts.Add( MT2Cut );
+
+  ExtendedCut* MT2gt90 = new ExtendedCut("MT2gt90" , std::string(myChan) +".MT2 > 90" , true , true, "" , "" ,false , true);
+  allCuts.Add( MT2gt90 );
+
+  ExtendedCut* sumMTbinI = new ExtendedCut("sumMTbinI" , "((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>250 && ((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))<400" , true , true, "" , "" ,false , true);
+  allCuts.Add( sumMTbinI );
+
+    }
+
+ else if (channel == "eebinII")
+    {
+  ExtendedCut* triggerCutEE =new ExtendedCut("Trigger" , "trigger.HLT_DiElectrons" , true , false , "" , "" , true , false); //trigger sf should be added here 
+  allCuts.Add(triggerCutEE);
+
+  ExtendedCut* bVetoEE =new ExtendedCut("bVeto" , "NBJetsCSVL == 0" , true , true, "" , "pileUp.Weight * SFWeight.BTagCSV40eq0" ,true , true);
+  allCuts.Add( bVetoEE );
+
+  TString myChan = "doubleEle[0]";
+  ExtendedCut* E0selectionEE = new ExtendedCut("E0Selection" , std::string(myChan) + ".Ele0Ind >=0"  , true , true , "" , "" , true , true); //tau id sf should be added here // 
+  allCuts.Add( E0selectionEE );
+  ExtendedCut* E1selectionEE = new ExtendedCut("E1Selection" , std::string(myChan) + ".Ele1Ind >=0"  , true , true , "" , "" , true , true); //tau id sf should be added here // 
+  allCuts.Add( E0selectionEE );
+
+  ExtendedCut* E0E1IsolationEE = new ExtendedCut("E0E1Isolation" , std::string(myChan) +".Isolated == 1" , true , true , "" , "doubleEle[0].Ele0IdIsoSF * doubleEle[0].Ele1IdIsoSF * doubleEle[0].DiEleTrgSF" , true , true); //tau id sf should be added here //
+  allCuts.Add( E0E1IsolationEE );
+ 
+  ExtendedCut* OSEE = new ExtendedCut("OS" , "((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)" ,  true , true, "" , "" , true , true); 
+  allCuts.Add( OSEE );
+
+  ExtendedCut* muvetoEE = new ExtendedCut("MuVeto" , "!(eeRejMu_defined())" ,  true , true, "" , "" , true , true); 
+  allCuts.Add( muvetoEE );
+
+  ExtendedCut* elevetoEE = new ExtendedCut("EleVeto" , "!(eeRejE2_defined())" ,  true , true, "" , "" , true , true); 
+  allCuts.Add( elevetoEE );
+
+  std::string invmass = std::string(std::string(myChan) + ".lv.M()");
+  ExtendedCut* lowmassveto =new ExtendedCut("LowMassVeto" , invmass +  " > 15." , true , true , "" , "" , false , true);
+  allCuts.Add( lowmassveto );
+  
+  ExtendedCut* ZPeakVeto =new ExtendedCut("ZPeakVeto" ,  invmass + " <= 71.0 || " + invmass  + " >= 111.0 " , true , true , "" , "" , false , true);
+  allCuts.Add( ZPeakVeto );
+
+  ExtendedCut* JZBCut = new ExtendedCut("JZB" , "eeJZBInDirect() < -50" , true , true, "" , "" ,false , true); 
+  allCuts.Add( JZBCut );
+
+  ExtendedCut* MT2Cut = new ExtendedCut("MT2Pre" , std::string(myChan) +".MT2 > 40" , true , true, "" , "" ,false , true); 
+  allCuts.Add( MT2Cut );
+
+  ExtendedCut* MT2gt90 = new ExtendedCut("MT2gt90" , std::string(myChan) +".MT2 > 90" , true , true, "" , "" ,false , true);
+  allCuts.Add( MT2gt90 );
+
+  ExtendedCut* sumMTbinII = new ExtendedCut("sumMTbinI" , "((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>400" , true , true, "" , "" ,false , true);
+  allCuts.Add( sumMTbinII );
+
+    }
+
  
   tA->eleTauAnalysis(&allCuts, neventperfile ,  outputfile , pu_systematic , tes_systematic , channel);
 
