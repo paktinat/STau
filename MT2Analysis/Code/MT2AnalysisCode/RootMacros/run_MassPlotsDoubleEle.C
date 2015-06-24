@@ -1,7 +1,7 @@
 {
   TString outputdir = "./results/";
-  TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30_NewPU_Stitched.dat";
-  //       TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_BigFiles_NewPU_Stitching.root";
+  //    TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30_NewPU_Stitched.dat";
+       TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_BigFiles_NewPU_Stitching.root";
   
   //TString samples = "samples/samplesMineTauPlusX-susy_ww.dat";
   //TString samples = "./samples/samplesMineTest.dat";
@@ -194,7 +194,7 @@
 // void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int nevents, TString myfileName, TString giveStatus, TString sampleName, TString variable, double *xbin, int nbins)
 
 //tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binI_ees_down-bigFiles", "ee_binI_ees_down", "", "MT2_down", xbin, nbins);
-//tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binI_nominal-bigFiles", "ee_binI_nominal", "", "MT2", xbin, nbins);
+tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binI_nominal", "ee_binI_nominal", "", "MT2", xbin, nbins);
 //tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binI_ees_up-bigFiles", "ee_binI_ees_up", "", "MT2_up", xbin, nbins);
 
 
