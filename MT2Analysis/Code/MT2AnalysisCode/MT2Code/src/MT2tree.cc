@@ -3926,6 +3926,56 @@ Float_t MT2tree::maxTauMT(){
     return -10.0;
 }
 
+Int_t MT2tree::e0MedSel(){
+  int q = -10; 
+  for (int i=0 ; i <= NEles ; i++){
+
+    if  (ele[i].PassQCDMediumE0_EE)//PassE0_EE)
+      {
+	//     doubleEle[0].Ele0Ind = i ;
+	q = i;
+        break;
+      }
+  }
+	return q;
+}
+
+Int_t MT2tree::e1MedSel(){
+
+  int p = -10 ;
+  for (int j = e0MedSel()+1 ; j <= NEles ; j++){
+
+  if  (ele[j].PassQCDMediumE1_EE)//PassE1_EE)
+      {
+	//        doubleEle[0].Ele1Ind = j ;
+	p = j ;
+        break;
+      }
+
+  }
+return p;
+}
+
+float MT2tree::DeltaReleMuChannel(){
+float deltaR = Util::GetDeltaR(muo[eleMu[0].mu0Ind].lv.Eta(),ele[eleMu[0].ele0Ind].lv.Eta(),muo[eleMu[0].mu0Ind].lv.Phi(),ele[eleMu[0].ele0Ind].lv.Phi());
+return deltaR;
+
+
+
+}
+
+float MT2tree::SumMTeleMuChannel(){
+float SumMT=muo[eleMu[0].mu0Ind].MT+ele[eleMu[0].ele0Ind].MT;
+return SumMT;
+
+}
+
+float MT2tree::SumMTTauTauChannel(){
+float SumMT= tau[doubleTau[0].GetTauIndex0()].MT + tau[doubleTau[0].GetTauIndex1()].MT ;
+return SumMT;
+
+}
+
 //--------------------ee-----------------------
 
 Float_t MT2tree::eePZeta(){//temporary solution for makePlot. No need to be moved to the next versions.
@@ -3940,7 +3990,7 @@ Float_t MT2tree::eePVisibleZeta(){//temporary solution for makePlot. No need to 
 }
 
 
-float MT2tree::eeDiLepPtRatio(){//temporary solution for makePlot. No need to be moved to the next versions.
+Float_t MT2tree::eeDiLepPtRatio(){//temporary solution for makePlot. No need to be moved to the next versions.
   return DiLepPtRatio(ele[doubleEle[0].Ele0Ind].lv , ele[doubleEle[0].Ele1Ind].lv);
 }
 
@@ -3980,7 +4030,12 @@ Float_t MT2tree::eePositiveChargedLepWithZBeamPlane(){
 
   return PositiveChargedLepWithZBeamPlane(LepPluslv, LepNeglv);
 }
-  
+
+Float_t MT2tree::eeSumMT(){
+ Float_t sumMT = GetMT(ele[doubleEle[0].Ele0Ind].lv , ele[doubleEle[0].Ele0Ind].lv.M(), pfmet[0] , 0.0) + GetMT(ele[doubleEle[0].Ele1Ind].lv , ele[doubleEle[0].Ele1Ind].lv.M(), pfmet[0] , 0.0);
+ return sumMT;
+}
+
 Float_t MT2tree::eeMCT(){
 
   TVector2 pmiss_vector2;
@@ -4012,8 +4067,8 @@ Float_t MT2tree::eeMETPlusPtZ(){
 
 Float_t MT2tree::eeJZBInDirect(){
   TLorentzVector A = -pfmet[0]-doubleEle[0].lv;
-  double B = A.Pt();
-  double C = B-doubleEle[0].lv.Pt();
+  Float_t B = A.Pt();
+  Float_t C = B-doubleEle[0].lv.Pt();
   return C;
 }
 Float_t MT2tree::eeabsJZBInDirect(){
@@ -4142,55 +4197,6 @@ Bool_t MT2tree::eeIsoMedium01to10(){
   return a;
 }
 
-Int_t MT2tree::e0MedSel(){
-  int q = -10; 
-  for (int i=0 ; i <= NEles ; i++){
-
-    if  (ele[i].PassQCDMediumE0_EE)//PassE0_EE)
-      {
-	//     doubleEle[0].Ele0Ind = i ;
-	q = i;
-        break;
-      }
-  }
-	return q;
-}
-
-Int_t MT2tree::e1MedSel(){
-
-  int p = -10 ;
-  for (int j = e0MedSel()+1 ; j <= NEles ; j++){
-
-  if  (ele[j].PassQCDMediumE1_EE)//PassE1_EE)
-      {
-	//        doubleEle[0].Ele1Ind = j ;
-	p = j ;
-        break;
-      }
-
-  }
-return p;
-}
-
-float MT2tree::DeltaReleMuChannel(){
-float deltaR = Util::GetDeltaR(muo[eleMu[0].mu0Ind].lv.Eta(),ele[eleMu[0].ele0Ind].lv.Eta(),muo[eleMu[0].mu0Ind].lv.Phi(),ele[eleMu[0].ele0Ind].lv.Phi());
-return deltaR;
-
-
-
-}
-
-float MT2tree::SumMTeleMuChannel(){
-float SumMT=muo[eleMu[0].mu0Ind].MT+ele[eleMu[0].ele0Ind].MT;
-return SumMT;
-
-}
-
-float MT2tree::SumMTTauTauChannel(){
-float SumMT= tau[doubleTau[0].GetTauIndex0()].MT + tau[doubleTau[0].GetTauIndex1()].MT ;
-return SumMT;
-
-}
 
 
 // ----------------------------------------------------------------------------------------------------------
