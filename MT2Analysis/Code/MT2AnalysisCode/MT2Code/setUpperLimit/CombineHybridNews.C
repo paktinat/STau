@@ -1,10 +1,10 @@
 void CombineHybridNews(){
   
-  TFile *Mdn = TFile::Open("upperLimit4BinsHybridNew0_50_19Jun.root");
-  TFile *Obs = TFile::Open("upperLimit4BinsHybridNew_Obs_19Jun.root");
-  TFile *M1 = TFile::Open("upperLimit4BinsHybridNew0_16_19Jun.root");
+  TFile *Mdn = TFile::Open("upperLimit4BinsHybridNew0_50_9Jul.root");
+  TFile *Obs = TFile::Open("upperLimit4BinsHybridNew_Obs_9Jul.root");
+  TFile *M1 = TFile::Open("upperLimit4BinsHybridNew0_16_9Jul.root");
 //   TFile *M1 = TFile::Open("upperLimit.root");
-  TFile *P1 = TFile::Open("upperLimit4BinsHybridNew0_84_19Jun.root");	
+  TFile *P1 = TFile::Open("upperLimit4BinsHybridNew0_84_9Jul.root");	
   
   TH2D *hMdn =(TH2D*)Mdn->Get("hSgmP2");
   TH2D *hObs =(TH2D*)Obs->Get("hSgmP2");
@@ -21,7 +21,7 @@ void CombineHybridNews(){
   hP2->SetName("hSgmP2");	
   hM2->SetName("hSgmM2");	
 
-  TFile *f = new TFile("upperLimit4BinsHybridNew_19Jun.root","RECREATE");
+  TFile *f = new TFile("upperLimit4BinsHybridNew_9Jul.root","RECREATE");
   hMdn->Write();
   hObs->Write();
   hP1->Write();
