@@ -1308,14 +1308,13 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
  	h_SMSEvents->Rebin2D(4, 4);
  	h_PN_MLSP_MChi->Divide(h_SMSEvents);
 
-<<<<<<< HEAD
-	TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
+
+	//	TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
 	//	h_PN_MLSP_MChi->Multiply(hXsec);
-=======
-// 	TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");//CharginoChargino
-	TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("StSt_8TeV_NLONLL_LSP");//StauStau
+
+ 	TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");//CharginoChargino
+//	TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("StSt_8TeV_NLONLL_LSP");//StauStau
 	h_PN_MLSP_MChi->Multiply(hXsec);
->>>>>>> cbf328f36287388df4c312047228299d12de6e58
 
 	TString fileName = fOutputDir;
 	if(!fileName.EndsWith("/")) fileName += "/";

@@ -159,6 +159,7 @@ void makeCardTauTau2(double N, double S, double dS, string sOut) {
 }
 
 void makeCardEE1(double N, double S, double dS, string sOut) {
+
     double EE1BMC = 20.17; //MC driven Bkg for non fake taus
     double dEE1BMC = 0.10;//its relative systematic uncer
     double dEE1BNMC = 127.0;//Number for MC without weight
@@ -166,38 +167,35 @@ void makeCardEE1(double N, double S, double dS, string sOut) {
     double EEBDD = 32.38; //Data Driven estimation for QCD
     double dEEBDD = 0.30;//0.08/0.06;//its total relative uncertainty
 
-    double EEBZ = 32.38;      //WJets 0.93 +- 0.13 +-0.15 
-    double dEEBZ = 0.30;//WJets 0.21 @ 0.25
-
-
     // === DATA CARD ===
     ofstream fOut(sOut.c_str());
     fOut.precision(3);
     fOut << "imax 1  number of channels" << std::endl;
     fOut << "jmax 2  number of backgrounds" << std::endl;
-    fOut << "kmax 5  number of nuisance parameters (sources of systematic uncertainties)" << std::endl;
+    fOut << "kmax 4  number of nuisance parameters (sources of systematic uncertainties)" << std::endl;
     fOut << "---" << std::endl;
     fOut << "bin b1" << std::endl;
-//     fOut << "observation " << (EE1BMC + EEBDD + EEBW) << std::endl;
-    fOut << "observation " << 1 << std::endl;
+//     fOut << "observation " << (EE1BMC + EEBDD) << std::endl;
+    fOut << "observation " << 51 << std::endl;
     fOut << "---" << std::endl;
-    fOut << "bin              b1     b1  b1  b1" << std::endl;
-    fOut << "process         SMS    All  DD  W" << std::endl;
-    fOut << "process          0     1    2    3" << std::endl;
+    fOut << "bin              b1     b1  b1  " << std::endl;
+    fOut << "process         SMS    All  DD  " << std::endl;
+    fOut << "process          0     1    2   " << std::endl;
     
-    fOut << "rate           " << S << "\t" << EE1BMC << "\t" << EEBDD <<"\t" << EEBZ << std::endl;
+    fOut << "rate           " << S << "\t" << EE1BMC << "\t" << EEBDD <<std::endl;
     fOut << "---" << std::endl;
      
-    fOut << "StatMC"<<sOut.c_str()<<"  gmN    " << dEE1BNMC <<"\t-\t"<< EE1BMC/dEE1BNMC << "\t-" << "\t-" << std::endl;
+    fOut << "StatMC"<<sOut.c_str()<<"  gmN    " << dEE1BNMC <<"\t-\t"<< EE1BMC/dEE1BNMC << "\t-" <<  std::endl;
 
 
-    fOut << "dEE1S   lnN    " << 1 + dS << "\t-" << "\t-" <<"\t-" <<  std::endl;
-    fOut << "dEE1BMC lnN    - \t "    << 1 + dEE1BMC << "\t-" << "\t-" << std::endl;
-    fOut << "dEEBDD   lnN  - \t "    <<  "\t-\t" << 1 + dEEBDD << "\t-" << std::endl;
-    //    fOut << "dEEBZ   lnN  - \t " <<  "\t-\t" <<  "\t-\t" << 1 + dEEBW << std::endl;
+    fOut << "dEE1S   lnN    " << 1 + dS << "\t-" << "\t-" << std::endl;
+    fOut << "dEE1BMC lnN    - \t "    << 1 + dEE1BMC << "\t-" << std::endl;
+    fOut << "dEEBDD   lnN  - \t "    <<  "\t-\t" << 1 + dEEBDD <<  std::endl;
     fOut.close();
 
+
 }
+
 void makeCardEE2(double N, double S, double dS, string sOut) {
     double EE2BMC = 6.92; //MC driven Bkg 
     double dEE2BMC = 0.1;//its relative systematic uncer
@@ -205,10 +203,6 @@ void makeCardEE2(double N, double S, double dS, string sOut) {
     
     double EEBDD = 13.49;//0.61; //Data Driven estimation for QCD
     double dEEBDD = 0.3;//1.55/0.61;//its total relative uncertainty
-
-    double EEBW = 13.49;//3.5;      //WJets 0.8 +- 0.2 +- 0.1
-    double dEEBW = 0.3;//(0.4/0.43 @ 0.25) ;//WJets
-
 
     // === DATA CARD ===
     ofstream fOut(sOut.c_str());
@@ -219,7 +213,7 @@ void makeCardEE2(double N, double S, double dS, string sOut) {
     fOut << "---" << std::endl;
     fOut << "bin b1" << std::endl;
 //     fOut << "observation " << (EE2BMC + EEBDD) << std::endl;
-    fOut << "observation " << 2 << std::endl;
+    fOut << "observation " << 20 << std::endl;
     fOut << "---" << std::endl;
     fOut << "bin              b1     b1  b1  " << std::endl;
     fOut << "process         SMS    All  DD  " << std::endl;

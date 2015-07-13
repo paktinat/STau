@@ -1,7 +1,7 @@
 {
   TString outputdir = "./results/";
-  TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30_NewPU_Stitched.dat";
-  //   TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_BigFiles_NewPU_Stitching.root";
+    TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_NBJetsCSVM0_MET30_NewPU_Stitched.dat";
+    // TString samples = "./samples/samplesMineDoubleElectron_QCDFull_SMS050_BigFiles_NewPU_Stitching.root";
   
   //TString samples = "samples/samplesMineTauPlusX-susy_ww.dat";
   //TString samples = "./samples/samplesMineTest.dat";
@@ -71,10 +71,12 @@
   myChannelCuts.push_back("misc.MET > 30");
   myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 71) || (doubleEle[0].lv.M() > 111))");
   myChannelCuts.push_back("eeJZBInDirect() < -50");//
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 40"));
+
   myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 90"));
 
-  //  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT) >250) && ((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT)<400)");
-   myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>400");
+  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT) >250) && ((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT)<400)");
+  //   myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>400");
 
 
   //   myChannelCuts.push_back("eeSumMT()>250 && eeSumMT()<400 ") ;//
@@ -148,7 +150,7 @@
 
    // myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 76) || (doubleEle[0].lv.M() > 106))");  
  
-  //  myChannelCuts.push_back("NJetsIDLoose == 0");
+  //    myChannelCuts.push_back("NJetsIDLoose >= 1");
  
  // myChannelCuts.push_back("!(eeRejE2_flag())");//                                      
   
