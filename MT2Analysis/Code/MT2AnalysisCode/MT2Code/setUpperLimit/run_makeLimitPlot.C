@@ -183,7 +183,7 @@ run_makeLimitPlot() {
     //For HybridNew hSgmP2 is the hSgmP1
 //     h01 = h02 ;
 //     h02 = h00 ;
-    float a = 1.0;//0.2;
+    float a = 1.0;
     h00->Scale(a);
     hOb->Scale(a);
     h01->Scale(a);

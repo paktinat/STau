@@ -941,6 +941,7 @@ public:
   Float_t eeMinMetLepDPhi();
   Float_t eePositiveChargedLepWithZBeamPlane();
   Float_t eeSumMT();
+  Float_t eeSumMTwithMass();
   Float_t eeMCT();
   Float_t eeMCTImb();
   Float_t eeMETMinusPtZ();

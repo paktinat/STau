@@ -4036,6 +4036,12 @@ Float_t MT2tree::eeSumMT(){
  return sumMT;
 }
 
+Float_t MT2tree::eeSumMTwithMass(){
+ Float_t sumMT = GetMT(ele[doubleEle[0].Ele0Ind].lv , 0.5, pfmet[0] , 0.0) + GetMT(ele[doubleEle[0].Ele1Ind].lv , ele[doubleEle[0].Ele1Ind].lv.M(), pfmet[0] , 0.0);
+ return sumMT;
+}
+
+
 Float_t MT2tree::eeMCT(){
 
   TVector2 pmiss_vector2;
