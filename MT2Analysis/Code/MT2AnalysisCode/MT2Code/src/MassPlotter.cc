@@ -11105,6 +11105,8 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	  continue;
 	if (fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt() <= 20 )
 	  continue;
+	if (fMT2tree->muo[fMT2tree->muTau[0].GetMuIndex0()].lv.Pt() <= 20 )
+	  continue;
 	if (fMT2tree->muTau[0].GetLV().M() <= 15 || (fMT2tree->muTau[0].GetLV().M() >= 45 && fMT2tree->muTau[0].GetLV().M() <= 75))
 	  continue;
 	if (fMT2tree->misc.MinMetJetDPhiPt40 <= 1.0)
@@ -11169,14 +11171,15 @@ else if(status == "ditau_bin1_pu_up")
 		    weight *= fMT2tree->pileUp.Weight * pu_up_Weight;
 	}
 
-
-	   if (fMT2tree->doubleTau[0].GetLV().M() <= 15 || (fMT2tree->doubleTau[0].GetLV().M() >= 55 && fMT2tree->doubleTau[0].GetLV().M() <= 85))
-	     continue;
-	   if (fMT2tree->misc.MinMetJetDPhiPt40 <= 1.0)
-	     continue;
-	   if(fMT2tree->doubleTau[0].GetMT2() <= 90)
-	     continue;
-
+	if(fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Pt() <= 45 || fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Pt() <= 45 )
+	  continue;
+	if (fMT2tree->doubleTau[0].GetLV().M() <= 15 || (fMT2tree->doubleTau[0].GetLV().M() >= 55 && fMT2tree->doubleTau[0].GetLV().M() <= 85))
+	  continue;
+	if (fMT2tree->misc.MinMetJetDPhiPt40 <= 1.0)
+	  continue;
+	if(fMT2tree->doubleTau[0].GetMT2() <= 90)
+	  continue;
+	
 	     myQuantity = fMT2tree->doubleTau[0].GetMT2();
 
      }
@@ -11198,6 +11201,9 @@ else if(status == "ditau_bin1_pu_down")
 
 	}
 
+
+	if(fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Pt() <= 45 || fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Pt() <= 45 )
+	  continue;
 
 	   if (fMT2tree->doubleTau[0].GetLV().M() <= 15 || (fMT2tree->doubleTau[0].GetLV().M() >= 55 && fMT2tree->doubleTau[0].GetLV().M() <= 85))
 	     continue;
@@ -11228,6 +11234,9 @@ else if(status == "ditau_bin2_pu_up")
 		    weight *= fMT2tree->pileUp.Weight * pu_up_Weight;
 
 	}
+
+	if(fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Pt() <= 45 || fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Pt() <= 45 )
+	  continue;
 
 	   if (fMT2tree->doubleTau[0].GetLV().M() <= 15 || (fMT2tree->doubleTau[0].GetLV().M() >= 55 && fMT2tree->doubleTau[0].GetLV().M() <= 85))
 	     continue;
@@ -11262,6 +11271,8 @@ else if(status == "ditau_bin2_pu_down")
 
 	}
 
+	if(fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Pt() <= 45 || fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Pt() <= 45 )
+	  continue;
 
 	   if (fMT2tree->doubleTau[0].GetLV().M() <= 15 || (fMT2tree->doubleTau[0].GetLV().M() >= 55 && fMT2tree->doubleTau[0].GetLV().M() <= 85))
 	     continue;
@@ -12081,8 +12092,8 @@ void MassPlotter::eeAnalysisTESpUsys1(TString cuts, TString trigger, unsigned in
 
 	}
 
-	   //	   if(fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt() <= 20)
-	   //             continue;
+	   if(fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].lv.Pt() <= 20)
+             continue;
 	   if (fMT2tree->muTau[0].GetLV().M() <= 15 || (fMT2tree->muTau[0].GetLV().M() >= 45 && fMT2tree->muTau[0].GetLV().M() <= 75))
 	     continue;
 	   if (fMT2tree->misc.MinMetJetDPhiPt40 <= 1.0)
@@ -14057,8 +14068,8 @@ void MassPlotter::eeZInOut(TString cuts, TString trigger, unsigned int nevents, 
   //  int      ccolor1[NumberOfSamples+1] = { 401 , 417,  419,   855,  603,    kRed,  603,      1,    632 };
       //    double bins[nbins+1] = {0.0, 10.0, 20.0, 30.0, 40.0, 45.0, 50.0, 55.0, 60.0, 75.0, 90.0};
 
-  static const int nbins = 5;
-  double bins[nbins+1] = {40, 50, 80, 110, 140, 200};
+  static const int nbins = 6;
+  double bins[nbins+1] = {0.0, 40, 50, 80, 110, 140, 200};
 
 
     TH1D* in  = new TH1D("in","in", nbins, bins);
@@ -14200,7 +14211,7 @@ void MassPlotter::eeZInOut(TString cuts, TString trigger, unsigned int nevents, 
   //	  if((fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].MT + fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].MT) > 250.0)
 	    //	    if(fMT2tree->misc.MinMetJetDPhiPt40 > 1)
 
-	  	  if(fMT2tree->doubleEle[0].lv.M() >= 71 && fMT2tree->doubleEle[0].lv.M() <= 111)     
+	  	  if(fMT2tree->doubleEle[0].lv.M() >= 81 && fMT2tree->doubleEle[0].lv.M() <= 101  )     
 
 	    {
 		 
@@ -14223,7 +14234,7 @@ void MassPlotter::eeZInOut(TString cuts, TString trigger, unsigned int nevents, 
 
 		  //	  if("(MT2tree->ee_e0Loose01to04() &&  ((fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].Charge + fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].Charge) ==  2 ||  ((fMT2tree->ele[fMT2tree->doubleEle[0].Ele0Ind].Charge + fMT2tree->ele[fMT2tree->doubleEle[0].Ele1Ind].Charge) == -2)))");
 
-	  if((fMT2tree->doubleEle[0].lv.M() > 15 && fMT2tree->doubleEle[0].lv.M() < 71) || fMT2tree->doubleEle[0].lv.M() > 111)
+	  if((fMT2tree->doubleEle[0].lv.M() > 20 && fMT2tree->doubleEle[0].lv.M() < 81) || fMT2tree->doubleEle[0].lv.M() > 101)
 	    {
 	      
 // 	      if(data == 1){
