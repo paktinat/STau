@@ -10100,18 +10100,17 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
     int data = 0;
     sample Sample = fSamples[ii];
 
-    if(Sample.sname != "SUSY" || Sample.sname != "DY")
-      continue;
+    //    if(Sample.sname != "SUSY" || Sample.sname != "DY")
+    //      continue;
 
 
-    //    if (sampleName != "")
+    if (sampleName != "")
 
-    //      {
-    //	if(sampleName != Sample.sname)
-    //          continue;
-    //      }
-
-    //    else
+      {
+	if(sampleName != Sample.sname)
+          continue;
+      }
+    else
                                  {
 
     if(Sample.type == "data")

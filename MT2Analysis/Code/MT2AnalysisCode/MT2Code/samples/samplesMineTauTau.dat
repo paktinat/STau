@@ -354,7 +354,7 @@ Type            mc
 Color		401
 
 ##--------------------------------------------------------
-SAMPLE
+#SAMPLE
 Name            QCD_HT-100To250
 SName           QCD
 ShapeName       QCD
@@ -366,7 +366,7 @@ Type            mc
 Color           401
 
 
-SAMPLE
+#SAMPLE
 Name            QCD_HT-250To500
 SName           QCD
 ShapeName       QCD
@@ -378,7 +378,7 @@ Type            mc
 Color           401
 
 
-SAMPLE
+#SAMPLE
 Name            QCD_HT-500To1000
 SName           QCD
 ShapeName       QCD
@@ -390,7 +390,7 @@ Type            mc
 Color           401
 
 
-SAMPLE
+#SAMPLE
 Name            QCD_HT-1000ToInf
 SName           QCD
 ShapeName       QCD
@@ -403,7 +403,7 @@ Color           401
 
 
 # -------- electroweak --------
-SAMPLE
+#SAMPLE
 Name		WWJetsTo2L2Nu
 SName		VV
 ShapeName	WJets  
@@ -414,7 +414,7 @@ Lumi            18100.0
 Type            mc
 Color		417
 
-SAMPLE
+#SAMPLE
 Name		WJetsToLNu
 SName		Wtolnu
 ShapeName	WJets
@@ -428,7 +428,7 @@ Color		417
 
 
 
-SAMPLE
+#SAMPLE
 Name		W1JetsToLNu
 SName		Wtolnu
 ShapeName	WJets
@@ -439,7 +439,7 @@ Lumi            18100.0
 Type            mc
 Color		417
 
-SAMPLE
+#SAMPLE
 Name		W2JetsToLNu
 SName		Wtolnu
 ShapeName	WJets
@@ -450,7 +450,7 @@ Lumi            18100.0
 Type            mc
 Color		417
 
-SAMPLE
+#SAMPLE
 Name		W3JetsToLNu
 SName		Wtolnu
 ShapeName	WJets
@@ -461,7 +461,7 @@ Lumi            18100.0
 Type            mc
 Color		417
 
-SAMPLE
+#SAMPLE
 Name		W4JetsToLNu
 SName		Wtolnu
 ShapeName	WJets
@@ -597,7 +597,7 @@ Type            mc
 Color		419  
 
 ## --------------- Top ----------
-SAMPLE
+#SAMPLE
 Name		TTGJets
 SName		Top
 ShapeName	Top
@@ -608,7 +608,7 @@ Lumi            18100.0
 Type            mc
 Color		600
 
-SAMPLE
+#SAMPLE
 Name		TTH_Inclusive
 SName		Top
 ShapeName	Top   
@@ -619,7 +619,7 @@ Lumi            18100.0
 Type            mc
 Color		600
 
-SAMPLE
+#SAMPLE
 Name		TTWJets
 SName		Top
 ShapeName	Top   
@@ -630,7 +630,7 @@ Lumi            18100.0
 Type            mc
 Color		600
  
-SAMPLE
+#SAMPLE
 Name		TTWWJets
 SName		Top
 ShapeName	Top   
@@ -641,7 +641,7 @@ Lumi            18100.0
 Type            mc
 Color		600
 
-SAMPLE
+#SAMPLE
 Name		TTZJets
 SName		Top
 ShapeName	Top  
@@ -652,7 +652,7 @@ Lumi            18100.0
 Type            mc
 Color		600
 
-SAMPLE
+#SAMPLE
 Name		TTbar
 SName		Top
 ShapeName	Top   
@@ -663,7 +663,7 @@ Lumi            18100.0
 Type            mc
 Color		600
 
-SAMPLE
+#SAMPLE
 Name		SingleTop_s
 SName		Top
 ShapeName	Top
@@ -675,7 +675,7 @@ Type            mc
 Color		600
 
 
-SAMPLE
+#SAMPLE
 Name		SingleTopbar_s
 SName		Top
 ShapeName	Top
@@ -686,7 +686,7 @@ Lumi            18100.0
 Type            mc
 Color		600
 
-SAMPLE
+#SAMPLE
 Name		SingleTop_t
 SName		Top
 ShapeName	Top
@@ -698,7 +698,7 @@ Type            mc
 Color		600
 
 
-SAMPLE
+#SAMPLE
 Name		SingleTopbar_t
 SName		Top
 ShapeName	Top
@@ -710,7 +710,7 @@ Type            mc
 Color		600
 
 
-SAMPLE
+#SAMPLE
 Name        	SingleTop_tW
 SName		Top
 ShapeName	Top
@@ -722,7 +722,7 @@ Type            mc
 Color		600
 
 
-SAMPLE
+#SAMPLE
 Name		SingleTopbar_tW
 SName		Top
 ShapeName	Top
@@ -735,7 +735,7 @@ Color		600
 
 ## --------- Higgs------------------------
 
-SAMPLE
+#SAMPLE
 Name		VBF_HToTauTau
 SName		Higgs
 ShapeName	Higgs
@@ -746,7 +746,7 @@ Lumi            18100.0
 Type		mc
 Color		401
 
-SAMPLE
+#SAMPLE
 Name		WH_ZH_TTH_HToTauTau
 SName		Higgs
 ShapeName	Higgs
@@ -757,7 +757,7 @@ Lumi            18100.0
 Type		mc
 Color		401
 
-SAMPLE
+#SAMPLE
 Name		GluGluToHToTauTau
 SName		Higgs
 ShapeName	Higgs
@@ -769,7 +769,7 @@ Type		mc
 Color		401
 
 ## --------- Data ---------------------------
-SAMPLE
+#SAMPLE
 Name		Run2012A_Tau
 SName		Tau-Data
 ShapeName	Data
@@ -780,7 +780,7 @@ Lumi            1.
 Type            data
 Color		1
 
-SAMPLE
+#SAMPLE
 Name		Run2012B_Tau
 SName		Tau-Data
 ShapeName	Data
@@ -791,7 +791,7 @@ Lumi            1.
 Type            data
 Color		1
 
-SAMPLE
+#SAMPLE
 Name		Run2012C_Tau
 SName		Tau-Data
 ShapeName	Data
@@ -803,7 +803,7 @@ Type            data
 Color		1
 
 
-SAMPLE
+#SAMPLE
 Name		Run2012D_Tau
 SName		Tau-Data
 ShapeName	Data

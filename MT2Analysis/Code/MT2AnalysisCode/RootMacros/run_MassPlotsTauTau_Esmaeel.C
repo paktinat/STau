@@ -1,5 +1,4 @@
 {
-  
   TString outputdir = "../MassPlots/";
   TString samples = "./samples/samplesMineTauTau.dat"; 
   int verbose =3;
@@ -105,9 +104,9 @@
  //----------ditau_bin1_pu_up, ditau_bin1_pu_down, ditau_bin1_tes_up, ditau_bin1_tes_down, ditau_bin2_pu_up, ditau_bin2_pu_down ,ditau_bin2_tes_up, ditau_bin2_tes_down, ditau_bin1_nominal, ditau_bin2_nominal;
   //
 
- tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 1000000000000000000, "MT2_up", "ditau_bin1_tes_up", "");
- //   tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 1000000000000000000, "NVertices_nominal", "ditau_bin1_nominal", "");
-  //     tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 1000000000000000000, "NVertices_down", "ditau_bin1_pu_down", "");
+  // tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 1000000000000000000, "MT2_up", "ditau_bin1_tes_up", "");
+  //   tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 1000000000000000000, "MT2_nominal", "ditau_bin1_nominal", "");
+      tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 1000000000000000000, "MT2_down", "ditau_bin1_pu_down", "");
 
 
  // tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 1000000000000000000, "ditau_bin2_nominal-50", "ditau_bin2_nominal", "");

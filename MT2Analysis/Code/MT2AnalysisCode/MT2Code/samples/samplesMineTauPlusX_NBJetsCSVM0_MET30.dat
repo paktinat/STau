@@ -5,11 +5,9 @@ ________________________________________________________________________________
 # list of samples
 
 ## -------- SMS --------
-<<<<<<< HEAD
+
 SAMPLE
-=======
 ##SAMPLE
->>>>>>> 7b35b3fe8c2a69488d4303c019ce8d7facfe4c80
 Name            TStau
 SName           SUSY
 ShapeName       Signal
