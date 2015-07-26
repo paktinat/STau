@@ -106,12 +106,19 @@
 
   //tA->TauEfficiency(cuts, 1000000000000, "TauEfficiency" , "DY" );
   //tA->TauEfficiency(cuts, 1000000000000, "TauEfficiency" , "Wtolnu" );
-    tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "MT2_etau_nominal_380_1", "etau_nominal");
+  tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "MT2", "etau_nominal", "");
   //             tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "MT2_etau_tes_up_noB_noRej_noInvMass_noMisc_380_0", "etau_tes_up");
     //	   tA->eeAnalysisTESpUsys1(cuts, trigger, 1000000000000000000, "MT2_etau_tes_down_noB_noRej_noInvMass_noMisc_380_0", "etau_tes_down");
 
   //    tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "MT2_etau_ees_up_380_1", "etau_ees_up");
   //    tA->eeAnalysisTESpUsys(cuts, trigger, 1000000000000000000, "MT2_etau_ees_up_380_1", "etau_ees_down");
 
+
+    int nbins = 1;
+    double xbin[nbins+1] = {-2000, 2000};
+
+    //tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "etau_nominal", "etau_nominal", "", xbin, nbins);                     
+//    tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 10000000000000,  "tau_bin1_pu_up", "ditau_bin1_pu_up", "", "", xbin, nbins);
+    //----------ditau_bin1_pu_up, ditau_bin1_pu_down, ditau_bin1_tes_up, ditau_bin1_tes_down, ditau_bin2_pu_up, ditau_bin2_pu_down ,ditau_bin2_tes_up, ditau_bin2_tes_down, ditau_bin1_nominal, ditau_bin2_nominal;   
 
 }

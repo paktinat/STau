@@ -1,4 +1,5 @@
 {
+  
   TString outputdir = "../MassPlots/";
   TString samples = "./samples/samplesMineTauTau.dat"; 
   int verbose =3;
@@ -43,7 +44,7 @@
     // << "(misc.ProcessID!=10 || (Susy.MassGlu  >= 240.0 && Susy.MassGlu  < 260.0 && Susy.MassLSP >=40 && Susy.MassLSP < 60.0))" << "&&" 
     //  << "(misc.ProcessID!=10 || (abs(Susy.MassGlu - 240.0) <= 10.0 && abs(Susy.MassLSP - 40) <= 10.0))" << "&&"
 
-    //  <<  "(misc.ProcessID!=10 || (abs(Susy.MassGlu - 240.0) <= 10.0 && abs(Susy.MassLSP - 40) <= 10.0))" << "&&"
+  <<  "(misc.ProcessID!=10 || (abs(Susy.MassGlu - 240.0) <= 10.0 && abs(Susy.MassLSP - 40) <= 10.0))" << "&&"
   << "doubleTau[0].tau0Ind >= 0" << "&&"
   << "doubleTau[0].tau1Ind >= 0" << "&&"
   << "doubleTau[0].chargeSum == 0" << "&&"
@@ -57,23 +58,23 @@
   << "tau[doubleTau[0].tau1Ind].MuonRej2>0.5"<< "&&"
 
     //------makePlot-------------
-   << "doubleTau[0].lv.M() > 15" << "&&"
-   << "(doubleTau[0].lv.M() < 55 || doubleTau[0].lv.M() > 85)" << "&&"
-   << "misc.MinMetJetDPhiPt40 > 1" << "&&"
-   << "doubleTau[0].MT2 > 40.0"<< "&&"
-  << "( 0 == 0 ) " << ")";
+    //   << "doubleTau[0].lv.M() > 15" << "&&"
+    //   << "(doubleTau[0].lv.M() < 55 || doubleTau[0].lv.M() > 85)" << "&&"
+    //  << "misc.MinMetJetDPhiPt40 > 1" << "&&"
+    //  << "doubleTau[0].MT2 > 40.0"<< "&&"
+      << "( 0 == 0 ) " << ")";
 
   TString preSelection = preSelCuts.str().c_str();
   myChannelCuts_bin1.push_back(std::string(preSelection));
   myChannelCuts_bin2.push_back(std::string(preSelection));
 
 // --- bin1 ---
-  myChannelCuts_bin1.push_back(std::string(std::string(myChan) + ".MT2 > 90.0 ")); 
-  //  myChannelCuts_bin1.push_back("maxTauMT() > 200"); 
+//  myChannelCuts_bin1.push_back(std::string(std::string(myChan) + ".MT2 > 90.0 ")); 
+
 
 // --- bin2 ---
 //  myChannelCuts_bin2.push_back("doubleTau[0].MT2 < 90");
-  //  myChannelCuts_bin2.push_back("(tau[doubleTau[0].tau0Ind].MT + tau[doubleTau[0].tau1Ind].MT) > 250.0");
+//  myChannelCuts_bin2.push_back("(tau[doubleTau[0].tau0Ind].MT + tau[doubleTau[0].tau1Ind].MT) > 250.0");
   myChannelCuts_bin2.push_back("NBJetsCSVM == 0");
 
   std::ostringstream cutStream_1;
@@ -96,7 +97,26 @@
 
   TString cuts_bin2 = cutStream_2.str().c_str();
 
-tA->makePlot("doubleTau[0].MT2",cuts_bin1, -10, -10 , -10 , trigger , "M_{T2}"  ,20,0, 1000,   true,  true ,  true,   true,  true,  true, 1,true, false, "png", 1);
+//  int nbins = 1;
+//  double xbin[nbins+1] = {-2000, 2000};        
+
+  //tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 10000000000000,  "ditau_bin1_nominal", "ditau_bin1_nominal", "", "", xbin, nbins);  
+  //tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 10000000000000,  "ditau_bin1_pu_up", "ditau_bin1_pu_up", "", "", xbin, nbins);  
+ //----------ditau_bin1_pu_up, ditau_bin1_pu_down, ditau_bin1_tes_up, ditau_bin1_tes_down, ditau_bin2_pu_up, ditau_bin2_pu_down ,ditau_bin2_tes_up, ditau_bin2_tes_down, ditau_bin1_nominal, ditau_bin2_nominal;
+  //
+
+ tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 1000000000000000000, "MT2_up", "ditau_bin1_tes_up", "");
+ //   tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 1000000000000000000, "NVertices_nominal", "ditau_bin1_nominal", "");
+  //     tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 1000000000000000000, "NVertices_down", "ditau_bin1_pu_down", "");
+
+
+ // tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 1000000000000000000, "ditau_bin2_nominal-50", "ditau_bin2_nominal", "");
+ // tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 1000000000000000000, "ditau_bin2_up-50", "ditau_bin2_up", "");
+ // tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 1000000000000000000, "ditau_bin2_down-50", "ditau_bin2_down", "");
+
+
+
+ //tA->makePlot("pileUp.NVertices",cuts_bin1, -10, -10 , -10 , trigger , "M_{T2}"  ,20,0, 60,   true,  true ,  true,   true,  true,  true, 1,true, false, "png", 1);
 
   //     tA->eeZInOut(cuts_bin2, trigger, 100000000000000000000, "wjets_0to90_signal");
 //tA->makePlot("doubleTau[0].MT2",cuts_bin2, -10, 0 , -10 , trigger , "M_{T2}"  ,4,40, 140,   true,  true ,  true,   true,  true,  true, 1,true, false, "png");
@@ -111,12 +131,5 @@ tA->makePlot("doubleTau[0].MT2",cuts_bin1, -10, -10 , -10 , trigger , "M_{T2}"  
 //      tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 1000, "MT2_tautau_bin2_nominal", "ditau_bin2_nominal");
 //     tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_tes_up_240_40", "ditau_bin2_tes_up");
 //      tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_tes_down_240_40", "ditau_bin2_tes_down");
-
-
-
-
- //----------ditau_bin1_pu_up, ditau_bin1_pu_down, ditau_bin1_tes_up, ditau_bin1_tes_down, ditau_bin2_pu_up, ditau_bin2_pu_down ,ditau_bin2_tes_up, ditau_bin2_tes_down, ditau_bin1_nominal, ditau_bin2_nominal;
-  //
-
 
 }

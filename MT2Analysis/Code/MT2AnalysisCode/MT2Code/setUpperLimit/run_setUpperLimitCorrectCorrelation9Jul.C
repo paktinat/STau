@@ -402,7 +402,11 @@ run_setUpperLimitCorrectCorrelation9Jul() {
 	      cout<<" There is 0 entry "<<endl;
 // 	    system("mv  roostats-* roostats-*.root");
 	    system("rm -f higgsCombineTest.Asymptotic.mH120.root");
+<<<<<<< HEAD
+	    //	    system("rm -f higgsCombineTest.HybridNew.mH120*.root");
+=======
 	    //system("rm -f higgsCombineTest.HybridNew.mH120*.root");
+>>>>>>> 7b35b3fe8c2a69488d4303c019ce8d7facfe4c80
 // 	    system("rm -f datacard");
 	    system("rm -f roostats-*");
 

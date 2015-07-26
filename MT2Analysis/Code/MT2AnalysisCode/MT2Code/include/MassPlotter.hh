@@ -264,9 +264,10 @@ public:
   void eeWJetsEstimation(TString cuts, TString trigger, TString myfileName);
   void eeVS(Long64_t nevents, TString cuts, TString trigger);
   void miscEfficiency(int sample_index, unsigned int nevents);
-  void eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int nevents, TString myfileName, TString giveStatus, TString sampleName,  TString variable, double *xbin, int nbins);
+  void eeAnalysisTESpUsys1(TString cuts, TString trigger, unsigned int nevents, TString myfileName, TString giveStatus, TString sampleName,  TString variable, double *xbin, int nbins);
   //  void eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int nevents, TString myfileName, TString giveStatus, TString sampleName);
-  void eeAnalysisTESpUsys1(TString cuts, TString trigger, unsigned int nevents, TString myfileName, TString giveStatus );
+  void eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int nevents, TString myfileName, TString giveStatus, TString sampleName );
+  void eeAnalysisTESpUsys2(TString cuts, TString trigger, unsigned int nevents, TString myfileName, TString giveStatus );
   void eeAnalysisPUsys(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
   void eeAnalysisPUsys();
   void eeAnalysisCDF(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
