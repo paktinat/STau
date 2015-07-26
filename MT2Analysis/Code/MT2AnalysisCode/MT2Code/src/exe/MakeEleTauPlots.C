@@ -45,7 +45,7 @@ double mt2Bins[] { 30 , 40 , 50 , 70 , 90 , 400 };
 // TString SUSYCatCommand = "((Susy.MassGlu - Susy.MassLSP)/100.0)+(misc.ProcessID-10)";
 // std::vector<TString> SUSYCatNames = {"00_100" , "100_200" , "200_300" , "300_400" , "400_500" };
 TString SUSYCatCommand = "GetSUSYCategory()" ; //"((Susy.MassGlu - Susy.MassLSP)/100.0)+(misc.ProcessID-10)";
-std::vector<TString> SUSYCatNames =  {"380_1" } ; //, "240_60"} ; // {"00_100" , "100_200" , "200_300" , "300_400" , "400_500" };
+std::vector<TString> SUSYCatNames =  {"180_60" , "380_0" , "240_60" , "240_80" } ; //, "240_60"} ; // {"00_100" , "100_200" , "200_300" , "300_400" , "400_500" };
 
 
 class MassPlotterEleTau : public BaseMassPlotter{
@@ -181,6 +181,7 @@ public:
     ExtendedObjectProperty* htauEta;
     ExtendedObjectProperty* hMET;
     ExtendedObjectProperty* hMT2;
+    ExtendedObjectProperty* hTauMT;
 
     ExtendedObjectProperty* hMT2_Loose;
     ExtendedObjectProperty* hMT2_Tight;
@@ -193,8 +194,10 @@ public:
 
     TEfficiency* PromptRate; 
     bool ApplyTauMTEff;
+    double TauMTCut;
 
-    FakeEstimation(TH2* hPtEtaPass , TH2* hPtEtaAll , TString varname , TEfficiency* promptRate , bool _applyTauMTEff = false , TDirectory* theDir = gDirectory):
+    FakeEstimation(TH2* hPtEtaPass , TH2* hPtEtaAll , TString varname , TEfficiency* promptRate , bool _applyTauMTEff = false , TDirectory* theDir = gDirectory , double tauMTCut = 200.0):
+      FixedExternalFRVal ( false ),
       PromptRate( promptRate ),
 
       VarName( varname ),
@@ -211,6 +214,8 @@ public:
       htauEta( new ExtendedObjectProperty(  varname + "_" + theDir->GetName() , "TauEta" ,"1"  , 2 , etaBins  , SUSYCatCommand, SUSYCatNames , NULL , "data" , {"FRUp" , "FRDown" , "PRUp" , "PRDown"})  ) ,
       effTauEta( new TEfficiency( "effTauEta" , "TauEta_TauMTEff" , 2 , etaBins ) ),
 
+      hTauMT( new ExtendedObjectProperty(  varname + "_" + theDir->GetName() ,  "TauMT", "1" , 10 , 0.0 , 500.0  , SUSYCatCommand, SUSYCatNames , NULL , "data" , {"FRUp" , "FRDown" , "PRUp" , "PRDown"}  )  ),
+
       hMET( new ExtendedObjectProperty(  varname + "_" + theDir->GetName() ,  "MET", "1" , 4 , metBins  , SUSYCatCommand, SUSYCatNames , NULL , "data" , {"FRUp" , "FRDown" , "PRUp" , "PRDown"}  )  ),
       effMET( new TEfficiency( "effMET" , "MET_TauMTEff" , 4 , metBins ) ),
       
@@ -224,7 +229,8 @@ public:
 
       isData(false),
       isW(false),
-      ApplyTauMTEff(_applyTauMTEff){
+      ApplyTauMTEff(_applyTauMTEff),
+      TauMTCut(tauMTCut){
 
       TH1F* hPtBarrelAll  = new TH1F("hPtBarrelAll",  "Barrel", 4, ptBins);
       TH1F* hPtBarrelPass = new TH1F("hPtBarrelPass", "Barrel", 4, ptBins);
@@ -326,10 +332,15 @@ public:
 
     double FakeRateVal;
     double FakeRateErr;
-    FakeEstimation(double fakeRateVal , double fakeRateErr , TEfficiency* promptRate , bool _applyTauMTEff = false) {
+    bool FixedExternalFRVal;
+    FakeEstimation(double fakeRateVal , double fakeRateErr , TEfficiency* promptRate , bool _applyTauMTEff = false , double tauMTCut = 200.0) {
       PromptRate = promptRate ;
       VarName = _applyTauMTEff?TString("TotalTauMTEff"):TString("Total");
+      VarName += TString::Format( "%f" , tauMTCut );
+      TauMTCut = tauMTCut ;
+      FixedExternalFRVal = true;
       
+
       htauPt_Total = new ExtendedObjectProperty( VarName + "_" + "fromMuTau" , "TauPt_Total" , "1" , 4 , ptBins  , SUSYCatCommand, SUSYCatNames , NULL , "data" , {"FRUp" , "FRDown" , "PRUp" , "PRDown"});
       effTauPt_Total = new TEfficiency("effTauPt_Total" , "TauPt_Total_TauMTEff" , 4 , ptBins ) ;
 
@@ -341,6 +352,8 @@ public:
 
       htauEta = new ExtendedObjectProperty(  VarName + "_" + "fromMuTau" , "TauEta" ,"1"  , 2 , etaBins  , SUSYCatCommand, SUSYCatNames , NULL , "data" , {"FRUp" , "FRDown" , "PRUp" , "PRDown"});
       effTauEta = new TEfficiency( "effTauEta" , "TauEta_TauMTEff" , 2 , etaBins );
+
+      hTauMT = new ExtendedObjectProperty(  VarName + "_" + "fromMuTa" ,  "TauMT", "1" , 10 , 0.0 , 500.0  , SUSYCatCommand, SUSYCatNames , NULL , "data" , {"FRUp" , "FRDown" , "PRUp" , "PRDown"}  ) ;
 
       hMET = new ExtendedObjectProperty(  VarName + "_" + "fromMuTau" ,  "MET", "1" , 4 , metBins  , SUSYCatCommand, SUSYCatNames , NULL , "data" , {"FRUp" , "FRDown" , "PRUp" , "PRDown"}  ) ;
       effMET = new TEfficiency( "effMET" , "MET_TauMTEff" , 4 , metBins );
@@ -362,7 +375,8 @@ public:
     }
 
 
-    FakeEstimation(TDirectory* theDir , TString varname , TEfficiency* promptRate , bool _applyTauMTEff = false):
+    FakeEstimation(TDirectory* theDir , TString varname , TEfficiency* promptRate , bool _applyTauMTEff = false , double tauMTCut = 200.0):
+      FixedExternalFRVal ( false ),
       PromptRate( promptRate ),
 
       VarName( varname ),
@@ -379,6 +393,8 @@ public:
       htauEta( new ExtendedObjectProperty(  varname + "_" + theDir->GetName() , "TauEta" ,"1"  , 2 , etaBins  , SUSYCatCommand, SUSYCatNames , NULL , "data" , {"FRUp" , "FRDown" , "PRUp" , "PRDown"})  ) ,
       effTauEta( new TEfficiency( "effTauEta" , "TauEta_TauMTEff" , 2 , etaBins ) ),
 
+      hTauMT( new ExtendedObjectProperty(  varname + "_" + theDir->GetName() ,  "TauMT", "1" , 10 , 0.0 , 500.0  , SUSYCatCommand, SUSYCatNames , NULL , "data" , {"FRUp" , "FRDown" , "PRUp" , "PRDown"}  )  ),
+
       hMET( new ExtendedObjectProperty(  varname + "_" + theDir->GetName() ,  "MET", "1" , 4 , metBins  , SUSYCatCommand, SUSYCatNames , NULL , "data" , {"FRUp" , "FRDown" , "PRUp" , "PRDown"}  )  ),
       effMET( new TEfficiency( "effMET" , "MET_TauMTEff" , 4 , metBins ) ),
       
@@ -392,7 +408,8 @@ public:
 
       isData(false),
       isW(false),
-      ApplyTauMTEff(_applyTauMTEff){
+      ApplyTauMTEff(_applyTauMTEff),
+      TauMTCut(tauMTCut){
 
       theDir->ls();
 
@@ -445,6 +462,8 @@ public:
       hMT2_Loose->SetTree( t , type , sname );      
       hMT2_Tight->SetTree( t , type , sname );
 
+      hTauMT->SetTree( t , type , sname );
+
       hMET->SetTree( t , type , sname );
       htauPt_EndCap->SetTree( t , type , sname );
       htauPt_Barrel->SetTree( t , type , sname );
@@ -462,7 +481,100 @@ public:
       if( ApplyTauMTEff ){
 	TDirectory* newdir2 = newdir->mkdir( "TauMTEfficiencies" );
 	newdir2->cd();
-	
+
+	//creating the tau-mt efficiency from mu+electron events
+
+	Double_t xAxis2[7] = {40, 50, 60, 70, 80, 90, 400}; 
+   
+	TH1D *h_tauMTgt200_Wjets = new TH1D("h_tauMTgt200_Wjets","",6, xAxis2);
+	h_tauMTgt200_Wjets->SetBinContent(1,9.905872);
+	h_tauMTgt200_Wjets->SetBinContent(2,13.95688);
+	h_tauMTgt200_Wjets->SetBinContent(3,18.57517);
+	h_tauMTgt200_Wjets->SetBinContent(4,18.95324);
+	h_tauMTgt200_Wjets->SetBinContent(5,1.495195);
+	h_tauMTgt200_Wjets->SetBinContent(6,0.7869803);
+	h_tauMTgt200_Wjets->SetBinError(1,2.258936);
+	h_tauMTgt200_Wjets->SetBinError(2,4.49163);
+	h_tauMTgt200_Wjets->SetBinError(3,5.788638);
+	h_tauMTgt200_Wjets->SetBinError(4,5.238657);
+	h_tauMTgt200_Wjets->SetBinError(5,0.9884983);
+	h_tauMTgt200_Wjets->SetBinError(6,0.4681562);
+	h_tauMTgt200_Wjets->SetBinError(7,0.3217573);
+	h_tauMTgt200_Wjets->SetEntries(119);
+	h_tauMTgt200_Wjets->SetStats(0);
+
+
+	TH1D *h__Wjets = new TH1D("h__Wjets","",6, xAxis2);
+	h__Wjets->SetBinContent(1,3635.999);
+	h__Wjets->SetBinContent(2,2965.83);
+	h__Wjets->SetBinContent(3,1530.336);
+	h__Wjets->SetBinContent(4,364.0428);
+	h__Wjets->SetBinContent(5,44.90832);
+	h__Wjets->SetBinContent(6,17.66823);
+	h__Wjets->SetBinError(1,85.19714);
+	h__Wjets->SetBinError(2,75.71737);
+	h__Wjets->SetBinError(3,55.53428);
+	h__Wjets->SetBinError(4,25.8804);
+	h__Wjets->SetBinError(5,8.975284);
+	h__Wjets->SetBinError(6,5.111432);
+	h__Wjets->SetBinError(7,2.17384);
+	h__Wjets->SetEntries(8210);
+	h__Wjets->SetStats(0);
+
+	h_tauMTgt200_Wjets->GetXaxis()->SetTitle("MT2");
+	h_tauMTgt200_Wjets->GetYaxis()->SetTitle("tauMT efficiency");
+
+	Double_t xAxis1[6] = {30, 40, 50, 70, 90, 400}; 
+	TH1* hA = h_tauMTgt200_Wjets->Rebin( 5 , "newAA" , xAxis1 );
+	TH1* hB = h__Wjets->Rebin( 5 , "newBB" , xAxis1 );
+
+
+	TEfficiency* effMuTau = new TEfficiency( *hA , *hB );
+	effMuTau->SetTitle("MuTau");
+	effMuTau->SetLineColor(kRed);
+	effMuTau->SetLineWidth(2);
+
+	TH1D *effMT2_passed__1 = new TH1D("effMT2_passed__1","MT2_TauMTEff (passed)",5, xAxis1);
+	effMT2_passed__1->SetBinContent(0,18.223);
+	effMT2_passed__1->SetBinContent(1,5.65426);
+	effMT2_passed__1->SetBinContent(2,6.34171);
+	effMT2_passed__1->SetBinContent(3,22.5906);
+	effMT2_passed__1->SetBinContent(4,10.9119);
+	effMT2_passed__1->SetBinContent(5,1.28564);
+	effMT2_passed__1->SetBinError(0,4.5107);
+	effMT2_passed__1->SetBinError(1,2.2808);
+	effMT2_passed__1->SetBinError(2,2.53492);
+	effMT2_passed__1->SetBinError(3,5.43353);
+	effMT2_passed__1->SetBinError(4,3.00357);
+	effMT2_passed__1->SetBinError(5,0.621203);
+	effMT2_passed__1->SetEntries(110);
+
+	TH1D *effMT2_total__2 = new TH1D("effMT2_total__2","MT2_TauMTEff (total)",5, xAxis1);
+	effMT2_total__2->SetBinContent(0,3365.35);
+	effMT2_total__2->SetBinContent(1,2378.12);
+	effMT2_total__2->SetBinContent(2,1971.88);
+	effMT2_total__2->SetBinContent(3,2227.27);
+	effMT2_total__2->SetBinContent(4,222.644);
+	effMT2_total__2->SetBinContent(5,16.1082);
+	effMT2_total__2->SetBinError(0,79.349);
+	effMT2_total__2->SetBinError(1,67.0316);
+	effMT2_total__2->SetBinError(2,57.9569);
+	effMT2_total__2->SetBinError(3,59.6749);
+	effMT2_total__2->SetBinError(4,18.1809);
+	effMT2_total__2->SetBinError(5,4.14784);
+	effMT2_total__2->SetEntries(10925);
+	effMT2_total__2->SetDirectory(0);
+
+	TEfficiency* effMT2_ele = new TEfficiency( *effMT2_passed__1 , *effMT2_total__2 );
+
+	effMT2->Write("MT2OnlyElectron");
+   
+	effMT2 = new TEfficiency(  *hA , *hB );
+	effMT2->Add( *effMT2_ele );
+	effMT2->SetName( "effMT2" );
+
+	//end of creating tau-mt eff from mu+ele events
+
 	effTauPt_Total->Write();
 	effTauPt_Barrel->Write();
 	effTauPt_EndCap->Write();
@@ -487,6 +599,7 @@ public:
       hMT2_Loose->Write(newdir , 19600);
       hMT2_Tight->Write(newdir , 19600);
       hMET->Write(newdir , 19600);
+      hTauMT->Write(newdir , 19600);
       htauPt_EndCap->Write(newdir , 19600);
       htauPt_Barrel->Write(newdir , 19600);
       htauPt_Total->Write(newdir , 19600);
@@ -499,29 +612,30 @@ public:
       double taueta = fabs( taueta1 );
       int taueta_bin = tauEta.GetTotalHistogram()->GetXaxis()->FindBin( taueta );
       bool original_pass(pass);
+      double original_weight(weight);
       if( !isData){
 	//w.Value = weight;
 	if( ApplyTauMTEff ){
 	  if( pass && isW ){
 	    if( taueta_bin == 1 )
-	      effTauPt_Barrel->FillWeighted( tauMT > 200 , weight , taupt );
+	      effTauPt_Barrel->FillWeighted( tauMT > TauMTCut , weight , taupt );
 	    else
-	      effTauPt_EndCap->FillWeighted( tauMT > 200 , weight , taupt );
+	      effTauPt_EndCap->FillWeighted( tauMT > TauMTCut , weight , taupt );
 
-	    effTauPt_Total->FillWeighted( tauMT > 200 , weight , taupt );
+	    effTauPt_Total->FillWeighted( tauMT > TauMTCut , weight , taupt );
 
-	    effTauEta->FillWeighted( tauMT > 200 , weight , taueta );
-	    effMET->FillWeighted( tauMT > 200 , weight , met );
-	    effMT2->FillWeighted( tauMT > 200 , weight , mt2 );
-	    effElePt->FillWeighted( tauMT > 200 , weight , elept );
+	    effTauEta->FillWeighted( tauMT > TauMTCut , weight , taueta );
+	    effMET->FillWeighted( tauMT > TauMTCut , weight , met );
+	    effMT2->FillWeighted( tauMT > TauMTCut , weight , mt2 );
+	    effElePt->FillWeighted( tauMT > TauMTCut , weight , elept );
 	  }
-	  pass &= (tauMT > 200) ;
+	  pass &= (tauMT > TauMTCut) ;
 	}else
-	  pass &= (tauMT > 200) ;
+	  pass &= (tauMT > TauMTCut) ;
 	w = weight ;
       }else{
 	if(!ApplyTauMTEff )
-	  if(tauMT < 200)
+	  if(tauMT < TauMTCut)
 	    return;
 	double value;
 	double val2;
@@ -565,7 +679,7 @@ public:
 	  
 	  //cout << eff << "---" << errL << "---" << errU << endl;
 	}
-	else if(VarName == "Total" || VarName=="TotalTauMTEff" ){
+	else if( FixedExternalFRVal ) { //VarName == "Total" || VarName=="TotalTauMTEff" ){
 	  eff = FakeRateVal;
 	  errL = errU = FakeRateErr;
 	}
@@ -581,16 +695,16 @@ public:
 	}
      
 
-	int bin_global_pr = PromptRate->FindFixBin( taupt , taueta );
+	//int bin_global_pr = PromptRate->FindFixBin( taupt , taueta );
 
 // 	ValueError f( eff , errL , errU ) ;
 // 	ValueError p( PromptRate->GetEfficiency( bin_global_pr )  , 
 // 		      PromptRate->GetEfficiencyErrorLow( bin_global_pr ),
 // 		      PromptRate->GetEfficiencyErrorUp( bin_global_pr ) );
 	double f = eff ;
-	double p = PromptRate->GetEfficiency( bin_global_pr )  ;
-	double pErrU = PromptRate->GetEfficiencyErrorUp( bin_global_pr ) ;
-	double pErrL = PromptRate->GetEfficiencyErrorLow( bin_global_pr ) ;
+	double p = 0.77 ; //PromptRate->GetEfficiency( bin_global_pr )  ;
+	double pErrU = 0.0032; //PromptRate->GetEfficiencyErrorUp( bin_global_pr ) ;
+	double pErrL = 0.0032; //PromptRate->GetEfficiencyErrorLow( bin_global_pr ) ;
 
 	//cout << VarName << ":" <<   f << "   " << p << endl;
 
@@ -620,12 +734,16 @@ public:
 	}
       }
 
-      if( original_pass ) //is tight
-	hMT2_Tight->Fill(  mt2 , w );
-      else //loose non-tight
-	hMT2_Loose->Fill(  mt2 , w );
+      if(mt2>90)
+	hTauMT->Fill(tauMT , original_weight );
 
       if( isData || pass ){
+	
+	if( original_pass ) //is tight
+	  hMT2_Tight->Fill(  mt2 , weight );
+	else //loose non-tight
+	  hMT2_Loose->Fill(  mt2 , weight );
+      
 	htauPt_Total->Fill( taupt , w , wSyst );
 	
 	if(taueta_bin == 1)
@@ -745,11 +863,13 @@ void MassPlotterEleTau::EstimateFakeBKG(TList* allCuts, Long64_t nevents , TStri
   TH2* hPtEtaPass = (TH2*) file->Get("hPtEtaPass");
 
   #ifndef Closure
-  FakeEstimation estTotal( 0.4464 , 0.0062 , promptRate , true );
-  FakeEstimation estTotalTauMTEff( 0.4464 , 0.0062 , promptRate , false );
+  FakeEstimation estTotal( 1.14355*0.4464 , sqrt( pow(0.0062*1.14355,2)+pow(0.4464* 0.0194,2) ) , promptRate , true );
+  FakeEstimation estTotalTauMTEff( 1.14355*0.4464 , sqrt( pow(0.0062*1.14355,2)+pow(0.4464* 0.0194,2) ) , promptRate , false );
+  FakeEstimation estTotalTauMT0( 1.14355*0.4464 , sqrt( pow(0.0062*1.14355,2)+pow(0.4464* 0.0194,2) ) , promptRate , false , 0.0);
   #else
-  FakeEstimation estTotal( 0.4282 , 0.0065 , promptRate , true );
-  FakeEstimation estTotalTauMTEff( 0.4282 , 0.0065 , promptRate , false );
+  FakeEstimation estTotal( 1.14355*0.41091 , sqrt( pow(0.00909922*1.14355,2)+pow(0.41091* 0.0194,2) ) , promptRate , true );
+  FakeEstimation estTotalTauMTEff( 1.14355*0.41091 , sqrt( pow(0.00909922*1.14355,2)+pow(0.41091* 0.0194,2) ), promptRate , false );
+  FakeEstimation estTotalTauMT0( 1.14355*0.41091 , sqrt( pow(0.00909922*1.14355,2)+pow(0.41091* 0.0194,2) ) , promptRate , false , 0.0 );
   #endif
 
   /*
@@ -908,7 +1028,7 @@ void MassPlotterEleTau::EstimateFakeBKG(TList* allCuts, Long64_t nevents , TStri
 
 	estTotalTauMTEff.SetTree( Sample.tree , Sample.type, Sample.sname );
 	estTotal.SetTree( Sample.tree , Sample.type, Sample.sname );
-
+	estTotalTauMT0.SetTree( Sample.tree , Sample.type, Sample.sname );
 	/*
 	estPt.SetTree( Sample.tree , Sample.type, Sample.sname );
 	estEta.SetTree( Sample.tree , Sample.type, Sample.sname );
@@ -1029,7 +1149,7 @@ void MassPlotterEleTau::EstimateFakeBKG(TList* allCuts, Long64_t nevents , TStri
 	    cutindex += 1.0;
 	  }
 	  
-	  if(mt2 <= 90.0)
+	  if(mt2 <= 0.0)
 	    continue;
 	  else{
 	    cutflowtable.Fill( cutindex , weight );
@@ -1075,6 +1195,7 @@ void MassPlotterEleTau::EstimateFakeBKG(TList* allCuts, Long64_t nevents , TStri
 
 	  estTotalTauMTEff.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2 ,  fMT2tree->tau[ tauid ].MT, pass , weight );
 	  estTotal.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2 ,  fMT2tree->tau[ tauid ].MT, pass , weight );
+	  estTotalTauMT0.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2 ,  fMT2tree->tau[ tauid ].MT, pass , weight );
 
 // 	  estPt.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2values[0] ,  fMT2tree->tau[ tauid ].MT, pass , weight );
 // 	  estEta.FillFR( fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2values[0] , fMT2tree->tau[ tauid ].MT, pass , weight );
@@ -1127,6 +1248,7 @@ void MassPlotterEleTau::EstimateFakeBKG(TList* allCuts, Long64_t nevents , TStri
 //   estMetPt.Write(frdir);
   estTotal.Write(frdir);
   estTotalTauMTEff.Write(frdir);
+  estTotalTauMT0.Write(frdir);
 
   savefile->Close();
   std::cout << "Saved histograms in " << savefile->GetName() << std::endl;
@@ -1187,8 +1309,8 @@ void MassPlotterEleTau::TauFakeRate(TList* allCuts, Long64_t nevents , TString m
     int data = 0;
     sample Sample = fSamples[ii];
 
-    if( Sample.sname != "W" )  // justw
-      continue;
+//     if( Sample.sname != "W" )  // justw
+//       continue;
 
     if(Sample.type == "data"){
       data = 1;
@@ -1237,6 +1359,9 @@ void MassPlotterEleTau::TauFakeRate(TList* allCuts, Long64_t nevents , TString m
     Sample.tree->SetBranchStatus("*misc*MET" , 1 );
     Sample.tree->SetBranchStatus("*SFWeight*BTagCSV40eq0" , 1 );
     Sample.tree->SetBranchStatus("*NBJetsCSVM" , 1 );
+    Sample.tree->SetBranchStatus("*trigger*HLT_EleTau" , 1 );
+    Sample.tree->SetBranchStatus("*SFWeight*BTagCSV40eq0" , 1 );
+    Sample.tree->SetBranchStatus("*NBJetsCSVM*" , 1 );
 
     Sample.tree->SetBranchStatus("*Susy*MassGlu*" , 1 );
     Sample.tree->SetBranchStatus("*Susy*MassLSP*" , 1 );
@@ -1254,7 +1379,7 @@ void MassPlotterEleTau::TauFakeRate(TList* allCuts, Long64_t nevents , TString m
     Sample.tree->SetBranchStatus("*misc*trackingFailureFlag" , 1 );
     Sample.tree->SetBranchStatus("*misc*eeBadScFlag" , 1 );
     Sample.tree->SetBranchStatus("*misc*EcalDeadCellTriggerPrimitiveFlag" , 1 );
-
+    Sample.tree->SetBranchStatus("*misc*MinMetJetDPhiPt40" , 1 );
 
     Long64_t nentries =  Sample.tree->GetEntries();
 
@@ -1332,9 +1457,9 @@ void MassPlotterEleTau::TauFakeRate(TList* allCuts, Long64_t nevents , TString m
       }
       if( PassCuts ){
 	if( isfinite (weight) ){
-	  int elecindex = -1;
-	  int preCondsAll ;
-	  int theTauIndex = fMT2tree->DeltaREleTau( 1 , 0.2 , elecindex , 30 , justss , preCondsAll );
+	  int elecindex = fMT2tree->eleTau[0].GetEleIndex0() ;
+	  //  int preCondsAll ;
+	  int theTauIndex = fMT2tree->eleTau[0].GetTauIndex0() ; //DeltaREleTau( 1 , 0.2 , elecindex , 30 , justss , preCondsAll );
 
 	  if( elecindex != -1 ){
 	    cutflowtable.Fill( cutindex , weight );
@@ -1343,8 +1468,8 @@ void MassPlotterEleTau::TauFakeRate(TList* allCuts, Long64_t nevents , TString m
 
 
 
-	  if(preCondsAll == 0)
-	    continue;
+// 	  if(preCondsAll == 0)
+// 	    continue;
 
 	  cutflowtable.Fill( cutindex , weight );
 	  cutindex += 1.0;
@@ -1372,18 +1497,19 @@ void MassPlotterEleTau::TauFakeRate(TList* allCuts, Long64_t nevents , TString m
 	  int nPass = 0;
 	  vector<double> mt2values;
 	  TString genlevelinfo;
-	  for( int tauid = 0 ; tauid < fMT2tree->NTaus ; tauid++ ){
-	    double mt2 = fMT2tree->CalcMT2( 0 , false , fMT2tree->tau[tauid].lv , fMT2tree->ele[elecindex].lv , fMT2tree->pfmet[0]  );
-	    bool MT2Cut = mt2 > mt2cut ;
-	    if( tauid != theTauIndex || !MT2Cut ) //preCondsAllBits[tauid] == 0
+	  //for( int tauid = 0 ; tauid < fMT2tree->NTaus ; tauid++ ){
+	  int tauid = theTauIndex;
+	  double mt2Val = fMT2tree->eleTau[0].GetMT2() ; //fMT2tree->CalcMT2( 0 , false , fMT2tree->tau[tauid].lv , fMT2tree->ele[elecindex].lv , fMT2tree->pfmet[0]  );
+	  bool MT2Cut = mt2Val > mt2cut ;
+	  if( tauid != theTauIndex || !MT2Cut ) //preCondsAllBits[tauid] == 0
+	    continue;
+
+	    //if( justss )
+	    if( fMT2tree->tau[ tauid ].Charge == fMT2tree->ele[elecindex].Charge )
 	      continue;
 
-	    if( justss )
-	      if( fMT2tree->tau[ tauid ].Charge != fMT2tree->ele[elecindex].Charge )
-		continue;
-
-	    if( ! fMT2tree->isPromptEleFakeTauFromJet( elecindex , tauid ) ) // justw
-	      continue;
+// 	    if( ! fMT2tree->isPromptEleFakeTauFromJet( elecindex , tauid ) ) // justw
+// 	      continue;
 
 	    tauIds.push_back( tauid );
 	    
@@ -1394,19 +1520,19 @@ void MassPlotterEleTau::TauFakeRate(TList* allCuts, Long64_t nevents , TString m
 	      nPass++;
 
 	    AllFRs* sfr = &(SampleFRs[Sample.sname]);
-	    sfr->Fill( weight , fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2 ,fMT2tree->tau[tauid].ElectronRejMVA3 , fMT2tree->tau[tauid].ElectronRej, pass );
+	    sfr->Fill( weight , fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2Val ,fMT2tree->tau[tauid].ElectronRejMVA3 , fMT2tree->tau[tauid].ElectronRej, pass );
 
-	    mt2values.push_back(mt2);
+	    mt2values.push_back(mt2Val);
 
 	    genlevelinfo = fMT2tree->GenLeptonAnalysisInterpretation( 1 , 0 , 1 , true ) ;
 	    if( data != 1 ){
 	      sfr = &(GenInfoFRs[genlevelinfo]);
-	      sfr->Fill( weight , fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2 ,fMT2tree->tau[tauid].ElectronRejMVA3 , fMT2tree->tau[tauid].ElectronRej , pass );
-
+	      sfr->Fill( weight , fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2Val ,fMT2tree->tau[tauid].ElectronRejMVA3 , fMT2tree->tau[tauid].ElectronRej , pass );
+	      
 	      sfr = &(SampleFRs["AllMC"]);
-	      sfr->Fill( weight , fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2  ,fMT2tree->tau[tauid].ElectronRejMVA3 , fMT2tree->tau[tauid].ElectronRej, pass );
+	      sfr->Fill( weight , fMT2tree->tau[tauid].lv.Pt() , fMT2tree->tau[tauid].lv.Eta()  ,fMT2tree->misc.MET , fMT2tree->ele[elecindex].lv.Pt() , mt2Val  ,fMT2tree->tau[tauid].ElectronRejMVA3 , fMT2tree->tau[tauid].ElectronRej, pass );
 	    }
-	  }
+	    //}
 
 	  if( tauIds.size() > 0 ){
 	    cutflowtable.Fill( cutindex , weight );
@@ -1767,7 +1893,7 @@ int main(int argc, char* argv[]) {
 
   #ifdef CalcFR
   bool justss = false;
-  double mt2cut;
+  double mt2cut = 0.0;
   #else
   TString inputFRFileName ;
   #endif
@@ -1836,10 +1962,8 @@ int main(int argc, char* argv[]) {
   #endif
 
   #ifndef Closure
-  #ifndef CalcFR
   ExtendedCut* triggerCut =new ExtendedCut("Trigger" , "trigger.HLT_EleTau" , true , false , "" , "" , false , false); 
   allCuts.Add( triggerCut );
-  #endif
   #endif
 
 
@@ -1853,7 +1977,11 @@ int main(int argc, char* argv[]) {
 				      "pileUp.Weight * SFWeight.BTagCSV40eq0" ,true , true);
   allCuts.Add( bVeto );
 
+  #ifdef CalcFR
+  ExtendedCut* metcut =new ExtendedCut("MET" , "misc.MET < 30" , true , true , "" , "" , true , true);
+  #else
   ExtendedCut* metcut =new ExtendedCut("MET" , "misc.MET > 30" , true , true , "" , "" , true , true);
+  #endif
   allCuts.Add( metcut );
 
   ExtendedCut* minDPhi = new ExtendedCut("MinMetJetDPhi" , "misc.MinMetJetDPhiPt40 > 1.0" , true , true, "" , "" ,true , true); 
@@ -1862,6 +1990,26 @@ int main(int argc, char* argv[]) {
   #ifdef CalcFR
   ExtendedCut* nTaus = new ExtendedCut("nTaus" , "NTaus > 0" , true , true , "" , "" , true , true );
   allCuts.Add( nTaus );
+
+  TString myChan = "eleTau[0]";
+  ExtendedCut* tauselection = new ExtendedCut("TauSelection" , std::string(myChan) + ".tau0Ind >=0"  , true , true , "" , "eleTau[0].tauTrgSF * eleTau[0].tauEnergySF " , true , true); //tau id sf should be added here // 
+  allCuts.Add( tauselection );
+
+  ExtendedCut* electronselection = new ExtendedCut("ElectronSelection" , std::string(myChan) + ".ele0Ind >=0" , true , true , "" , "eleTau[0].eleTrgSF * eleTau[0].eleIdIsoSF" , false , true); //electron id and iso sf here
+  allCuts.Add( electronselection );
+
+  ExtendedCut* ElePTCut = new ExtendedCut("ElePTCut" , "ele[eleTau[0].ele0Ind].lv.Pt() > 25" , true , true, "" , "" ,false , true);
+  allCuts.Add( ElePTCut );
+
+  ExtendedCut* Isolated =new ExtendedCut("Isolated" , std::string(myChan) + ".Isolated == 1" , true , true, "" , "" , true , true);
+  allCuts.Add(Isolated);
+
+  ExtendedCut* OS = new ExtendedCut("OS" , std::string(myChan) + ".GetSumCharge() == 0" ,  true , true, "" , "" , true , true); 
+  allCuts.Add( OS );
+
+  ExtendedCut* EleTauDR = new ExtendedCut( "EleTauDR" , "DeltaREleTau() > 0.2"  ,  true , true, "" , "" , true , true);
+  allCuts.Add( EleTauDR );
+
   tA->TauFakeRate(&allCuts, neventperfile ,  outputfile , justss , mt2cut );
   #else
 
@@ -1968,6 +2116,9 @@ int main(int argc, char* argv[]) {
   ExtendedCut* OS = new ExtendedCut("OS" , std::string(myChan) + ".GetSumCharge() == 0" ,  true , true, "" , "" , true , true); 
   allCuts.Add( OS );
 
+//   ExtendedCut* SS = new ExtendedCut("SS" , std::string(myChan) + ".GetSumCharge() != 0" ,  true , true, "" , "" , true , true); 
+//   allCuts.Add( SS );
+
   ExtendedCut* muveto = new ExtendedCut("MuVeto" , "HasNoVetoMuForEleTau()" ,  true , true, "" , "" , true , true); 
   allCuts.Add( muveto );
 
@@ -2054,9 +2205,14 @@ int main(int argc, char* argv[]) {
     ExtendedObjectProperty* TauMTProp = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "TauMT" , "tau[eleTau[0].tau0Ind].MT" , 10 , 0 , 500 ,SUSYCatCommand , SUSYCatNames );//M_{T}^{#tau_{h}}
     allProps.Add( TauMTProp );
 
-    ExtendedObjectProperty* TauPt = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "TauPt" , "tau[eleTau[0].tau0Ind].lv.Pt()" , 12 , 20 , 260 ,SUSYCatCommand , SUSYCatNames );//#p_{T}^{#tau_{h}}
+    ExtendedObjectProperty* TauPt = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "TauPt" , "tau[eleTau[0].tau0Ind].lv.Pt()" , 9 , 20 , 200 ,SUSYCatCommand , SUSYCatNames );//#p_{T}^{#tau_{h}}
     allProps.Add( TauPt );
 
+    ExtendedObjectProperty* TauJetPt = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "TauJetPt" , "tau[eleTau[0].tau0Ind].JetPt" , 9 , 20 , 200 ,SUSYCatCommand , SUSYCatNames );//#p_{T}^{#tau_{h}}
+    allProps.Add( TauJetPt );
+
+    ExtendedObjectProperty* eleTauElePt = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "ElePt" , "ele[eleTau[0].ele0Ind].lv.Pt()" , 9 , 20 , 200 ,SUSYCatCommand , SUSYCatNames );
+    allProps.Add( eleTauElePt );
 
     ExtendedObjectProperty* MET = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "MET" , "misc.MET" , 11 , 30 , 360  ,SUSYCatCommand , SUSYCatNames );
     allProps.Add( MET );
@@ -2070,6 +2226,16 @@ int main(int argc, char* argv[]) {
 
     ExtendedObjectProperty* GenLeptonAnalysisF = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "GenLeptonAnalysisF" , "GenLeptonAnalysisInterpretation( 1,0,1 , false )" , 8 , 0 , 8 ,SUSYCatCommand , SUSYCatNames , &labels );
     allProps.Add( GenLeptonAnalysisF );
+
+    ExtendedObjectProperty* eleTauTauEta = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "TauEta" , "abs(tau[eleTau[0].tau0Ind].lv.Eta())" , 5 , 0 , 2.3 ,SUSYCatCommand , SUSYCatNames );
+    allProps.Add( eleTauTauEta );
+
+    ExtendedObjectProperty* eleTauTauJetEta = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "TauJetEta" , "abs(tau[eleTau[0].tau0Ind].JetEta)" , 5 , 0 , 2.3 ,SUSYCatCommand , SUSYCatNames );
+    allProps.Add( eleTauTauJetEta );
+
+    ExtendedObjectProperty* EleTauDR = new ExtendedObjectProperty( ((ExtendedCut*)cuto)->Name , "EleTauDR" , "DeltaREleTau()" , 10 , 0 , 5 ,SUSYCatCommand , SUSYCatNames );
+    allProps.Add( EleTauDR );
+
 
   // *  * 
 
@@ -2291,7 +2457,8 @@ int main(int argc, char* argv[]) {
   TString CutName = "MT2PreCut" ;
 
   cout << "FROM EventList : " << CutName << endl;
-  TFile* finput = TFile::Open( "/dataLOCAL/hbakhshi/NoteSelectionFullSMSNewEmEnriched_Histos.root");
+  //TFile* finput = TFile::Open( "/dataLOCAL/hbakhshi/NoteSelectionFullSMSNewEmEnriched_Histos.root");
+  TFile* finput = TFile::Open( "/dataLOCAL/hbakhshi/SSSelection_Histos.root");
   finput->cd();
   gDirectory->cd( CutName );
   gDirectory->cd("EventLists");

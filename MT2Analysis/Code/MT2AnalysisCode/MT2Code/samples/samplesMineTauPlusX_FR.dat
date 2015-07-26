@@ -1,0 +1,228 @@
+#########################################################################################
+GENERAL
+Path         ///dataLOCAL/MT2Tau/RootFiles/
+________________________________________________________________________________________
+# list of samples
+
+# -------- electroweak --------
+SAMPLE
+Name		WJetsToLNu
+SName		W
+ShapeName	WJets
+File            TauTau_V3_1/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball_v*_Part*_BigFiles_NewPU_Stitching.root
+Xsection  	36257.2
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		417
+
+SAMPLE
+Name		W1JetsToLNu
+SName		W
+ShapeName	WJets
+File            TauTau_V3_1/W1JetsToLNu_TuneZ2Star_8TeV-madgraph_BigFiles_NewPU_Stitching.root
+Xsection  	1.23 * 5400
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		417
+
+SAMPLE
+Name		W2JetsToLNu
+SName		W
+ShapeName	WJets
+File            TauTau_V3_1/W2JetsToLNu_TuneZ2Star_8TeV-madgraph_BigFiles_NewPU_Stitching.root
+Xsection  	1.23 * 1750
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		417
+
+SAMPLE
+Name		W3JetsToLNu
+SName		W
+ShapeName	WJets
+File            TauTau_V3_1/W3JetsToLNu_TuneZ2Star_8TeV-madgraph_BigFiles_NewPU_Stitching.root
+Xsection  	1.23 * 519
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		417
+
+SAMPLE
+Name		W4JetsToLNu
+SName		W
+ShapeName	WJets
+File            TauTau_V3_1/W4JetsToLNu_TuneZ2Star_8TeV-madgraph_BigFiles_NewPU_Stitching.root
+Xsection  	1.23 * 214
+Kfact           1.
+Lumi            19600.0
+Type            mc
+Color		417
+
+
+
+## --------- Data ---------------------------
+SAMPLE
+Name		Run2012A_TauPlusX
+SName		TauPlusX-Data
+ShapeName	Data
+File            TauTau_V3_1/TauPlusX-Run2012A_2.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
+
+SAMPLE
+Name		Run2012B_TauPlusX
+SName		TauPlusX-Data
+ShapeName	Data
+File            TauTau_V3_1/TauPlusX-Run2012B.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
+
+SAMPLE
+Name		Run2012C_TauPlusX
+SName		TauPlusX-Data
+ShapeName	Data
+File            TauTau_V3_1/TauPlusX-Run2012C-22Jan2013-v1_Part*.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color		1
+
+
+SAMPLE
+Name		Run2012D_TauPlusX
+SName		TauPlusX-Data
+ShapeName	Data
+File            TauTau_V3_1/TauPlusX-Run2012D-22Jan2013-v1_Part*.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color	        1
+
+
+###SAMPLE
+Name		Run2012D_SingleMu
+SName		SingleMu-Data
+ShapeName	Data
+File            TauTau_V3_1/SingleMu_Run2012D-22Jan2013-v1_AOD_*.root
+Xsection  	1.
+Kfact           1.	
+Lumi            1.
+Type            data
+Color	        1
+
+
+
+#####SAMPLE
+Name		VBF_HToTauTau
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/VBF_HToTauTau_M-125_8TeV-powheg-pythia6_BigFiles_NewPU_Stitching.root
+Xsection  	0.1 pb # 1.578 * 0.0632 https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+
+#####SAMPLE
+Name		WH_ZH_TTH_HToTauTau
+SName		QCD
+ShapeName	QCD
+File            TauTau_V3_1/WH_ZH_TTH_HToTauTau_M-125_8TeV-pythia6-tauola_BigFiles_NewPU_Stitching.root
+Xsection  	0.077 pb # (0.69669 (WH) + 0.3943 (ZH) + 0.1302 (ttH)) * 0.0632 https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+#####SAMPLE
+Name		GluGluToHToTauTau
+SName		Higgs
+ShapeName	Higgs
+File            TauTau_V3_1/GluGluToHToTauTau_M-125_8TeV-powheg-pythia6_BigFiles_NewPU_Stitching.root
+Xsection  	1.234 pb # 19.52 * 0.0632 https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013
+Kfact           1.0
+Lumi            19600.0
+Type		mc
+Color		401
+
+
+
+#SAMPLE
+Name		WJetsToLNu2
+SName		Wtolnu
+ShapeName	WJets
+File            TauTau_V3_1/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball_NBJetsCSVM0_MET30_NewPU_Stitching.root
+Xsection  	36257.2
+Kfact           1.
+Lumi            19600.0
+Type            data
+Color		417
+
+
+#SAMPLE
+Name		W1JetsToLNu2
+SName		Wtolnu
+ShapeName	WJets
+File            TauTau_V3_1/W1JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
+Xsection  	1.23 * 5400
+Kfact           1.
+Lumi            19600.0
+Type            data
+Color		417
+
+#SAMPLE
+Name		W2JetsToLNu2
+SName		Wtolnu
+ShapeName	WJets
+File            TauTau_V3_1/W2JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
+Xsection  	1.23 * 1750
+Kfact           1.
+Lumi            19600.0
+Type            data
+Color		417
+
+#SAMPLE
+Name		W3JetsToLNu2
+SName		Wtolnu
+ShapeName	WJets
+File            TauTau_V3_1/W3JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
+Xsection  	1.23 * 519
+Kfact           1.
+Lumi            19600.0
+Type            data
+Color		417
+
+#SAMPLE
+Name		W4JetsToLNu2
+SName		Wtolnu
+ShapeName	WJets
+File            TauTau_V3_1/W4JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
+Xsection  	1.23 * 214
+Kfact           1.
+Lumi            19600.0
+Type            data
+Color		417
+
+
+
+###SAMPLE
+Name		WJetsToLNu2
+SName		Wtolnu
+ShapeName	WJets
+File            TauTau_V3_1/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30_NewPU_Stitching_MuTauPreselectionTauTightID.root
+Xsection  	1.23 * 214
+Kfact           1.
+Lumi            19600.0
+Type            data
+Color		417

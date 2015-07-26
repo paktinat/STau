@@ -88,6 +88,9 @@ RunEleTauAnalyzerPreSelection: src/exe/MakeEleTauPlots.C $(SHARED)
 RunEleTauAnalyzerSelection: src/exe/MakeEleTauPlots.C $(SHARED)	
 	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -DTREE -DFROMEvtLst -o $@ $^		
 
+RunEleTauAnalyzerSelectionSS: src/exe/MakeEleTauPlots.C $(SHARED)	
+	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -DTREE -DFROMEvtLst -o $@ $^		
+
 RunEleTauAnalyzerCalcFR: src/exe/MakeEleTauPlots.C $(SHARED)	
 	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -DTauFR -DCalcFR -o $@ $^		
 
