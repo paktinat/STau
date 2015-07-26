@@ -5,7 +5,7 @@ ________________________________________________________________________________
 # list of samples
 
 ## -------- SMS --------
-#SAMPLE
+##SAMPLE
 Name            TStau
 SName           SUSY
 ShapeName       Signal
@@ -42,6 +42,22 @@ Color           1
 #Old   XSec =  0.14986
 #New   XSec = 0.01414
 #Newer Xsec = 0.01249
+
+
+
+##SAMPLE
+Name            TStau
+SName           SUSY
+ShapeName       Signal
+File            TauTau_V3_1/SMS-TStauStau_mStau-50to500_mLSP-1to480_TuneZ2star_8TeV-pythia6-tauolapp_Part0_NBJetsCSVM0_MET30_NewPU_Stitching.root
+Xsection        0.00993 pb
+Kfact           1.
+Lumi            19600.0
+Type            susy
+Color           1
+
+
+
 
 #No QCD after muTau preselection
 ##------------ QCD-Pt-BCtoE ----------------
@@ -768,7 +784,7 @@ Type            data
 Color	        1
 
 
-######SAMPLE
+#####SAMPLE
 Name		Run2012D_SingleMu
 SName		SingleMu-Data
 ShapeName	Data
@@ -779,8 +795,7 @@ Lumi            1.
 Type            data
 Color	        1
 
-
-#SAMPLE
+##SAMPLE
 Name		WJetsToLNu2
 SName		Wtolnu
 ShapeName	WJets
@@ -791,8 +806,7 @@ Lumi            19600.0
 Type            data
 Color		417
 
-
-#SAMPLE
+##SAMPLE
 Name		W1JetsToLNu2
 SName		Wtolnu
 ShapeName	WJets
@@ -803,7 +817,7 @@ Lumi            19600.0
 Type            data
 Color		417
 
-#SAMPLE
+##SAMPLE
 Name		W2JetsToLNu2
 SName		Wtolnu
 ShapeName	WJets
@@ -814,7 +828,7 @@ Lumi            19600.0
 Type            data
 Color		417
 
-#SAMPLE
+##SAMPLE
 Name		W3JetsToLNu2
 SName		Wtolnu
 ShapeName	WJets
@@ -825,7 +839,7 @@ Lumi            19600.0
 Type            data
 Color		417
 
-#SAMPLE
+##SAMPLE
 Name		W4JetsToLNu2
 SName		Wtolnu
 ShapeName	WJets
