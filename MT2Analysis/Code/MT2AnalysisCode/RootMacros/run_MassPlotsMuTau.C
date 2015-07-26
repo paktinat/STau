@@ -1,9 +1,9 @@
 {
   TString outputdir = "../MassPlots/";
-  //  TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30FakeRate.dat"; 
+  TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat"; 
   //TString samples = "./samples/samplesMineTauPlusX_BigFiles_NewPU_Stitching.dat";
 
-  //  TString samples = "./samples/samplesMineTauPlusX.dat"; 
+  //TString samples = "./samples/samplesMineTauPlusX.dat"; 
   //TString samples = "./samples/samplesMineSingleMu.dat";
   //TString samples = "./samples/samplesMineQCD.dat";
   //TString samples = "./samples/samplesMineTest.dat";  
@@ -29,7 +29,7 @@
   tA->init(samples);
   tA->SetIsPhoton(false);
   //To define the channel and turn on/off the channel specific SF. They are applied by default.
-  //void SetMuTauChannel(bool muIdSF = true, bool muIsoSF = true, bool muTrgSF = true, bool tauTrgSF = true, bool tauWjetsSF = true)
+  //void SetMuTauChannel(bool muIdSF = true, bool muIsoSF = true, bool muTrgSF = true, bool tauTrgSF = true, bool tauWjetsSF = true, bool tauEnergySF = true)
   tA->SetMuTauChannel();
 //  tA->SetStitching(false);
   /*
@@ -68,13 +68,13 @@
   TString myChan = "muTau[0]";
   
   //myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP) < 185.0 && (Susy.MassGlu - Susy.MassLSP) > 135.0))"); 
-  //myChannelCuts.push_back("(misc.ProcessID!=10 || ( (Susy.MassGlu - Susy.MassLSP) < 300.0))"); 
+  //myChannelCuts.push_back("(misc.ProcessID!=10 || ( (Susy.MassGlu - Susy.MassLSP) > 200.0))"); 
  
   //myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 220.0) <= 10.0 && abs(Susy.MassLSP - 0) <= 10.0))"); 
   //myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 180.0) <= 10.0 && abs(Susy.MassLSP - 60) <= 10.0))");//0.119//0.0111//0.00993
  // myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 390.0) <= 10.0 && abs(Susy.MassLSP - 10) <= 10.0))"); //0.227//0.0343
-  myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 380.0 && Susy.MassGlu  < 400.0 && Susy.MassLSP < 20.0))"); //0.227//0.0343//0.00189
-//   myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 180.0 && Susy.MassGlu  < 200.0 && Susy.MassLSP >=60 && Susy.MassLSP < 80.0))");//0.119//0.0111
+  //  myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 380.0 && Susy.MassGlu  < 400.0 && Susy.MassLSP < 20.0))"); //0.227//0.0343//0.00189
+   myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 180.0 && Susy.MassGlu  < 200.0 && Susy.MassLSP >=60 && Susy.MassLSP < 80.0))");//0.119//0.0111//0.00993
   //myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 240.0) <= 10.0 && abs(Susy.MassLSP - 40) <= 10.0))");//0.14986//0.01414//0.01249
   //myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 240.0 && Susy.MassGlu  < 260.0 && Susy.MassLSP >=40 && Susy.MassLSP < 60.0))");//0.14986//0.01414
   //myChannelCuts.push_back("(misc.ProcessID!=10 || (  (Susy.MassLSP < 150) && (Susy.MassGlu < 400) ))"); 
@@ -83,8 +83,8 @@
   myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0Ind >=0")); // Second lepton index, channel specific
   myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated > 0 ")); //1 iso mu and iso tau, 0 iso mu and non iso tau, -1 non iso mu and non iso tau
   
-  myChannelCuts.push_back("misc.MET <= 30"); 
-  //  myChannelCuts.push_back("misc.MET > 30"); 
+  //myChannelCuts.push_back("misc.MET <= 30"); 
+  myChannelCuts.push_back("misc.MET > 30"); 
   myChannelCuts.push_back("NBJetsCSVM == 0");
   
   //myChannelCuts.push_back(std::string(std::string(myChan) + ".signalMuTau"));
@@ -93,9 +93,9 @@
   
  
   //myChannelCuts.push_back(std::string(std::string(myChan) + ".chargeSum == 0"));
-
+  
   myChannelCuts.push_back("abs(muTau[0].chargeSum) == 0");
-//   myChannelCuts.push_back("(tau[muTau[0].tau0Ind].Isolation3Hits == 1.)");//Tau Tight ID
+  myChannelCuts.push_back("(tau[muTau[0].tau0Ind].Isolation3Hits == 1.)");//Tau Tight ID
   //myChannelCuts.push_back("(tau[muTau[0].tau0Ind].Isolation3Hits > 1)");//Tau Loose-Non-Tight ID
 
 
@@ -107,21 +107,21 @@
   //myChannelCuts.push_back("(muTau[0].lv.M() > 45 && muTau[0].lv.M() < 75)");
 
    myChannelCuts.push_back(" misc.MinMetJetDPhiPt40 > 1.0 ");
-
-//     myChannelCuts.push_back(" muTau[0].MT2 >= 40 ");
-  //myChannelCuts.push_back(" muTau[0].MT2 < 60 && muTau[0].MT2 > 30 ");
-
-  //myChannelCuts.push_back("NMuons > 0");
-//   myChannelCuts.push_back("muo[0].lv.Pt() > 25");
-  
-  //myChannelCuts.push_back("abs(tau[muTau[0].tau0Ind].lv.Eta()) < 1.4 ");
-  //myChannelCuts.push_back("(tau[muTau[0].tau0Ind].lv.Pt()) > 30 ");
-  //myChannelCuts.push_back("(tau[muTau[0].tau0Ind].lv.Pt()) > 40 ");
+   
+   myChannelCuts.push_back(" muTau[0].MT2 >= 40 ");
+   //myChannelCuts.push_back(" muTau[0].MT2 < 60 && muTau[0].MT2 > 30 ");
+   
+   //myChannelCuts.push_back("NMuons > 0");
+   //myChannelCuts.push_back("muo[0].lv.Pt() > 25");
+   
+   //myChannelCuts.push_back("abs(tau[muTau[0].tau0Ind].lv.Eta()) < 1.4 ");
+//    myChannelCuts.push_back("(tau[muTau[0].tau0Ind].lv.Pt()) > 25 ");
+   //myChannelCuts.push_back("(muo[muTau[0].mu0Ind].lv.Pt()) > 40 ");
   
 
 //   Bin1
-//   myChannelCuts.push_back(" muTau[0].MT2 >  90 ");
-//   myChannelCuts.push_back(" tau[muTau[0].tau0Ind].MT > 200 ");//tauMT
+   myChannelCuts.push_back(" muTau[0].MT2 >  90 ");
+   myChannelCuts.push_back(" tau[muTau[0].tau0Ind].MT > 200 ");//tauMT
 //   myChannelCuts.push_back(" tau[muTau[0].tau0Ind].MT < 90 ");//tauMT
 //   myChannelCuts.push_back(" tau[muTau[0].tau0Ind].MT > 40 ");//tauMT
 //   //    myChannelCuts.push_back(" muTau[0].MT2 >  60 ");
@@ -329,13 +329,13 @@
   //tA->makePlot("muo[muTau[0].mu0Ind].lv.Pt() + tau[muTau[0].tau0Ind].lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "muPt + tauPt"            ,18, 0, 540,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);  
   //tA->makePlot("muTau.lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "muTauPt"            , 25, 0, 500,          false,        true ,  true,   true,  true,  true, 1,true, false, "C", 2);
   
-  //tA->makePlot("tau[muTau[0].tau0Ind].lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "tauPt"            ,9, 20, 200,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);
+  tA->makePlot("tau[muTau[0].tau0Ind].lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "tauPt"            ,36, 20, 200,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);
   //tA->makePlot("tau[muTau[0].tau0Ind].JetPt",     cuts,    -10,  0 , -10 ,   trigger , "tauJetPt"            ,9, 20, 200,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);
   //tA->makePlot("abs(tau[muTau[0].tau0Ind].JetEta)",     cuts,    -10,  0 , -10 ,   trigger , "tauJetEta"            ,5, 0, 2.3,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);
   //>0 Loose of Signal//minMetJetDPhiPt40 > 1  
   //>0 13.2 40-90
   //tA->makePlot("tau[muTau[0].tau0Ind].lv.Pt() - muo[muTau[0].mu0Ind].lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "tauPt - muPt"            ,10, -250, 250,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);
-  //tA->makePlot("muo[muTau[0].mu0Ind].lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "muPt"            ,20, 20, 120,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);
+  //tA->makePlot("muo[muTau[0].mu0Ind].lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "muPt"            ,20, 20, 200,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);
   // tA->makePlot(" muTau[0].pZeta ",     cuts,    -10,  0 , -10 ,   trigger , "pZeta"            ,10, 0, 600,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 3);
   //tA->makePlot("misc.MET - muTau.lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "MET - muTauPt"            , 10, -250, 250,          false,        true ,  true,   true,  true,  true, 1,true, false, "C", 2);
   //tA->makePlot("misc.MET + muTau.lv.Pt()",     cuts,    -10,  0 , -10 ,   trigger , "MET + muTauPt"            , 10, 0, 500,          false,        true ,  true,   true,  true,  true, 1,true, false, "C", 2);
@@ -360,7 +360,7 @@
   //> 1 2.0 
   //> 1 1.5  //SumMT > 300
   //>1 13.5 40-90
-  //tA->makePlot("misc.MinMetJetDPhiPt40",     cuts,    -10,  0 , -10 ,   trigger , "minMetJetDPhiPt40"            ,16, 0, 3.2,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);
+  //  tA->makePlot("misc.MinMetJetDPhiPt40",     cuts,    -10,  0 , -10 ,   trigger , "minMetJetDPhiPt40"            ,16, 0, 3.2,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);
   //tA->makePlot("minMetTauDPhiMuTau()",     cuts,    -10,  0 , -10 ,   trigger , "minMetTauDPhiPt"            ,34, 0, 3.4,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);
   //>340 1.5  
   //>325 1.25//minMetJetDPhiPt40 > 1  
@@ -385,7 +385,8 @@
   //>110 1.8//SumMT > 300
   //no peak 40-90 
 //   tA->makePlot("misc.MET",     cuts,    -10,  0 , -10 ,   trigger , "pfMET"            ,11, 30, 360,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);
-  //tA->makePlot("tau[muTau[0].tau0Ind].MT",     cuts,    -10,  0 , -10 ,   trigger , "tauMT"            ,2, 0, 400,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);
+//   tA->makePlot("tau[muTau[0].tau0Ind].MT",     cuts,    -10,  0 , -10 ,   trigger , "tauMT"            ,2, 100, 300,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);
+//  tA->makePlot("GetMTmuTau()",     cuts,    -10,  0 , -10 ,   trigger , "tauMT"            ,20, 100, 300,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);
   //tA->makePlot("muo[muTau[0].mu0Ind].lv.Eta()",     cuts,    -10,  0 , -10 ,   trigger , "muEta"            ,20, -2.5, 2.5,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);
 //   tA->makePlot("misc.METPhi",     cuts,    -10,  0 , -10 ,   trigger , "METPhi"            ,70, -3.5, 3.5,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);
   //tA->makePlot("misc.Vectorsumpt",     cuts,    -10,  0 , -10 ,   trigger , "Vectorsumpt"            ,10, 0, 100,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 2);
@@ -408,7 +409,8 @@
   //tA->TauFakeRate(cuts, trigger, 10000000000, "PtEta_MuTauTight_Over_Loose_pfOnly_WJets_OppSign_ExtraLepVeto_MT2gt40_ZVeto_minDPhi_MET_NBJets_Weighted");
   //tA->TauFakeRate(cuts, trigger, 10000000000, "PtEta_MuTauTight_Over_Loose_SingleMu_OppSign_ExtraLepVeto_MET_NBJets_Weighted");
   //tA->TauFakeRate(cuts, trigger, 10000000000, "PtEta_MuTauTight_Over_Loose_TauPlusX_SS_ExtraLepVeto_MT2gt40_ZVeto_minDPhi_MET_NBJets_Weighted");
-  tA->TauFakeRate(cuts, trigger, 10000000000, "PtEta_MuTauTight_Over_Loose_TauPlusX_OS_ExtraLepVeto_ZVeto_minDPhi_METlt30_NBJets_Weighted");
+  //tA->TauFakeRate(cuts, trigger, 10000000000, "PtEta_MuTauTight_Over_Loose_TauPlusX_OS_ExtraLepVeto_ZVeto_minDPhi_METlt30_NBJets_Weighted");
+//   tA->TauFakeRate(cuts, trigger, 10000000000, "PtEta_MuTauTight_Over_Loose_pfOnly_WJets_TauPlusXcuts_OS_ExtraLepVeto_ZVeto_minDPhi_METlt30_NBJets_Weighted");
 
   //tA->vs(10000000000, cuts, trigger);
 

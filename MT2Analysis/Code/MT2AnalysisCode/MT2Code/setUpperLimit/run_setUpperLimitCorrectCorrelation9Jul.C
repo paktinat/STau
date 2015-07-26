@@ -45,7 +45,7 @@ void makeCardMuTau(double N, double S, double dS, string sOut) {
     
     double MuTauBDD = 6.83; //Data Driven estimation for fake taus  6.82557 +- 3.87114 = 6.82557 *(1.0 +- 0.563391(Stat) +- 0.065173(FRSys) +- 0.00218677(PRSys))
     double dMuTauBDD = 0.56;//its total relative uncertainty Stat
-    double dLepTauBDD = 0.07;//its total relative uncertainty from PR(0.2%), FR(6.5%), tauMT correlated with muTau
+    double dLepTauBDD = 0.07;//its total relative uncertainty from PR(0.2%), FR(6.5%) correlated with muTau
 
     // === DATA CARD ===
     ofstream fOut(sOut.c_str());
@@ -85,8 +85,8 @@ void makeCardTauTau1(double N, double S, double dS, string sOut) {
     double TauTauBDD = 0.15; //Data Driven estimation for QCD
     double dTauTauBDD = 1.7;//0.08/0.06;//its total relative uncertainty
 
-    double TauTauBW = 0.93 * 0.00213/0.0029;      //WJets 0.93 +- 0.13 +-0.15 
-    double dTauTauBW = 0.79;//WJets 0.21 @ 0.77
+    double TauTauBW = 0.93 * 0.00213/0.0029;      //WJets 0.93 +- 0.13 +-0.14 
+    double dTauTauBW = 0.79;//WJets 0.19 @ 0.77
 
 
     // === DATA CARD ===
@@ -363,15 +363,15 @@ run_setUpperLimitCorrectCorrelation9Jul() {
 	    
             system("combineCards.py datacard_* > datacard");
  	    system("rm -f datacard_*");
-	    //system("combine -M Asymptotic datacard");
+	    system("combine -M Asymptotic datacard");
             //system("combine -M HybridNew  datacard");
-	    system("combine -M HybridNew --frequentist --rule CLs --testStat LHC datacard -H ProfileLikelihood --fork 10 --expectedFromGrid=0.5");                          
+	    //system("combine -M HybridNew --frequentist --rule CLs --testStat LHC datacard -H ProfileLikelihood --fork 10 --expectedFromGrid=0.5");                          
 	    //system("combine -M HybridNew --frequentist --rule CLs --testStat LHC datacard -H ProfileLikelihood --fork 10");  
 
 	    TTree* tree;
-	    //TFile * flimit = new TFile("higgsCombineTest.Asymptotic.mH120.root");
+	    TFile * flimit = new TFile("higgsCombineTest.Asymptotic.mH120.root");
             //TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.root");
-	    TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.quant0.500.root");
+	    //TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.quant0.500.root");
 
             flimit->GetObject("limit", tree);
 
@@ -402,7 +402,11 @@ run_setUpperLimitCorrectCorrelation9Jul() {
 	      cout<<" There is 0 entry "<<endl;
 // 	    system("mv  roostats-* roostats-*.root");
 	    system("rm -f higgsCombineTest.Asymptotic.mH120.root");
+<<<<<<< HEAD
 	    //	    system("rm -f higgsCombineTest.HybridNew.mH120*.root");
+=======
+	    //system("rm -f higgsCombineTest.HybridNew.mH120*.root");
+>>>>>>> 7b35b3fe8c2a69488d4303c019ce8d7facfe4c80
 // 	    system("rm -f datacard");
 	    system("rm -f roostats-*");
 
