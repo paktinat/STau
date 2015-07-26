@@ -2,7 +2,7 @@
   TString outputdir = "../MassPlots/";
   //  TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30FakeRate.dat"; 
   //TString samples = "./samples/samplesMineTauPlusX_BigFiles_NewPU_Stitching.dat";
-
+TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat"; 
   //  TString samples = "./samples/samplesMineTauPlusX.dat"; 
   //TString samples = "./samples/samplesMineSingleMu.dat";
   //TString samples = "./samples/samplesMineQCD.dat";
@@ -73,18 +73,19 @@
   //myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 220.0) <= 10.0 && abs(Susy.MassLSP - 0) <= 10.0))"); 
   //myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 180.0) <= 10.0 && abs(Susy.MassLSP - 60) <= 10.0))");//0.119//0.0111//0.00993
  // myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 390.0) <= 10.0 && abs(Susy.MassLSP - 10) <= 10.0))"); //0.227//0.0343
-  myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 380.0 && Susy.MassGlu  < 400.0 && Susy.MassLSP < 20.0))"); //0.227//0.0343//0.00189
+  //  myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 380.0 && Susy.MassGlu  < 400.0 && Susy.MassLSP < 20.0))"); //0.227//0.0343//0.00189
 //   myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 180.0 && Susy.MassGlu  < 200.0 && Susy.MassLSP >=60 && Susy.MassLSP < 80.0))");//0.119//0.0111
-  //myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 240.0) <= 10.0 && abs(Susy.MassLSP - 40) <= 10.0))");//0.14986//0.01414//0.01249
+  myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 380.0) <= 10.0 && abs(Susy.MassLSP - 1) <= 10.0))");//0.14986//0.01414//0.01249
   //myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 240.0 && Susy.MassGlu  < 260.0 && Susy.MassLSP >=40 && Susy.MassLSP < 60.0))");//0.14986//0.01414
   //myChannelCuts.push_back("(misc.ProcessID!=10 || (  (Susy.MassLSP < 150) && (Susy.MassGlu < 400) ))"); 
   //You need to carefully define the cut variables based on MT2"Channel".hh
+
   myChannelCuts.push_back(std::string(std::string(myChan) + ".tau0Ind >=0")); // First lepton index, channel specific
   myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0Ind >=0")); // Second lepton index, channel specific
   myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated > 0 ")); //1 iso mu and iso tau, 0 iso mu and non iso tau, -1 non iso mu and non iso tau
   
-  myChannelCuts.push_back("misc.MET <= 30"); 
-  //  myChannelCuts.push_back("misc.MET > 30"); 
+  //  myChannelCuts.push_back("misc.MET <= 30"); 
+  myChannelCuts.push_back("misc.MET > 30"); 
   myChannelCuts.push_back("NBJetsCSVM == 0");
   
   //myChannelCuts.push_back(std::string(std::string(myChan) + ".signalMuTau"));
@@ -95,20 +96,20 @@
   //myChannelCuts.push_back(std::string(std::string(myChan) + ".chargeSum == 0"));
 
   myChannelCuts.push_back("abs(muTau[0].chargeSum) == 0");
-//   myChannelCuts.push_back("(tau[muTau[0].tau0Ind].Isolation3Hits == 1.)");//Tau Tight ID
+  myChannelCuts.push_back("(tau[muTau[0].tau0Ind].Isolation3Hits == 1.)");//Tau Tight ID
   //myChannelCuts.push_back("(tau[muTau[0].tau0Ind].Isolation3Hits > 1)");//Tau Loose-Non-Tight ID
 
 
   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoElec"));
   myChannelCuts.push_back("(muTau[0].hasNoVetoMu && HasNoVetoMuForMuTau() )"); //decreasing the pt threshold of the rejected muons from 15 to 10.
  
-   myChannelCuts.push_back("muTau[0].lv.M() > 15");
-   myChannelCuts.push_back("(muTau[0].lv.M() < 45 || muTau[0].lv.M() > 75)");
+  //   myChannelCuts.push_back("muTau[0].lv.M() > 15");
+  //   myChannelCuts.push_back("(muTau[0].lv.M() < 45 || muTau[0].lv.M() > 75)");
   //myChannelCuts.push_back("(muTau[0].lv.M() > 45 && muTau[0].lv.M() < 75)");
 
-   myChannelCuts.push_back(" misc.MinMetJetDPhiPt40 > 1.0 ");
+  //   myChannelCuts.push_back(" misc.MinMetJetDPhiPt40 > 1.0 ");
 
-//     myChannelCuts.push_back(" muTau[0].MT2 >= 40 ");
+  //   myChannelCuts.push_back(" muTau[0].MT2 >= 40 ");
   //myChannelCuts.push_back(" muTau[0].MT2 < 60 && muTau[0].MT2 > 30 ");
 
   //myChannelCuts.push_back("NMuons > 0");
@@ -211,15 +212,19 @@
   }
 
   TString cuts = cutStream.str().c_str();
-           
-  /*
-* Define the properties of plots
-*/	
-  Objectproperties PHI("phi");
-  Objectproperties PT("pt");
-  Objectproperties MULT("mult");
-  std::vector<TString> vars;
-  TList props;
+
+
+  //tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_tes_up", "mutau_tes_up", "");
+//  tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_nominal", "mutau_nominal", "");
+tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_tes_down", "mutau_tes_down", "");
+
+
+/* Define the properties of plots*/	
+//  Objectproperties PHI("phi");
+//  Objectproperties PT("pt");
+//  Objectproperties MULT("mult");
+//  std::vector<TString> vars;
+//  TList props;
     
   /*
 * Plot the channel specific variables: add what you like to see ....
@@ -252,7 +257,7 @@
 
   /*Kinematics*/
 
-  TString myMisc = "misc";
+   //  TString myMisc = "misc";
   //vars.push_back(myMisc + ".Run"); props.Add(&PT);
 
   //vars.push_back(myMisc + ".MET"); props.Add(&PT);
@@ -408,12 +413,12 @@
   //tA->TauFakeRate(cuts, trigger, 10000000000, "PtEta_MuTauTight_Over_Loose_pfOnly_WJets_OppSign_ExtraLepVeto_MT2gt40_ZVeto_minDPhi_MET_NBJets_Weighted");
   //tA->TauFakeRate(cuts, trigger, 10000000000, "PtEta_MuTauTight_Over_Loose_SingleMu_OppSign_ExtraLepVeto_MET_NBJets_Weighted");
   //tA->TauFakeRate(cuts, trigger, 10000000000, "PtEta_MuTauTight_Over_Loose_TauPlusX_SS_ExtraLepVeto_MT2gt40_ZVeto_minDPhi_MET_NBJets_Weighted");
-  tA->TauFakeRate(cuts, trigger, 10000000000, "PtEta_MuTauTight_Over_Loose_TauPlusX_OS_ExtraLepVeto_ZVeto_minDPhi_METlt30_NBJets_Weighted");
+  //  tA->TauFakeRate(cuts, trigger, 10000000000, "PtEta_MuTauTight_Over_Loose_TauPlusX_OS_ExtraLepVeto_ZVeto_minDPhi_METlt30_NBJets_Weighted");
 
   //tA->vs(10000000000, cuts, trigger);
 
-   int NumberOfBins = 15;
-  double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0};      //MT2
+  //   int NumberOfBins = 15;
+  //  double xbin[NumberOfBins+1] = {0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0,125.0,150.0,175.0,200.0,250.0};      //MT2
   //double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
 
   //tA->DrawMyPlots("MT2_NewFiles.root", xbin, NumberOfBins);
