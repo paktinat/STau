@@ -851,12 +851,17 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 			   TString xtitle, const int nbins, const double *bins, 
 			   bool flip_order, bool logflag, bool composited, bool ratio, 
 			   bool stacked, bool overlaySUSY, float overlayScale, bool add_underflow, bool saveHistos, TString saveMacro, int type){
+  //To run on CharginoChargino
+    TH2D *h_PN_MLSP_MChi = new TH2D("h_PN_MLSP_MChi", "", 125, 0, 2500, 125, 0, 2500);
+    TH2D *h_N_MLSP_MChi = new TH2D("h_N_MLSP_MChi", "", 125, 0, 2500, 125, 0, 2500);
+    
+  //To run on StauStau uncomment the following
+  //TH2D *h_PN_MLSP_MChi = new TH2D("h_PN_MLSP_MChi", "", 250, 0, 2500, 250, 0, 2500);                               
+  //TH2D *h_N_MLSP_MChi = new TH2D("h_N_MLSP_MChi", "", 250, 0, 2500, 250, 0, 2500);                                                                                           
+  //To run on StauStau
 
-        TH2D *h_PN_MLSP_MChi = new TH2D("h_PN_MLSP_MChi", "", 125, 0, 2500, 125, 0, 2500);
-	h_PN_MLSP_MChi->Sumw2();
-
-        TH2D *h_N_MLSP_MChi = new TH2D("h_N_MLSP_MChi", "", 125, 0, 2500, 125, 0, 2500);
-	h_N_MLSP_MChi->Sumw2();
+  h_PN_MLSP_MChi->Sumw2(); 
+  h_N_MLSP_MChi->Sumw2();    
 
 	int SusySampleInd = -1;
 
@@ -1305,12 +1310,16 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
 	h_PN_Data->SetName("h_PN_Data");
 	h_PN_Data->Rebin(h_PN_Data->GetNbinsX());
 
+	//To run on CharginoChargino
  	h_SMSEvents->Rebin2D(4, 4);
+	
+	//To run on StauStau uncomment the following
+	//h_SMSEvents->Rebin2D(2, 2);
  	h_PN_MLSP_MChi->Divide(h_SMSEvents);
 
 
 	TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");//CharginoChargino
-	//TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("StSt_8TeV_NLONLL_LSP"); hXsec->Rebin2D(2, 2);hXsec->Scale(0.25);//StauStau
+	//TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("StSt_8TeV_NLONLL_LSP"); //StauStau
 	h_PN_MLSP_MChi->Multiply(hXsec);
 
 	TString fileName = fOutputDir;
@@ -10100,17 +10109,18 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
     int data = 0;
     sample Sample = fSamples[ii];
 
-    //    if(Sample.sname != "SUSY" || Sample.sname != "DY")
-    //      continue;
+    if(Sample.sname != "SUSY" || Sample.sname != "DY")
+      continue;
 
 
-    if (sampleName != "")
+    //    if (sampleName != "")
 
-      {
-	if(sampleName != Sample.sname)
-          continue;
-      }
-    else
+    //      {
+    //	if(sampleName != Sample.sname)
+    //          continue;
+    //      }
+
+    //    else
                                  {
 
     if(Sample.type == "data")
