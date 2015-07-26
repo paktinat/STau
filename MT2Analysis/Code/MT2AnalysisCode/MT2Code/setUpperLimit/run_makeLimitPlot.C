@@ -11,7 +11,7 @@ TLegend* legend() {
 TH2D* getXsecUp(TH2D* hRatio, TH2D* hXsec) {
     TH2D* hXsecUp = (TH2D*) hRatio->Clone("hXsecUp");
     
-    hXsecUp->Multiply(hRatio, hXsec);
+    //    hXsecUp->Multiply(hRatio, hXsec);
 
     //    hXsecUp->GetXaxis()->SetRangeUser(0, 600);
     //    hXsecUp->GetYaxis()->SetRangeUser(0, 600);
@@ -183,7 +183,7 @@ run_makeLimitPlot() {
     //For HybridNew hSgmP2 is the hSgmP1
 //     h01 = h02 ;
 //     h02 = h00 ;
-    float a = 1.0;
+    float a = 0.02;
     h00->Scale(a);
     hOb->Scale(a);
     h01->Scale(a);

@@ -401,8 +401,8 @@ run_setUpperLimitCorrectCorrelation9Jul() {
 	    }else
 	      cout<<" There is 0 entry "<<endl;
 // 	    system("mv  roostats-* roostats-*.root");
-	    //system("rm -f higgsCombineTest.Asymptotic.mH120.root");
-	    system("rm -f higgsCombineTest.HybridNew.mH120*.root");
+	    system("rm -f higgsCombineTest.Asymptotic.mH120.root");
+	    //	    system("rm -f higgsCombineTest.HybridNew.mH120*.root");
 // 	    system("rm -f datacard");
 	    system("rm -f roostats-*");
 

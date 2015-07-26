@@ -67,18 +67,18 @@
   myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].Charge + ele[doubleEle[0].Ele1Ind].Charge) == 0)");//Signal OS 
   myChannelCuts.push_back("!(eeRejE2_defined())");//                                      
   myChannelCuts.push_back("!(eeRejMu_defined())");//                                      
-   myChannelCuts.push_back("NBJetsCSVL == 0");
+  myChannelCuts.push_back("NBJetsCSVL == 0");
   
   myChannelCuts.push_back("misc.MET > 30");
   //  myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 71) || (doubleEle[0].lv.M() > 111))");
-  //  myChannelCuts.push_back("eeJZBInDirect() < -50");//
-  //  myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 40"));
+  myChannelCuts.push_back("eeJZBInDirect() < -50");//
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 40"));
 
 
-  // myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 90"));
+ myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 90"));
 
- //  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT) >250) && ((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT)<400)");
-  //   myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>400");
+ //    myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT) >250) && ((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT)<400)");
+ myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>400");
 
   //    myChannelCuts.push_back("NJetsIDLoose >= 1");
   //   myChannelCuts.push_back("eeSumMT()>250 && eeSumMT()<400 ") ;//
@@ -113,7 +113,7 @@
   
   //------------------Inv Mass------------
 
-  //       myChannelCuts.push_back("(doubleEle[0].lv.M() >= 81 && doubleEle[0].lv.M() <= 111)");
+    myChannelCuts.push_back("(doubleEle[0].lv.M() >= 71 && doubleEle[0].lv.M() <= 111)");
 
   //    myChannelCuts.push_back("NBJetsCSVM >= 2");
   //  myChannelCuts.push_back("NBJetsCSVL >= 2");
@@ -188,7 +188,7 @@
 
    //   tA->MakeCutFlowTable( myChannelCuts );
    //tA->makePlot("misc.MET", cuts, -1, -10, -10, trigger, "MET", 10, 0, 300, false, true, true, true,true, true, 1, true, true, "png",1);
-   //   tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2", 8, 40, 200, false,true, true, true,true, true, 1, true, true,"png",1);
+      tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2", 8, 40, 200, false,true, true, true,true, true, 1, true, true,"png",1);
   //------------------------------Methods-----------------------------------
     int nbins = 1;
   double xbin[nbins+1] = {-2000, 2000};      //MT2
@@ -203,14 +203,14 @@
 //double xbin[NumberOfBins+1] = {0.0,30.0,50.0,70.0,90.0,110.0,140.0,170.0,200.0,240.0,280.0,330.0,400.0,490.0,600.0,730.0,860.0,1000.0}; //Mass
 
 //  tA->eeAnalysis(cuts, trigger, 100000000000000000000, "", "MET", "MET-eeAnal");
-            tA->eeZInOut(cuts, trigger, 100000000000000000000, "MT2 withou jzb");
+//            tA->eeZInOut(cuts, trigger, 100000000000000000000, "MT2");
   //         tA->eeQCDCtoBRatio(cuts, trigger, 100000000000000000000, "Ratio_CtoB-JZBltm50-MT2lt90-binII");
   
 
 // void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int nevents, TString myfileName, TString giveStatus, TString sampleName, TString variable, double *xbin, int nbins)
 
 //tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binI_ees_down", "ee_binI_ees_down", "Wtolnu", "MT2_down", xbin, nbins);
-//tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binI_nominal", "ee_binI_nominal", "Wtolnu", "MT2", xbin, nbins);
+//tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binI_nominal", "ee_binI_nominal", "", "MT2", xbin, nbins);
 //tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binI_ees_up", "ee_binI_ees_up", "Wtolnu", "MT2_up", xbin, nbins);
 
 //tA->eeAnalysisTESpUsys(cuts, trigger, 10000000000000,  "ee_binI_ees_downfixedmass", "ee_binI_ees_down", "", "SUMMT-fixedmass", xbin, nbins);

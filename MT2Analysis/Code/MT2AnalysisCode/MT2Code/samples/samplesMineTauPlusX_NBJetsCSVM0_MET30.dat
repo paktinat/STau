@@ -5,7 +5,7 @@ ________________________________________________________________________________
 # list of samples
 
 ## -------- SMS --------
-#SAMPLE
+SAMPLE
 Name            TStau
 SName           SUSY
 ShapeName       Signal
@@ -16,7 +16,7 @@ Lumi            19600.0
 Type            susy
 Color           1
 
-SAMPLE
+#SAMPLE
 Name            TStau
 SName           SUSY
 ShapeName       Signal

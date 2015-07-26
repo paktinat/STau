@@ -160,15 +160,15 @@ void makeCardTauTau2(double N, double S, double dS, string sOut) {
 
 void makeCardEE1(double N, double S, double dS, string sOut) {
 
-    double EE1BMC = 20.17; //MC driven Bkg for non fake taus
+    double EE1BMC = 10.65; //MC driven Bkg for non fake taus
     double dEE1BMC = 0.10;//its relative systematic uncer
-    double dEE1BNMC = 127.0;//Number for MC without weight
+    double dEE1BNMC = 56.0;//Number for MC without weight
     
-    double EEBDD = 32.38; //Data Driven estimation for QCD
-    double dEEBDD = 0.30;//0.08/0.06;//its total relative uncertainty
+    double EEBDD = 42.38; //Data Driven estimation for QCD
+    double dEEBDD = 0.33;//0.08/0.06;//its total relative uncertainty
 
-    double EEBT = 0.93;      //WJets 0.93 +- 0.13 +-0.15 
-    double dEEBT = 0.33;//WJets 0.21 @ 0.25
+    double EEBT = 3.59;      //WJets 0.93 +- 0.13 +-0.15 
+    double dEEBT = 0.28;//WJets 0.21 @ 0.25
 
 
     // === DATA CARD ===
@@ -180,7 +180,7 @@ void makeCardEE1(double N, double S, double dS, string sOut) {
     fOut << "---" << std::endl;
     fOut << "bin b1" << std::endl;
 //     fOut << "observation " << (EE1BMC + EEBDD + EEBW) << std::endl;
-    fOut << "observation " << 1 << std::endl;
+    fOut << "observation " << 51 << std::endl;
     fOut << "---" << std::endl;
     fOut << "bin              b1     b1  b1  b1" << std::endl;
     fOut << "process         SMS    All  DD  Top" << std::endl;
@@ -195,22 +195,22 @@ void makeCardEE1(double N, double S, double dS, string sOut) {
     fOut << "dEE1S   lnN    " << 1 + dS << "\t-" << "\t-" <<"\t-" <<  std::endl;
     fOut << "dEE1BMC lnN    - \t "    << 1 + dEE1BMC << "\t-" << "\t-" << std::endl;
     fOut << "dEEBDD   lnN  - \t "    <<  "\t-\t" << 1 + dEEBDD << "\t-" << std::endl;
-    fOut << "dEEBW   lnN  - \t " <<  "\t-\t" <<  "\t-\t" << 1 + dEEBT << std::endl;
+    fOut << "dEEBT   lnN  - \t " <<  "\t-\t" <<  "\t-\t" << 1 + dEEBT << std::endl;
     fOut.close();
 
 }
 
 void makeCardEE2(double N, double S, double dS, string sOut) {
 
-    double EE2BMC = 6.92; //MC driven Bkg 
+    double EE2BMC = 4.21; //MC driven Bkg 
     double dEE2BMC = 0.1;//its relative systematic uncer
-    double dEE2BNMC = 14.0;//Number for MC without weight
+    double dEE2BNMC = 9.0;//Number for MC without weight
     
     double EEBDD = 13.49;//0.61; //Data Driven estimation for QCD
     double dEEBDD = 0.3;//1.55/0.61;//its total relative uncertainty
 
-    double EEBT = 0.93;      //WJets 0.93 +- 0.13 +-0.15 
-    double dEEBT = 0.33;//WJets 0.21 @ 0.25
+    double EEBT = 0.4;      //WJets 0.93 +- 0.13 +-0.15 
+    double dEEBT = 0.30;//WJets 0.21 @ 0.25
 
 
     // === DATA CARD ===
@@ -222,7 +222,7 @@ void makeCardEE2(double N, double S, double dS, string sOut) {
     fOut << "---" << std::endl;
     fOut << "bin b1" << std::endl;
 //     fOut << "observation " << (EE2BMC + EEBDD + EEBW) << std::endl;
-    fOut << "observation " << 1 << std::endl;
+    fOut << "observation " << 20 << std::endl;
     fOut << "---" << std::endl;
     fOut << "bin              b1     b1  b1  b1" << std::endl;
     fOut << "process         SMS    All  DD  Top" << std::endl;
@@ -409,11 +409,11 @@ bool isOUT(double x, double y) {
     */
 
 
-    if (x > 450.) return true;
-    if (y <= 100.) return true;
-    if (y > 150.) return true;
+//     if (x > 450.) return true;
+//     if (y <= 100.) return true;
+//     if (y > 150.) return true;
 
-    if((x -y) < 100) return true;
+//     if((x -y) < 100) return true;
     double a = (100. - 480.) / (120. - 500.);
     double b = -a * 120. + 100.;
     if (y > (a * x + b) ) return true;
@@ -529,15 +529,15 @@ run_setUpperLimitCorrectCorrelation19Jun() {
 	    
             system("combineCards.py datacard_* > datacard");
 	    // 	    system("rm -f datacard_*");
-	    //system("combine -M Asymptotic datacard");
+	    system("combine -M Asymptotic datacard");
             //system("combine -M HybridNew  datacard");
-	    system("combine -M HybridNew --frequentist --rule CLs --testStat LHC datacard -H ProfileLikelihood --fork 10 --expectedFromGrid=0.16");                          
+//	    system("combine -M HybridNew --frequentist --rule CLs --testStat LHC datacard -H ProfileLikelihood --fork 10 --expectedFromGrid=0.16");                          
 	    //system("combine -M HybridNew --frequentist --rule CLs --testStat LHC datacard -H ProfileLikelihood --fork 10");  
 
 	    TTree* tree;
-	    //TFile * flimit = new TFile("higgsCombineTest.Asymptotic.mH120.root");
+	    TFile * flimit = new TFile("higgsCombineTest.Asymptotic.mH120.root");
             //TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.root");
-	    TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.quant0.160.root");
+	    //TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.quant0.160.root");
 
             flimit->GetObject("limit", tree);
 
@@ -567,8 +567,8 @@ run_setUpperLimitCorrectCorrelation19Jun() {
 	    }else
 	      cout<<" There is 0 entry "<<endl;
 // 	    system("mv  roostats-* roostats-*.root");
-	    //system("rm -f higgsCombineTest.Asymptotic.mH120.root");
-	    system("rm -f higgsCombineTest.HybridNew.mH120*.root");
+	    system("rm -f higgsCombineTest.Asymptotic.mH120.root");
+//	    system("rm -f higgsCombineTest.HybridNew.mH120*.root");
 // 	    system("rm -f datacard");
 	    system("rm -f roostats-*");
 
