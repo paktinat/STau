@@ -1309,8 +1309,8 @@ void MassPlotter::MakePlot(std::vector<sample> Samples, TString var, TString mai
  	h_PN_MLSP_MChi->Divide(h_SMSEvents);
 
 
-	//TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");//CharginoChargino
-	TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("StSt_8TeV_NLONLL_LSP"); hXsec->Rebin2D(2, 2);hXsec->Scale(0.5);//StauStau
+	TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");//CharginoChargino
+	//TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("StSt_8TeV_NLONLL_LSP"); hXsec->Rebin2D(2, 2);hXsec->Scale(0.25);//StauStau
 	h_PN_MLSP_MChi->Multiply(hXsec);
 
 	TString fileName = fOutputDir;

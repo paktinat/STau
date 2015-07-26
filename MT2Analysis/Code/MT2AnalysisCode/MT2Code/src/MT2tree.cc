@@ -168,8 +168,8 @@ double MT2Susy::XSectionCharginoLSP() const{
 }
 
 int MT2Susy::Category( ) const{
-  //vector< pair<int,int> > susypoints = { {180 , 60} , {380 , 0} , {240 , 60} , {240 , 80} };
-  vector< pair<int,int> > susypoints = { {380 , 0} };
+  vector< pair<int,int> > susypoints = { {180 , 60} , {380 , 0} , {240 , 60} , {240 , 80} };
+  //vector< pair<int,int> > susypoints = { {380 , 0} };
   int ret = 0;
   for( auto pair : susypoints ){
     if( MassGlu >= pair.first && MassGlu < pair.first+20 && MassLSP < pair.second+20 && (MassLSP) >= pair.second )
