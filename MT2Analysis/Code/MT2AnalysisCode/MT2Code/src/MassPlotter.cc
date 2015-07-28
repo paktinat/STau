@@ -10094,7 +10094,7 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
   for(unsigned int ii = 0; ii < fSamples.size(); ii++)
     {
 
-
+      int m=0 ;
     TString myCuts = cuts;
  
     int data = 0;
@@ -10401,10 +10401,16 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	 continue;
        if ( invMass_mutau_up <= 15 || (invMass_mutau_up >= 45 && invMass_mutau_up <= 75))
 	 continue;
-       if (mt2_mutau_up <= 90)
+       if (mt2_mutau_up <= 100)
 	 continue;
        if (tau_MT_mutau_up <= 200)
 	 continue;
+       //       if(Sample.sname == "DY")
+       m +=1 ;
+       //       if(Sample.sname == "SUSY")
+       //       n +=1 ;
+
+
        myQuantity =mt2_mutau_up;
      }
 
@@ -10434,10 +10440,17 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	 continue;
        if ( invMass_mutau_down <= 15 || (invMass_mutau_down >= 45 & invMass_mutau_down <= 75))
 	 continue;
-       if (mt2_mutau_down <= 90)
+       if (mt2_mutau_down <= 100)
 	 continue;
        if (tau_MT_mutau_down <= 200)
 	 continue;
+
+       //       if(Sample.sname == "DY")
+       m +=1 ;
+       //       if(Sample.sname == "SUSY")
+       //       n +=1 ;
+
+       //       m +=1 ;
        myQuantity =mt2_mutau_down;
      }
 
@@ -10742,10 +10755,14 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	  continue;
 	if (fMT2tree->misc.MinMetJetDPhiPt40 <= 1.0)
 	  continue;
-	if(fMT2tree->muTau[0].GetMT2() <= 90)
+	if(fMT2tree->muTau[0].GetMT2() <= 100)
 	  continue;
 	if(fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT <= 200)     
 	  continue;
+	//       if(Sample.sname == "DY")
+       m +=1 ;
+       //       if(Sample.sname == "SUSY")
+       //       n +=1 ;
 
 	  myQuantity = fMT2tree->muTau[0].GetMT2();
 
@@ -11105,7 +11122,7 @@ else if(status == "etau_pu_up")
 	   myQuantity = fMT2tree->eleTau[0].GetMT2();
      }
       
-      
+
 
       if(data == 1){
 
@@ -11203,15 +11220,45 @@ else if(status == "etau_pu_up")
       }
 //For(events)
 
-    double e1 =0;
-   for(int m = 0; m <= NumberOfSamples; m++){
+      double e ;
+      double f ;
 
-   e1 = MT2[m]->Integral();
-   std::cout << setfill('#') << std::setw(50) << "" << std::endl;
-   cout << "sample:" << cnames[m] << endl;
-   cout << "all_content:..."<< e1 << endl;   
 
-   } 
+      for(int kk = 0; kk <= NumberOfSamples; kk++){
+
+      e = 0;
+      f = 0;
+
+   for(int mm = 0; mm < nbins+1 ; mm++){
+
+
+     e += MT2[kk]->GetBinContent(mm);
+
+     f += MT2[kk]->GetBinError(mm)*MT2[kk]->GetBinError(mm);
+
+ } 
+   double g = sqrt(f);
+
+   std::cout << setfill('-') << std::setw(50) << "" << std::endl;
+   cout << "sample:" << cnames[kk] << endl;
+   cout << "all_bin_content:..."<< e << endl;   
+   cout << "all_bin_error:..."<< g << endl;   
+   //   cout << "SUSY unweighted:..."<< n << endl;   
+   cout << "all events unweighted:..."<< m << endl;   
+      }
+
+
+
+//     double e1 =0;
+//    for(int m = 0; m <= NumberOfSamples; m++){
+
+//    e1 = MT2[m]->Integral();
+//    //   e2 = e1 / weight;
+//    std::cout << setfill('#') << std::setw(50) << "" << std::endl;
+//    cout << "sample:" << cnames[m] << endl;
+//    cout << "all_content:..."<< e1 << endl;   
+//    cout << "all_content unweighted:..."<< m << endl;   
+//    } 
    
 
 				 }
@@ -11265,15 +11312,15 @@ else if(status == "etau_pu_up")
 //    cout << "all_bin_error:..."<< c << endl;   
 //    }
 
-      double e ;
-      double f ;
+    double e ;
+    double f ;
 
 
       for(int kk = 0; kk <= NumberOfSamples; kk++){
 
       e = 0;
       f = 0;
-
+      //      m =0;
    for(int mm = 0; mm < nbins+1 ; mm++){
 
 
@@ -11288,6 +11335,7 @@ else if(status == "etau_pu_up")
    cout << "sample:" << cnames[kk] << endl;
    cout << "all_bin_content:..."<< e << endl;   
    cout << "all_bin_error:..."<< g << endl;   
+   //   cout << "all_content unweighted:..."<< m << endl;   
    }
 
 

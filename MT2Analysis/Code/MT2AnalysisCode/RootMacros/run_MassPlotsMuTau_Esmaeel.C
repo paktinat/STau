@@ -76,6 +76,7 @@ TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat";
   //  myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 380.0 && Susy.MassGlu  < 400.0 && Susy.MassLSP < 20.0))"); //0.227//0.0343//0.00189
 //   myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 180.0 && Susy.MassGlu  < 200.0 && Susy.MassLSP >=60 && Susy.MassLSP < 80.0))");//0.119//0.0111
   myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 380.0) <= 10.0 && abs(Susy.MassLSP - 1) <= 10.0))");//0.14986//0.01414//0.01249
+  //  myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 100.0) <= 10.0 && abs(Susy.MassLSP - 1) <= 10.0))");//0.14986//0.01414//0.01249
   //myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 240.0 && Susy.MassGlu  < 260.0 && Susy.MassLSP >=40 && Susy.MassLSP < 60.0))");//0.14986//0.01414
   //myChannelCuts.push_back("(misc.ProcessID!=10 || (  (Susy.MassLSP < 150) && (Susy.MassGlu < 400) ))"); 
   //You need to carefully define the cut variables based on MT2"Channel".hh
@@ -214,11 +215,9 @@ TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat";
   TString cuts = cutStream.str().c_str();
 
 
-  //tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_tes_up", "mutau_tes_up", "");
-//  tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_nominal", "mutau_nominal", "");
-tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_tes_down", "mutau_tes_down", "");
-
-
+  tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_tes_up", "mutau_tes_up", "");
+  //  tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_nominal", "mutau_nominal", "");
+  //        tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_tes_down", "mutau_tes_down", "");
 /* Define the properties of plots*/	
 //  Objectproperties PHI("phi");
 //  Objectproperties PT("pt");
