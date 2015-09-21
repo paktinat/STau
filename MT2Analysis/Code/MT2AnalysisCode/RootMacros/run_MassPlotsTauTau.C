@@ -1,6 +1,7 @@
 {
   TString outputdir = "../MassPlots/";
-  TString samples = "./samples/samplesMineTauTau.dat"; 
+  //TString samples = "./samples/samplesMineTauTau.dat"; 
+  TString samples = "./samples/samplesMineSmall.dat"; 
   int verbose =3;
 
   gSystem->CompileMacro("../MT2Code/src/MassPlotter.cc", "kf");//"k", "f"
@@ -96,7 +97,8 @@
 
   TString cuts_bin2 = cutStream_2.str().c_str();
 
-tA->makePlot("doubleTau[0].MT2",cuts_bin1, -10, -10 , -10 , trigger , "M_{T2}"  ,20,0, 1000,   true,  true ,  true,   true,  true,  true, 1,true, false, "png", 1);
+tA->getGenEfficiencies(10000);
+//tA->makePlot("doubleTau[0].MT2",cuts_bin1, -10, -10 , -10 , trigger , "M_{T2}"  ,20,0, 1000,   true,  true ,  true,   true,  true,  true, 1,true, false, "png", 1);
 
   //     tA->eeZInOut(cuts_bin2, trigger, 100000000000000000000, "wjets_0to90_signal");
 //tA->makePlot("doubleTau[0].MT2",cuts_bin2, -10, 0 , -10 , trigger , "M_{T2}"  ,4,40, 140,   true,  true ,  true,   true,  true,  true, 1,true, false, "png");
