@@ -276,6 +276,7 @@ public:
 
    void QCDEstimationinTauTau(TString cuts, TString trigger, unsigned int nevents, TString myfileName );
   void getGenEfficiencies(unsigned int nEvts);
+  bool wayToSort(TLorentzVector l1, TLorentzVector l2); 
   
 void TauTauAnalysisbin1(TString cuts,TString trigger,unsigned int nevents, TString myfileName);
 void TauTauAnalysisbin2(TString cuts, TString trigger, unsigned int nevents,TString myfileName);

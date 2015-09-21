@@ -17064,12 +17064,9 @@ void MassPlotter::getGenEfficiencies(unsigned int nEvts){
 
         TH1::SetDefaultSumw2();
 
-  TH1I * genID = new TH1I("genID","genID", 6, 10, 16);
-  TH1D * genID_weight = new TH1D("genID_w","genID_w", 6, 10, 16);
-
   TH1I * nGenTaus = new TH1I("nGenTaus","nGenTaus", 10, 0, 10);
-  TH1I * TauMotherID = new TH1I("TauMotherID","TauMotherID", 16, 1000010, 1000026);
-  TH1I * TauDecayMode = new TH1I("TauDecayMode","TauDecayMode", 3, 0, 3);
+  TH1D * leadingTau_pt = new TH1D("tau0Pt","tau0Pt", 100, 0, 500);
+  TH1D * nextToLeadingTau_pt = new TH1D("tau1Pt","tau1Pt", 100, 0, 500);
 
         for(size_t i = 0; i < fSamples.size(); ++i){
         sample Sample = fSamples[i];
@@ -17125,6 +17122,11 @@ void MassPlotter::getGenEfficiencies(unsigned int nEvts){
 	}
 
 	nGenTaus->Fill(genTaus.size());
+	if (genTaus.size() != 2) continue;
+
+	std::sort(genTaus.begin(),genTaus.end(),wayToSort);
+	leadingTau_pt->Fill(genTaus[0].Pt());
+	nextToLeadingTau_pt->Fill(genTaus[1].Pt());
 // ---------------------------------------------------------------------------
 /*
 		double weight = 0;
@@ -17276,3 +17278,4 @@ cout<<"W->muo "<<genID_weight->GetBinContent(4)<<endl;
 cout<<"W->tau "<<genID_weight->GetBinContent(6)<<endl;
 */
 }
+bool MassPlotter::wayToSort(TLorentzVector l1, TLorentzVector l2) { return l1.Pt() > l2.Pt(); }
