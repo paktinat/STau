@@ -17113,8 +17113,14 @@ void MassPlotter::getGenEfficiencies(unsigned int nEvts){
 	if (tau_e || tau_m) tau_h = false;
 	if (!tau_h) continue;
 
+	bool newHadTau = true;
 
-	genTaus.push_back(fMT2tree->genlept[j].lv);
+	for(int k = 0; k < genTaus.size(); k++) {
+		double deltaR = Util::GetDeltaR(fMT2tree->genlept[j].lv.Eta(), genTaus[k].Eta(), fMT2tree->genlept[j].lv.Phi(), genTaus[k].Phi());
+		if(deltaR < 0.5) newHadTau = false;
+	}
+
+	if (newHadTau) genTaus.push_back(fMT2tree->genlept[j].lv);
 
 	}
 
