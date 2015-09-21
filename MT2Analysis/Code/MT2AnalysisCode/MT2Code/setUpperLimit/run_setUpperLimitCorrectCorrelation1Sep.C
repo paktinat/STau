@@ -1,3 +1,5 @@
+// root run_setUpperLimitCorrectCorrelation1Sep 0.2 EXP count1.root count2.root count3.root ...
+
 #include <TString.h>
 
 void makeCardEleTau(double N, double S, double dS, string sOut) {
@@ -302,6 +304,13 @@ run_setUpperLimitCorrectCorrelation1Sep() {
     TH2D* hSgmP2 = (TH2D*) htmp->Clone("hSgmP2");
     TH2D* hSgmM2 = (TH2D*) htmp->Clone("hSgmM2");
 
+    TH2D* hXSec = (TH2D*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
+    TH2D* hXSecUP = (TH2D*) TFile::Open("referenceXSecs.root")->Get("UP_C1C1_8TeV_NLONLL_LSP");
+    TH2D* hXSecDOWN = (TH2D*) TFile::Open("referenceXSecs.root")->Get("DOWN_C1C1_8TeV_NLONLL_LSP");
+
+    Int_t Obs_Sigma = 0; // -1 0 1
+
+
     TFile* fin;
     for (int ix = 1; ix <= htmp->GetXaxis()->GetNbins(); ix++) {
         for (int iy = 1; iy <= htmp->GetYaxis()->GetNbins(); iy++) {    
@@ -327,7 +336,22 @@ run_setUpperLimitCorrectCorrelation1Sep() {
 
                 TH2* hSgn = fin->GetObjectChecked("h_PN_MLSP_MChi", "TH2*");
                 Double_t S = hSgn->GetBinContent(ix, iy);
+                
                 Double_t statS = hSgn->GetBinError(ix, iy);
+
+                Double_t XS = hXSec->GetBinContent(ix, iy);
+                Double_t XSUP = hXSecUP->GetBinContent(ix, iy);
+                Double_t XSDOWN = hXSecDOWN->GetBinContent(ix, iy);
+
+                if(Obs_Sigma == 1){
+                 S = (XSUP/XS)*S;
+                 statS = sqrt(XSUP/XS)*statS;
+				}
+                if(Obs_Sigma == -1){
+                S = (XDOWN/XS)*S;
+                statS = sqrt(XDOWN/XS)*statS;
+                }
+                
 
 // 		if(S!= 0)
 // 		  dS = sqrt(dS * dS + (statS * statS/(S*S)));
@@ -364,14 +388,14 @@ run_setUpperLimitCorrectCorrelation1Sep() {
 	    
             system("combineCards.py datacard_* > datacard");
  	    system("rm -f datacard_*");
-	    system("combine -M Asymptotic datacard");
-            //system("combine -M HybridNew  datacard");
+	    //system("combine -M Asymptotic datacard");
+        //system("combine -M HybridNew  datacard");
 	    //system("combine -M HybridNew --frequentist --rule CLs --testStat LHC datacard -H ProfileLikelihood --fork 10 --expectedFromGrid=0.5");                          
-	    //system("combine -M HybridNew --frequentist --rule CLs --testStat LHC datacard -H ProfileLikelihood --fork 10");  
+	    system("combine -M HybridNew --frequentist --rule CLs --testStat LHC datacard -H ProfileLikelihood --fork 10");  
 
 	    TTree* tree;
-	    TFile * flimit = new TFile("higgsCombineTest.Asymptotic.mH120.root");
-            //TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.root");
+	    //TFile * flimit = new TFile("higgsCombineTest.Asymptotic.mH120.root");
+        TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.root");
 	    //TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.quant0.500.root");
 
             flimit->GetObject("limit", tree);
@@ -402,8 +426,8 @@ run_setUpperLimitCorrectCorrelation1Sep() {
 	    }else
 	      cout<<" There is 0 entry "<<endl;
 // 	    system("mv  roostats-* roostats-*.root");
-	    system("rm -f higgsCombineTest.Asymptotic.mH120.root");
-//	    system("rm -f higgsCombineTest.HybridNew.mH120*.root");
+//	    system("rm -f higgsCombineTest.Asymptotic.mH120.root");
+	    system("rm -f higgsCombineTest.HybridNew.mH120*.root");
 // 	    system("rm -f datacard");
 	    system("rm -f roostats-*");
 
