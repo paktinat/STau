@@ -17060,13 +17060,20 @@ plotRatioStack(h_stack, MT2[NumberOfSamples-2], MT2[NumberOfSamples], MT2[Number
 
 }
 
+bool wayToSort(TLorentzVector l1, TLorentzVector l2) { return l1.Pt() > l2.Pt(); }
+
 void MassPlotter::getGenEfficiencies(unsigned int nEvts){
 
         TH1::SetDefaultSumw2();
 
   TH1I * nGenTaus = new TH1I("nGenTaus","nGenTaus", 10, 0, 10);
-  TH1D * leadingTau_pt = new TH1D("tau0Pt","tau0Pt", 100, 0, 500);
-  TH1D * nextToLeadingTau_pt = new TH1D("tau1Pt","tau1Pt", 100, 0, 500);
+  TH1D * leadingTau_pt_all = new TH1D("tau0Pt_all","tau0Pt_all", 100, 0, 500);
+  TH1D * nextToLeadingTau_pt_all = new TH1D("tau1Pt_all","tau1Pt_all", 100, 0, 500);
+  TH1D * leadingTau_pt_pass = new TH1D("tau0Pt_pass","tau0Pt_pass", 100, 0, 500);
+  TH1D * nextToLeadingTau_pt_pass = new TH1D("tau1Pt_pass","tau1Pt_pass", 100, 0, 500);
+
+  TH1D * leadingTau_pt_eff = new TH1D("tau0Pt_eff","tau0Pt_eff", 100, 0, 500);
+  TH1D * nextToLeadingTau_pt_eff = new TH1D("tau1Pt_eff","tau1Pt_eff", 100, 0, 500);
 
         for(size_t i = 0; i < fSamples.size(); ++i){
         sample Sample = fSamples[i];
@@ -17125,34 +17132,33 @@ void MassPlotter::getGenEfficiencies(unsigned int nEvts){
 	if (genTaus.size() != 2) continue;
 
 	std::sort(genTaus.begin(),genTaus.end(),wayToSort);
-	leadingTau_pt->Fill(genTaus[0].Pt());
-	nextToLeadingTau_pt->Fill(genTaus[1].Pt());
+
+	leadingTau_pt_all->Fill(genTaus[0].Pt());
+	nextToLeadingTau_pt_all->Fill(genTaus[1].Pt());
 // ---------------------------------------------------------------------------
-/*
-		double weight = 0;
-		double pt0 = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Pt();
-		double pt1 = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Pt();
-		double leadingTau_weight = 0.826969 * 0.5 * (TMath::Erf((pt0 - 42.2274) / 2. / 0.783258 / sqrt(pt0)) + 1.); 
-		double nextToLeadingTau_weight = 0.826969 * 0.5 * (TMath::Erf((pt1 - 42.2274) / 2. / 0.783258 / sqrt(pt1)) + 1.); 
-		weight = leadingTau_weight*nextToLeadingTau_weight;
 
 		//weight *= fMT2tree->pileUp.Weight;
 
-		//if(fMT2tree->misc.ProcessID == 0) weight = 1; // data events
-		//if(!(fMT2tree->misc.ProcessID != 0 || (fMT2tree->misc.CrazyHCAL==0 && fMT2tree->misc.NegativeJEC==0 && fMT2tree->misc.CSCTightHaloIDFlag==0 && fMT2tree->misc.HBHENoiseFlag==0 && fMT2tree->misc.hcalLaserEventFlag==0 && fMT2tree->misc.trackingFailureFlag==0 && fMT2tree->misc.eeBadScFlag==0 && fMT2tree->misc.EcalDeadCellTriggerPrimitiveFlag==0 && fMT2tree->trigger.HLT_DiTau))) continue;
-
-// *** Signal Regions ********************************************************************************
 		//if(!(fMT2tree->misc.ProcessID!=10 || (abs(fMT2tree->Susy.MassGlu - 240) <= 5 && abs(fMT2tree->Susy.MassLSP - 40) <= 5))) continue;
+
 		if(!(fMT2tree->doubleTau[0].GetTauIndex0() >= 0))  continue;
+		double pt0 = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Pt();
+		double leadingTau_weight = 0.826969 * 0.5 * (TMath::Erf((pt0 - 42.2274) / 2. / 0.783258 / sqrt(pt0)) + 1.); 
+		leadingTau_pt_pass->Fill(genTaus[0].Pt());
+		
 		if(!(fMT2tree->doubleTau[0].GetTauIndex1() >= 0))  continue;
-		if(!(fMT2tree->doubleTau[0].GetLV().M() > 12))  continue;
-                if(!(fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].ElectronRejMVA3 > 0.5))  continue;
-                if(!(fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].MuonRej2 > 0.5))  continue;
-                if(!(fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].MuonRej2 > 0.5))  continue;
-		if(!(fMT2tree->doubleTau[0].HasNoVetoMu()))  continue;
-		if(!(fMT2tree->doubleTau[0].HasNoVetoElec()))  continue;
-		if(!(fMT2tree->doubleTau[0].GetSumCharge() == 0))  continue;
-		if(!(fMT2tree->doubleTau[0].isSignalDoubleTau()))  continue;
+		double pt1 = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Pt();
+		double nextToLeadingTau_weight = 0.826969 * 0.5 * (TMath::Erf((pt1 - 42.2274) / 2. / 0.783258 / sqrt(pt1)) + 1.); 
+		nextToLeadingTau_pt_pass->Fill(genTaus[1].Pt());
+
+		//if(!(fMT2tree->doubleTau[0].GetLV().M() > 12))  continue;
+                //if(!(fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].ElectronRejMVA3 > 0.5))  continue;
+                //if(!(fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].MuonRej2 > 0.5))  continue;
+                //if(!(fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].MuonRej2 > 0.5))  continue;
+		//if(!(fMT2tree->doubleTau[0].HasNoVetoMu()))  continue;
+		//if(!(fMT2tree->doubleTau[0].HasNoVetoElec()))  continue;
+		//if(!(fMT2tree->doubleTau[0].GetSumCharge() == 0))  continue;
+		//if(!(fMT2tree->doubleTau[0].isSignalDoubleTau()))  continue;
 		//if(!(fMT2tree->misc.MinMetJetDPhiPt40 > 1))  continue;
 		//if(!(fMT2tree->doubleTau[0].GetMT2() > 40))  continue;
 
@@ -17166,11 +17172,7 @@ void MassPlotter::getGenEfficiencies(unsigned int nEvts){
                 //if(!(fMT2tree->NBJetsCSVM == 0))  continue;
 		//}
 
-nWs+=weight;
-	int nTaus=0;
-        int HadTau = 0;
-		nrAll++;
-*/
+
 		//if(!(fMT2tree->misc.ProcessID == 10))  continue;
 		//if(!((abs(fMT2tree->Susy.MassGlu - 240) <= 5.0 && abs(fMT2tree->Susy.MassLSP - 40) <= 5.0)))  continue;
 		//nrSusy++;
@@ -17181,59 +17183,6 @@ nWs+=weight;
 	//cout << "+++ Proccessing event " << jentry << " +++++++++++++++++++++++++++++++++++++++" << endl;
 	//cout << "+++ This event has " << fMT2tree->NGenLepts << " generated leptons" << endl;
 
-
-	//cout<<"*** new event **********************"<<endl;
-/*
-        for(int j = 0; j < fMT2tree->NGenParticles; j++){
-
-	cout << "--- particle id  " << fMT2tree->genparticle[j].ID << endl;
-	cout << "--- particle mid " << fMT2tree->genparticle[j].MIndex << endl;
-	cout << "--- particle mst  " << fMT2tree->genparticle[j].GMIndex << endl;
-*/
-	//cout << "--- particle id  " << fMT2tree->genlept[j].ID << endl;
-	//cout << "--- particle mid " << fMT2tree->genlept[j].MID << endl;
-	//cout << "--- particle mst  " << fMT2tree->genlept[j].MStatus << endl;
-/*
-	if(abs(fMT2tree->genlept[j].ID)==11 && abs(fMT2tree->genlept[j].MID)==24) {genID->Fill(11);genID_weight->Fill(11,weight);}	
-	if(abs(fMT2tree->genlept[j].ID)==13 && abs(fMT2tree->genlept[j].MID)==24) {genID->Fill(13);genID_weight->Fill(13,weight);}	
-	if(abs(fMT2tree->genlept[j].ID)==15 && abs(fMT2tree->genlept[j].MID)==24) {genID->Fill(15);genID_weight->Fill(15,weight);}
-
-        if(abs(fMT2tree->genlept[j].ID) != 15) 
-          continue;
-        if(fMT2tree->genlept[j].MStatus != 3) 
-          continue;
-
-	nTaus++;
-	TauMotherID->Fill(abs(fMT2tree->genlept[j].MID));
-
-	bool tau_e = false;
-	bool tau_m = false;
-	bool tau_h = true; 
-        for(int i = 0; i < fMT2tree->NGenLepts; i++){
-          if((abs(fMT2tree->genlept[i].ID) == 11) && (fMT2tree->genlept[i].MID == fMT2tree->genlept[j].ID)) tau_e = true;
-          if((abs(fMT2tree->genlept[i].ID) == 13) && (fMT2tree->genlept[i].MID == fMT2tree->genlept[j].ID)) tau_m = true;
-        }
-/=*  
-        if (tau_ele == 1 || tau_muo == 1) {
-	HadTau = 0;
-	cout << "+++ Proccessing event " << jentry << " +++++++++++++++++++++++++++++++++++++++" << endl;
-	cout << "*** leptonic ! "<<endl;
-	if(tau_ele == 1) cout<<" with electron"<<endl;
-	else cout<<" with muon"<<endl;
-	}
-
-        if (HadTau == 1) cout<<"*** hadronic ! "<<endl;
-*=/
-	if (tau_e || tau_m) tau_h = false;
-
-	if (tau_h) HadTau++;
-*/
-//	}
-/*
-	//if (HadTau == 0) nEvts++;
-	NTaus->Fill(nTaus);
-	if (nTaus == 2) TauDecayMode->Fill(HadTau);
-*/
 } // loop over events
 
 /*TCanvas *c0 = new TCanvas("c0", "c0", 500, 500);
@@ -17254,28 +17203,15 @@ cout<<"** fraction of tau_h tau_l "<<TauDecayMode->GetBinContent(2)/TauDecayMode
 cout<<"** fraction of tau_l tau_l "<<TauDecayMode->GetBinContent(1)/TauDecayMode->GetEntries()<<endl;
 */
 
-//cout<<"** nr of susy events "<<nrSusy<<endl;
-//cout<<"** nr of events with at least one leptonically-decaying tau "<<nEvts<<endl;
-/*
-	int allSelectedEvents = 0; 
-	for (int i = 0; i < 120; i++) {if (n[i] != 0) cout<<" *** number of ttbar events in decay mode "<<i<<" is "<<n[i]<<endl;
-	allSelectedEvents += n[i]; 
-	}
-	cout<<">>>>> number of selected events after all cuts: "<<allSelectedEvents<<endl;
-	cout<<"		>>>>> number of MC-truth events with fMT2tree->TopDecayModeResult(11)==true : "<<nLepVeto_ele<<endl;
-	cout<<"		>>>>> number of MC-truth events with fMT2tree->TopDecayModeResult(13)==true : "<<nLepVeto_muo<<endl;
-*/
-
 }
-//cout<<" nr of Wjets event: "<<nWs<<endl;
 TCanvas *c0 = new TCanvas("c0", "c0", 500, 500);
 nGenTaus->Draw();
-/*cout<<"W->ele "<<genID->GetBinContent(2)<<endl;
-cout<<"W->muo "<<genID->GetBinContent(4)<<endl;
-cout<<"W->tau "<<genID->GetBinContent(6)<<endl;
-cout<<"W->ele "<<genID_weight->GetBinContent(2)<<endl;
-cout<<"W->muo "<<genID_weight->GetBinContent(4)<<endl;
-cout<<"W->tau "<<genID_weight->GetBinContent(6)<<endl;
-*/
+
+TCanvas *c1 = new TCanvas("c1", "c1", 500, 500);
+leadingTau_pt_eff->Divide(leadingTau_pt_pass,leadingTau_pt_all); 
+leadingTau_pt_eff->Draw();
+
+TCanvas *c2 = new TCanvas("c2", "c2", 500, 500);
+nextToLeadingTau_pt_eff->Divide(nextToLeadingTau_pt_pass,nextToLeadingTau_pt_all); 
+nextToLeadingTau_pt_eff->Draw();
 }
-bool MassPlotter::wayToSort(TLorentzVector l1, TLorentzVector l2) { return l1.Pt() > l2.Pt(); }
