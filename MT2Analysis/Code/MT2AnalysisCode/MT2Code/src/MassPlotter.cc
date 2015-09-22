@@ -17079,8 +17079,8 @@ void MassPlotter::getGenEfficiencies(unsigned int nEvts){
         sample Sample = fSamples[i];
 	//if (!(Sample.sname == "SUSY")) continue;
 	//if (!(Sample.shapename == "WJets" && Sample.sname != "VV")) continue;
-	//cout << "loading printcontent for: " << Sample.name << endl;
-	//cout << "		sname      " << Sample.sname << endl;
+	cout << "loading : " << Sample.name << endl;
+	cout << "sname   : " << Sample.sname << endl;
 
 	fMT2tree = new MT2tree();
         Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
@@ -17143,7 +17143,7 @@ void MassPlotter::getGenEfficiencies(unsigned int nEvts){
 
 	  for(int k = 0; k < fMT2tree->NTaus; k++){
 	    float deltaR = Util::GetDeltaR(genTaus[0].Eta(), fMT2tree->tau[k].lv.Eta(), genTaus[0].Phi(), fMT2tree->tau[k].lv.Phi());
-	    if(fMT2tree->tau[k].PassTau0_TauTau == 1)
+	    if(fMT2tree->tau[k].PassTau0_TauTau == 1 && fMT2tree->tau[k].MuonRej2 > 0.5 && fMT2tree->tau[k].ElectronRejMVA3 > 0.5)
 	      if(deltaR < minDR){
 		minDR = deltaR;
 		tau0Index = k;
@@ -17160,7 +17160,7 @@ void MassPlotter::getGenEfficiencies(unsigned int nEvts){
 	  for(int k = 0; k < fMT2tree->NTaus; k++){
 	    if(k == tau0Index) continue;
 	    float deltaR = Util::GetDeltaR(genTaus[1].Eta(), fMT2tree->tau[k].lv.Eta(), genTaus[1].Phi(), fMT2tree->tau[k].lv.Phi());
-	    if(fMT2tree->tau[k].PassTau1_TauTau == 1)
+	    if(fMT2tree->tau[k].PassTau1_TauTau == 1 && fMT2tree->tau[k].MuonRej2 > 0.5 && fMT2tree->tau[k].ElectronRejMVA3 > 0.5)
 	      if(deltaR < minDR){
 		minDR = deltaR;
 		tau1Index = k;
@@ -17172,67 +17172,29 @@ void MassPlotter::getGenEfficiencies(unsigned int nEvts){
 		double nextToLeadingTau_weight = 0.826969 * 0.5 * (TMath::Erf((pt1 - 42.2274) / 2. / 0.783258 / sqrt(pt1)) + 1.); 
 		nextToLeadingTau_pt_pass->Fill(genTaus[1].Pt(),nextToLeadingTau_weight);
 
-		//if(!(fMT2tree->doubleTau[0].GetLV().M() > 12))  continue;
-                //if(!(fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].ElectronRejMVA3 > 0.5))  continue;
-                //if(!(fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].MuonRej2 > 0.5))  continue;
-                //if(!(fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].MuonRej2 > 0.5))  continue;
-		//if(!(fMT2tree->doubleTau[0].HasNoVetoMu()))  continue;
-		//if(!(fMT2tree->doubleTau[0].HasNoVetoElec()))  continue;
-		//if(!(fMT2tree->doubleTau[0].GetSumCharge() == 0))  continue;
-		//if(!(fMT2tree->doubleTau[0].isSignalDoubleTau()))  continue;
-		//if(!(fMT2tree->misc.MinMetJetDPhiPt40 > 1))  continue;
-		//if(!(fMT2tree->doubleTau[0].GetMT2() > 40))  continue;
-
-		//if(!bin2estimation) {
-		//if(!(fMT2tree->doubleTau[0].GetMT2() > 90))  continue;
-	        //if(!(fMT2tree->maxTauMT() > 200))  continue;
-		//}
-		//if(bin2estimation) {
-                //if(!(fMT2tree->doubleTau[0].GetMT2() < 90))  continue;
-                //if(!((fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].MT + fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].MT) > 250))  continue;
-                //if(!(fMT2tree->NBJetsCSVM == 0))  continue;
-		//}
-
-
-		//if(!(fMT2tree->misc.ProcessID == 10))  continue;
-		//if(!((abs(fMT2tree->Susy.MassGlu - 240) <= 5.0 && abs(fMT2tree->Susy.MassLSP - 40) <= 5.0)))  continue;
-		//nrSusy++;
-		//if(!(fMT2tree->doubleTau[0].GetTauIndex0() >= 0))  continue;
-		//if(!(fMT2tree->doubleTau[0].GetTauIndex1() >= 0))  continue;
-		//if(!(fMT2tree->doubleTau[0].GetSumCharge() == 0))  continue;
-
-	//cout << "+++ Proccessing event " << jentry << " +++++++++++++++++++++++++++++++++++++++" << endl;
-	//cout << "+++ This event has " << fMT2tree->NGenLepts << " generated leptons" << endl;
-
 } // loop over events
-
-/*TCanvas *c0 = new TCanvas("c0", "c0", 500, 500);
-NTaus->Draw();
-//c0->BuildLegend();
-TCanvas *c1 = new TCanvas("c1", "c1", 500, 500);
-TauMotherID->Draw();
-//c1->BuildLegend();
-TCanvas *c2 = new TCanvas("c2", "c2", 500, 500);
-TauDecayMode->Draw();
-//c2->BuildLegend();
-cout<<"** nr of all events "<<nrAll<<endl;
-cout<<"** TauDecayMode->GetEntries() "<<TauDecayMode->GetEntries()<<endl;
-cout<<"** NTaus->GetBinContent(3) "<<NTaus->GetBinContent(3)<<endl;
-
-cout<<"** fraction of tau_h tau_h "<<TauDecayMode->GetBinContent(3)/TauDecayMode->GetEntries()<<endl;
-cout<<"** fraction of tau_h tau_l "<<TauDecayMode->GetBinContent(2)/TauDecayMode->GetEntries()<<endl;
-cout<<"** fraction of tau_l tau_l "<<TauDecayMode->GetBinContent(1)/TauDecayMode->GetEntries()<<endl;
-*/
 
 }
 TCanvas *c0 = new TCanvas("c0", "c0", 500, 500);
 nGenTaus->Draw();
 
 TCanvas *c1 = new TCanvas("c1", "c1", 500, 500);
+c1->Divide(1,3);
+c1->cd(1);
+leadingTau_pt_pass->Draw();
+c1->cd(2);
+leadingTau_pt_all->Draw();
+c1->cd(3);
 leadingTau_pt_eff->Divide(leadingTau_pt_pass,leadingTau_pt_all); 
 leadingTau_pt_eff->Draw();
 
 TCanvas *c2 = new TCanvas("c2", "c2", 500, 500);
+c2->Divide(1,3);
+c2->cd(1);
+nextToLeadingTau_pt_pass->Draw();
+c2->cd(2);
+nextToLeadingTau_pt_all->Draw();
+c2->cd(3);
 nextToLeadingTau_pt_eff->Divide(nextToLeadingTau_pt_pass,nextToLeadingTau_pt_all); 
 nextToLeadingTau_pt_eff->Draw();
 }
