@@ -17144,12 +17144,12 @@ void MassPlotter::getGenEfficiencies(unsigned int nEvts){
 		if(!(fMT2tree->doubleTau[0].GetTauIndex0() >= 0))  continue;
 		double pt0 = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Pt();
 		double leadingTau_weight = 0.826969 * 0.5 * (TMath::Erf((pt0 - 42.2274) / 2. / 0.783258 / sqrt(pt0)) + 1.); 
-		leadingTau_pt_pass->Fill(genTaus[0].Pt());
+		leadingTau_pt_pass->Fill(genTaus[0].Pt(),leadingTau_weight);
 		
 		if(!(fMT2tree->doubleTau[0].GetTauIndex1() >= 0))  continue;
 		double pt1 = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Pt();
 		double nextToLeadingTau_weight = 0.826969 * 0.5 * (TMath::Erf((pt1 - 42.2274) / 2. / 0.783258 / sqrt(pt1)) + 1.); 
-		nextToLeadingTau_pt_pass->Fill(genTaus[1].Pt());
+		nextToLeadingTau_pt_pass->Fill(genTaus[1].Pt(),nextToLeadingTau_weight);
 
 		//if(!(fMT2tree->doubleTau[0].GetLV().M() > 12))  continue;
                 //if(!(fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].ElectronRejMVA3 > 0.5))  continue;
