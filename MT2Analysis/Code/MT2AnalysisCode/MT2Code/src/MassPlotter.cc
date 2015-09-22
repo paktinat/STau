@@ -17137,17 +17137,38 @@ void MassPlotter::getGenEfficiencies(unsigned int nEvts){
 	nextToLeadingTau_pt_all->Fill(genTaus[1].Pt());
 // ---------------------------------------------------------------------------
 
-		//weight *= fMT2tree->pileUp.Weight;
+	float minDR = 100.0;
+	int tau0Index = -1;
+	int tau1Index = -1;
 
-		//if(!(fMT2tree->misc.ProcessID!=10 || (abs(fMT2tree->Susy.MassGlu - 240) <= 5 && abs(fMT2tree->Susy.MassLSP - 40) <= 5))) continue;
+	  for(int k = 0; k < fMT2tree->NTaus; k++){
+	    float deltaR = Util::GetDeltaR(genTaus[0].Eta(), fMT2tree->tau[k].lv.Eta(), genTaus[0].Phi(), fMT2tree->tau[k].lv.Phi());
+	    if(fMT2tree->tau[k].PassTau0_TauTau == 1)
+	      if(deltaR < minDR){
+		minDR = deltaR;
+		tau0Index = k;
+	      }
+	  }
 
-		if(!(fMT2tree->doubleTau[0].GetTauIndex0() >= 0))  continue;
-		double pt0 = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Pt();
+		if(!(minDR<0.5 && tau0Index != -1))  continue;
+		double pt0 = fMT2tree->tau[tau0Index].lv.Pt();
 		double leadingTau_weight = 0.826969 * 0.5 * (TMath::Erf((pt0 - 42.2274) / 2. / 0.783258 / sqrt(pt0)) + 1.); 
 		leadingTau_pt_pass->Fill(genTaus[0].Pt(),leadingTau_weight);
 		
-		if(!(fMT2tree->doubleTau[0].GetTauIndex1() >= 0))  continue;
-		double pt1 = fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Pt();
+	minDR = 100.0;
+
+	  for(int k = 0; k < fMT2tree->NTaus; k++){
+	    if(k == tau0Index) continue;
+	    float deltaR = Util::GetDeltaR(genTaus[1].Eta(), fMT2tree->tau[k].lv.Eta(), genTaus[1].Phi(), fMT2tree->tau[k].lv.Phi());
+	    if(fMT2tree->tau[k].PassTau1_TauTau == 1)
+	      if(deltaR < minDR){
+		minDR = deltaR;
+		tau1Index = k;
+	      }
+	  }
+
+		if(!(minDR<0.5 && tau1Index != -1))  continue;
+		double pt1 = fMT2tree->tau[tau1Index].lv.Pt();
 		double nextToLeadingTau_weight = 0.826969 * 0.5 * (TMath::Erf((pt1 - 42.2274) / 2. / 0.783258 / sqrt(pt1)) + 1.); 
 		nextToLeadingTau_pt_pass->Fill(genTaus[1].Pt(),nextToLeadingTau_weight);
 
