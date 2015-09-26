@@ -17198,3 +17198,159 @@ c2->cd(3);
 nextToLeadingTau_pt_eff->Divide(nextToLeadingTau_pt_pass,nextToLeadingTau_pt_all); 
 nextToLeadingTau_pt_eff->Draw();
 }
+
+
+void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts){
+  
+  TH1::SetDefaultSumw2();
+
+  TH1I * nGenTaus = new TH1I("nGenTaus","nGenTaus", 10, 0, 10);
+  TH1D * leadingTau_pt_all = new TH1D("tau0Pt_all","tau0Pt_all", 100, 0, 500);
+  TH1D * Mu_pt_all = new TH1D("tau1Pt_all","tau1Pt_all", 100, 0, 500);
+  TH1D * leadingTau_pt_pass = new TH1D("tau0Pt_pass","tau0Pt_pass", 100, 0, 500);
+  TH1D * Mu_pt_pass = new TH1D("Mu_pt_pass","Mu_pt_pass", 100, 0, 500);
+
+  TH1D * leadingTau_pt_eff = new TH1D("tau0Pt_eff","tau0Pt_eff", 100, 0, 500);
+  TH1D * Mu_pt_eff = new TH1D("MuPt_eff","MuPt_eff", 100, 0, 500);
+
+  for(size_t i = 0; i < fSamples.size(); ++i){
+    sample Sample = fSamples[i];
+    cout << "loading : " << Sample.name << endl;
+    cout << "sname   : " << Sample.sname << endl;
+
+    fMT2tree = new MT2tree();
+    Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
+    unsigned int nentries =  Sample.tree->GetEntries();
+	
+    for (Long64_t jentry=0; jentry<min(nentries,nEvts);jentry++) {
+      cout<<"processing event "<<jentry<<endl;
+      Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
+
+      // --- Gen-Level -------------------------------------------------------------
+
+      std::vector<TLorentzVector> genTaus;
+
+      for(int j = 0; j < fMT2tree->NGenLepts; j++){
+
+	//cout << "--- particle id  " << fMT2tree->genlept[j].ID << endl;
+	//cout << "--- particle mid " << fMT2tree->genlept[j].MID << endl;
+	//cout << "--- particle mst  " << fMT2tree->genlept[j].MStatus << endl;
+
+	if(abs(fMT2tree->genlept[j].ID) != 15) 
+	  continue;
+// 	if(fMT2tree->genlept[j].MStatus != 3) 
+// 	  continue;
+
+	bool tau_e = false;
+	bool tau_m = false;
+	bool tau_h = true; 
+	for(int i = 0; i < fMT2tree->NGenLepts; i++){
+	  if((abs(fMT2tree->genlept[i].ID) == 11) && (fMT2tree->genlept[i].MID == fMT2tree->genlept[j].ID)) tau_e = true;
+	  if((abs(fMT2tree->genlept[i].ID) == 13) && (fMT2tree->genlept[i].MID == fMT2tree->genlept[j].ID)) tau_m = true;
+	}
+
+	if (tau_e || tau_m) tau_h = false;
+	if (!tau_h) continue;
+
+	bool newHadTau = true;
+
+	for(int k = 0; k < genTaus.size(); k++) {
+	  double deltaR = Util::GetDeltaR(fMT2tree->genlept[j].lv.Eta(), genTaus[k].Eta(), fMT2tree->genlept[j].lv.Phi(), genTaus[k].Phi());
+	  if(deltaR < 0.5) newHadTau = false;
+	}
+
+	if (newHadTau) genTaus.push_back(fMT2tree->genlept[j].lv);
+
+      }//for(int j = 0; j < fMT2tree->NGenLep
+
+      int nGenTau = genTaus.size();
+
+      nGenTaus->Fill(nGenTau);
+
+      if (nGenTau > 1 ) 
+	std::sort(genTaus.begin(),genTaus.end(),wayToSort);
+      
+      leadingTau_pt_all->Fill(genTaus[0].Pt());
+      if (nGenTau > 1 ) 
+	Mu_pt_all->Fill(genTaus[nGenTau - 1].Pt());
+      // ---------------------------------------------------------------------------
+
+      float minDR = 100.0;
+      int tauIndex = -1;
+      int muIndex = -1;
+
+      for(int k = 0; k < fMT2tree->NTaus; k++){
+	float deltaR = Util::GetDeltaR(genTaus[0].Eta(), fMT2tree->tau[k].lv.Eta(), genTaus[0].Phi(), fMT2tree->tau[k].lv.Phi());
+	if(fMT2tree->muo[k].PassMu0_TauMu == 1 && fMT2tree->tau[k].lv.Pt() > 25 && fMT2tree->tau[k].Isolation3Hits == 1)
+	  if(deltaR < minDR){
+	    minDR = deltaR;
+	    tauIndex = k;
+	  }
+      }
+
+      if(!(minDR<0.5 && tauIndex != -1))  continue;
+      TLorentzVector  myTau = fMT2tree->tau[tauIndex].lv;
+      double taupt = myTau.Pt();
+      double leadingTau_weight = 0.826969 * 0.5 * (TMath::Erf((taupt - 42.2274) / 2. / 0.783258 / sqrt(taupt)) + 1.); 
+      leadingTau_pt_pass->Fill(taupt,leadingTau_weight);
+	
+      genTaus.clear();
+
+      for(int j = 0; j < fMT2tree->NGenLepts; j++){
+
+	if(abs(fMT2tree->genlept[j].ID) != 13 || abs(fMT2tree->genlept[i].MID) != 15) 
+	  continue;
+// 	if(fMT2tree->genlept[j].MStatus != 3) 
+// 	  continue;
+	
+	genTaus.push_back(fMT2tree->genlept[j].lv);
+
+      }
+
+      if(genTaus.size() > 1)
+	cout<<" More than 1 muon is found NMuons:: "<<genTaus.size()<<endl;
+
+      minDR = 100.0;
+
+      for(int k = 0; k < fMT2tree->NMuons; k++){
+
+	float deltaR = Util::GetDeltaR(genTaus[0].Eta(), fMT2tree->muo[k].lv.Eta(), genTaus[0].Phi(), fMT2tree->muo[k].lv.Phi());
+	if(fMT2tree->muo[k].PassMu0_TauMu == 1)
+	  if(deltaR < minDR){
+	    minDR = deltaR;
+	    muIndex = k;
+	  }
+      }
+
+      if(!(minDR<0.5 && muIndex != -1))  continue;
+      TLorentzVector mu = fMT2tree->muo[muIndex].lv;
+      double mupt = mu.Pt();
+      double mu_weight = 0.826969 * 0.5 * (TMath::Erf((mupt - 42.2274) / 2. / 0.783258 / sqrt(mupt)) + 1.); 
+      Mu_pt_pass->Fill(mupt,mu_weight);
+
+    } // loop over events
+
+  }
+  TCanvas *c0 = new TCanvas("c0", "c0", 500, 500);
+  nGenTaus->Draw();
+
+  TCanvas *c1 = new TCanvas("c1", "c1", 500, 500);
+  c1->Divide(1,3);
+  c1->cd(1);
+  leadingTau_pt_pass->Draw();
+  c1->cd(2);
+  leadingTau_pt_all->Draw();
+  c1->cd(3);
+  leadingTau_pt_eff->Divide(leadingTau_pt_pass,leadingTau_pt_all); 
+  leadingTau_pt_eff->Draw();
+
+  TCanvas *c2 = new TCanvas("c2", "c2", 500, 500);
+  c2->Divide(1,3);
+  c2->cd(1);
+  Mu_pt_pass->Draw();
+  c2->cd(2);
+  Mu_pt_all->Draw();
+  c2->cd(3);
+  Mu_pt_eff->Divide(Mu_pt_pass,Mu_pt_all); 
+  Mu_pt_eff->Draw();
+}
