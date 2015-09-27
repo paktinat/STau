@@ -12,14 +12,14 @@ SAMPLE
 Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part2_Part0_BigFiles_NewPU_Stitching_DoubleTauRelaxed2
 SName           QCD
 ShapeName       QCD
-File            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part2_Part0.root
+File            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part*_Part*.root
 Xsection        1
 Kfact           1.0
 Lumi            19600.0
 Type            mc
 Color           401
 
-SAMPLE
+#SAMPLE
 Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part2_Part1_BigFiles_NewPU_Stitching_DoubleTauRelaxed2
 SName           QCD
 ShapeName       QCD
@@ -32,7 +32,7 @@ Color           401
 
 
 
-SAMPLE
+#SAMPLE
 Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part2_Part2_BigFiles_NewPU_Stitching_DoubleTauRelaxed2
 SName           QCD
 ShapeName       QCD
@@ -45,7 +45,7 @@ Color           401
 
 
 
-SAMPLE
+#SAMPLE
 Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part2_Part3_BigFiles_NewPU_Stitching_DoubleTauRelaxed2
 SName           QCD
 ShapeName       QCD

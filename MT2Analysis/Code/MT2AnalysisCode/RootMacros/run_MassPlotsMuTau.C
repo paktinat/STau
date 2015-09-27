@@ -453,6 +453,6 @@
   //  tA->muTauWJetsEstimation(cuts, trigger, "PtEta_MuTauTight_Over_Loose_TauPlusX_SS_ExtraLepVeto_MT2gt40_ZVeto_minDPhi_MET_NBJets_Weighted_FRHistos.root", true);
   //tA->TauEfficiency(cuts, 10000000000, "MT2_MuTauTight_Over_Loose_SignalSelectionNoZVeto_DYToLL_M50","DY");
   //tA->LeptonEfficiency(cuts, 10000000000);
-  tA->getGenEfficienciesMuTau(1000);
+  tA->getGenEfficienciesMuTau(155370000);
 
 }
