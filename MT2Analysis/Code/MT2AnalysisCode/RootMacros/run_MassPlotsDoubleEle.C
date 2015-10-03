@@ -70,14 +70,14 @@
   myChannelCuts.push_back("NBJetsCSVL == 0");
   
   myChannelCuts.push_back("misc.MET > 30");
-  //  myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 71) || (doubleEle[0].lv.M() > 111))");
+  myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 71) || (doubleEle[0].lv.M() > 111))");
   myChannelCuts.push_back("eeJZBInDirect() < -50");//
   myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 40"));
 
 
  myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 90"));
 
- //    myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT) >250) && ((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT)<400)");
+ // myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT) >250) && ((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT)<400)");
  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>400");
 
   //    myChannelCuts.push_back("NJetsIDLoose >= 1");
@@ -113,7 +113,7 @@
   
   //------------------Inv Mass------------
 
-    myChannelCuts.push_back("(doubleEle[0].lv.M() >= 71 && doubleEle[0].lv.M() <= 111)");
+ //    myChannelCuts.push_back("(doubleEle[0].lv.M() >= 71 && doubleEle[0].lv.M() <= 111)");
 
   //    myChannelCuts.push_back("NBJetsCSVM >= 2");
   //  myChannelCuts.push_back("NBJetsCSVL >= 2");

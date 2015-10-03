@@ -10755,14 +10755,12 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	  continue;
 	if (fMT2tree->misc.MinMetJetDPhiPt40 <= 1.0)
 	  continue;
-	if(fMT2tree->muTau[0].GetMT2() <= 100)
-	  continue;
-	if(fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT <= 200)     
-	  continue;
-	//       if(Sample.sname == "DY")
+	//	if(fMT2tree->muTau[0].GetMT2() <= 90)
+	//	  continue;
+	//	if(fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT <= 200)     
+	//	  continue;
+
        m +=1 ;
-       //       if(Sample.sname == "SUSY")
-       //       n +=1 ;
 
 	  myQuantity = fMT2tree->muTau[0].GetMT2();
 
@@ -10975,10 +10973,10 @@ else if(status == "mutau_pu_up")
 	     continue;
 	   if (fMT2tree->misc.MET <= 30)
 	     continue;
-	   if(fMT2tree->muTau[0].GetMT2() <= 90)
-	     continue;
-	   if(fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT <= 200)     
-	     continue;
+	   //	   if(fMT2tree->muTau[0].GetMT2() <= 90)
+	   //	     continue;
+	   //	   if(fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT <= 200)     
+	   //  continue;
 
 
      myQuantity = fMT2tree->muTau[0].GetMT2();
@@ -11021,10 +11019,10 @@ else if(status == "mutau_pu_down")
 	     continue;
 	   if (fMT2tree->misc.MET <= 30)
 	     continue;
-	   if(fMT2tree->muTau[0].GetMT2() <= 90)
-	     continue;
-	   if(fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT <= 200)     
-	     continue;
+	   //	   if(fMT2tree->muTau[0].GetMT2() <= 90)
+	   //  continue;
+	   // if(fMT2tree->tau[fMT2tree->muTau[0].GetTauIndex0()].MT <= 200)     
+	   //  continue;
 
 	   myQuantity = fMT2tree->muTau[0].GetMT2();
     

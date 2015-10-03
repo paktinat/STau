@@ -215,9 +215,14 @@ TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat";
   TString cuts = cutStream.str().c_str();
 
 
-  tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_tes_up", "mutau_tes_up", "");
-  //  tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_nominal", "mutau_nominal", "");
-  //        tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_tes_down", "mutau_tes_down", "");
+  //  tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_tes_up", "mutau_tes_up", "");
+  //    tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_nominal", "mutau_nominal", "");
+  //          tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_tes_down", "mutau_tes_down", "");
+
+  //    tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_pu_up", "mutau_pu_up", "");
+  //   tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_nominal", "mutau_nominal", "");
+  tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_pu_down", "mutau_pu_down", "");
+
 /* Define the properties of plots*/	
 //  Objectproperties PHI("phi");
 //  Objectproperties PT("pt");

@@ -17,7 +17,7 @@ TH2D* getXsecUp(TH2D* hRatio, TH2D* hXsec) {
     //    hXsecUp->GetYaxis()->SetRangeUser(0, 600);
     hXsecUp->GetXaxis()->SetRangeUser(100, 700);
     hXsecUp->GetYaxis()->SetRangeUser(0, 700);
-    hXsecUp->GetZaxis()->SetRangeUser(0.001, 100);
+    hXsecUp->GetZaxis()->SetRangeUser(0.00001, 10000);
 
     hXsecUp->GetXaxis()->SetTitle("m_{#tilde{#chi}} [GeV/c]");
     hXsecUp->GetYaxis()->SetTitle("m_{LSP} [GeV/c]");
@@ -183,7 +183,7 @@ run_makeLimitPlot() {
     //For HybridNew hSgmP2 is the hSgmP1
 //     h01 = h02 ;
 //     h02 = h00 ;
-    float a = 0.02;
+    float a = 0.01;
     h00->Scale(a);
     hOb->Scale(a);
     h01->Scale(a);
