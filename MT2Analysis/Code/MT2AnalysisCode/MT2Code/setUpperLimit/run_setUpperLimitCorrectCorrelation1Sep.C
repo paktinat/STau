@@ -348,8 +348,8 @@ run_setUpperLimitCorrectCorrelation1Sep() {
                  statS = sqrt(XSUP/XS)*statS;
 				}
                 if(Obs_Sigma == -1){
-                S = (XDOWN/XS)*S;
-                statS = sqrt(XDOWN/XS)*statS;
+                S = (XSDOWN/XS)*S;
+                statS = sqrt(XSDOWN/XS)*statS;
                 }
                 
 
