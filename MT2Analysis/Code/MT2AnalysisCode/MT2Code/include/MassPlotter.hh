@@ -275,7 +275,7 @@ public:
   void eeQCDCtoBRatio(TString cuts, TString trigger, unsigned int nevents, TString myfileName);
 
    void QCDEstimationinTauTau(TString cuts, TString trigger, unsigned int nevents, TString myfileName );
-  void getGenEfficiencies(unsigned int nEvts);
+  void getGenEfficiencies(unsigned int nEvts, bool bin2);
   void getGenEfficienciesMuTau(unsigned int nEvts);
   
 void TauTauAnalysisbin1(TString cuts,TString trigger,unsigned int nevents, TString myfileName);

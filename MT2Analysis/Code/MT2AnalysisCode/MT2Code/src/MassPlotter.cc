@@ -17062,18 +17062,42 @@ plotRatioStack(h_stack, MT2[NumberOfSamples-2], MT2[NumberOfSamples], MT2[Number
 
 bool wayToSort(TLorentzVector l1, TLorentzVector l2) { return l1.Pt() > l2.Pt(); }
 
-void MassPlotter::getGenEfficiencies(unsigned int nEvts){
+void MassPlotter::getGenEfficiencies(unsigned int nEvts, bool bin2){
 
         TH1::SetDefaultSumw2();
 
   TH1I * nGenTaus = new TH1I("nGenTaus","nGenTaus", 10, 0, 10);
+
   TH1D * leadingTau_pt_all = new TH1D("tau0Pt_all","tau0Pt_all", 100, 0, 500);
-  TH1D * nextToLeadingTau_pt_all = new TH1D("tau1Pt_all","tau1Pt_all", 100, 0, 500);
   TH1D * leadingTau_pt_pass = new TH1D("tau0Pt_pass","tau0Pt_pass", 100, 0, 500);
+
+  TH1D * nextToLeadingTau_pt_all = new TH1D("tau1Pt_all","tau1Pt_all", 100, 0, 500);
   TH1D * nextToLeadingTau_pt_pass = new TH1D("tau1Pt_pass","tau1Pt_pass", 100, 0, 500);
+
+  TH1D * IsolationSum = new TH1D("IsoSum", "IsoSum", 14, 0, 14);
+  TH1D * SumCharge = new TH1D("sumCharge", "sumCharge", 5, -2.5, 2.5);
+  TH1D * nBJets = new TH1D("NBJetsCSVM", "NBJetsCSVM", 5, 0, 5);
+  TH1D * ExtraLepton = new TH1D("ExtraLepton", "ExtaLepton", 2, 0, 2);
+  TH1D * minDPhi = new TH1D("minDPhi", "minDPhi", 16, 0, 3.2);
+
+  TH1D * Met_all = new TH1D("met_all","met_all", 100, 0, 500);
+  TH1D * Met_pass = new TH1D("met_pass","met_pass", 100, 0, 500);
+  
+  TH1D * Mt2_all = new TH1D("mt2_all","mt2_all", 100, 0, 500);
+  TH1D * Mt2_pass = new TH1D("mt2_pass","mt2_pass", 100, 0, 500);
+
+  TH1D * Mass_all = new TH1D("mass_all","mass_all", 100, 0, 500);
+  TH1D * Mass_pass = new TH1D("mass_pass","mass_pass", 100, 0, 500);
+
+  TH1D * SumMT_all = new TH1D("SumMT_all","SumMT_all", 100, 0, 500);
+  TH1D * SumMT_pass = new TH1D("SumMT_pass","SumMT_pass", 100, 0, 500);
 
   TH1D * leadingTau_pt_eff = new TH1D("tau0Pt_eff","tau0Pt_eff", 100, 0, 500);
   TH1D * nextToLeadingTau_pt_eff = new TH1D("tau1Pt_eff","tau1Pt_eff", 100, 0, 500);
+  TH1D * Met_eff = new TH1D("met_eff","met_eff", 100, 0, 500);
+  TH1D * Mt2_eff = new TH1D("mt2_eff","mt2_eff", 100, 0, 500);
+  TH1D * Mass_eff = new TH1D("mass_eff","mass_eff", 100, 0, 500);
+  TH1D * SumMT_eff = new TH1D("SumMT_eff","SumMT_eff", 100, 0, 500);
 
         for(size_t i = 0; i < fSamples.size(); ++i){
         sample Sample = fSamples[i];
@@ -17093,11 +17117,11 @@ void MassPlotter::getGenEfficiencies(unsigned int nEvts){
 
 // --- Gen-Level -------------------------------------------------------------
 
-		int genTauTauStatus = fMT2tree->GenLeptonAnalysis(0,1,1);
-
-		if(genTauTauStatus != 311) continue;
+	//int genTauTauStatus = fMT2tree->GenLeptonAnalysis(0,1,1);
+	//if(genTauTauStatus != 311) continue;
 
 	std::vector<TLorentzVector> genTaus;
+	std::vector<TLorentzVector> genNeus;
 
         for(int j = 0; j < fMT2tree->NGenLepts; j++){
 
@@ -17113,9 +17137,13 @@ void MassPlotter::getGenEfficiencies(unsigned int nEvts){
 	bool tau_e = false;
 	bool tau_m = false;
 	bool tau_h = true; 
+
+	int neutrinoIndex = -1;
+
         for(int i = 0; i < fMT2tree->NGenLepts; i++){
           if((abs(fMT2tree->genlept[i].ID) == 11) && (fMT2tree->genlept[i].MID == fMT2tree->genlept[j].ID)) tau_e = true;
           if((abs(fMT2tree->genlept[i].ID) == 13) && (fMT2tree->genlept[i].MID == fMT2tree->genlept[j].ID)) tau_m = true;
+          if((abs(fMT2tree->genlept[i].ID) == 16) && (fMT2tree->genlept[i].MID == fMT2tree->genlept[j].ID)) neutrinoIndex = i;
         }
 
 	if (tau_e || tau_m) tau_h = false;
@@ -17128,25 +17156,31 @@ void MassPlotter::getGenEfficiencies(unsigned int nEvts){
 		if(deltaR < 0.5) newHadTau = false;
 	}
 
-	if (newHadTau) genTaus.push_back(fMT2tree->genlept[j].lv);
+	if (newHadTau) {
+		genTaus.push_back(fMT2tree->genlept[j].lv);
+		genNeus.push_back(fMT2tree->genlept[neutrinoIndex].lv);
+	}	
 
 	}
 
 	nGenTaus->Fill(genTaus.size());
 	if (genTaus.size() != 2) continue;
 
-	std::sort(genTaus.begin(),genTaus.end(),wayToSort);
-
-	leadingTau_pt_all->Fill(genTaus[0].Pt());
-	nextToLeadingTau_pt_all->Fill(genTaus[1].Pt());
+		
+	std::vector<TLorentzVector> visTaus;
+	visTaus.push_back(genTaus[0]-genNeus[0]);
+	visTaus.push_back(genTaus[1]-genNeus[1]);
+	std::sort(visTaus.begin(),visTaus.end(),wayToSort);
 // ---------------------------------------------------------------------------
+
+	leadingTau_pt_all->Fill(visTaus[0].Pt());
 
 	float minDR = 100.0;
 	int tau0Index = -1;
 	int tau1Index = -1;
 
 	  for(int k = 0; k < fMT2tree->NTaus; k++){
-	    float deltaR = Util::GetDeltaR(genTaus[0].Eta(), fMT2tree->tau[k].lv.Eta(), genTaus[0].Phi(), fMT2tree->tau[k].lv.Phi());
+	    float deltaR = Util::GetDeltaR(visTaus[0].Eta(), fMT2tree->tau[k].lv.Eta(), visTaus[0].Phi(), fMT2tree->tau[k].lv.Phi());
 	    if(fMT2tree->tau[k].PassTau0_TauTau == 1 && fMT2tree->tau[k].MuonRej2 > 0.5 && fMT2tree->tau[k].ElectronRejMVA3 > 0.5)
 	      if(deltaR < minDR){
 		minDR = deltaR;
@@ -17154,16 +17188,18 @@ void MassPlotter::getGenEfficiencies(unsigned int nEvts){
 	      }
 	  }
 
-		if(!(minDR<0.5 && tau0Index != -1))  continue;
-		double pt0 = fMT2tree->tau[tau0Index].lv.Pt();
-		double leadingTau_weight = 0.826969 * 0.5 * (TMath::Erf((pt0 - 42.2274) / 2. / 0.783258 / sqrt(pt0)) + 1.); 
-		leadingTau_pt_pass->Fill(genTaus[0].Pt(),leadingTau_weight);
+	if(!(minDR<0.5 && tau0Index != -1))  continue;
+	double pt0 = fMT2tree->tau[tau0Index].lv.Pt();
+	double leadingTau_weight = 0.826969 * 0.5 * (TMath::Erf((pt0 - 42.2274) / 2. / 0.783258 / sqrt(pt0)) + 1.); 
+	leadingTau_pt_pass->Fill(visTaus[0].Pt(),leadingTau_weight);
 		
+	nextToLeadingTau_pt_all->Fill(visTaus[1].Pt());
+
 	minDR = 100.0;
 
 	  for(int k = 0; k < fMT2tree->NTaus; k++){
 	    if(k == tau0Index) continue;
-	    float deltaR = Util::GetDeltaR(genTaus[1].Eta(), fMT2tree->tau[k].lv.Eta(), genTaus[1].Phi(), fMT2tree->tau[k].lv.Phi());
+	    float deltaR = Util::GetDeltaR(visTaus[1].Eta(), fMT2tree->tau[k].lv.Eta(), visTaus[1].Phi(), fMT2tree->tau[k].lv.Phi());
 	    if(fMT2tree->tau[k].PassTau1_TauTau == 1 && fMT2tree->tau[k].MuonRej2 > 0.5 && fMT2tree->tau[k].ElectronRejMVA3 > 0.5)
 	      if(deltaR < minDR){
 		minDR = deltaR;
@@ -17171,10 +17207,64 @@ void MassPlotter::getGenEfficiencies(unsigned int nEvts){
 	      }
 	  }
 
-		if(!(minDR<0.5 && tau1Index != -1))  continue;
-		double pt1 = fMT2tree->tau[tau1Index].lv.Pt();
-		double nextToLeadingTau_weight = 0.826969 * 0.5 * (TMath::Erf((pt1 - 42.2274) / 2. / 0.783258 / sqrt(pt1)) + 1.); 
-		nextToLeadingTau_pt_pass->Fill(genTaus[1].Pt(),nextToLeadingTau_weight);
+	if(!(minDR<0.5 && tau1Index != -1))  continue;
+	double pt1 = fMT2tree->tau[tau1Index].lv.Pt();
+	double nextToLeadingTau_weight = 0.826969 * 0.5 * (TMath::Erf((pt1 - 42.2274) / 2. / 0.783258 / sqrt(pt1)) + 1.); 
+	nextToLeadingTau_pt_pass->Fill(visTaus[1].Pt(),nextToLeadingTau_weight);
+
+	double IsoSum=fMT2tree->tau[tau0Index].Isolation3Hits+fMT2tree->tau[tau1Index].Isolation3Hits;
+	IsolationSum->Fill(IsoSum); 
+
+	int sumCharge = fMT2tree->tau[tau0Index].Charge + fMT2tree->tau[tau1Index].Charge;
+	SumCharge->Fill(sumCharge);
+
+	if(sumCharge != 0) continue;
+
+	TLorentzVector genMET4vector = -(visTaus[0] + visTaus[1]);
+	float genMET = genMET4vector.Pt();
+	Met_all->Fill(genMET);
+	if(!(fMT2tree->misc.MET > 30)) continue;
+	Met_pass->Fill(genMET);
+
+	if(bin2) {
+	nBJets->Fill(fMT2tree->NBJetsCSVM);      
+	if(fMT2tree->NBJetsCSVM != 0) continue;
+	}
+
+
+      if(fMT2tree->doubleTau[0].HasNoVetoElec() && fMT2tree->doubleTau[0].HasNoVetoMu())
+	ExtraLepton->Fill(0);
+      else {
+	ExtraLepton->Fill(1);
+	continue;
+      }
+
+	float genMass = (visTaus[0] + visTaus[1]).M();
+	Mass_all->Fill(genMass);
+	float Mass = (fMT2tree->tau[tau0Index].lv + fMT2tree->tau[tau1Index].lv).M();
+
+	if(Mass < 15 || (Mass > 55 && Mass < 85)) continue;
+	Mass_pass->Fill(genMass);
+
+	minDPhi->Fill(fMT2tree->misc.MinMetJetDPhiPt40);
+	if(!(fMT2tree->misc.MinMetJetDPhiPt40 > 1))  continue;
+
+	float genMT2 = fMT2tree->CalcMT2(0, 0, visTaus[0], visTaus[1], genMET4vector);       
+      
+	Mt2_all->Fill(genMT2);      
+
+	float recMT2 = fMT2tree->CalcMT2(0, 0, fMT2tree->tau[tau0Index].lv, fMT2tree->tau[tau1Index].lv, fMT2tree->misc.MET);
+	if(bin2) if(!(recMT2 > 40 && recMT2 < 90)) continue;
+	else if(!(recMT2 > 90)) continue;	
+	Mt2_pass->Fill(genMT2);
+
+	if(!bin2) continue;
+
+	float genSumMT = fMT2tree->GetMT(visTaus[0], genMET4vector) + fMT2tree->GetMT(visTaus[1], genMET4vector); 
+
+	SumMT_all->Fill(genSumMT);
+	 if(!((fMT2tree->GetMT(fMT2tree->tau[tau0Index].lv, fMT2tree->misc.MET) + fMT2tree->GetMT(fMT2tree->tau[tau1Index].lv, fMT2tree->misc.MET) > 250)))  continue;
+	SumMT_pass->Fill(genSumMT);
 
 } // loop over events
 
@@ -17192,6 +17282,9 @@ c1->cd(3);
 leadingTau_pt_eff->Divide(leadingTau_pt_pass,leadingTau_pt_all); 
 leadingTau_pt_eff->Draw();
 
+  if(leadingTau_pt_all->Integral() != 0)
+    cout<<" tau0Eff "<<leadingTau_pt_pass->Integral()/leadingTau_pt_all->Integral()<<endl;
+
 TCanvas *c2 = new TCanvas("c2", "c2", 500, 500);
 c2->Divide(1,3);
 c2->cd(1);
@@ -17201,6 +17294,88 @@ nextToLeadingTau_pt_all->Draw();
 c2->cd(3);
 nextToLeadingTau_pt_eff->Divide(nextToLeadingTau_pt_pass,nextToLeadingTau_pt_all); 
 nextToLeadingTau_pt_eff->Draw();
+
+  if(nextToLeadingTau_pt_all->Integral() != 0)
+    cout<<" tau1Eff "<<nextToLeadingTau_pt_pass->Integral()/nextToLeadingTau_pt_all->Integral()<<endl;
+
+  if(SumCharge->Integral() != 0)
+    cout<<" OSEff "<<SumCharge->GetBinContent(3)/SumCharge->Integral()<<endl;
+
+  TCanvas *cmet = new TCanvas("cmet", "cmet", 500, 500);
+  cmet->Divide(1,3);
+  cmet->cd(1);
+  Met_pass->Draw();
+  cmet->cd(2);
+  Met_all->Draw();
+  cmet->cd(3);
+  Met_eff->Divide(Met_pass,Met_all); 
+  Met_eff->Draw();
+  
+  if(Met_all->Integral() != 0)
+    cout<<" metEff "<<Met_pass->Integral()/Met_all->Integral()<<endl;
+
+  if(nBJets->Integral() != 0)
+    cout<<" nBEff "<<nBJets->GetBinContent(1)/nBJets->Integral()<<endl;
+
+  if(ExtraLepton->Integral() != 0)
+    cout<<" ExtrLepEff "<<ExtraLepton->GetBinContent(1)/ExtraLepton->Integral()<<endl;
+
+  TCanvas *cmass = new TCanvas("cmass", "cmass", 500, 500);
+  cmass->Divide(1,3);
+  cmass->cd(1);
+  Mass_pass->Draw();
+  cmass->cd(2);
+  Mass_all->Draw();
+  cmass->cd(3);
+  Mass_eff->Divide(Mass_pass,Mass_all);
+  Mass_eff->Draw();
+
+  if(Mass_all->Integral() != 0)
+    cout<<" massEff "<<Mass_pass->Integral()/Mass_all->Integral()<<endl;
+
+  if(minDPhi->Integral() != 0)
+    cout<<" minDPhiEff "<<minDPhi->Integral(6,16)/minDPhi->Integral()<<endl;
+
+  TCanvas *cmt2 = new TCanvas("cmt2", "cmt2", 500, 500);
+  cmt2->Divide(1,3);
+  cmt2->cd(1);
+  Mt2_pass->Draw();
+  cmt2->cd(2);
+  Mt2_all->Draw();
+  cmt2->cd(3);
+  Mt2_eff->Divide(Mt2_pass,Mt2_all);
+  Mt2_eff->Draw();
+
+  if(Mt2_all->Integral() != 0)
+    cout<<" mt2Eff "<<Mt2_pass->Integral()/Mt2_all->Integral()<<endl;
+
+  TCanvas *ctaumt = new TCanvas("ctaumt", "ctaumt", 500, 500);
+  ctaumt->Divide(1,3);
+  ctaumt->cd(1);
+  SumMT_pass->Draw();
+  ctaumt->cd(2);
+  SumMT_all->Draw();
+  ctaumt->cd(3);
+  SumMT_eff->Divide(SumMT_pass,SumMT_all);
+  SumMT_eff->Draw();
+
+  if(SumMT_all->Integral() != 0)
+    cout<<" tauMTEff "<<SumMT_pass->Integral()/SumMT_all->Integral()<<endl;
+
+  TCanvas *c3 = new TCanvas("c3", "c3", 500, 500);
+  c3->Divide(2,3);
+  c3->cd(1);
+  IsolationSum->Draw();
+  c3->cd(2);
+  SumCharge->Draw();
+  c3->cd(3);
+  nBJets->Draw();
+  c3->cd(4);
+  ExtraLepton->Draw();
+  c3->cd(5);
+  minDPhi->Draw();
+  c3->cd(6);
+
 }
 
 
