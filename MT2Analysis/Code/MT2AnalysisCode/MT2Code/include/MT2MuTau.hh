@@ -86,7 +86,7 @@ public:
   float GetPZetaImbalanced(){return pZetaImbalanced;};
   int GetTauIndex0(){ return tau0Ind; };
   int GetMuIndex0(){ return mu0Ind; };
-  int GetSumChbarge(){ return chargeSum; };
+  int GetSumCharge(){ return chargeSum; };
   float GetMT2(){ return MT2; };
   float GetMT2Imbalanced(){ return MT2Imbalanced; };
   float GetMCT(){ return MCT; };
