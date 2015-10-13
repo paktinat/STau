@@ -45,7 +45,7 @@ double mt2Bins[] { 30 , 40 , 50 , 70 , 90 , 400 };
 // TString SUSYCatCommand = "((Susy.MassGlu - Susy.MassLSP)/100.0)+(misc.ProcessID-10)";
 // std::vector<TString> SUSYCatNames = {"00_100" , "100_200" , "200_300" , "300_400" , "400_500" };
 TString SUSYCatCommand = "GetSUSYCategory()" ; //"((Susy.MassGlu - Susy.MassLSP)/100.0)+(misc.ProcessID-10)";
-std::vector<TString> SUSYCatNames =  {"180_60" , "380_0" , "240_60" , "240_80" } ; //, "240_60"} ; // {"00_100" , "100_200" , "200_300" , "300_400" , "400_500" };
+std::vector<TString> SUSYCatNames = { "380_0" } ; // {"180_60" , "380_0" , "240_60" , "240_80" } ; //, "240_60"} ; // {"00_100" , "100_200" , "200_300" , "300_400" , "400_500" };
 
 
 class MassPlotterEleTau : public BaseMassPlotter{
@@ -841,8 +841,8 @@ void MassPlotterEleTau::EstimateFakeBKG(TList* allCuts, Long64_t nevents , TStri
   TEfficiency* promptRate ;
   fPromptRates->GetObject( "hPtEta" , promptRate );
   
-  TFile* fFakeRates = TFile::Open(TString("/dataLOCAL/hbakhshi/FakeRate_") + inputFRFileName + TString("_Histos.root") );
-  //TFile* fFakeRates = TFile::Open("/dataLOCAL/hbakhshi/FakeRates_Tight2_Histos.root");
+  TFile* fFakeRates = TFile::Open(TString("/dataLOCAL/dataLOCAL/hbakhshi/FakeRate_") + inputFRFileName + TString("_Histos.root") );
+  //TFile* fFakeRates = TFile::Open("/dataLOCAL/dataLOCAL/hbakhshi/FakeRates_Tight2_Histos.root");
   #ifndef Closure
   fFakeRates->cd("SampleFakeRates/SingleElectron-Data");
   #else
@@ -854,9 +854,9 @@ void MassPlotterEleTau::EstimateFakeBKG(TList* allCuts, Long64_t nevents , TStri
 	
   
   #ifndef Closure
-  TFile *file = new TFile("/dataLOCAL/MT2Tau/share/PtEta_MuTauTight_Over_Loose_SingleMu_SameSign_MET_NBJets_Weighted_FRHistos.root");
+  TFile *file = new TFile("/dataLOCAL/dataLOCAL/MT2Tau/share/PtEta_MuTauTight_Over_Loose_SingleMu_SameSign_MET_NBJets_Weighted_FRHistos.root");
   #else
-  TFile *file = new TFile("/dataLOCAL/MT2Tau/share/PtEta_MuTauTight_Over_Loose_pfOnly_WJets_SameSign_MET_NBJets_Weighted_FRHistos.root");
+  TFile *file = new TFile("/dataLOCAL/dataLOCAL/MT2Tau/share/PtEta_MuTauTight_Over_Loose_pfOnly_WJets_SameSign_MET_NBJets_Weighted_FRHistos.root");
   #endif
 
   TH2* hPtEtaAll  = (TH2*) file->Get("hPtEtaAll");
@@ -1628,6 +1628,7 @@ void MassPlotterEleTau::TauFakeRate(TList* allCuts, Long64_t nevents , TString m
 void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vector< pair<int,int> > Significances, TString myfileName , TString SUSYCatCommand , vector<TString> SUSYCatNames , TDirectory* elists  , TString cut){
 
   TTreeFormula* wToLNuW = 0;
+  bool isSTauSTau = false;
 
   int lumi = 0;
 
@@ -1738,7 +1739,28 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vect
 	    delete mLSP;
 	  }
 
-	  susyXSection = new TTreeFormula("susyXSection" , "GetSUSYXSection()" , Sample.tree );
+	  if( Sample.name == "TStauStau" ){
+	    isSTauSTau = true;
+	    susyXSection = new TTreeFormula("susyXSection" , "GetSUSYXSection(1)" , Sample.tree );
+
+	    delete hsignals_noXSecW;
+	    delete hsignals_xsection;
+	    delete hsignals_uw;
+	    delete hsignals_w;
+
+	    hsignals_w = new TH2D("h_PN_MLSP_MChi","", 250 , 0 ,  2500 , 250 , 0 , 2500);
+	    hsignals_uw = new TH2D("h_N_MLSP_MChi","", 250 , 0 ,  2500 , 250 , 0 , 2500);
+	    hsignals_xsection = new TH2D("h_XSections_MLSP_MChi","", 250 , 0 ,  2500 , 250 , 0 , 2500);
+	    hsignals_noXSecW = new TH2D("h_NoXSecW_MLSP_MChi","", 250 , 0 ,  2500 , 250 , 0 , 2500);
+ 
+	    cout << "Signal is STauSTau" << endl;
+	  }
+	  else{
+	    susyXSection = new TTreeFormula("susyXSection" , "GetSUSYXSection(0)" , Sample.tree );
+	    cout << "Signal is CharginoChargino" << endl;
+	  }
+
+
 	  mGlu = new TTreeFormula("mGlu" , "Susy.MassGlu" , Sample.tree );
 	  mLSP = new TTreeFormula("mLSP" , "Susy.MassLSP" , Sample.tree );
 
@@ -1841,6 +1863,9 @@ void MassPlotterEleTau::eleTauAnalysis(TList* allCuts, Long64_t nevents ,   vect
   hsignals_xsection->Write( );
   hsignals_noXSecW->Write();
   YieldsFile->Close();
+
+  if(isSTauSTau)
+    return;
 
 
   fileName = fileName  + myfileName +"_Histos.root";
@@ -2110,6 +2135,10 @@ int main(int argc, char* argv[]) {
   ExtendedCut* ElePTCut = new ExtendedCut("ElePTCut" , "ele[eleTau[0].ele0Ind].lv.Pt() > 25" , true , true, "" , "" ,false , true);
   allCuts.Add( ElePTCut );
 
+  ExtendedCut* TauPT = new ExtendedCut( "TauPTCut25" , "tau[eleTau[0].tau0Ind].lv.Pt() > 25 " , true , true, "" , "" ,false , true);
+  allCuts.Add(TauPT);
+  CutsForControlPlots.Add( TauPT );
+
   ExtendedCut* Isolated =new ExtendedCut("Isolated" , std::string(myChan) + ".Isolated == 1" , true , true, "" , "" , true , true);
   allCuts.Add(Isolated);
 
@@ -2163,10 +2192,10 @@ int main(int argc, char* argv[]) {
  
 
   ExtendedCut* MT2Cut = new ExtendedCut("MT2Cut" , "eleTau[0].MT2 > 90" , true , true, "" , "" ,false , true); //pileUp.Weight
-  allCuts.Add( MT2Cut );
+  //allCuts.Add( MT2Cut );
   CutsForControlPlots.Add(MT2Cut);  
 
-  lastCuts.Add(MT2Cut);
+  //lastCuts.Add(MT2Cut);
 
   
   ExtendedCut* TauMT = new ExtendedCut( "TauMTCut" , "tau[eleTau[0].tau0Ind].MT > 200 " , true , true, "" , "" ,false , true);
@@ -2176,25 +2205,40 @@ int main(int argc, char* argv[]) {
   lastCuts.Add(TauMT);
 
   
-  ExtendedCut* TauPT = new ExtendedCut( "TauPTCut30" , "tau[eleTau[0].tau0Ind].lv.Pt() > 30 " , true , true, "" , "" ,false , true);
-  allCuts.Add(TauPT);
-  CutsForControlPlots.Add( TauPT );
   
-  lastCuts.Add(TauPT);
+  //lastCuts.Add(TauPT);
 
 
-  //ExtendedCut* metPpz =new ExtendedCut("METpPZ" , "DeltaMETEleTau(2) > 150" , true , true , "" , "" , true , true); 
-  //eleTau[0].eleTrgSF * eleTau[0].eleIdIsoSF*eleTau[0].tauTrgSF*SFWeight.BTagCSV40eq0
-  //lastCuts.Add(metPpz);
-  //CutsForControlPlots.Add(metPpz);
-  
-  //   ExtendedCut* metMpz =new ExtendedCut("METmPZ" , "DeltaMETEleTau(1) > -50" , true , true , "" , "" , true , true);
-  //   //lastCuts.Add(metMpz);
-  //   CutsForControlPlots.Add(metMpz);
-  
+//   //StauStau part
 
-//   TString SUSYCatCommand = "GetSUSYCategory()" ; //"((Susy.MassGlu - Susy.MassLSP)/100.0)+(misc.ProcessID-10)";
-//   std::vector<TString> SUSYCatNames =  {"180_60", "380_1" , "240_60"} ; // {"00_100" , "100_200" , "200_300" , "300_400" , "400_500" };
+  allCuts.Clear();
+  allCuts.Add( cleaningcut );
+
+  ExtendedCut* staustau_signalSelection =new ExtendedCut("Signal" , "(misc.ProcessID!=10 || (  (Susy.MassLSP < 150) && (Susy.MassGlu < 250) ))" , false , false , "" , "" , false , true); 
+  allCuts.Add(staustau_signalSelection);
+
+
+  allCuts.Add(triggerCut);
+  allCuts.Add(metcut);
+  allCuts.Add( bVeto );
+  allCuts.Add( tauselection );
+  allCuts.Add( tauIsolation );
+  allCuts.Add( electronselection );
+  allCuts.Add( ElePTCut );
+  allCuts.Add(Isolated);
+  allCuts.Add( OS );
+  allCuts.Add( muveto );
+  allCuts.Add( eleveto );
+
+//   ExtendedCut* LIPBin1 = new ExtendedCut( "Bin1" , "((misc.MET + tau[muTau[0].tau0Ind].lv.Pt()) > 130) && (muTau[0].DPhi >   2.) && (abs(tau[muTau[0].tau0Ind].lv.Eta()) < 1.4722 ) && ((muTau[0].lv.M() - 61) < 120) && (muTau[0.]MT2 < 35)" , true , true, "" , "" ,false , true);
+//   //allCuts.Add( LIPBin1 );
+
+  ExtendedCut* LIPBin2 = new ExtendedCut("Bin2" , "((ele[eleTau[0].ele0Ind].MT + tau[eleTau[0].tau0Ind].MT) > 260 ) && (abs(ele[eleTau[0].ele0Ind].lv.Eta()) < 1.4722 ) && (tau[eleTau[0].tau0Ind].MT > 60) && ((misc.MET + ele[eleTau[0].ele0Ind].lv.Pt()) > 140) " , true , true, "" , "" ,false , true);
+  allCuts.Add( LIPBin2 );
+
+  allCuts.Print("" , 0 );
+  //end of StauStau part
+  
   
   TIter cut(&  CutsForControlPlots );
   TObject* cuto ;
@@ -2457,8 +2501,8 @@ int main(int argc, char* argv[]) {
   TString CutName = "MT2PreCut" ;
 
   cout << "FROM EventList : " << CutName << endl;
-  //TFile* finput = TFile::Open( "/dataLOCAL/hbakhshi/NoteSelectionFullSMSNewEmEnriched_Histos.root");
-  TFile* finput = TFile::Open( "/dataLOCAL/hbakhshi/SSSelection_Histos.root");
+  TFile* finput = TFile::Open( "/dataLOCAL/dataLOCAL/hbakhshi/NoteSelectionFullSMSNewEmEnriched_Histos.root");
+  //TFile* finput = TFile::Open( "/dataLOCAL/dataLOCAL/hbakhshi/SSSelection_Histos.root");
   finput->cd();
   gDirectory->cd( CutName );
   gDirectory->cd("EventLists");

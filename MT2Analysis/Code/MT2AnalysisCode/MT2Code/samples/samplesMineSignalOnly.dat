@@ -1,9 +1,20 @@
 #########################################################################################
 GENERAL
-Path         ///hadoop/cms/store/user/hbakhshi/
+Path         ///dataLOCAL/MT2Tau/RootFiles/
 ________________________________________________________________________________________
 # list of samples
 ## -------- SMS --------
+
+SAMPLE
+Name            TStauStau
+SName           SUSY
+ShapeName       Signal
+File            TauTau_V3_1/SMS-TStauStau_mStau-50to500_mLSP-1to480_TuneZ2star_8TeV-pythia6-tauolapp_Part*_NBJetsCSVM0_MET30_NewPU_Stitching.root
+Xsection        0.00993 pb
+Kfact           1.
+Lumi            19600.0
+Type            susy
+Color           1
 
 #SAMPLE
 Name            TStau
@@ -17,7 +28,7 @@ Type            susy
 Color           1
 
 ## --------- Data ---------------------------
-SAMPLE
+#SAMPLE
 Name		Run2012A_SingleElectron
 SName		SingleElectron-Data
 ShapeName	Data

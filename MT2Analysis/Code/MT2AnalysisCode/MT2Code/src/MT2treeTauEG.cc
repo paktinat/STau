@@ -242,21 +242,22 @@ bool MT2tree::HasNoVetoElecForEleTau(int signalIndex){
       continue;
     }
 
-    if( ele[i].IDVetoMuTau == 1 )
-      nVeto++;
+//     if( ele[i].IDVetoMuTau == 1 )
+//       nVeto++;
     
-//     if( ele[i].Iso04 < .2 ){
-//       //cout << "iso," ;
-//       if(ele[i].PassE0_EE){
-// 	//cout << "e0-" ;
-//   	nVeto++;
-//       }
-//       else if(ele[i].PassE1_EE){
-// 	//cout << "e1-" ;
-// 	nVeto++;
-//       }
-  }
+    if( ele[i].Iso04 < .2 ){
+      //cout << "iso," ;
+      if(ele[i].PassE0_EE){
+	//cout << "e0-" ;
+  	nVeto++;
+      }
+      else if(ele[i].PassE1_EE){
+	//cout << "e1-" ;
+	nVeto++;
+      }
+    }
 
+  }
   //cout << nVeto << endl;
   return (nVeto == 0);
 }
@@ -264,7 +265,7 @@ bool MT2tree::HasNoVetoElecForEleTau(int signalIndex){
 bool MT2tree::HasNoVetoMuForEleTau(){
   int nVeto = 0;
   for(int i = 0; i < NMuons; i++){
-    if(muo[i].RejMu_TauTau == 1){
+    if(muo[i].PassMu0_EleMu == 1){ //RejMu_TauTau
       nVeto++;
     }
   }

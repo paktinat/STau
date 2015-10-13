@@ -132,6 +132,7 @@ public:
 
 //   TGraphAsymmErrors* theXSecGraph;
    double XSectionCharginoLSP() const;
+   double XSectionSTauLSP() const;
    int Category( ) const ;
 
   ClassDef(MT2Susy, 2);
@@ -1139,7 +1140,7 @@ Float_t SumMTTauTauChannel();
   MT2Top         fitTop[10];
   MT2GenParticle genparticle[m_genparticleSize];
   MT2Susy        Susy;
-  double GetSUSYXSection(){return Susy.XSectionCharginoLSP();};
+  double GetSUSYXSection(int sms = 0){if(sms==0) return Susy.XSectionCharginoLSP(); else return Susy.XSectionSTauLSP() ;};
   double GetSUSYCategory(){return Susy.Category();};
   MT2Misc        misc;
   MT2PileUp      pileUp;

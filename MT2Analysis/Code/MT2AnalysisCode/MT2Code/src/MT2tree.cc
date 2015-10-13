@@ -17,8 +17,8 @@
 
 using namespace std;
 
-TGraphAsymmErrors* theXSecGraph;
-
+TGraphAsymmErrors* theCharginoLSPXSecGraph;
+TGraphAsymmErrors* theSTauLSPXSecGraph;
 // MT2Misc -----------------------------------
 MT2Misc::MT2Misc(){
   Reset();
@@ -116,8 +116,8 @@ void MT2Top::Reset(){
 MT2Susy::MT2Susy(){
   Reset();
   
-  if(theXSecGraph)
-    delete theXSecGraph;
+  if(theCharginoLSPXSecGraph)
+    delete theCharginoLSPXSecGraph;
 
 
   int nbins = 29 ;
@@ -153,23 +153,113 @@ MT2Susy::MT2Susy(){
   double vals800[]={0.31 , 0.0 , 0.0 , 0.0 , 0.0};
   double* vals[] = {vals100,vals125,vals150,vals175,vals200,vals225,vals250,vals275,vals300,vals325,vals350,vals375,vals400,vals425,vals450,vals475,vals500,vals525,vals550,vals575,vals600,vals625,vals650,vals675,vals700,vals725,vals750,vals775,vals800} ;
   gROOT->cd();
-  theXSecGraph = new TGraphAsymmErrors( nbins );
+  theCharginoLSPXSecGraph = new TGraphAsymmErrors( nbins );
   for(int i = 0 ; i< nbins ; i++){
-    theXSecGraph->SetPoint( i , masses[i] , vals[i][0] );
+    theCharginoLSPXSecGraph->SetPoint( i , masses[i] , vals[i][0] );
 //     double errh = hypot( vals[i][1] , vals[i][2] );
 //     double errl = hypot( vals[i][3] , vals[i][4] );
-//     theXSecGraph.SetPointError( i , errl , errh , 12.5 , 12.5 );
+//     theCharginoLSPXSecGraph.SetPointError( i , errl , errh , 12.5 , 12.5 );
   }
+
+
+  if(theSTauLSPXSecGraph)
+    delete theSTauLSPXSecGraph;
+
+  gROOT->cd();
+  theSTauLSPXSecGraph = new TGraphAsymmErrors( 77 );
+
+  theSTauLSPXSecGraph->SetPoint(0,100,1.26E+002);
+  theSTauLSPXSecGraph->SetPoint(1,105,1.05E+002);
+  theSTauLSPXSecGraph->SetPoint(2,110,8.79E+001);
+  theSTauLSPXSecGraph->SetPoint(3,115,7.42E+001);
+  theSTauLSPXSecGraph->SetPoint(4,120,6.31E+001);
+  theSTauLSPXSecGraph->SetPoint(5,125,5.40E+001);
+  theSTauLSPXSecGraph->SetPoint(6,130,4.64E+001);
+  theSTauLSPXSecGraph->SetPoint(7,135,4.01E+001);
+  theSTauLSPXSecGraph->SetPoint(8,140,3.49E+001);
+  theSTauLSPXSecGraph->SetPoint(9,145,3.04E+001);
+  theSTauLSPXSecGraph->SetPoint(10,150,2.66E+001);
+  theSTauLSPXSecGraph->SetPoint(11,155,2.34E+001);
+  theSTauLSPXSecGraph->SetPoint(12,160,2.06E+001);
+  theSTauLSPXSecGraph->SetPoint(13,165,1.82E+001);
+  theSTauLSPXSecGraph->SetPoint(14,170,1.62E+001);
+  theSTauLSPXSecGraph->SetPoint(15,175,1.44E+001);
+  theSTauLSPXSecGraph->SetPoint(16,180,1.28E+001);
+  theSTauLSPXSecGraph->SetPoint(17,185,1.15E+001);
+  theSTauLSPXSecGraph->SetPoint(18,190,1.03E+001);
+  theSTauLSPXSecGraph->SetPoint(19,195,9.22);
+  theSTauLSPXSecGraph->SetPoint(20,200,8.30);
+  theSTauLSPXSecGraph->SetPoint(21,205,7.49);
+  theSTauLSPXSecGraph->SetPoint(22,210,6.76);
+  theSTauLSPXSecGraph->SetPoint(23,215,6.12);
+  theSTauLSPXSecGraph->SetPoint(24,220,5.55);
+  theSTauLSPXSecGraph->SetPoint(25,225,5.04);
+  theSTauLSPXSecGraph->SetPoint(26,230,4.58);
+  theSTauLSPXSecGraph->SetPoint(27,235,4.18);
+  theSTauLSPXSecGraph->SetPoint(28,240,3.81);
+  theSTauLSPXSecGraph->SetPoint(29,245,3.48);
+  theSTauLSPXSecGraph->SetPoint(30,250,3.18);
+  theSTauLSPXSecGraph->SetPoint(31,255,2.91);
+  theSTauLSPXSecGraph->SetPoint(32,260,2.67);
+  theSTauLSPXSecGraph->SetPoint(33,265,2.45);
+  theSTauLSPXSecGraph->SetPoint(34,270,2.25);
+  theSTauLSPXSecGraph->SetPoint(35,275,2.07);
+  theSTauLSPXSecGraph->SetPoint(36,280,1.91);
+  theSTauLSPXSecGraph->SetPoint(37,285,1.76);
+  theSTauLSPXSecGraph->SetPoint(38,290,1.62);
+  theSTauLSPXSecGraph->SetPoint(39,295,1.50);
+  theSTauLSPXSecGraph->SetPoint(40,300,1.39);
+  theSTauLSPXSecGraph->SetPoint(41,305,1.28);
+  theSTauLSPXSecGraph->SetPoint(42,310,1.19);
+  theSTauLSPXSecGraph->SetPoint(43,315,1.10);
+  theSTauLSPXSecGraph->SetPoint(44,320,1.02);
+  theSTauLSPXSecGraph->SetPoint(45,325,9.48E-001);
+  theSTauLSPXSecGraph->SetPoint(46,330,8.80E-001);
+  theSTauLSPXSecGraph->SetPoint(47,335,8.18E-001);
+  theSTauLSPXSecGraph->SetPoint(48,340,7.61E-001);
+  theSTauLSPXSecGraph->SetPoint(49,345,7.08E-001);
+  theSTauLSPXSecGraph->SetPoint(50,350,6.60E-001);
+  theSTauLSPXSecGraph->SetPoint(51,355,6.15E-001);
+  theSTauLSPXSecGraph->SetPoint(52,360,5.73E-001);
+  theSTauLSPXSecGraph->SetPoint(53,365,5.35E-001);
+  theSTauLSPXSecGraph->SetPoint(54,370,4.99E-001);
+  theSTauLSPXSecGraph->SetPoint(55,375,4.66E-001);
+  theSTauLSPXSecGraph->SetPoint(56,380,4.36E-001);
+  theSTauLSPXSecGraph->SetPoint(57,385,4.08E-001);
+  theSTauLSPXSecGraph->SetPoint(58,390,3.81E-001);
+  theSTauLSPXSecGraph->SetPoint(59,395,3.57E-001);
+  theSTauLSPXSecGraph->SetPoint(60,400,3.34E-001);
+  theSTauLSPXSecGraph->SetPoint(61,405,3.13E-001);
+  theSTauLSPXSecGraph->SetPoint(62,410,2.94E-001);
+  theSTauLSPXSecGraph->SetPoint(63,415,2.75E-001);
+  theSTauLSPXSecGraph->SetPoint(64,420,2.58E-001);
+  theSTauLSPXSecGraph->SetPoint(65,425,2.42E-001);
+  theSTauLSPXSecGraph->SetPoint(66,430,2.28E-001);
+  theSTauLSPXSecGraph->SetPoint(67,435,2.14E-001);
+  theSTauLSPXSecGraph->SetPoint(68,440,2.01E-001);
+  theSTauLSPXSecGraph->SetPoint(69,445,1.89E-001);
+  theSTauLSPXSecGraph->SetPoint(70,450,1.78E-001);
+  theSTauLSPXSecGraph->SetPoint(71,455,1.67E-001);
+  theSTauLSPXSecGraph->SetPoint(72,460,1.57E-001);
+  theSTauLSPXSecGraph->SetPoint(73,465,1.48E-001);
+  theSTauLSPXSecGraph->SetPoint(74,470,1.39E-001);
+  theSTauLSPXSecGraph->SetPoint(75,475,1.31E-001);
+  theSTauLSPXSecGraph->SetPoint(76,480,1.24E-001);
+
+
 
 }
 
+double MT2Susy::XSectionSTauLSP() const{
+  return theSTauLSPXSecGraph->Eval( MassGlu );
+}
 double MT2Susy::XSectionCharginoLSP() const{
-  return theXSecGraph->Eval(MassGlu);
+  return theCharginoLSPXSecGraph->Eval(MassGlu);
 }
 
 int MT2Susy::Category( ) const{
-  vector< pair<int,int> > susypoints = { {180 , 60} , {380 , 0} , {240 , 60} , {240 , 80} };
-  //vector< pair<int,int> > susypoints = { {380 , 0} };
+  //vector< pair<int,int> > susypoints = { {180 , 60} , {380 , 0} , {240 , 60} , {240 , 80} };
+  vector< pair<int,int> > susypoints = { {380 , 0} };
   int ret = 0;
   for( auto pair : susypoints ){
     if( MassGlu >= pair.first && MassGlu < pair.first+20 && MassLSP < pair.second+20 && (MassLSP) >= pair.second )

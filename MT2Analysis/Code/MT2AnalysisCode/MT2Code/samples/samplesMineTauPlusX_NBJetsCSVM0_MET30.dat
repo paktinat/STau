@@ -1,13 +1,12 @@
 #########################################################################################
 GENERAL
-Path         ///dataLOCAL/MT2Tau/RootFiles/
+Path         ///dataLOCAL/dataLOCAL/MT2Tau/RootFiles/
 ________________________________________________________________________________________
 # list of samples
 
 ## -------- SMS --------
 
-SAMPLE
-##SAMPLE
+#SAMPLE
 Name            TStau
 SName           SUSY
 ShapeName       Signal
@@ -18,16 +17,17 @@ Lumi            19600.0
 Type            susy
 Color           1
 
-#SAMPLE
+SAMPLE
 Name            TStau
 SName           SUSY
 ShapeName       Signal
-File            TauTau_V3_1/SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part*_Part*_NBJetsCSVM0_MET30_NewPU_Stitching.root
+File            TauTau_V3_1/SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part*_Part*_NBJetsCSVM0_MET30_NewPU_Stitching2.root
 Xsection        0.00189 pb
 Kfact           1.
 Lumi            19600.0
 Type            susy
 Color           1
+
 #(380, 1)
 #Old   XSec = 0.227       
 #New   XSec = 0.0343
@@ -58,6 +58,16 @@ Lumi            19600.0
 Type            susy
 Color           1
 
+#SAMPLE
+Name            TStauStau
+SName           SUSY
+ShapeName       Signal
+File            TauTau_V3_1/SMS-TStauStau_mStau-50to500_mLSP-1to480_TuneZ2star_8TeV-pythia6-tauolapp_Part*_NBJetsCSVM0_MET30_NewPU_Stitching.root
+Xsection        0.00993 pb
+Kfact           1.
+Lumi            19600.0
+Type            susy
+Color           1
 
 
 
@@ -415,7 +425,7 @@ Color		401
 
 SAMPLE
 Name		WWJetsTo2L2Nu
-SName		VV
+SName		WW
 ShapeName	WJets  
 File            TauTau_V3_1/WWJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	5.8   #4.7 pb 
@@ -426,7 +436,7 @@ Color		417
 
 SAMPLE
 Name		WJetsToLNu
-SName		Wtolnu
+SName		W
 ShapeName	WJets
 File            TauTau_V3_1/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	36257.2
@@ -437,7 +447,7 @@ Color		417
 
 SAMPLE
 Name		W1JetsToLNu
-SName		Wtolnu
+SName		W
 ShapeName	WJets
 File            TauTau_V3_1/W1JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.23 * 5400
@@ -448,7 +458,7 @@ Color		417
 
 SAMPLE
 Name		W2JetsToLNu
-SName		Wtolnu
+SName		W
 ShapeName	WJets
 File            TauTau_V3_1/W2JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.23 * 1750
@@ -459,7 +469,7 @@ Color		417
 
 SAMPLE
 Name		W3JetsToLNu
-SName		Wtolnu
+SName		W
 ShapeName	WJets
 File            TauTau_V3_1/W3JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.23 * 519
@@ -470,7 +480,7 @@ Color		417
 
 SAMPLE
 Name		W4JetsToLNu
-SName		Wtolnu
+SName		W
 ShapeName	WJets
 File            TauTau_V3_1/W4JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.23 * 214
@@ -483,7 +493,7 @@ Color		417
 #----------------DY----------------
 SAMPLE
 Name		DYToLL_M10To50
-SName		DY
+SName		ZX
 ShapeName	ZJetsToLL
 File            TauTau_V3_1/DYJetsToLL_M-10To50filter_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	876.8
@@ -494,7 +504,7 @@ Color		419
 
 SAMPLE
 Name		DYToLL_M50
-SName		DY
+SName		ZX
 ShapeName	ZJetsToLL
 File            TauTau_V3_1/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.187695 * 2950
@@ -505,7 +515,7 @@ Color		419
                   
 SAMPLE
 Name		DY1ToLL_M50
-SName		DY
+SName		ZX
 ShapeName	ZJetsToLL
 File            TauTau_V3_1/DY1JetsToLL_M-50_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.187695 * 561
@@ -516,7 +526,7 @@ Color		419
                   
 SAMPLE
 Name		DY2ToLL_M50
-SName		DY
+SName		ZX
 ShapeName	ZJetsToLL
 File            TauTau_V3_1/DY2JetsToLL_M-50_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.187695 * 181
@@ -527,7 +537,7 @@ Color		419
                   
 SAMPLE
 Name		DY3ToLL_M50
-SName		DY
+SName		ZX
 ShapeName	ZJetsToLL
 File            TauTau_V3_1/DY3JetsToLL_M-50_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.187695 * 51.1
@@ -538,7 +548,7 @@ Color		419
                   
 SAMPLE
 Name		DY4ToLL_M50
-SName		DY
+SName		ZX
 ShapeName	ZJetsToLL
 File            TauTau_V3_1/DY4JetsToLL_M-50_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.187695 * 23
@@ -550,7 +560,7 @@ Color		419
 
 SAMPLE
 Name		ZZJetsTo2L2Nu
-SName		DY
+SName		ZX
 ShapeName	ZZJetsTo2L2Nu
 File            TauTau_V3_1/ZZJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	0.7   #0.28 pb 
@@ -561,7 +571,7 @@ Color		419
  
 SAMPLE
 Name		ZZJetsTo2L2Q
-SName		DY
+SName		ZX
 ShapeName	ZZJetsTo2L2Q
 File            TauTau_V3_1/ZZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	2.5     #0.91 pb
@@ -572,7 +582,7 @@ Color		419
     
 SAMPLE
 Name		ZZJetsTo4L
-SName		DY
+SName		ZX
 ShapeName	ZZJetsTo4L
 File            TauTau_V3_1/ZZJetsTo4L_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	0.2 #0.1296 pb
@@ -583,7 +593,7 @@ Color		419
  
 SAMPLE
 Name		WZJetsTo3LNu
-SName		DY
+SName		ZX
 ShapeName	WZJetsTo3LNu
 File            TauTau_V3_1/WZJetsTo3LNu_TuneZ2_8TeV-madgraph-tauola_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.1     #0.8674 pb
@@ -594,7 +604,7 @@ Color		419
 
 SAMPLE
 Name		WZJetsTo2L2Q
-SName		DY
+SName		ZX
 ShapeName	WZJetsTo2L2Q
 File            TauTau_V3_1/WZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	2.2     #1.755 pb
@@ -799,7 +809,7 @@ Color	        1
 
 ##SAMPLE
 Name		WJetsToLNu2
-SName		Wtolnu
+SName		W
 ShapeName	WJets
 File            TauTau_V3_1/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	36257.2
@@ -810,7 +820,7 @@ Color		417
 
 ##SAMPLE
 Name		W1JetsToLNu2
-SName		Wtolnu
+SName		W
 ShapeName	WJets
 File            TauTau_V3_1/W1JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.23 * 5400
@@ -821,7 +831,7 @@ Color		417
 
 ##SAMPLE
 Name		W2JetsToLNu2
-SName		Wtolnu
+SName		W
 ShapeName	WJets
 File            TauTau_V3_1/W2JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.23 * 1750
@@ -832,7 +842,7 @@ Color		417
 
 ##SAMPLE
 Name		W3JetsToLNu2
-SName		Wtolnu
+SName		W
 ShapeName	WJets
 File            TauTau_V3_1/W3JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.23 * 519
@@ -843,7 +853,7 @@ Color		417
 
 ##SAMPLE
 Name		W4JetsToLNu2
-SName		Wtolnu
+SName		W
 ShapeName	WJets
 File            TauTau_V3_1/W4JetsToLNu_TuneZ2Star_8TeV-madgraph_NBJetsCSVM0_MET30_NewPU_Stitching.root
 Xsection  	1.23 * 214
