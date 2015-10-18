@@ -9,128 +9,128 @@ ________________________________________________________________________________
 
 
 SAMPLE
-Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part2_Part0_BigFiles_NewPU_Stitching_DoubleTauRelaxed2
-SName           QCD
-ShapeName       QCD
+Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part2_Part0
+SName           SUSY
+ShapeName       Signal
 File            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part*_Part*.root
 Xsection        1
 Kfact           1.0
 Lumi            19600.0
-Type            mc
+Type            susy
 Color           401
 
 #SAMPLE
-Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part2_Part1_BigFiles_NewPU_Stitching_DoubleTauRelaxed2
-SName           QCD
-ShapeName       QCD
+Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part2_Part1
+SName           SUSY
+ShapeName       Signal
 File            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part2_Part1.root
 Xsection        1
 Kfact           1.0
 Lumi            19600.0
-Type            mc
+Type            susy
 Color           401
 
 
 
 #SAMPLE
-Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part2_Part2_BigFiles_NewPU_Stitching_DoubleTauRelaxed2
-SName           QCD
-ShapeName       QCD
+Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part2_Part2
+SName           SUSY
+ShapeName       Signal
 File            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part2_Part2.root
 Xsection        1
 Kfact           1.0
 Lumi            19600.0
-Type            mc
+Type            susy
 Color           401
 
 
 
 #SAMPLE
-Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part2_Part3_BigFiles_NewPU_Stitching_DoubleTauRelaxed2
-SName           QCD
-ShapeName       QCD
+Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part2_Part3
+SName           SUSY
+ShapeName       Signal
 File            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part2_Part3.root
 Xsection        1
 Kfact           1.0
 Lumi            19600.0
-Type            mc
+Type            susy
 Color           401
 
 #SAMPLE
-Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part0_BigFiles_NewPU_Stitching_DoubleTauRelaxed2
-SName           QCD
-ShapeName       QCD
+Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part0
+SName           SUSY
+ShapeName       Signal
 File            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part0.root
 Xsection        1
 Kfact           1.0
 Lumi            19600.0
-Type            mc
+Type            susy
 Color           401
 
 #SAMPLE
-Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part1_BigFiles_NewPU_Stitching_DoubleTauRelaxed2
-SName           QCD
-ShapeName       QCD
+Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part1
+SName           SUSY
+ShapeName       Signal
 File            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part1.root
 Xsection        1
 Kfact           1.0
 Lumi            19600.0
-Type            mc
+Type            susy
 Color           401
 
 #SAMPLE
-Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part2_BigFiles_NewPU_Stitching_DoubleTauRelaxed2
-SName           QCD
-ShapeName       QCD
+Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part2
+SName           SUSY
+ShapeName       Signal
 File            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part2.root
 Xsection        1
 Kfact           1.0
 Lumi            19600.0
-Type            mc
+Type            susy
 Color           401
 
 #SAMPLE
-Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part3_BigFiles_NewPU_Stitching_DoubleTauRelaxed2
-SName           QCD
-ShapeName       QCD
+Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part3
+SName           SUSY
+ShapeName       Signal
 File            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part3.root
 Xsection        1
 Kfact           1.0
 Lumi            19600.0
-Type            mc
+Type            susy
 Color           401
 
 #SAMPLE
-Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part4_BigFiles_NewPU_Stitching_DoubleTauRelaxed2
-SName           QCD
-ShapeName       QCD
+Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part4
+SName           SUSY
+ShapeName       Signal
 File            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part4.root
 Xsection        1
 Kfact           1.0
 Lumi            19600.0
-Type            mc
+Type            susy
 Color           401
 
 #SAMPLE
-Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part5_BigFiles_NewPU_Stitching_DoubleTauRelaxed2
-SName           QCD
-ShapeName       QCD
+Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part5
+SName           SUSY
+ShapeName       Signal
 File            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part5.root
 Xsection        1
 Kfact           1.0
 Lumi            19600.0
-Type            mc
+Type            susy
 Color           401
 
 #SAMPLE
-Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part6_BigFiles_NewPU_Stitching_DoubleTauRelaxed2
-SName           QCD
-ShapeName       QCD
+Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part6
+SName           SUSY
+ShapeName       Signal
 File            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part1_Part6.root
 Xsection        1
 Kfact           1.0
 Lumi            19600.0
-Type            mc
+Type            susy
 Color           401
 
 

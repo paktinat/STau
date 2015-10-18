@@ -90,7 +90,7 @@ void SetStyle_PRD(){
   RootStyle->SetStatColor     (0);
   RootStyle->SetStatW(0.5);
 //  RootStyle->SetMarkerStyle(20);
-//RootStyle->SetMarkerSize(1.25);
+//  RootStyle->SetMarkerSize(2.0);
 
 //RootStyle->SetPalette(1);
 
