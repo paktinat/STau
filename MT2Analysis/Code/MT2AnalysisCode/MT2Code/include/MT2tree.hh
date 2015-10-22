@@ -933,6 +933,12 @@ public:
   //Float_t PositiveChargedLepWithZBeamPlane(TLorentzVector LepPluslv, TLorentzVector LepNeglv);
   Float_t PositiveChargedLepWithZBeamPlaneMuTau();
 
+  int NJetsMinJetMet(){
+    int nJets = GetNjets(20, 5.0, 0); 
+    return nJets;
+  }
+
+
   //----------------- ee --------------------
   Float_t eePZeta();
   Float_t eePZetaImbalanced();

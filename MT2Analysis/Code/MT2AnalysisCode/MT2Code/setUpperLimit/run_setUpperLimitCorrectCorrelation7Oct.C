@@ -1,10 +1,16 @@
+// root run_setUpperLimitCorrectCorrelation1Sep 0.2 EXP count1.root count2.root count3.root ...
+
 #include <TString.h>
 
 void makeCardEleTau(double N, double S, double dS, string sOut) {
-    double EleTauBMC = 0.23; //MC driven Bkg for non fake taus
+    double EleTauBMC = 0.20; //MC driven Bkg for non fake taus
     double dEleTauBMC = 0.25;//its relative systematic uncer
-    double dEleTauBNMC = 9.0;//Number for MC without weight
-    
+    double dEleTauBNMC = 8.0;//Number for MC without weight
+ 
+    double EleTauBMCLR = 0.03; //MC driven Bkg for Low Rate MC
+    double dEleTauBMCLR = 0.50;//its relative systematic uncer
+    double dEleTauBNMCLR = 1.0;//Number for MC without weight
+   
     double EleTauBDD = 2.73; //Data Driven estimation for fake taus 2.73 +- 2.77
     double dEleTauBDD = 1.01;//its total relative uncertainty Stat
     double dLepTauBDD = 0.07;//its total relative uncertainty from PR (0.3%), FR(7%) correlated with muTau
@@ -13,35 +19,41 @@ void makeCardEleTau(double N, double S, double dS, string sOut) {
     ofstream fOut(sOut.c_str());
     fOut.precision(3);
     fOut << "imax 1  number of channels" << std::endl;
-    fOut << "jmax 2  number of backgrounds" << std::endl;
-    fOut << "kmax 5  number of nuisance parameters (sources of systematic uncertainties)" << std::endl;
+    fOut << "jmax 3  number of backgrounds" << std::endl;
+    fOut << "kmax 7  number of nuisance parameters (sources of systematic uncertainties)" << std::endl;
     fOut << "---" << std::endl;
     fOut << "bin b1" << std::endl;
 //     fOut << "observation " <<(EleTauBMC +EleTauBDD) << std::endl;
     fOut << "observation " <<3 << std::endl;
     fOut << "---" << std::endl;
-    fOut << "bin              b1     b1  b1" << std::endl;
-    fOut << "process         SMS    All  DD" << std::endl;
-    fOut << "process          0     1    2" << std::endl;
+    fOut << "bin              b1     b1  b1 b1" << std::endl;
+    fOut << "process         SMS    All  DD LR" << std::endl;
+    fOut << "process          0     1    2   3" << std::endl;
     
-    fOut << "rate            " << S << "\t" << EleTauBMC << "\t" << EleTauBDD << std::endl;
+    fOut << "rate            " << S << "\t" << EleTauBMC << "\t" << EleTauBDD << "\t" << EleTauBMCLR << std::endl;
     fOut << "---" << std::endl;
      
-    fOut << "StatMC"<<sOut.c_str()<<" gmN " << dEleTauBNMC <<"\t-\t"<< EleTauBMC/dEleTauBNMC << "\t-" << std::endl;
+    fOut << "StaMC"<<sOut.c_str()<<" gmN " << dEleTauBNMC <<"\t-\t"<< EleTauBMC/dEleTauBNMC << "\t-\t-" << std::endl;
+    fOut << "StaMCLR"<<sOut.c_str()<<" gmN " << dEleTauBNMCLR <<"\t-\t-\t-\t"<< EleTauBMCLR/dEleTauBNMCLR <<  std::endl;
 
 
-    fOut << "dEleTauS         lnN     " << 1 + dS << "\t-\t-" << std::endl;
-    fOut << "dEleTauBMC       lnN     - \t " << 1 + dEleTauBMC << "\t-" << std::endl;
-    fOut << "dEleTauBDD       lnN     - \t " <<  "-\t" << 1 + dEleTauBDD << std::endl;
-    fOut << "dLepTauBDD       lnN     - \t " <<  "-\t"<< 1 + dLepTauBDD << std::endl;
+    fOut << "dEleTauS         lnN     " << 1 + dS << "\t-\t-\t-" << std::endl;
+    fOut << "dEleTauBMC       lnN     - \t " << 1 + dEleTauBMC << "\t-\t-" << std::endl;
+    fOut << "dEleTauBDD       lnN     - \t " <<  "-\t" << 1 + dEleTauBDD << "\t-"<<std::endl;
+    fOut << "dLepTauBDD       lnN     - \t " <<  "-\t"<< 1 + dLepTauBDD << "\t-"<<std::endl;
+    fOut << "dEleTauBMCLR     lnN     - \t " <<  "-\t-\t" << 1 + dEleTauBMCLR << std::endl;
     fOut.close();
 
 }
 
 void makeCardMuTau(double N, double S, double dS, string sOut) {
-    double MuTauBMC = 0.45; //MC driven Bkg for non fake taus
+    double MuTauBMC = 0.26; //MC driven Bkg for non fake taus
     double dMuTauBMC = 0.25;//its relative systematic uncer
-    double dMuTauBNMC = 8.0;//Number for MC without weight
+    double dMuTauBNMC = 5.0;//Number for MC without weight
+    
+    double MuTauBMCLR = 0.19; //MC driven Bkg for Low Rate MC
+    double dMuTauBMCLR = 0.5;//its relative systematic uncer
+    double dMuTauBNMCLR = 3.0;//Number for MC without weight
     
     double MuTauBDD = 6.83; //Data Driven estimation for fake taus  6.82557 +- 3.87114 = 6.82557 *(1.0 +- 0.563391(Stat) +- 0.065173(FRSys) +- 0.00218677(PRSys))
     double dMuTauBDD = 0.56;//its total relative uncertainty Stat
@@ -51,26 +63,28 @@ void makeCardMuTau(double N, double S, double dS, string sOut) {
     ofstream fOut(sOut.c_str());
     fOut.precision(3);
     fOut << "imax 1  number of channels" << std::endl;
-    fOut << "jmax 2  number of backgrounds" << std::endl;
-    fOut << "kmax 5 number of nuisance parameters (sources of systematic uncertainties)" << std::endl;
+    fOut << "jmax 3  number of backgrounds" << std::endl;
+    fOut << "kmax 7 number of nuisance parameters (sources of systematic uncertainties)" << std::endl;
     fOut << "---" << std::endl;
     fOut << "bin b1" << std::endl;
 //     fOut << "observation " <<(MuTauBMC +MuTauBDD) << std::endl;
     fOut << "observation " <<5 << std::endl;
     fOut << "---" << std::endl;
-    fOut << "bin              b1     b1  b1" << std::endl;
-    fOut << "process         SMS    All  DD" << std::endl;
-    fOut << "process          0     1    2" << std::endl;
+    fOut << "bin              b1     b1  b1 b1" << std::endl;
+    fOut << "process         SMS    All  DD LR" << std::endl;
+    fOut << "process          0     1    2   3" << std::endl;
     
-    fOut << "rate           " << S << "\t" << MuTauBMC << "\t" << MuTauBDD << std::endl;
+    fOut << "rate           " << S << "\t" << MuTauBMC << "\t" << MuTauBDD << "\t" << MuTauBMCLR << std::endl;
     fOut << "---" << std::endl;
      
-    fOut << "StatMC"<<sOut.c_str()<<"  gmN    " << dMuTauBNMC <<"\t-\t"<< MuTauBMC/dMuTauBNMC << "\t-" << std::endl;
+    fOut << "StatMC"<<sOut.c_str()<<"  gmN    " << dMuTauBNMC <<"\t-\t"<< MuTauBMC/dMuTauBNMC << "\t-\t-" << std::endl;
+    fOut << "StatMCLR"<<sOut.c_str()<<"  gmN    " << dMuTauBNMCLR <<"\t-\t-\t-\t"<< MuTauBMCLR/dMuTauBNMCLR << std::endl;
 
-    fOut << "dMuTauS   lnN    " << 1 + dS << "\t-" << "\t-\t" << std::endl;
-    fOut << "dMuTauBMC lnN    - \t " << 1 + dMuTauBMC << "\t-" << std::endl;
-    fOut << "dMuTauBDD   lnN  - \t " <<  "-\t" << 1 + dMuTauBDD <<  std::endl;
-    fOut << "dLepTauBDD  lnN  - \t " <<  "-\t" << 1 + dLepTauBDD << std::endl;
+    fOut << "dMuTauS   lnN    " << 1 + dS << "\t-" << "\t-\t-" << std::endl;
+    fOut << "dMuTauBMC lnN    - \t " << 1 + dMuTauBMC << "\t-\t-" << std::endl;
+    fOut << "dMuTauBDD   lnN  - \t " <<  "-\t" << 1 + dMuTauBDD <<  "\t-" << std::endl;
+    fOut << "dLepTauBDD  lnN  - \t " <<  "-\t" << 1 + dLepTauBDD << "\t-" << std::endl;
+    fOut << "dMuTauBMCLR lnN  - \t-\t-\t"  << 1 + dMuTauBMCLR << std::endl;
     
     fOut.close();
 
@@ -78,12 +92,16 @@ void makeCardMuTau(double N, double S, double dS, string sOut) {
 
 
 void makeCardTauTau1(double N, double S, double dS, string sOut) {
-    double TauTau1BMC = 0.75; //MC driven Bkg for non fake taus
+    double TauTau1BMC = 0.56; //MC driven Bkg for non fake taus
     double dTauTau1BMC = 0.25;//its relative systematic uncer
-    double dTauTau1BNMC = 81.0;//Number for MC without weight
-    
-    double TauTauBDD = 0.15; //Data Driven estimation for QCD
-    double dTauTauBDD = 1.7;//0.08/0.06;//its total relative uncertainty
+    double dTauTau1BNMC = 61.0;//Number for MC without weight
+
+    double TauTau1BMCLR = 0.19; //MC driven Bkg for non fake taus
+    double dTauTau1BMCLR = 0.50;//its relative systematic uncer
+    double dTauTau1BNMCLR = 20.0;//Number for MC without weight
+     
+    double TauTauBDD = 0.13; //Data Driven estimation for QCD 0.13 +- 0.19 + - 0.10
+    double dTauTauBDD = 1.65;//0.21/0.13;//its total relative uncertainty
 
     double TauTauBW = 0.93 * 0.00213/0.0029;      //WJets 0.93 +- 0.13 +-0.14 
     double dTauTauBW = 0.79;//WJets 0.19 @ 0.77
@@ -93,37 +111,43 @@ void makeCardTauTau1(double N, double S, double dS, string sOut) {
     ofstream fOut(sOut.c_str());
     fOut.precision(3);
     fOut << "imax 1  number of channels" << std::endl;
-    fOut << "jmax 3  number of backgrounds" << std::endl;
-    fOut << "kmax 5  number of nuisance parameters (sources of systematic uncertainties)" << std::endl;
+    fOut << "jmax 4  number of backgrounds" << std::endl;
+    fOut << "kmax 7  number of nuisance parameters (sources of systematic uncertainties)" << std::endl;
     fOut << "---" << std::endl;
     fOut << "bin b1" << std::endl;
 //     fOut << "observation " << (TauTau1BMC + TauTauBDD + TauTauBW) << std::endl;
     fOut << "observation " << 1 << std::endl;
     fOut << "---" << std::endl;
-    fOut << "bin              b1     b1  b1  b1" << std::endl;
-    fOut << "process         SMS    All  DD  W" << std::endl;
-    fOut << "process          0     1    2    3" << std::endl;
+    fOut << "bin              b1     b1  b1  b1  b1" << std::endl;
+    fOut << "process         SMS    All  DD  W   LR" << std::endl;
+    fOut << "process          0     1    2   3   4" << std::endl;
     
-    fOut << "rate           " << S << "\t" << TauTau1BMC << "\t" << TauTauBDD <<"\t" << TauTauBW << std::endl;
+    fOut << "rate           " << S << "\t" << TauTau1BMC << "\t" << TauTauBDD <<"\t" << TauTauBW << "\t" << TauTau1BMCLR << std::endl;
     fOut << "---" << std::endl;
      
-    fOut << "StatMC"<<sOut.c_str()<<"  gmN    " << dTauTau1BNMC <<"\t-\t"<< TauTau1BMC/dTauTau1BNMC << "\t-" << "\t-" << std::endl;
+    fOut << "StatMC"<<sOut.c_str()<<"  gmN    " << dTauTau1BNMC <<"\t-\t"<< TauTau1BMC/dTauTau1BNMC << "\t-" << "\t-\t-" << std::endl;
+    fOut << "StatMCLR"<<sOut.c_str()<<"  gmN    " << dTauTau1BNMCLR << "\t-\t-\t-\t-\t"<< TauTau1BMC/dTauTau1BNMC << std::endl;
 
 
-    fOut << "dTauTau1S   lnN    " << 1 + dS << "\t-" << "\t-" <<"\t-" <<  std::endl;
-    fOut << "dTauTau1BMC lnN    - \t "    << 1 + dTauTau1BMC << "\t-" << "\t-" << std::endl;
-    fOut << "dTauTauBDD   lnN  - \t "    <<  "\t-\t" << 1 + dTauTauBDD << "\t-" << std::endl;
-    fOut << "dTauTauBW   lnN  - \t " <<  "\t-\t" <<  "\t-\t" << 1 + dTauTauBW << std::endl;
+    fOut << "dTauTau1S   lnN    " << 1 + dS << "\t-" << "\t-" <<"\t-\t-" <<  std::endl;
+    fOut << "dTauTau1BMC lnN    - \t "    << 1 + dTauTau1BMC << "\t-" << "\t-\t-" << std::endl;
+    fOut << "dTauTauBDD   lnN  - \t "    <<  "\t-\t" << 1 + dTauTauBDD << "\t-\t-" << std::endl;
+    fOut << "dTauTauBW   lnN  - \t " <<  "\t-\t" <<  "\t-\t" << 1 + dTauTauBW <<  "\t-" <<std::endl;
+    fOut << "dTauTau1BMCLR lnN    - \t "    << "\t-" << "\t-\t-\t" << 1 + dTauTau1BMCLR << std::endl;
     fOut.close();
 
 }
 void makeCardTauTau2(double N, double S, double dS, string sOut) {
-    double TauTau2BMC = 1.99; //MC driven Bkg 
+    double TauTau2BMC = 1.24; //MC driven Bkg 
     double dTauTau2BMC = 0.25;//its relative systematic uncer
-    double dTauTau2BNMC = 5.0;//Number for MC without weight
+    double dTauTau2BNMC = 3.0;//Number for MC without weight
+
+    double TauTau2BMCLR = 0.75; //MC driven Bkg 
+    double dTauTau2BMCLR = 0.50;//its relative systematic uncer
+    double dTauTau2BNMCLR = 2.0;//Number for MC without weight
     
-    double TauTauBDD = 0.82;//0.61; //Data Driven estimation for QCD
-    double dTauTauBDD = 0.79;//1.55/0.61;//its total relative uncertainty
+    double TauTauBDD = 1.15;//Data Driven estimation for QCD 1.15 +- 0.81 +- 0.25
+    double dTauTauBDD = 0.74;//0.85/1.15;//its total relative uncertainty
 
 //     double TauTauBW = 0.43;//3.5;      //WJets 0.8 +- 0.2 +- 0.1
 //     double dTauTauBW = 0.96;//(0.4/0.43 @ 0.25) ;//WJets
@@ -133,26 +157,28 @@ void makeCardTauTau2(double N, double S, double dS, string sOut) {
     ofstream fOut(sOut.c_str());
     fOut.precision(3);
     fOut << "imax 1  number of channels" << std::endl;
-    fOut << "jmax 2  number of backgrounds" << std::endl;
-    fOut << "kmax 4  number of nuisance parameters (sources of systematic uncertainties)" << std::endl;
+    fOut << "jmax 3  number of backgrounds" << std::endl;
+    fOut << "kmax 6  number of nuisance parameters (sources of systematic uncertainties)" << std::endl;
     fOut << "---" << std::endl;
     fOut << "bin b1" << std::endl;
 //     fOut << "observation " << (TauTau2BMC + TauTauBDD) << std::endl;
     fOut << "observation " << 2 << std::endl;
     fOut << "---" << std::endl;
-    fOut << "bin              b1     b1  b1  " << std::endl;
-    fOut << "process         SMS    All  DD  " << std::endl;
-    fOut << "process          0     1    2   " << std::endl;
+    fOut << "bin              b1     b1  b1 b1 " << std::endl;
+    fOut << "process         SMS    All  DD LR " << std::endl;
+    fOut << "process          0     1    2  3  " << std::endl;
     
-    fOut << "rate           " << S << "\t" << TauTau2BMC << "\t" << TauTauBDD <<std::endl;
+    fOut << "rate           " << S << "\t" << TauTau2BMC << "\t" << TauTauBDD <<"\t" << TauTau2BMCLR <<std::endl;
     fOut << "---" << std::endl;
      
-    fOut << "StatMC"<<sOut.c_str()<<"  gmN    " << dTauTau2BNMC <<"\t-\t"<< TauTau2BMC/dTauTau2BNMC << "\t-" <<  std::endl;
+    fOut << "StatMC"<<sOut.c_str()<<"  gmN    " << dTauTau2BNMC <<"\t-\t"<< TauTau2BMC/dTauTau2BNMC << "\t-\t-" <<  std::endl;
+    fOut << "StatMCLR"<<sOut.c_str()<<"  gmN    " << dTauTau2BNMCLR <<"\t-\t-\t-\t"<< TauTau2BMCLR/dTauTau2BNMCLR  <<  std::endl;
 
 
-    fOut << "dTauTau2S   lnN    " << 1 + dS << "\t-" << "\t-" << std::endl;
-    fOut << "dTauTau2BMC lnN    - \t "    << 1 + dTauTau2BMC << "\t-" << std::endl;
-    fOut << "dTauTauBDD   lnN  - \t "    <<  "\t-\t" << 1 + dTauTauBDD <<  std::endl;
+    fOut << "dTauTau2S   lnN    " << 1 + dS << "\t-" << "\t-\t-" << std::endl;
+    fOut << "dTauTau2BMC lnN    - \t "    << 1 + dTauTau2BMC << "\t-\t-" << std::endl;
+    fOut << "dTauTauBDD   lnN  - \t "    <<  "\t-\t-\t" << 1 + dTauTauBDD << "\t-" << std::endl;
+    fOut << "dTauTau2BMCLR lnN    - \t- \t- " <<    1 + dTauTau2BMC <<  std::endl;
     fOut.close();
 
 
@@ -266,13 +292,13 @@ bool isOUT(double x, double y) {
     return false;
 }
 
-run_setUpperLimitCorrectCorrelation9Jul() {
+run_setUpperLimitCorrectCorrelation7Oct() {
 
     std::vector< TString > sin;
     int argc = gApplication->Argc();
     for (int i = 0; i < argc; i++) {
         TString argvi = gApplication->Argv(i);
-        if (argvi.Contains("run_setUpperLimitCorrectCorrelation9Jul.C"))
+        if (argvi.Contains("run_setUpperLimitCorrectCorrelation7Oct.C"))
             for (int j = i + 1; j < argc; j++) {
                 TString argvj = gApplication->Argv(j);
                 sin.push_back(argvj);
@@ -302,6 +328,13 @@ run_setUpperLimitCorrectCorrelation9Jul() {
     TH2D* hSgmP2 = (TH2D*) htmp->Clone("hSgmP2");
     TH2D* hSgmM2 = (TH2D*) htmp->Clone("hSgmM2");
 
+    TH2D* hXSec = (TH2D*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
+    TH2D* hXSecUP = (TH2D*) TFile::Open("referenceXSecs.root")->Get("UP_C1C1_8TeV_NLONLL_LSP");
+    TH2D* hXSecDOWN = (TH2D*) TFile::Open("referenceXSecs.root")->Get("DOWN_C1C1_8TeV_NLONLL_LSP");
+
+    Int_t Obs_Sigma = 0; // -1 0 1
+
+
     TFile* fin;
     for (int ix = 1; ix <= htmp->GetXaxis()->GetNbins(); ix++) {
         for (int iy = 1; iy <= htmp->GetYaxis()->GetNbins(); iy++) {    
@@ -327,7 +360,22 @@ run_setUpperLimitCorrectCorrelation9Jul() {
 
                 TH2* hSgn = fin->GetObjectChecked("h_PN_MLSP_MChi", "TH2*");
                 Double_t S = hSgn->GetBinContent(ix, iy);
+                
                 Double_t statS = hSgn->GetBinError(ix, iy);
+
+                Double_t XS = hXSec->GetBinContent(ix, iy);
+                Double_t XSUP = hXSecUP->GetBinContent(ix, iy);
+                Double_t XSDOWN = hXSecDOWN->GetBinContent(ix, iy);
+
+                if(Obs_Sigma == 1){
+                 S = (XSUP/XS)*S;
+                 statS = sqrt(XSUP/XS)*statS;
+				}
+                if(Obs_Sigma == -1){
+                S = (XSDOWN/XS)*S;
+                statS = sqrt(XSDOWN/XS)*statS;
+                }
+                
 
 // 		if(S!= 0)
 // 		  dS = sqrt(dS * dS + (statS * statS/(S*S)));
@@ -363,16 +411,16 @@ run_setUpperLimitCorrectCorrelation9Jul() {
             if (!(std::ifstream("datacard_0")).good()) continue;
 	    
             system("combineCards.py datacard_* > datacard");
- 	    system("rm -f datacard_*");
-	    //system("combine -M Asymptotic datacard");
-            //system("combine -M HybridNew  datacard");
-	    system("combine -M HybridNew --frequentist --rule CLs --testStat LHC datacard -H ProfileLikelihood --fork 10 --expectedFromGrid=0.5");                          
+	    system("rm -f datacard_*");
+	    system("combine -M Asymptotic datacard");
+	    //system("combine -M HybridNew  datacard");
+	    //system("combine -M HybridNew --frequentist --rule CLs --testStat LHC datacard -H ProfileLikelihood --fork 10 --expectedFromGrid=0.5");                          
 	    //system("combine -M HybridNew --frequentist --rule CLs --testStat LHC datacard -H ProfileLikelihood --fork 10");  
 
 	    TTree* tree;
-	    //TFile * flimit = new TFile("higgsCombineTest.Asymptotic.mH120.root");
-            //TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.root");
-	    TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.quant0.500.root");
+	    TFile * flimit = new TFile("higgsCombineTest.Asymptotic.mH120.root");
+	    //TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.root");
+	    //TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.quant0.500.root");
 
             flimit->GetObject("limit", tree);
 
@@ -402,9 +450,9 @@ run_setUpperLimitCorrectCorrelation9Jul() {
 	    }else
 	      cout<<" There is 0 entry "<<endl;
 // 	    system("mv  roostats-* roostats-*.root");
-//	    system("rm -f higgsCombineTest.Asymptotic.mH120.root");
-	    system("rm -f higgsCombineTest.HybridNew.mH120*.root");
-// 	    system("rm -f datacard");
+	    system("rm -f higgsCombineTest.Asymptotic.mH120.root");
+//	    system("rm -f higgsCombineTest.HybridNew.mH120*.root");
+ 	    system("rm -f datacard");
 	    system("rm -f roostats-*");
 
         }//iy

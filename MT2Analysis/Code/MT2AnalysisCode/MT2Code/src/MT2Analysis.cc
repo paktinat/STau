@@ -647,6 +647,7 @@ bool MT2Analysis::FillMT2TreeBasics(){
 		else if(abs(fTR->GenLeptonID[i]) == 22 )  mass=0;     // photon
 		else if(abs(fTR->GenLeptonID[i]) == 23 )  mass=91.2;   //  Z
 		else if(abs(fTR->GenLeptonID[i]) == 24 )  mass=80.4;   //  W
+		else if(MID == 15) mass = 1700.0;
 		else   continue;
 		NGenLepts++;
 		if(NGenLepts >= 20 ) {cout << "ERROR: NGenLepts >=20: skipping remaining genlepts for event " << fTR->Event << endl; continue;}

@@ -1,3 +1,5 @@
+// root run_setUpperLimitCorrectCorrelation1Sep 0.2 EXP count1.root count2.root count3.root ...
+
 #include <TString.h>
 
 void makeCardEleTau(double N, double S, double dS, string sOut) {
@@ -45,7 +47,8 @@ void makeCardMuTau(double N, double S, double dS, string sOut) {
     
     double MuTauBDD = 6.83; //Data Driven estimation for fake taus  6.82557 +- 3.87114 = 6.82557 *(1.0 +- 0.563391(Stat) +- 0.065173(FRSys) +- 0.00218677(PRSys))
     double dMuTauBDD = 0.56;//its total relative uncertainty Stat
-    double dLepTauBDD = 0.07;//its total relative uncertainty from PR(0.2%), FR(6.5%) correlated with muTau
+//     double dLepTauBDD = 0.07;//its total relative uncertainty from PR(0.2%), FR(6.5%) correlated with muTau
+    double dLepTauBDD = 0.17;//its total relative uncertainty from PR(0.3%), FR(16%) correlated with muTau
 
     // === DATA CARD ===
     ofstream fOut(sOut.c_str());
@@ -82,8 +85,8 @@ void makeCardTauTau1(double N, double S, double dS, string sOut) {
     double dTauTau1BMC = 0.25;//its relative systematic uncer
     double dTauTau1BNMC = 81.0;//Number for MC without weight
     
-    double TauTauBDD = 0.15; //Data Driven estimation for QCD
-    double dTauTauBDD = 1.7;//0.08/0.06;//its total relative uncertainty
+    double TauTauBDD = 0.13; //Data Driven estimation for QCD 0.13 +- 0.19 + - 0.10
+    double dTauTauBDD = 1.65;//0.21/0.13;//its total relative uncertainty
 
     double TauTauBW = 0.93 * 0.00213/0.0029;      //WJets 0.93 +- 0.13 +-0.14 
     double dTauTauBW = 0.79;//WJets 0.19 @ 0.77
@@ -122,8 +125,8 @@ void makeCardTauTau2(double N, double S, double dS, string sOut) {
     double dTauTau2BMC = 0.25;//its relative systematic uncer
     double dTauTau2BNMC = 5.0;//Number for MC without weight
     
-    double TauTauBDD = 0.82;//0.61; //Data Driven estimation for QCD
-    double dTauTauBDD = 0.79;//1.55/0.61;//its total relative uncertainty
+    double TauTauBDD = 1.15;//Data Driven estimation for QCD 1.15 +- 0.81 +- 0.25
+    double dTauTauBDD = 0.74;//0.85/1.15;//its total relative uncertainty
 
 //     double TauTauBW = 0.43;//3.5;      //WJets 0.8 +- 0.2 +- 0.1
 //     double dTauTauBW = 0.96;//(0.4/0.43 @ 0.25) ;//WJets
@@ -266,13 +269,13 @@ bool isOUT(double x, double y) {
     return false;
 }
 
-run_setUpperLimitCorrectCorrelation9Jul() {
+run_setUpperLimitCorrectCorrelation20Sep() {
 
     std::vector< TString > sin;
     int argc = gApplication->Argc();
     for (int i = 0; i < argc; i++) {
         TString argvi = gApplication->Argv(i);
-        if (argvi.Contains("run_setUpperLimitCorrectCorrelation9Jul.C"))
+        if (argvi.Contains("run_setUpperLimitCorrectCorrelation20Sep.C"))
             for (int j = i + 1; j < argc; j++) {
                 TString argvj = gApplication->Argv(j);
                 sin.push_back(argvj);
@@ -302,6 +305,13 @@ run_setUpperLimitCorrectCorrelation9Jul() {
     TH2D* hSgmP2 = (TH2D*) htmp->Clone("hSgmP2");
     TH2D* hSgmM2 = (TH2D*) htmp->Clone("hSgmM2");
 
+    TH2D* hXSec = (TH2D*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
+    TH2D* hXSecUP = (TH2D*) TFile::Open("referenceXSecs.root")->Get("UP_C1C1_8TeV_NLONLL_LSP");
+    TH2D* hXSecDOWN = (TH2D*) TFile::Open("referenceXSecs.root")->Get("DOWN_C1C1_8TeV_NLONLL_LSP");
+
+    Int_t Obs_Sigma = 0; // -1 0 1
+
+
     TFile* fin;
     for (int ix = 1; ix <= htmp->GetXaxis()->GetNbins(); ix++) {
         for (int iy = 1; iy <= htmp->GetYaxis()->GetNbins(); iy++) {    
@@ -327,7 +337,22 @@ run_setUpperLimitCorrectCorrelation9Jul() {
 
                 TH2* hSgn = fin->GetObjectChecked("h_PN_MLSP_MChi", "TH2*");
                 Double_t S = hSgn->GetBinContent(ix, iy);
+                
                 Double_t statS = hSgn->GetBinError(ix, iy);
+
+                Double_t XS = hXSec->GetBinContent(ix, iy);
+                Double_t XSUP = hXSecUP->GetBinContent(ix, iy);
+                Double_t XSDOWN = hXSecDOWN->GetBinContent(ix, iy);
+
+                if(Obs_Sigma == 1){
+                 S = (XSUP/XS)*S;
+                 statS = sqrt(XSUP/XS)*statS;
+				}
+                if(Obs_Sigma == -1){
+                S = (XDOWN/XS)*S;
+                statS = sqrt(XDOWN/XS)*statS;
+                }
+                
 
 // 		if(S!= 0)
 // 		  dS = sqrt(dS * dS + (statS * statS/(S*S)));
@@ -365,14 +390,14 @@ run_setUpperLimitCorrectCorrelation9Jul() {
             system("combineCards.py datacard_* > datacard");
  	    system("rm -f datacard_*");
 	    //system("combine -M Asymptotic datacard");
-            //system("combine -M HybridNew  datacard");
-	    system("combine -M HybridNew --frequentist --rule CLs --testStat LHC datacard -H ProfileLikelihood --fork 10 --expectedFromGrid=0.5");                          
-	    //system("combine -M HybridNew --frequentist --rule CLs --testStat LHC datacard -H ProfileLikelihood --fork 10");  
+        //system("combine -M HybridNew  datacard");
+	    //system("combine -M HybridNew --frequentist --rule CLs --testStat LHC datacard -H ProfileLikelihood --fork 10 --expectedFromGrid=0.5");                          
+	    system("combine -M HybridNew --frequentist --rule CLs --testStat LHC datacard -H ProfileLikelihood --fork 10");  
 
 	    TTree* tree;
 	    //TFile * flimit = new TFile("higgsCombineTest.Asymptotic.mH120.root");
-            //TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.root");
-	    TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.quant0.500.root");
+        TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.root");
+	    //TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.quant0.500.root");
 
             flimit->GetObject("limit", tree);
 

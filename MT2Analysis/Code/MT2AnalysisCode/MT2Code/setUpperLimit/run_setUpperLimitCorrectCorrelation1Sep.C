@@ -387,7 +387,7 @@ run_setUpperLimitCorrectCorrelation1Sep() {
             if (!(std::ifstream("datacard_0")).good()) continue;
 	    
             system("combineCards.py datacard_* > datacard");
- 	    system("rm -f datacard_*");
+ 	    //system("rm -f datacard_*");
 	    //system("combine -M Asymptotic datacard");
         //system("combine -M HybridNew  datacard");
 	    //system("combine -M HybridNew --frequentist --rule CLs --testStat LHC datacard -H ProfileLikelihood --fork 10 --expectedFromGrid=0.5");                          

@@ -11,7 +11,7 @@ TLegend* legend() {
 TH2D* getXsecUp(TH2D* hRatio, TH2D* hXsec) {
     TH2D* hXsecUp = (TH2D*) hRatio->Clone("hXsecUp");
     
-    //    hXsecUp->Multiply(hRatio, hXsec);
+    hXsecUp->Multiply(hRatio, hXsec);
 
     //    hXsecUp->GetXaxis()->SetRangeUser(0, 600);
     //    hXsecUp->GetYaxis()->SetRangeUser(0, 600);
@@ -168,6 +168,8 @@ run_makeLimitPlot() {
 
     TH2D* hXsec = (TH2D*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
 
+//     TH2D* hXsec = (TH2D*) TFile::Open("referenceXSecs.root")->Get("StSt_8TeV_NLONLL_LSP"); hXsec->Rebin2D(2,2); hXsec->Scale(0.25);
+
     TH2D* h00 = (TH2D*) TFile::Open(sgnStrFile)->Get("hMdn");
     TH2D* hOb = (TH2D*) TFile::Open(sgnStrFile)->Get("hObs");
     TH2D* h01 = (TH2D*) TFile::Open(sgnStrFile)->Get("hSgmP1");
@@ -183,7 +185,7 @@ run_makeLimitPlot() {
     //For HybridNew hSgmP2 is the hSgmP1
 //     h01 = h02 ;
 //     h02 = h00 ;
-    float a = 0.02;
+    float a = 1.0;//0.2;
     h00->Scale(a);
     hOb->Scale(a);
     h01->Scale(a);
@@ -230,9 +232,9 @@ run_makeLimitPlot() {
     vg00.draw();
     vgOb.draw();
     vg01.draw();
-//     vg02.draw();
+     vg02.draw();
     vg_1.draw();
-//     vg_2.draw();
+     vg_2.draw();
 
     g00->Draw();
     g01->Draw("C");
