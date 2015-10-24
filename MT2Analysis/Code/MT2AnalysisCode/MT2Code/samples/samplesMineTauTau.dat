@@ -10,14 +10,15 @@ SAMPLE
 Name            TStau
 SName           SUSY
 ShapeName       Signal
-File            TauTau_V3_1/SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part*_Part*_NBJetsCSVM0_MET30_NewPU_Stitching.root
-Xsection        0.01249 pb
+File            TauTau_V3_1/SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part*_Part*_BigFiles_NewPU_Stitching_DoubleTauRelaxed2.root
+Xsection        0.01249 #0.00993 # pb
 Kfact           1.
 Lumi            18100.0
 Type            susy
 Color           1
 
 #TauTau_V3_1/SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part*_Part*_NBJetsCSVM0_MET30_NewPU_Stitching.root
+
 #TauTau_V3_1/SMS-TChipChimStauSnu-mChi-120to500-mLSP-1to480-x-050-TuneZ2star-8TeV-pythia6-tauolapp_NBJetsCSVM0_MET30_NewPU_Stitching.root
 
 #(380, 1)

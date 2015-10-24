@@ -44,6 +44,9 @@
     //  << "(misc.ProcessID!=10 || (abs(Susy.MassGlu - 240.0) <= 10.0 && abs(Susy.MassLSP - 40) <= 10.0))" << "&&"
 
   <<  "(misc.ProcessID!=10 || (abs(Susy.MassGlu - 240.0) <= 10.0 && abs(Susy.MassLSP - 40) <= 10.0))" << "&&"
+    //  <<  "(misc.ProcessID!=10 || (abs(Susy.MassGlu - 180.0) <= 10.0 && abs(Susy.MassLSP - 60.0) <= 10.0))" << "&&"
+    //  <<  "(misc.ProcessID!=10 || (abs(Susy.MassGlu - 240.0) <= 10.0 && abs(Susy.MassLSP - 40) <= 10.0))" << "&&"
+
   << "doubleTau[0].tau0Ind >= 0" << "&&"
   << "doubleTau[0].tau1Ind >= 0" << "&&"
   << "doubleTau[0].chargeSum == 0" << "&&"
@@ -124,12 +127,34 @@
 // tA->eeAnalysis(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_nominal");
 // tA->eeAnalysisTESsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_down_rejApp");
 
+//------------------------------240 , 40 -----------------------
+//  tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_tes_down_240_40", "ditau_bin1_tes_down", "");
 //  tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_nominal_240_40", "ditau_bin1_nominal", "");
-  tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_tes_up_240_40", "ditau_bin1_tes_up", "");
-//    tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_tes_down_240_40", "ditau_bin1_tes_down");
+//  tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_tes_up_240_40", "ditau_bin1_tes_up", "");
 
-//      tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 1000, "MT2_tautau_bin2_nominal", "ditau_bin2_nominal");
-//     tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_tes_up_240_40", "ditau_bin2_tes_up");
-//      tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_tes_down_240_40", "ditau_bin2_tes_down");
+//      tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_tes_down_240_40", "ditau_bin2_tes_down", "");
+  tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 1000000000000000000000000, "MT2_tautau_bin2_nominal", "ditau_bin2_nominal", "");
+//    tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_tes_up_240_40", "ditau_bin2_tes_up", "");
+
+
+//------------------------------180 , 60 -----------------------
+  //    tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_tes_down_18_60", "ditau_bin1_tes_down", "");
+  //  tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_nominal_18_60", "ditau_bin1_nominal", "");
+  //  tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_tes_up_18_60", "ditau_bin1_tes_up", "");
+  
+//      tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_tes_down_18_60", "ditau_bin2_tes_down", "");
+// tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 1000000000000000000000000, "MT2_tautau_bin2_nominal", "ditau_bin2_nominal", "");
+  //      tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_tes_up_18_60", "ditau_bin2_tes_up", "");
+
+
+//------------------------------380 , 1 -----------------------
+//  tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_tes_down_380_1", "ditau_bin1_tes_down", "");
+//  tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_nominal_380_1", "ditau_bin1_nominal", "");
+//  tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_tes_up_380_1", "ditau_bin1_tes_up", "");
+
+//      tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_tes_down_380_1", "ditau_bin2_tes_down", "");
+//  tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 1000000000000000000000000, "MT2_tautau_bin2_nominal", "ditau_bin2_nominal", "");
+//    tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_tes_up_380_1", "ditau_bin2_tes_up", "");
+
 
 }
