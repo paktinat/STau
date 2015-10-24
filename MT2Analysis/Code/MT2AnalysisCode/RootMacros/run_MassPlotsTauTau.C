@@ -58,10 +58,10 @@
   << "tau[doubleTau[0].tau1Ind].MuonRej2>0.5"<< "&&"
 
     //------makePlot-------------
-   << "doubleTau[0].lv.M() > 15" << "&&"
-   << "(doubleTau[0].lv.M() < 55 || doubleTau[0].lv.M() > 85)" << "&&"
-   << "misc.MinMetJetDPhiPt40 > 1" << "&&"
-   << "doubleTau[0].MT2 > 40.0"<< "&&"
+  << "doubleTau[0].lv.M() > 15" << "&&"
+  << "(doubleTau[0].lv.M() < 55 || doubleTau[0].lv.M() > 85)" << "&&"
+  << "misc.MinMetJetDPhiPt40 > 1" << "&&"
+  << "doubleTau[0].MT2 > 40.0"<< "&&"
   << "( 0 == 0 ) " << ")";
 
   TString preSelection = preSelCuts.str().c_str();

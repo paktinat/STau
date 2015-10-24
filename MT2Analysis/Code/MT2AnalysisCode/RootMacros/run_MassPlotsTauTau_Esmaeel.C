@@ -57,10 +57,11 @@
   << "tau[doubleTau[0].tau1Ind].MuonRej2>0.5"<< "&&"
 
     //------makePlot-------------
-   << "doubleTau[0].lv.M() > 15" << "&&"
-   << "(doubleTau[0].lv.M() < 55 || doubleTau[0].lv.M() > 85)" << "&&"
-	     << "misc.MinMetJetDPhiPt40 > 1" << "&&"
-      << "doubleTau[0].MT2 > 40.0"<< "&&"
+    //   << "doubleTau[0].lv.M() > 15" << "&&"
+    //   << "(doubleTau[0].lv.M() < 55 || doubleTau[0].lv.M() > 85)" << "&&"
+    //	     << "misc.MinMetJetDPhiPt40 > 1" << "&&"
+    //     << "misc.MET > 30"<< "&&"
+    //      << "doubleTau[0].MT2 > 40.0"<< "&&"
       << "( 0 == 0 ) " << ")";
 
   TString preSelection = preSelCuts.str().c_str();
@@ -68,7 +69,7 @@
   myChannelCuts_bin2.push_back(std::string(preSelection));
 
 // --- bin1 ---
-  myChannelCuts_bin1.push_back(std::string(std::string(myChan) + ".MT2 > 90.0 ")); 
+//  myChannelCuts_bin1.push_back(std::string(std::string(myChan) + ".MT2 > 90.0 ")); 
 
 
 // --- bin2 ---
@@ -115,16 +116,16 @@
 
 
 
- tA->makePlot("pileUp.NVertices",cuts_bin1, -10, -10 , -10 , trigger , "M_{T2}"  ,20,0, 60,   true,  true ,  true,   true,  true,  true, 1,true, false, "png", 1);
+  // tA->makePlot("pileUp.NVertices",cuts_bin1, -10, -10 , -10 , trigger , "M_{T2}"  ,20,0, 60,   true,  true ,  true,   true,  true,  true, 1,true, false, "png", 1);
 
   //     tA->eeZInOut(cuts_bin2, trigger, 100000000000000000000, "wjets_0to90_signal");
-//tA->makePlot("doubleTau[0].MT2",cuts_bin2, -10, 0 , -10 , trigger , "M_{T2}"  ,4,40, 140,   true,  true ,  true,   true,  true,  true, 1,true, false, "png");
+ //tA->makePlot("doubleTau[0].MT2",cuts_bin1, -10, 0 , -10 , trigger , "M_{T2}"  ,4,40, 140,   true,  true ,  true,   true,  true,  true, 1,true, false, "png");
 // tA->eeAnalysis(cuts_bin1, trigger, 1000000000000000000, "MT2_ditau_bin1_nominal");
 // tA->eeAnalysis(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_nominal");
 // tA->eeAnalysisTESsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_down_rejApp");
 
-//  tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_nominal_240_40", "ditau_bin1_nominal");
-//      tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_tes_up_240_40", "ditau_bin1_tes_up");
+//  tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_nominal_240_40", "ditau_bin1_nominal", "");
+  tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_tes_up_240_40", "ditau_bin1_tes_up", "");
 //    tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_tes_down_240_40", "ditau_bin1_tes_down");
 
 //      tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 1000, "MT2_tautau_bin2_nominal", "ditau_bin2_nominal");

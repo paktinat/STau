@@ -10109,8 +10109,8 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
     int data = 0;
     sample Sample = fSamples[ii];
 
-    if(Sample.sname != "SUSY" || Sample.sname != "DY")
-      continue;
+    //    if(Sample.sname != "SUSY" || Sample.sname != "DY")
+    //      continue;
 
 
     //    if (sampleName != "")
@@ -10302,7 +10302,9 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
        	 continue;
        if (MinMetJetDPhi_up <= 1)
 	 continue;
-       if (mt2_ditau_up <= 50)
+       if (MET_up.Pt() <= 30)
+	 continue;
+       if (mt2_ditau_up <= 90)
        	 continue;
 
        myQuantity =mt2_ditau_up;
@@ -10325,7 +10327,9 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	 continue;
        if (MinMetJetDPhi_down <= 1)
 	 continue;
-       if (mt2_ditau_down <= 50)
+       if (MET_down.Pt() <= 30)
+	 continue;
+       if (mt2_ditau_down <= 90)
 	 continue;
              myQuantity =mt2_ditau_down;
       
@@ -10351,7 +10355,9 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	 continue;
        if (MinMetJetDPhi_up <= 1)
 	 continue;
-       if(mt2_ditau_up >= 50 || mt2_ditau_up <= 40)
+       if (MET_up.Pt() <= 30)
+	 continue;
+       if(mt2_ditau_up >= 90 || mt2_ditau_up <= 40)
 	 continue;
        if (sumMT_up <= 250)
 	 continue;
@@ -10376,7 +10382,9 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	 continue;
        if (MinMetJetDPhi_down <= 1)
 	 continue;
-       if(mt2_ditau_down >= 50 || mt2_ditau_down <= 40)
+       if (MET_down.Pt() <= 30)
+	 continue;
+       if(mt2_ditau_down >= 90 || mt2_ditau_down <= 40)
 	 continue;
        if (sumMT_down <= 250)
 	 continue;
@@ -10541,14 +10549,13 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	  continue;
 	if (fMT2tree->misc.MinMetJetDPhiPt40 <= 1.0)
 	  continue;
-	if(fMT2tree->doubleTau[0].GetMT2() <= 50)
+	if (fMT2tree->misc.MET <= 30)
+	  continue;
+	if(fMT2tree->doubleTau[0].GetMT2() <= 90)
 	  continue;
 
-	//	if(fMT2tree->doubleTau[0].GetMT2() <= 90)
-	//	  continue;
+	myQuantity = fMT2tree->doubleTau[0].GetMT2();
 
-		myQuantity = fMT2tree->doubleTau[0].GetMT2();
-	//       myQuantity = fMT2tree->pileUp.NVertices; 
      }
 
     //----------------------ditau_bin2_nominal----------------------------
@@ -10569,7 +10576,9 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 	  continue;
 	if (fMT2tree->misc.MinMetJetDPhiPt40 <= 1.0)
 	  continue;
-	if(fMT2tree->doubleTau[0].GetMT2() >= 50 || fMT2tree->doubleTau[0].GetMT2() <= 40)
+	if (fMT2tree->misc.MET <= 30)
+	  continue;
+	if(fMT2tree->doubleTau[0].GetMT2() >= 90 || fMT2tree->doubleTau[0].GetMT2() <= 40)
 	  continue;
 	if((fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].MT) + (fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].MT) <= 250)     
 	  continue;
