@@ -2,6 +2,127 @@
 #include "helper/Utilities.hh"
 #include "Corrector.h"
 
+TLorentzVector empty_lv_tmp_to_return;
+
+TLorentzVector MT2tree::EleTauGetGenEle() const{
+  int idx = GetGenLeptIndex( 0 , 11 , 15 , 0 , 10 ) ;
+  if( idx == -1 ){
+    empty_lv_tmp_to_return.SetXYZM( 0 , 0 , 0 , 1000000.);
+    return empty_lv_tmp_to_return;
+  }
+  
+  return (genlept[idx].lv);
+}
+TLorentzVector MT2tree::EleTauGetGenTau() const{
+  vector<TLorentzVector> tauLvs ;
+
+  // ( (index,pdgID) , lv 
+  vector< pair< pair<int,int> ,TLorentzVector> > tauHLvs ;
+
+  for(int i=0; i<NGenLepts; ++i){
+    if( abs(genlept[i].ID)==11 ) {
+      if( abs( genlept[i].MID ) == 15 ){
+	TLorentzVector motherLV = genlept[i].Mlv;
+	auto existingTau = std::find_if( tauLvs.begin() , tauLvs.end() , 
+					 [motherLV]( const TLorentzVector s ){
+					   double dr = s.DrEtaPhi( motherLV );
+					   return dr < 0.3;
+					   double diff = (s.Vect()-motherLV.Vect()).Mag() ;
+					   return  (diff < (s.Vect().Mag()/20.0)) ;
+					 } );
+	if( existingTau == tauLvs.end() ){
+	  tauLvs.push_back( motherLV );
+	}
+      }
+    }
+
+    if( abs(genlept[i].ID)==13 ) {
+      if( abs( genlept[i].MID ) == 15 ){
+	TLorentzVector motherLV = genlept[i].Mlv;
+	auto existingTau = std::find_if( tauLvs.begin() , tauLvs.end() , 
+					 [motherLV]( const TLorentzVector s ){ 
+					   double dr = s.DrEtaPhi( motherLV );
+					   return dr < 0.3;
+					   double diff = (s.Vect()-motherLV.Vect()).Mag() ;
+					   return  (diff < (s.Vect().Mag()/20.0)) ;
+					 } );
+	if( existingTau == tauLvs.end() ){
+	  tauLvs.push_back( motherLV );
+	}
+      }
+    }
+
+    if( abs(genlept[i].ID)==15 ) {
+      TLorentzVector motherLV = genlept[i].lv;
+      auto existingTau = std::find_if( tauLvs.begin() , tauLvs.end() , 
+				       [motherLV]( const TLorentzVector s ){ 
+					 double dr = s.DrEtaPhi( motherLV );
+					 return dr < 0.3;
+					 double diff = (s.Vect()-motherLV.Vect()).Mag() ;
+					 return  (diff < (s.Vect().Mag()/20.0)) ;
+				       });
+      if( existingTau == tauLvs.end() ){
+	tauLvs.push_back( motherLV );
+	tauHLvs.push_back( make_pair( make_pair( i , genlept[i].ID) , motherLV)  );
+      }
+    }
+  }
+
+  std::sort( tauHLvs.begin() , tauHLvs.end() , 
+	     []( const pair< pair<int,int> ,TLorentzVector> l1 , const pair< pair<int,int> ,TLorentzVector> l2 ){
+	       return l2.second.Pt() > l1.second.Pt() ;
+	     });
+
+  if( tauHLvs.size() == 0 ){
+    return empty_lv_tmp_to_return;
+  }
+  else{
+    TLorentzVector neutrinoLV;
+
+    for(int i=tauHLvs[0].first.first; i<NGenLepts; ++i){
+      if( abs(genlept[i].ID)==16 ) {
+	if( genlept[i].MID == tauHLvs[0].first.second ){
+	  //if( tauHLvs[0].DrEtaPhi( genlept[i].Mlv ) < 0.2 ) 
+	    neutrinoLV = genlept[i].lv ;
+	}
+      }
+    }
+    return (tauHLvs[0].second - neutrinoLV );
+  }
+
+}
+const double MT2tree::EleTauCalcGenMET() const{
+  return genmet[0].Pt();
+}
+const double MT2tree::EleTauCalcGenMT2() const{
+  TLorentzVector ele = EleTauGetGenEle();
+  if( ele == empty_lv_tmp_to_return )
+    return -1 ;
+  
+  TLorentzVector tau = EleTauGetGenTau();
+  if( tau == empty_lv_tmp_to_return )
+    return -1;
+
+  double genMT2 = CalcMT2(0,0, ele, tau, genmet[0] );       
+  
+  return genMT2;
+}
+const double MT2tree::EleTauCalcGenMinDPhi() const{
+  return 0.0;
+}
+const double MT2tree::EleTauGenInvMass() const{
+  TLorentzVector ele = EleTauGetGenEle();
+  if( ele == empty_lv_tmp_to_return )
+    return -1 ;
+  
+  TLorentzVector tau = EleTauGetGenTau();
+  if( tau == empty_lv_tmp_to_return )
+    return -1;
+
+  return (ele+tau).M();
+}
+
+
 bool MT2tree::isPromptEleFakeTauFromJet( int eleId , int tauId ){
   TLorentzVector lvTau = tau[ tauId ].lv;
   TLorentzVector lvEle = ele[ eleId ].lv;

@@ -62,7 +62,7 @@ SHARED=shlib/libDiLeptonAnalysis.so
 .PHONY : clean purge all depend PhysQC
 
 # Rules ====================================
-all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared  RunEleTauAnalyzerClosure RunEleTauAnalyzerFakeEstimation RunEleTauAnalyzerPreSelection RunEleTauAnalyzerSelection RunEleTauAnalyzerCalcFR RunEleTauAnalyzerEsmaeel
+all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared  RunEleTauAnalyzerClosure RunEleTauAnalyzerFakeEstimation RunEleTauAnalyzerPreSelection RunEleTauAnalyzerSelection RunEleTauAnalyzerCalcFR RunEleTauAnalyzerEsmaeel RunEleTauAnalyzerEfficiencies
 
  shared: $(SHARED)
  $(SHARED): $(OBJS)
@@ -74,6 +74,9 @@ all:   RunMT2Analyzer RunQuickAnalyzer MakeMassPlots shared  RunEleTauAnalyzerCl
 #	mv /scratch/$$USERNAME/RunMT2Analyzer shlib/libDiLeptonAnalysis.so
 
 RunEleTauAnalyzerEsmaeel: src/exe/MakeEleTauPlotsEsmaeel.C $(SHARED)	
+	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -o $@ $^		
+
+RunEleTauAnalyzerEfficiencies: src/exe/MakeEleTauPlotsGenEff.C $(SHARED)	
 	$(CXX) $(CXXFLAGS) -ldl $(GLIBS) $(LDFLAGS) -o $@ $^		
 
 RunEleTauAnalyzerClosure: src/exe/MakeEleTauPlots.C $(SHARED)	

@@ -1033,7 +1033,7 @@ public:
   Bool_t  FillMT2HemiMinDHT (Float_t testmass=0, bool massive=false,       Int_t PFJID=1, Float_t minJPt=20, Float_t maxJEta=2.4, Int_t met=1, Int_t hemi_nr=-1);
   Float_t GetMCTcorr(TLorentzVector p1, TLorentzVector p2, TLorentzVector DTM, TVector2 pmiss);
   Float_t CalcMT2(float testmass, bool massive, 
-		  TLorentzVector visible1, TLorentzVector visible2, TLorentzVector MET );
+		  TLorentzVector visible1, TLorentzVector visible2, TLorentzVector MET ) const;
   Float_t GetMT(TLorentzVector lv1, float m1, TLorentzVector lv2, float m2);
   Float_t GetMT(TLorentzVector lv1, TLorentzVector lv2);
   Float_t SimpleMT2(bool pseudo=true, int heminr=1);
@@ -1052,7 +1052,7 @@ public:
   Float_t GetDiLeptonPt(int same_sign=0, int same_flavour=1, int flavour=0, float pt=10, float lower_mass=71, float upper_mass=111);
   Float_t GetGenLeptPt(int which, int pid, int mother, float pt, float eta);
   Float_t GetGenLeptEta(int which, int pid, int mother, float pt, float eta);
-  Int_t   GetGenLeptIndex(int which, int pid, int mother, float pt, float eta);
+  Int_t   GetGenLeptIndex(int which, int pid, int mother, float pt, float eta) const;
   Float_t GetGenLeptPt2(int which, int pid, int mother, int gmother, float pt, float eta);
   Float_t GetGenLeptEta2(int which, int pid, int mother, int gmother, float pt, float eta);
   Int_t   GetGenLeptIndex2(int which, int pid, int mother, int gmother, float pt, float eta);
@@ -1208,6 +1208,14 @@ Float_t SumMTTauTauChannel();
   int DeltaREleTau(int elec_method , double minDR, int & elecindex , double minElePt , bool SS , int& oldRET ); //elec_method:0for the first, 1 for the first with id
   Float_t DeltaREleTau();
   Float_t DeltaMETEleTau(int mode);
+
+  TLorentzVector EleTauGetGenEle() const;
+  TLorentzVector EleTauGetGenTau() const;
+  const double EleTauCalcGenMET() const;
+  const double EleTauCalcGenMT2() const;
+  const double EleTauCalcGenMinDPhi() const;
+  const double EleTauGenInvMass() const;
+
   void  FillEleTau();
   void  FillEleMu();
 

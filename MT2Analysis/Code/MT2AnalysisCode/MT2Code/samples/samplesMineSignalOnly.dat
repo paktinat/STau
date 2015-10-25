@@ -1,11 +1,24 @@
 #########################################################################################
 GENERAL
-Path         ///dataLOCAL/MT2Tau/RootFiles/
+Path         rfio:///dpm/particles.ipm.ac.ir/home/cms//store/user/paktinat/
+
+#Path         ///dataLOCAL/MT2Tau/RootFiles/
 ________________________________________________________________________________________
 # list of samples
 ## -------- SMS --------
 
 SAMPLE
+Name            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part2_Part0
+SName           SUSY
+ShapeName       Signal
+File            SMS-TChipChimStauSnu_mChi-120to700_mLSP-1to700_x-050_TuneZ2star_8TeV-pythia6-tauolapp_Part*_Part*.root
+Xsection        1
+Kfact           1.0
+Lumi            19600.0
+Type            susy
+Color           401
+
+#SAMPLE
 Name            TStauStau
 SName           SUSY
 ShapeName       Signal

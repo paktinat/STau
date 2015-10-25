@@ -2417,7 +2417,7 @@ Bool_t MT2tree::FillMT2HemiMinDHT(Float_t testmass, bool massive, Int_t PFJID, F
 }
 
 // calculate MT2 ---------------------------------------------------------------------------------------------
-Float_t MT2tree::CalcMT2(float testmass, bool massive, TLorentzVector visible1, TLorentzVector visible2, TLorentzVector MET ){
+Float_t MT2tree::CalcMT2(float testmass, bool massive, TLorentzVector visible1, TLorentzVector visible2, TLorentzVector MET ) const{
   
   double pa[3];
   double pb[3];
@@ -2678,14 +2678,15 @@ Float_t MT2tree::GetMETPlusGenLepts(int met, int RemoveOSSFDiLepts, int require_
 	return lv.Pt();
 }
 
-Int_t   MT2tree::GetGenLeptIndex(int which, int pid, int mother, float pt, float eta){
+Int_t   MT2tree::GetGenLeptIndex(int which, int pid, int mother, float pt, float eta) const{
 	vector<int>    indices;
 	vector<float> pts, etas;
 	for(int i=0; i<NGenLepts; ++i){
 		if(pid==1113)        {if(abs(genlept[i].ID) !=11 && abs(genlept[i].ID)!=13  ) continue;}
 		else if(pid==121416) {if(abs(genlept[i].ID) !=12 && abs(genlept[i].ID)!=14 && abs(genlept[i].ID)!=16) continue;}
 		else if(abs(genlept[i].ID) !=pid   ) continue;
-		if(abs(genlept[i].MID)               !=mother) continue;
+		if( mother != -100000 ) 
+		  if(abs(genlept[i].MID)               !=mother) continue;
 		if(    genlept[i].lv.Pt()            < pt    ) continue;
 		if(fabs(genlept[i].lv.Eta())         > eta   ) continue;
 		indices.push_back(i);

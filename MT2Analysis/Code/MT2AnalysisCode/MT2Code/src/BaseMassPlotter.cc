@@ -72,6 +72,7 @@ void BaseMassPlotter::loadSamples(const char* filename){
 
 		
       s.tree = new TChain("MassTree"); //(TTree*)f->Get("MassTree");
+      cout << file << endl;
       ((TChain*)(s.tree))->Add( file , 0 );
       ((TChain*)(s.tree))->LoadTree(0);
 
