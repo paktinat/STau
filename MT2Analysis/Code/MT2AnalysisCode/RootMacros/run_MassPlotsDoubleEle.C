@@ -70,15 +70,15 @@
   myChannelCuts.push_back("NBJetsCSVL == 0");
   
   myChannelCuts.push_back("misc.MET > 30");
-  //  myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 71) || (doubleEle[0].lv.M() > 111))");
+  myChannelCuts.push_back("((doubleEle[0].lv.M() > 15 && doubleEle[0].lv.M() < 71) || (doubleEle[0].lv.M() > 111))");
   myChannelCuts.push_back("eeJZBInDirect() < -50");//
   myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 40"));
 
 
  myChannelCuts.push_back(std::string(std::string(myChan) + ".MT2 > 90"));
 
- //    myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT) >250) && ((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT)<400)");
- myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>400");
+ // myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT) >250) && ((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT)<400)");
+  myChannelCuts.push_back("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))>400");
 
   //    myChannelCuts.push_back("NJetsIDLoose >= 1");
   //   myChannelCuts.push_back("eeSumMT()>250 && eeSumMT()<400 ") ;//
@@ -113,7 +113,7 @@
   
   //------------------Inv Mass------------
 
-    myChannelCuts.push_back("(doubleEle[0].lv.M() >= 71 && doubleEle[0].lv.M() <= 111)");
+ //    myChannelCuts.push_back("(doubleEle[0].lv.M() >= 71 && doubleEle[0].lv.M() <= 111)");
 
   //    myChannelCuts.push_back("NBJetsCSVM >= 2");
   //  myChannelCuts.push_back("NBJetsCSVL >= 2");
@@ -188,10 +188,11 @@
 
    //   tA->MakeCutFlowTable( myChannelCuts );
    //tA->makePlot("misc.MET", cuts, -1, -10, -10, trigger, "MET", 10, 0, 300, false, true, true, true,true, true, 1, true, true, "png",1);
-      tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2", 8, 40, 200, false,true, true, true,true, true, 1, true, true,"png",1);
+   //      tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2", 8, 40, 200, false,true, true, true,true, true, 1, true, true,"png",1);
+      tA->makePlot("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))", cuts, -10, 0, -10, trigger, "#sum_{}^{}m_T^i binII", 10, 200, 700, false,true, true, true,true, true, 1, true, true,"png",1);
   //------------------------------Methods-----------------------------------
-    int nbins = 1;
-  double xbin[nbins+1] = {-2000, 2000};      //MT2
+      //    int nbins = 1;
+      //  double xbin[nbins+1] = {-2000, 2000};      //MT2
 //int NumberOfBins = 8;
 //double xbin[NumberOfBins+1] = {0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0}; //Mass
 //tA->DrawMyPlots("2014-12-05/fakePrompt-allBigMC_singleFull-tight-ele0outWwindow-ele1inWwindow-noEM_Histos.root", xbin, NumberOfBins);

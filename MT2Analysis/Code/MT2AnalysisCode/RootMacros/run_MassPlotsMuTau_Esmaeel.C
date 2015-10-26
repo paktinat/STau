@@ -1,12 +1,13 @@
 {
   TString outputdir = "../MassPlots/";
-  //  TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30FakeRate.dat"; 
-  //TString samples = "./samples/samplesMineTauPlusX_BigFiles_NewPU_Stitching.dat";
-TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat"; 
+  TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat"; 
   //  TString samples = "./samples/samplesMineTauPlusX.dat"; 
   //TString samples = "./samples/samplesMineSingleMu.dat";
   //TString samples = "./samples/samplesMineQCD.dat";
   //TString samples = "./samples/samplesMineTest.dat";  
+  //  TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30FakeRate.dat"; 
+  //TString samples = "./samples/samplesMineTauPlusX_BigFiles_NewPU_Stitching.dat";
+
   int verbose =3;
 
   gSystem->CompileMacro("../MT2Code/src/MassPlotter.cc", "kf");//"k", "f"
@@ -67,6 +68,58 @@ TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat";
   //You need to specify the channel
   TString myChan = "muTau[0]";
   
+  //  myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 180.0) <= 10.0 && abs(Susy.MassLSP - 60) <= 10.0))");//0.14986//0.01414//0.01249
+  //  myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 240.0) <= 10.0 && abs(Susy.MassLSP - 40) <= 10.0))");//0.14986//0.01414//0.01249
+  myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 380.0) <= 10.0 && abs(Susy.MassLSP - 1) <= 10.0))");//0.14986//0.01414//0.01249
+
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".tau0Ind >=0")); // First lepton index, channel specific
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0Ind >=0")); // Second lepton index, channel specific
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated > 0 ")); //1 iso mu and iso tau, 0 iso mu and non iso tau, -1 non iso mu and non iso tau
+  myChannelCuts.push_back("abs(muTau[0].chargeSum) == 0");
+  myChannelCuts.push_back("(tau[muTau[0].tau0Ind].Isolation3Hits == 1.)");//Tau Tight ID
+
+  myChannelCuts.push_back("NBJetsCSVM == 0");
+  
+  myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoElec"));
+  myChannelCuts.push_back("(muTau[0].hasNoVetoMu && HasNoVetoMuForMuTau() )"); //decreasing the pt threshold of the rejected muons from 15 to 10.
+
+  //---------------------------tes related variables--------------------------------
+  myChannelCuts.push_back("misc.MET > 30");  
+  myChannelCuts.push_back("muTau[0].lv.M() > 15");
+  myChannelCuts.push_back("(muTau[0].lv.M() < 45 || muTau[0].lv.M() > 75)");
+  myChannelCuts.push_back(" misc.MinMetJetDPhiPt40 > 1.0 ");
+  myChannelCuts.push_back(" muTau[0].MT2 >= 40 ");
+ 
+  myChannelCuts.push_back(" muTau[0].MT2 >  90 ");
+  myChannelCuts.push_back(" tau[muTau[0].tau0Ind].MT > 200 ");//tauMT
+
+  //--------------------------------------------------------------------------------
+
+  myChannelCuts.push_back("0 == 0");	//Place holder for Jet requirements
+
+
+
+  // We need to make the cut stream
+
+  std::ostringstream cutStream;
+  cutStream << " ";
+  for(unsigned int iCut = 1; iCut < myChannelCuts.size(); iCut++){
+    cutStream << myChannelCuts[iCut];
+    if(iCut < (myChannelCuts.size() - 1))
+      cutStream	<<" && ";
+  }
+
+  TString cuts = cutStream.str().c_str();
+
+
+  //tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_tes_up", "mutau_tes_up", "");
+  //  tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_nominal", "mutau_nominal", "");
+//tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_tes_down", "mutau_tes_down", "");
+
+  tA->makePlot("muTau[0].MT2",     cuts,    -10,  0 , -10 ,   trigger , "MT2"            , 6, 40, 100,          false,        true ,  true,   true,  true,  true, 1,true, false, "png", 1);
+
+//--------------------------------------------------------------------------------------------------------------------------
+
   //myChannelCuts.push_back("(misc.ProcessID!=10 || ((Susy.MassGlu - Susy.MassLSP) < 185.0 && (Susy.MassGlu - Susy.MassLSP) > 135.0))"); 
   //myChannelCuts.push_back("(misc.ProcessID!=10 || ( (Susy.MassGlu - Susy.MassLSP) < 300.0))"); 
  
@@ -75,18 +128,11 @@ TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat";
  // myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 390.0) <= 10.0 && abs(Susy.MassLSP - 10) <= 10.0))"); //0.227//0.0343
   //  myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 380.0 && Susy.MassGlu  < 400.0 && Susy.MassLSP < 20.0))"); //0.227//0.0343//0.00189
 //   myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 180.0 && Susy.MassGlu  < 200.0 && Susy.MassLSP >=60 && Susy.MassLSP < 80.0))");//0.119//0.0111
-  myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 380.0) <= 10.0 && abs(Susy.MassLSP - 1) <= 10.0))");//0.14986//0.01414//0.01249
+
   //myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 240.0 && Susy.MassGlu  < 260.0 && Susy.MassLSP >=40 && Susy.MassLSP < 60.0))");//0.14986//0.01414
   //myChannelCuts.push_back("(misc.ProcessID!=10 || (  (Susy.MassLSP < 150) && (Susy.MassGlu < 400) ))"); 
   //You need to carefully define the cut variables based on MT2"Channel".hh
 
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".tau0Ind >=0")); // First lepton index, channel specific
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".mu0Ind >=0")); // Second lepton index, channel specific
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".Isolated > 0 ")); //1 iso mu and iso tau, 0 iso mu and non iso tau, -1 non iso mu and non iso tau
-  
-  //  myChannelCuts.push_back("misc.MET <= 30"); 
-  myChannelCuts.push_back("misc.MET > 30"); 
-  myChannelCuts.push_back("NBJetsCSVM == 0");
   
   //myChannelCuts.push_back(std::string(std::string(myChan) + ".signalMuTau"));
 
@@ -95,21 +141,11 @@ TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat";
  
   //myChannelCuts.push_back(std::string(std::string(myChan) + ".chargeSum == 0"));
 
-  myChannelCuts.push_back("abs(muTau[0].chargeSum) == 0");
-  myChannelCuts.push_back("(tau[muTau[0].tau0Ind].Isolation3Hits == 1.)");//Tau Tight ID
   //myChannelCuts.push_back("(tau[muTau[0].tau0Ind].Isolation3Hits > 1)");//Tau Loose-Non-Tight ID
 
 
-  myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoElec"));
-  myChannelCuts.push_back("(muTau[0].hasNoVetoMu && HasNoVetoMuForMuTau() )"); //decreasing the pt threshold of the rejected muons from 15 to 10.
- 
-  //   myChannelCuts.push_back("muTau[0].lv.M() > 15");
-  //   myChannelCuts.push_back("(muTau[0].lv.M() < 45 || muTau[0].lv.M() > 75)");
   //myChannelCuts.push_back("(muTau[0].lv.M() > 45 && muTau[0].lv.M() < 75)");
 
-  //   myChannelCuts.push_back(" misc.MinMetJetDPhiPt40 > 1.0 ");
-
-  //   myChannelCuts.push_back(" muTau[0].MT2 >= 40 ");
   //myChannelCuts.push_back(" muTau[0].MT2 < 60 && muTau[0].MT2 > 30 ");
 
   //myChannelCuts.push_back("NMuons > 0");
@@ -121,8 +157,6 @@ TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat";
   
 
 //   Bin1
-//   myChannelCuts.push_back(" muTau[0].MT2 >  90 ");
-//   myChannelCuts.push_back(" tau[muTau[0].tau0Ind].MT > 200 ");//tauMT
 //   myChannelCuts.push_back(" tau[muTau[0].tau0Ind].MT < 90 ");//tauMT
 //   myChannelCuts.push_back(" tau[muTau[0].tau0Ind].MT > 40 ");//tauMT
 //   //    myChannelCuts.push_back(" muTau[0].MT2 >  60 ");
@@ -196,28 +230,6 @@ TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat";
   myChannelCuts.push_back("eleTau[0].MT2 > 90");
   //  myChannelCuts.push_back("eleTau[0].MT2 > 50");
 */
-
-  myChannelCuts.push_back("0 == 0");	//Place holder for Jet requirements
-
-
-
-  // We need to make the cut stream
-
-  std::ostringstream cutStream;
-  cutStream << " ";
-  for(unsigned int iCut = 1; iCut < myChannelCuts.size(); iCut++){
-    cutStream << myChannelCuts[iCut];
-    if(iCut < (myChannelCuts.size() - 1))
-      cutStream	<<" && ";
-  }
-
-  TString cuts = cutStream.str().c_str();
-
-
-  //tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_tes_up", "mutau_tes_up", "");
-//  tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_nominal", "mutau_nominal", "");
-tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_tes_down", "mutau_tes_down", "");
-
 
 /* Define the properties of plots*/	
 //  Objectproperties PHI("phi");
@@ -316,7 +328,7 @@ tA->eeAnalysisTESpUsys(cuts, trigger, 100000000000000000000000000, "MT2_mutau_te
 //    tA->makePlot(vars[iVar], cuts, -10, 0 , -10, trigger, vars[iVar], 20, 0, 200, false, true, true, true, true, true, 1, true, true, "png");
 //  }
 //tA->makePlot("pileUp.NVertices",     cuts,    -10,  0 , -10 ,   trigger , "NVertices"            , 50, 0, 50,          false,        true ,  true,   true,  true,  true, 1,true, false, "C");
-  //tA->makePlot("muTau[0].MT2",     cuts,    -10,  0 , -10 ,   trigger , "MT2"            , 6, 40, 100,          false,        true ,  true,   true,  true,  true, 1,true, false, "C", 2);
+
 
   //tA->makePlot("max(muo[muTau[0].mu0Ind].MT, tau[muTau[0].tau0Ind].MT)",     cuts,    -10,  0 , -10 ,   trigger , "maxMT"            ,10, 100, 300,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 3);
   //> 200 0.95//minMetJetDPhiPt40 > 1
