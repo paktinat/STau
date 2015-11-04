@@ -95,15 +95,15 @@ const double MT2tree::EleTauCalcGenMET() const{
   return genmet[0].Pt();
 }
 const double MT2tree::EleTauCalcGenMT2() const{
-  TLorentzVector ele = EleTauGetGenEle();
-  if( ele == empty_lv_tmp_to_return )
+  TLorentzVector elelv = EleTauGetGenEle();
+  if( elelv == empty_lv_tmp_to_return )
     return -1 ;
   
-  TLorentzVector tau = EleTauGetGenTau();
-  if( tau == empty_lv_tmp_to_return )
+  TLorentzVector taulv = EleTauGetGenTau();
+  if( taulv == empty_lv_tmp_to_return )
     return -1;
 
-  double genMT2 = CalcMT2(0,0, ele, tau, genmet[0] );       
+  double genMT2 = CalcMT2(0,0, elelv, taulv, genmet[0] );       
   
   return genMT2;
 }
@@ -111,15 +111,15 @@ const double MT2tree::EleTauCalcGenMinDPhi() const{
   return 0.0;
 }
 const double MT2tree::EleTauGenInvMass() const{
-  TLorentzVector ele = EleTauGetGenEle();
-  if( ele == empty_lv_tmp_to_return )
+  TLorentzVector elelv = EleTauGetGenEle();
+  if( elelv == empty_lv_tmp_to_return )
     return -1 ;
   
-  TLorentzVector tau = EleTauGetGenTau();
-  if( tau == empty_lv_tmp_to_return )
+  TLorentzVector taulv = EleTauGetGenTau();
+  if( taulv == empty_lv_tmp_to_return )
     return -1;
 
-  return (ele+tau).M();
+  return (elelv+taulv).M();
 }
 
 

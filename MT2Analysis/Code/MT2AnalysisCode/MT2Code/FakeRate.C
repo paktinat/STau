@@ -10,16 +10,26 @@ void FakeRate(){
   //TFile *file = new TFile("../MassPlots/PtEta_MuTauTight_Over_Loose_SingleMu_OppSign_ExtraLepVeto_MET_NBJets_Weighted_FRHistos.root", "READ"); 
   //TFile *file = new TFile("../MassPlots/PtEta_MuTauTight_Over_Loose_SingleMu_SameSign_ExtraLepVeto_MET_NBJets_Weighted_FRHistos.root", "READ"); 
   //TFile *file = new TFile("../MassPlots/PtEta_MuTauTight_Over_Loose_pfOnly_WJets_OppSign_ExtraLepVeto_MET_NBJets_Weighted_FRHistos.root", "READ"); 
-  TFile *file = new TFile("../MassPlots/PtEta_MuTauTight_Over_Loose_pfOnly_WJets_SameSign_ExtraLepVeto_MET_NBJets_Weighted_FRHistos.root", "READ"); 
+
+  //TFile *file = new TFile("../MassPlots/PtEta_MuTauTight_Over_Loose_pfOnly_WJets_SameSign_ExtraLepVeto_MET_NBJets_Weighted_FRHistos.root", "READ"); 
+
   //TFile *file = new TFile("../MassPlots/PtEta_MuTauTight_Over_Loose_pfOnly_WJets_MET_NBJets_Weighted_FRHistos.root", "READ"); 
   //TFile *file = new TFile("../MassPlots/PtEta_MuTauTight_Over_Loose_pfOnly_WJets_SameSign_MET_NBJets_Weighted_FRHistos.root", "READ");
   //TFile *file = new TFile("../MassPlots/PtEta_MuTauTight_Over_Loose_pfOnly_WJets_SameSign_ExtraLepVeto_MT2gt40_ZVeto_minDPhi_MET_NBJets_Weighted_FRHistos.root", "READ");
   //TFile *file = new TFile("../MassPlots/PtEta_MuTauTight_Over_Loose_pfOnly_WJets_OppSign_ExtraLepVeto_MT2gt40_ZVeto_minDPhi_MET_NBJets_Weighted_FRHistos.root", "READ");
   //TFile *file = new TFile("../MassPlots/PtEta_MuTauTight_Over_Loose_TauPlusX_OS_ExtraLepVeto_ZVeto_minDPhi_METlt30_NBJets_Weighted_FRHistos.root", "READ");
   //TFile *file = new TFile("../MassPlots/PtEta_MuTauTight_Over_Loose_pfOnly_WJets_TauPlusXcuts_OS_ExtraLepVeto_ZVeto_minDPhi_METlt30_NBJets_Weighted_FRHistos.root", "READ");
+  TFile *file = new TFile("../MassPlots/PtEta_MuTauTight_Over_VLoose_pfOnly_WJets_OppSign_ExtraLepVeto_ZVeto_minDPhi_MET_NBJets_Weighted_FRHistos.root", "READ");
+  //TFile *file = new TFile("../MassPlots/PtEta_MuTauTight_Over_VLoose_TauPlusX_SS_ExtraLepVeto_minDPhi_MET_NBJets_FRHistos.root", "READ");  
+  //TFile *file = new TFile("../MassPlots/PtEta_MuTauTight_Over_VLoose_TauPlusX_OS_ExtraLepVeto_ZVeto_minDPhi_METlt30_NBJets_FRHistos.root", "READ"); 
+  
+  cout<<"Openning file :: "<<file->GetName()<<endl;
+
   TH2* hPtEtaAll  = (TH2*) file->Get("hPtEtaAll");
   TH2* hPtEtaPass = (TH2*) file->Get("hPtEtaPass");
 
+
+  
   const int nBins = 6;
 
   float xbin1[nBins] = {20.0, 60.0, 90.0, 140.0, 300.0, 1000.0}; //Barrel
@@ -47,6 +57,16 @@ void FakeRate(){
   
   int binNumberY = hPtEtaAll->GetNbinsY();
   
+  //Pt < 25 GeV excluded.
+  for(int i = 1; i < 61; i++){
+    for(int j = 1; j < 26; j++){
+      hPtEtaAll->SetBinContent(i,j,0);
+      hPtEtaPass->SetBinContent(i,j,0);
+      hPtEtaAll->SetBinError(i,j,0);
+      hPtEtaPass->SetBinError(i,j,0);
+    }
+  }
+
   hPtEtaAll->IntegralAndError(0,binNumberX,0,binNumberY,errAll);
  
   double errPass;
@@ -95,9 +115,6 @@ void FakeRate(){
       hEtaPass->Fill(abs(i - 30)/10.0, binIJPass);
     }
   }
-
-
-
 
   hPtBarrelPass->Divide(hPtBarrelAll);
   

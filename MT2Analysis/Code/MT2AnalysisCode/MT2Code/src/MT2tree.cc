@@ -1716,8 +1716,8 @@ Float_t MT2tree::GetPseudoJetsdPhi(int hemi_seed, int hemi_association, int PFJI
   if (px.size()<2) return -9;
 
   // get hemispheres (seed 2: max inv mass, association method: default 3 = minimal lund distance)
-  Hemisphere* hemi = new Hemisphere(px, py, pz, E, hemi_seed, hemi_association);
-  vector<int> grouping = hemi->getGrouping();
+  Hemisphere* hemi2 = new Hemisphere(px, py, pz, E, hemi_seed, hemi_association);
+  vector<int> grouping = hemi2->getGrouping();
 
   TLorentzVector pseudojet1(0.,0.,0.,0.);
   TLorentzVector pseudojet2(0.,0.,0.,0.);
@@ -1735,7 +1735,7 @@ Float_t MT2tree::GetPseudoJetsdPhi(int hemi_seed, int hemi_association, int PFJI
 		pseudojet2.SetE( pseudojet2.E()  + E[i]);
 	}
   }
-  delete hemi;
+  delete hemi2;
   return Util::DeltaPhi(pseudojet1.Phi(), pseudojet2.Phi());
 }
 

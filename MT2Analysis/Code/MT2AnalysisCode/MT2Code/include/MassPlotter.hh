@@ -250,6 +250,7 @@ public:
   void SpecialMakePlot(unsigned int nevents, TString cuts, TString trigger);
   void muTauAnalysis(TString cuts, TString trigger, unsigned int nevents, TString myfilename, int type = 0);
   void muTauWJetsEstimation(TString cuts, TString trigger, TString myfileName, bool calculateTauMTPass = false, float sysFR = 0, float sysPR = 0, float sysMT2 = 0, float sysTauMT = 0);
+  void muTauWJetsEstimation(TString cuts, TString trigger, bool calculateTauMTPass = false, float sysFR = 0, float sysPR = 0, float sysMT2 = 0, float sysTauMT = 0);
   void TauFakeRate(TString cuts, TString trigger, unsigned int nevents, TString myfilename);
   void TauEfficiency(TString cuts, unsigned int nevents, TString myfilename , TString SamplSName);
   void LeptonEfficiency(TString cuts, unsigned int nevents);

@@ -156,7 +156,7 @@ void MT2tree::FillMuTau(){
   }
   else{//Fake Rate method, Iso Mu and NonIso Tau
     muTau[0].Reset();	
-    std::pair<int,int> indecies = this->GetTauMuFakeRate();
+    indecies = this->GetTauMuFakeRate();
     if(this->fVerbose > 3 )
       std::cout<<"muTauFakeRate[0]: tau index: "<<indecies.first<<", mu index: "<<indecies.second<<endl;
     if(indecies.first != -1 && indecies.second != -1){
@@ -199,7 +199,7 @@ void MT2tree::FillMuTau(){
 	muTau[0].printObject();
     }else{//QCD NonIso Mu and non Iso Tau
       muTau[0].Reset();	
-      std::pair<int,int> indecies = this->GetTauMuQCD();
+      indecies = this->GetTauMuQCD();
       if(this->fVerbose > 3 )
 	std::cout<<"muTauQCD[0]: tau index: "<<indecies.first<<", mu index: "<<indecies.second<<endl;
       if(indecies.first != -1 && indecies.second != -1){
