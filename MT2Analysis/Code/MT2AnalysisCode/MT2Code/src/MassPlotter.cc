@@ -18699,4 +18699,555 @@ void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts){
 
 
 }
+void MassPlotter::getGenEfficienciesTauTau(unsigned int nEvts,TString cuts, bool bin2){
+  
+  TH1::SetDefaultSumw2();
+
+  TH1I * nGenTaus = new TH1I("nGenTaus","nGenTaus", 10, 0, 10);
+  TH1D * deltaR2Lep = new TH1D("deltaR2Lep","deltaR2Lep", 280, -1.0, 13);
+
+  float  xBinsPt[11] = {0, 10, 20, 30, 40, 60, 80, 120, 160, 200, 1000};
+
+  TH1D * leadingTau_pt_all = new TH1D("tau0Pt_all","tau0Pt_all", 100, 0, 500);
+  TH1D * leadingTau_pt_pass = new TH1D("tau0Pt_pass","tau0Pt_pass", 100, 0, 500);
+  TH1D * nextToLeadingTau_pt_all = new TH1D("tau1Pt_all","tau1Pt_all", 100, 0, 500);
+  TH1D * nextToLeadingTau_pt_pass = new TH1D("tau1Pt_pass","tau1Pt_pass", 100, 0, 500);
+
+  TH1D * IsolationSum = new TH1D("IsoSum", "IsoSum", 14, 0, 14);
+  TH1D * SumCharge = new TH1D("sumCharge", "sumCharge", 5, -2.5, 2.5);
+  TH1D * nBJets = new TH1D("NBJetsCSVM", "NBJetsCSVM", 5, 0, 5);
+  TH1D * ExtraLepton = new TH1D("ExtraLepton", "ExtaLepton", 2, 0, 2);
+  TH1D * minDPhi = new TH1D("minDPhi", "minDPhi", 16, 0, 3.2);
+
+  TH1D * Met_all = new TH1D("met_all","met_all", 100, 0, 500);
+  TH1D * Met_pass = new TH1D("met_pass","met_pass", 100, 0, 500);
+  
+  TH1D * Mt2_all = new TH1D("mt2_all","mt2_all", 100, 0, 500);
+  TH1D * Mt2_pass = new TH1D("mt2_pass","mt2_pass", 100, 0, 500);
+
+  TH1D * Mass_all = new TH1D("mass_all","mass_all", 100, 0, 500);
+  TH1D * Mass_pass = new TH1D("mass_pass","mass_pass", 100, 0, 500);
+
+  TH1D * SumMT_all = new TH1D("SumMT_all","SumMT_all", 100, 0, 500);
+  TH1D * SumMT_pass = new TH1D("SumMT_pass","SumMT_pass", 100, 0, 500);
+
+  TH1D * leadingTau_pt_eff = new TH1D("tau0Pt_eff","tau0Pt_eff", 100, 0, 500);
+  TH1D * nextToLeadingTau_pt_eff = new TH1D("tau1Pt_eff","tau1Pt_eff", 100, 0, 500);
+  TH1D * Met_eff = new TH1D("met_eff","met_eff", 100, 0, 500);
+  TH1D * Mt2_eff = new TH1D("mt2_eff","mt2_eff", 100, 0, 500);
+  TH1D * Mass_eff = new TH1D("mass_eff","mass_eff", 100, 0, 500);
+  TH1D * SumMT_eff = new TH1D("SumMT_eff","SumMT_eff", 100, 0, 500);
+
+  TEventList *myEvtList;
+  cout<<" cuts "<<cuts<<endl;
+
+  for(size_t i = 0; i < fSamples.size(); ++i){
+    sample Sample = fSamples[i];
+    cout << "loading : " << Sample.name << endl;
+    cout << "sname   : " << Sample.sname << endl;
+
+    fMT2tree = new MT2tree();
+    Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
+//     unsigned int nentries =  Sample.tree->GetEntries();
+
+//     gROOT->cd();
+    Sample.tree->Draw(">>selList", cuts);
+    myEvtList = (TEventList*)gDirectory->Get("selList");
+    //myEvtList = (TEventList*)TFile::Open("myList.root")->Get("selList");
+   
+    unsigned int nentries = myEvtList->GetN();
+ 
+    for (Long64_t jentry=0; jentry<min(nentries,nEvts);jentry++) {
+      
+      if ( fVerbose>2 && jentry % 100000 == 0 ){
+	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+	
+	fflush(stdout);
+      }
+      
+//       Sample.tree->GetEntry(jentry);
+      Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
+
+//       if(fMT2tree->NTaus < 1 || fMT2tree->NMuons < 1)
+// 	continue;
+
+      // --- Gen-Level -------------------------------------------------------------
+      std::vector<TLorentzVector> genTaus;
+      std::vector<TLorentzVector> genNeus;
+      int problem = 0;
+      for(int j = fMT2tree->NGenLepts - 1; j > -1; j--){
+
+        if(abs(fMT2tree->genlept[j].ID) != 15) 
+          continue;
+        if(fMT2tree->genlept[j].MStatus != 3) 
+          continue;
+
+	bool tau_e = false;
+	bool tau_m = false;
+	bool tau_h = true; 
+
+	int nDaughters = 0;
+	int neutrinoIndex = -1;
+
+        for(int ii = 0; ii < fMT2tree->NGenLepts; ii++){
+          if((abs(fMT2tree->genlept[ii].ID) == 11) && (fMT2tree->genlept[ii].MID == fMT2tree->genlept[j].ID)) tau_e = true;
+          if((abs(fMT2tree->genlept[ii].ID) == 13) && (fMT2tree->genlept[ii].MID == fMT2tree->genlept[j].ID)) tau_m = true;
+          if((abs(fMT2tree->genlept[ii].ID) == 16) && (fMT2tree->genlept[ii].MID == fMT2tree->genlept[j].ID)) neutrinoIndex = ii;
+ 	  if(fMT2tree->genlept[ii].MID == fMT2tree->genlept[j].ID) nDaughters++;
+        }
+	//cout<<"nr of daughters: "<<nDaughters<<endl;
+	if (tau_e || tau_m) tau_h = false;
+	if (!tau_h) continue;
+	//cout<<"hadronic tau!! "<<endl;
+
+	bool newHadTau = true;
+
+	for(int k = 0; k < genTaus.size(); k++) {
+		double deltaR = Util::GetDeltaR(fMT2tree->genlept[j].lv.Eta(), genTaus[k].Eta(), fMT2tree->genlept[j].lv.Phi(), genTaus[k].Phi());
+	  	deltaR2Lep->Fill(deltaR);
+		if(deltaR < 0.5) newHadTau = false;
+	}
+
+	if (newHadTau) {
+		//cout<<"this hadronic tau will be saved into a vector."<<endl;
+		genTaus.push_back(fMT2tree->genlept[j].lv);
+		genNeus.push_back(fMT2tree->genlept[neutrinoIndex].lv);
+	}	
+
+      }
+
+	nGenTaus->Fill(genTaus.size());
+	if (genTaus.size() != 2) continue;
+		
+	std::vector<TLorentzVector> visTaus;
+	visTaus.push_back(genTaus[0]-genNeus[0]);
+	visTaus.push_back(genTaus[1]-genNeus[1]);
+	std::sort(visTaus.begin(),visTaus.end(),wayToSort);
+ 
+	leadingTau_pt_all->Fill(visTaus[0].Pt());
+	int tau0Index = -1;
+	tau0Index = fMT2tree->doubleTau[0].GetTauIndex0();
+	if(tau0Index < 0 )  continue;                                
+	//if(!(fMT2tree->tau[tau0Index].PassTau0_TauTau == 1 && fMT2tree->tau[tau0Index].MuonRej2 > 0.5 && fMT2tree->tau[tau0Index].ElectronRejMVA3 > 0.5)) continue;
+	if(!(fMT2tree->tau[tau0Index].PassTau0_TauTau == 1)) continue;
+
+	double pt0 = fMT2tree->tau[tau0Index].lv.Pt();
+	double leadingTau_weight = 1.0; //0.826969 * 0.5 * (TMath::Erf((pt0 - 42.2274) / 2. / 0.783258 / sqrt(pt0)) + 1.); 
+	leadingTau_pt_pass->Fill(visTaus[0].Pt(),leadingTau_weight);
+		
+	nextToLeadingTau_pt_all->Fill(visTaus[1].Pt());
+	int tau1Index = -1;
+	tau1Index = fMT2tree->doubleTau[0].GetTauIndex1();
+	if(tau1Index < 0 )  continue;                                
+	//if(!(fMT2tree->tau[tau1Index].PassTau1_TauTau == 1 && fMT2tree->tau[tau1Index].MuonRej2 > 0.5 && fMT2tree->tau[tau1Index].ElectronRejMVA3 > 0.5)) continue;
+	if(!(fMT2tree->tau[tau1Index].PassTau1_TauTau == 1)) continue;
+
+	double pt1 = fMT2tree->tau[tau1Index].lv.Pt();
+	double nextToLeadingTau_weight = 1.0; //0.826969 * 0.5 * (TMath::Erf((pt1 - 42.2274) / 2. / 0.783258 / sqrt(pt1)) + 1.); 
+	nextToLeadingTau_pt_pass->Fill(visTaus[1].Pt(),nextToLeadingTau_weight);
+
+	double IsoSum=fMT2tree->tau[tau0Index].Isolation3Hits+fMT2tree->tau[tau1Index].Isolation3Hits;
+	IsolationSum->Fill(IsoSum); 
+
+	int sumCharge = fMT2tree->tau[tau0Index].Charge + fMT2tree->tau[tau1Index].Charge;
+	SumCharge->Fill(sumCharge);
+
+	if(sumCharge != 0) continue;
+
+	TLorentzVector genMET4vector = -(visTaus[0] + visTaus[1]);
+	float genMET = genMET4vector.Pt();
+	Met_all->Fill(genMET);
+	if(!(fMT2tree->misc.MET > 30)) continue;
+	Met_pass->Fill(genMET);
+
+	if(bin2) {
+	nBJets->Fill(fMT2tree->NBJetsCSVM);      
+	if(fMT2tree->NBJetsCSVM != 0) continue;
+	}
+
+      if(fMT2tree->doubleTau[0].HasNoVetoElec() && fMT2tree->doubleTau[0].HasNoVetoMu())
+	ExtraLepton->Fill(0);
+      else {
+	ExtraLepton->Fill(1);
+	continue;
+      }
+
+	float genMass = (visTaus[0] + visTaus[1]).M();
+	Mass_all->Fill(genMass);
+	float Mass = (fMT2tree->tau[tau0Index].lv + fMT2tree->tau[tau1Index].lv).M();
+	if(Mass < 15 || (Mass > 55 && Mass < 85)) continue;
+	Mass_pass->Fill(genMass);
+
+	minDPhi->Fill(fMT2tree->misc.MinMetJetDPhiPt40);
+	if(!(fMT2tree->misc.MinMetJetDPhiPt40 > 1))  continue;
+
+	float genMT2 = fMT2tree->CalcMT2(0, 0, visTaus[0], visTaus[1], genMET4vector);       
+      
+	Mt2_all->Fill(genMT2);      
+
+	float recMT2 = fMT2tree->CalcMT2(0, 0, fMT2tree->tau[tau0Index].lv, fMT2tree->tau[tau1Index].lv, fMT2tree->pfmet[0]); 
+	if(bin2) if(!(recMT2 > 40 && recMT2 < 90)) continue;
+	else if(!(recMT2 > 90)) continue;	
+	Mt2_pass->Fill(genMT2);
+
+	if(!bin2) continue;
+
+	float genSumMT = fMT2tree->GetMT(visTaus[0], genMET4vector) + fMT2tree->GetMT(visTaus[1], genMET4vector); 
+
+	SumMT_all->Fill(genSumMT);
+	 if(!((fMT2tree->GetMT(fMT2tree->tau[tau0Index].lv, fMT2tree->pfmet[0]) + fMT2tree->GetMT(fMT2tree->tau[tau1Index].lv, fMT2tree->pfmet[0]) > 250)))  continue;
+	SumMT_pass->Fill(genSumMT);
+
+    } // loop over events
+
+  }
+
+TCanvas *c0 = new TCanvas("c0", "c0", 500, 500);
+nGenTaus->Draw();
+
+TCanvas *c1 = new TCanvas("c1", "c1", 500, 500);
+c1->Divide(1,3);
+c1->cd(1);
+leadingTau_pt_pass->Draw();
+c1->cd(2);
+leadingTau_pt_all->Draw();
+c1->cd(3);
+leadingTau_pt_eff->Divide(leadingTau_pt_pass,leadingTau_pt_all); 
+leadingTau_pt_eff->Draw();
+
+  if(leadingTau_pt_all->Integral() != 0)
+    cout<<" tau0Eff "<<leadingTau_pt_pass->Integral()/leadingTau_pt_all->Integral()<<endl;
+
+TCanvas *c2 = new TCanvas("c2", "c2", 500, 500);
+c2->Divide(1,3);
+c2->cd(1);
+nextToLeadingTau_pt_pass->Draw();
+c2->cd(2);
+nextToLeadingTau_pt_all->Draw();
+c2->cd(3);
+nextToLeadingTau_pt_eff->Divide(nextToLeadingTau_pt_pass,nextToLeadingTau_pt_all); 
+nextToLeadingTau_pt_eff->Draw();
+
+  if(nextToLeadingTau_pt_all->Integral() != 0)
+    cout<<" tau1Eff "<<nextToLeadingTau_pt_pass->Integral()/nextToLeadingTau_pt_all->Integral()<<endl;
+
+  if(SumCharge->Integral() != 0)
+    cout<<" OSEff "<<SumCharge->GetBinContent(3)/SumCharge->Integral()<<endl;
+
+  TCanvas *cmet = new TCanvas("cmet", "cmet", 500, 500);
+  cmet->Divide(1,3);
+  cmet->cd(1);
+  Met_pass->Draw();
+  cmet->cd(2);
+  Met_all->Draw();
+  cmet->cd(3);
+  Met_eff->Divide(Met_pass,Met_all); 
+  Met_eff->Draw();
+  
+  if(Met_all->Integral() != 0)
+    cout<<" metEff "<<Met_pass->Integral()/Met_all->Integral()<<endl;
+
+  if(nBJets->Integral() != 0)
+    cout<<" nBEff "<<nBJets->GetBinContent(1)/nBJets->Integral()<<endl;
+
+  if(ExtraLepton->Integral() != 0)
+    cout<<" ExtrLepEff "<<ExtraLepton->GetBinContent(1)/ExtraLepton->Integral()<<endl;
+
+  TCanvas *cmass = new TCanvas("cmass", "cmass", 500, 500);
+  cmass->Divide(1,3);
+  cmass->cd(1);
+  Mass_pass->Draw();
+  cmass->cd(2);
+  Mass_all->Draw();
+  cmass->cd(3);
+  Mass_eff->Divide(Mass_pass,Mass_all);
+  Mass_eff->Draw();
+
+  if(Mass_all->Integral() != 0)
+    cout<<" massEff "<<Mass_pass->Integral()/Mass_all->Integral()<<endl;
+
+  if(minDPhi->Integral() != 0)
+    cout<<" minDPhiEff "<<minDPhi->Integral(6,16)/minDPhi->Integral()<<endl;
+
+  TCanvas *cmt2 = new TCanvas("cmt2", "cmt2", 500, 500);
+  cmt2->Divide(1,3);
+  cmt2->cd(1);
+  Mt2_pass->Draw();
+  cmt2->cd(2);
+  Mt2_all->Draw();
+  cmt2->cd(3);
+  Mt2_eff->Divide(Mt2_pass,Mt2_all);
+  Mt2_eff->Draw();
+
+  if(Mt2_all->Integral() != 0)
+    cout<<" mt2Eff "<<Mt2_pass->Integral()/Mt2_all->Integral()<<endl;
+
+  TCanvas *ctaumt = new TCanvas("ctaumt", "ctaumt", 500, 500);
+  ctaumt->Divide(1,3);
+  ctaumt->cd(1);
+  SumMT_pass->Draw();
+  ctaumt->cd(2);
+  SumMT_all->Draw();
+  ctaumt->cd(3);
+  SumMT_eff->Divide(SumMT_pass,SumMT_all);
+  SumMT_eff->Draw();
+
+  if(SumMT_all->Integral() != 0)
+    cout<<" tauMTEff "<<SumMT_pass->Integral()/SumMT_all->Integral()<<endl;
+
+  TCanvas *c3 = new TCanvas("c3", "c3", 500, 500);
+  c3->Divide(2,3);
+  c3->cd(1);
+  IsolationSum->Draw();
+  c3->cd(2);
+  SumCharge->Draw();
+  c3->cd(3);
+  nBJets->Draw();
+  c3->cd(4);
+  ExtraLepton->Draw();
+  c3->cd(5);
+  minDPhi->Draw();
+  c3->cd(6);
+
+  for(size_t i = 0; i < fSamples.size(); ++i){
+    sample Sample = fSamples[i];
+ 
+    cout << "loading : " << Sample.name << endl;
+    cout << "sname   : " << Sample.sname << endl;
+
+    unsigned int nentries = myEvtList->GetN();
+ 
+    for (Long64_t jentry=0; jentry<min(nentries,nEvts);jentry++) {
+
+      if ( fVerbose>2 && jentry % 100000 == 0 ){
+	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+
+	fflush(stdout);
+      }
+
+      Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
+      
+      h_SMSMuTau->Fill(fMT2tree->Susy.MassGlu, fMT2tree->Susy.MassLSP);
+
+      int recFail = 1;
+      int tau0Index = fMT2tree->doubleTau[0].GetTauIndex0();
+      int tau1Index = fMT2tree->doubleTau[0].GetTauIndex1();
+
+      if(tau0Index >= 0 && fMT2tree->tau[tau0Index].PassTau0_TauTau && tau1Index >= 0  && fMT2tree->tau[tau1Index].PassTau1_TauTau){
+
+      TLorentzVector recTau0 = fMT2tree->tau[tau0Index].lv;
+      TLorentzVector recTau1 = fMT2tree->tau[tau1Index].lv;
+
+      int sumCharge = fMT2tree->tau[tau0Index].Charge + fMT2tree->tau[tau1Index].Charge;
+
+      if(sumCharge != 0)
+        recFail = 0;
+
+      if(fMT2tree->misc.MET <= 30.0)
+	recFail = 0;
+
+      if(bin2 && fMT2tree->NBJetsCSVM > 0)
+        recFail = 0;
+
+      if(!(fMT2tree->doubleTau[0].HasNoVetoElec() && fMT2tree->doubleTau[0].HasNoVetoMu()))
+        recFail = 0;
+
+      float Mass = (fMT2tree->tau[tau0Index].lv + fMT2tree->tau[tau1Index].lv).M();
+      if(Mass < 15 || (Mass > 55 && Mass < 85))
+
+      if(fMT2tree->misc.MinMetJetDPhiPt40 <= 1)
+        recFail = 0;
+
+      float recMT2 = fMT2tree->CalcMT2(0, 0, fMT2tree->tau[tau0Index].lv, fMT2tree->tau[tau1Index].lv, fMT2tree->pfmet[0]);
+      if((!bin2 && recMT2 <= 90) || (bin2 && !(recMT2 > 40 && recMT2 < 90)))
+        recFail = 0;
+
+      float SumMT = fMT2tree->GetMT(fMT2tree->tau[tau0Index].lv, fMT2tree->pfmet[0]) + fMT2tree->GetMT(fMT2tree->tau[tau1Index].lv, fMT2tree->pfmet[0]);      
+      if(SumMT <= 250)          
+	recFail = 0; 
+
+      if(recFail == 1)
+	h_SMS_NRec->Fill(fMT2tree->Susy.MassGlu, fMT2tree->Susy.MassLSP);
+    }
+      // --- Gen-Level -------------------------------------------------------------
+
+      std::vector<TLorentzVector> genTaus;
+      std::vector<TLorentzVector> genNeus;
+
+      for(int j = fMT2tree->NGenLepts - 1; j > -1; j--){
+
+	if(abs(fMT2tree->genlept[j].ID) != 15) 
+	  continue;
+	int nDaughters = 0;
+	int neutrinoIndex = -1;
+	for(int ii = 0; ii < fMT2tree->NGenLepts; ii++){
+	  if(fMT2tree->genlept[ii].MID == fMT2tree->genlept[j].ID){
+	    nDaughters++;
+	    if(abs(fMT2tree->genlept[ii].ID) == 16)
+	      neutrinoIndex = ii;
+	  }
+	}
+
+	if (nDaughters > 1) continue;
+
+	bool newHadTau = true;
+
+	for(int k = 0; k < genTaus.size(); k++) {
+	  double deltaR = Util::GetDeltaR(fMT2tree->genlept[j].lv.Eta(), genTaus[k].Eta(), fMT2tree->genlept[j].lv.Phi(), genTaus[k].Phi());
+	  deltaR2Lep->Fill(deltaR);
+	  
+	  if(deltaR < 0.5) newHadTau = false;
+	}
+
+	if (newHadTau){ 
+	  genTaus.push_back(fMT2tree->genlept[j].lv);
+	  genNeus.push_back(fMT2tree->genlept[neutrinoIndex].lv);
+	}
+	
+      }//for(int j = 0; j < fMT2tree->NGenLep
+
+      int nGenTau = genTaus.size();
+
+      nGenTaus->Fill(nGenTau);
+
+      float weight = 1.0;
+
+      if (nGenTau == 0) continue;
+ 
+      TLorentzVector visibleTau = genTaus[0] - genNeus[0];
+
+      //      int recFail = 1;
+
+      int binNumber = leadingTau_pt_eff->FindBin(visibleTau.Pt());
+      
+      weight  *= leadingTau_pt_eff->GetBinContent(binNumber);
+
+      genTaus.clear();
+
+      for(int j = 0; j < fMT2tree->NGenLepts; j++){
+
+	if(abs(fMT2tree->genlept[j].ID) != 13 || abs(fMT2tree->genlept[j].MID) != 15) 
+	  continue;
+	if(fMT2tree->genlept[j].GMStatus != 3) //To kill soft muons from B-mesons! 
+	  continue;
+
+	bool newMu = true;
+
+	for(int k = 0; k < genTaus.size(); k++) {
+	  double deltaR = Util::GetDeltaR(fMT2tree->genlept[j].lv.Eta(), genTaus[k].Eta(), fMT2tree->genlept[j].lv.Phi(), genTaus[k].Phi());	  
+	  
+	  deltaR2Lep->Fill(deltaR + 6);
+
+	  if(deltaR < 0.5) newMu = false;
+	}
+
+	if (newMu) genTaus.push_back(fMT2tree->genlept[j].lv);
+
+      }
+      if (nGenTau == 0) continue;
+
+      TLorentzVector genMuon = genTaus[0];
+
+      binNumber = Mu_pt_eff->FindBin(genMuon.Pt());
+      
+      weight  *= Mu_pt_eff->GetBinContent(binNumber);
+
+      TLorentzVector genMET4vector = -(genMuon + visibleTau);
+      
+      float genMET = genMET4vector.Pt();
+
+      float genMass = (genMuon + visibleTau).M();
+
+      float genMT2 = fMT2tree->CalcMT2(0,0, genMuon, visibleTau, genMET4vector);       
+
+      float genTauMT = fMT2tree->GetMT(visibleTau, genMET4vector); 
+
+      weight  *= SumCharge->GetBinContent(3)/SumCharge->Integral();
+
+      binNumber = Met_eff->FindBin(genMET);
+      
+      weight  *= Met_eff->GetBinContent(binNumber);
+      weight  *= nBJets->GetBinContent(1)/nBJets->Integral();
+      
+      weight  *= ExtraLepton->GetBinContent(1)/ExtraLepton->Integral();
+   
+      binNumber = Mass_eff->FindBin(genMass);
+      
+      weight  *= Mass_eff->GetBinContent(binNumber);
+
+      weight  *= minDPhi->Integral(6,16)/minDPhi->Integral();
+
+      binNumber = Mt2_eff->FindBin(genMT2);
+      
+      weight  *= Mt2_eff->GetBinContent(binNumber);
+
+      binNumber = tauMT_eff->FindBin(genTauMT);
+      
+      weight  *= tauMT_eff->GetBinContent(binNumber);
+
+      h_SMS->Fill(fMT2tree->Susy.MassGlu, fMT2tree->Susy.MassLSP, weight);
+   
+    }
+  }
+  cout<<endl;	
+
+  TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");//CharginoChargino
+  hXsec->SetMarkerSize(2.0);
+  TH2D * h_SMSEff = (TH2D*)h_SMS->Clone();
+  h_SMSEff->SetName("h_SMSEff");
+
+  hXsec->Scale(0.23 * 19600); //BR for muTau
+  h_SMSEff->Multiply(hXsec);
+  h_SMSEvents->Rebin2D(4, 4);
+  h_SMSEvents->SetMarkerSize(2.0);
+  h_SMSEff->Divide(h_SMSMuTau);
+  //  h_SMSGen->Divide(h_SMSEvents);
+  //  h_SMSEff->Multiply(h_SMSGen);
+  //h_SMSEff->Divide(h_SMSEvents);
+
+  TH2* h_SMSYield = (TH2*) TFile::Open("/home/paktinat/CMSSW_6_1_1/src/MT2_Tau/MT2Analysis/Code/MT2AnalysisCode/MT2Code/setUpperLimit/MuTau_Bin1_HighStat700_NewPUTSChi.root")->Get("h_N_MLSP_MChi");//CharginoChargino
+  h_SMSYield->SetMarkerSize(2.0);
+//   TH2D * h_SMSDif = (TH2D*)h_SMSEff->Clone();
+  TH2D * h_SMSDif = (TH2D*)h_SMS->Clone();
+  h_SMSDif->SetName("h_SMSDif");
+
+  h_SMSDif->Add(h_SMSYield, -1);
+  h_SMSDif->Divide(h_SMSYield);
+
+  TCanvas *cSMS = new TCanvas("cSMS", "cSMS", 500, 500);
+  cSMS->Divide(3,3);
+  cSMS->cd(1);
+  h_SMS->GetXaxis()->SetRangeUser(100,499);
+  h_SMS->GetYaxis()->SetRangeUser(0,499);
+  h_SMS->Draw("colz");
+  cSMS->cd(2);
+  h_SMSEff->GetXaxis()->SetRangeUser(100,499);
+  h_SMSEff->GetYaxis()->SetRangeUser(0,499);
+  h_SMSEff->Draw("colz");
+  cSMS->cd(3);
+  h_SMSYield->GetXaxis()->SetRangeUser(100,499);
+  h_SMSYield->GetYaxis()->SetRangeUser(0,499);
+  h_SMSYield->Draw("colz");
+  cSMS->cd(4);
+  h_SMSDif->GetXaxis()->SetRangeUser(100,499);
+  h_SMSDif->GetYaxis()->SetRangeUser(0,499);
+  h_SMSDif->Draw("colz");
+  cSMS->cd(5);
+  h_SMSEvents->GetXaxis()->SetRangeUser(100,499);
+  h_SMSEvents->GetYaxis()->SetRangeUser(0,499);
+  h_SMSEvents->Draw("colz");
+  cSMS->cd(6);
+  hXsec->GetXaxis()->SetRangeUser(100,499);
+  hXsec->GetYaxis()->SetRangeUser(0,499);
+  hXsec->Draw("colz");
+  cSMS->cd(7);
+  h_SMSMuTau->GetXaxis()->SetRangeUser(100,499);
+  h_SMSMuTau->GetYaxis()->SetRangeUser(0,499);
+  h_SMSMuTau->Draw("colz");
+  cSMS->cd(8);
+  h_SMS_NRec->GetXaxis()->SetRangeUser(100,499);
+  h_SMS_NRec->GetYaxis()->SetRangeUser(0,499);
+  h_SMS_NRec->Draw("colz");
+
+}
 
