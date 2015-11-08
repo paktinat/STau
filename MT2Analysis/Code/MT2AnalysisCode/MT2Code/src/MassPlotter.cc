@@ -18738,6 +18738,10 @@ void MassPlotter::getGenEfficienciesTauTau(unsigned int nEvts,TString cuts, bool
   TH1D * Mass_eff = new TH1D("mass_eff","mass_eff", 100, 0, 500);
   TH1D * SumMT_eff = new TH1D("SumMT_eff","SumMT_eff", 100, 0, 500);
 
+  TH2D *h_SMS      = new TH2D("h_SMS",      "h_SMS",      125, 0, 2500, 125, 0, 2500);
+  TH2D *h_SMS_NRec   = new TH2D("h_SMS_NRec",   "h_SMS_NRec",   125, 0, 2500, 125, 0, 2500);
+  TH2D *h_SMSMuTau = new TH2D("h_SMSMuTau", "h_SMSMuTau", 125, 0, 2500, 125, 0, 2500);
+
   TEventList *myEvtList;
   cout<<" cuts "<<cuts<<endl;
 
@@ -19070,7 +19074,7 @@ nextToLeadingTau_pt_eff->Draw();
 	h_SMS_NRec->Fill(fMT2tree->Susy.MassGlu, fMT2tree->Susy.MassLSP);
     }
       // --- Gen-Level -------------------------------------------------------------
-
+/*
       std::vector<TLorentzVector> genTaus;
       std::vector<TLorentzVector> genNeus;
 
@@ -19187,10 +19191,11 @@ nextToLeadingTau_pt_eff->Draw();
 
       h_SMS->Fill(fMT2tree->Susy.MassGlu, fMT2tree->Susy.MassLSP, weight);
    
+*/
     }
   }
   cout<<endl;	
-
+/*
   TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");//CharginoChargino
   hXsec->SetMarkerSize(2.0);
   TH2D * h_SMSEff = (TH2D*)h_SMS->Clone();
@@ -19249,5 +19254,6 @@ nextToLeadingTau_pt_eff->Draw();
   h_SMS_NRec->GetYaxis()->SetRangeUser(0,499);
   h_SMS_NRec->Draw("colz");
 
+*/
 }
 
