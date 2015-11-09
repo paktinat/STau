@@ -2324,7 +2324,7 @@ void MassPlotter::printHisto(THStack* h, TH1* h_data, TLegend* leg,  TString can
 //____________________________________________________________________________
 void MassPlotter::loadSamples(const char* filename){
 	fSamples.clear();
-	char buffer[200];
+	char buffer[800];
 	ifstream IN(filename);
 
 	char StringValue[1000];
@@ -2368,7 +2368,7 @@ void MassPlotter::loadSamples(const char* filename){
 			sscanf(buffer, "ShapeName\t%s", StringValue);
 			s.shapename = TString(StringValue);
 
-			IN.getline(buffer, 400, '\n');
+			IN.getline(buffer, 800, '\n');
 			sscanf(buffer, "File\t%s", StringValue);
 
 			TString file =fPath+StringValue;
