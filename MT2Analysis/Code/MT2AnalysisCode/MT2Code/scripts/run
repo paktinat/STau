@@ -1,0 +1,7 @@
+python -i TrgEfficiencies.py -t muTau -s MuEG -d ~/TrgEff
+python -i TrgEfficiencies.py -t muTau -s MuEGEndcap -d ~/TrgEff
+python -i TrgEfficiencies.py -t muTau -s MuEGBarrel -d ~/TrgEff
+python -i TrgEfficiencies.py -t eleTau -s MuEGBarrel -d ~/TrgEff
+python -i TrgEfficiencies.py -t eleTau -s MuEGEndcap -d ~/TrgEff
+python -i TrgEfficiencies.py -t eleTau -s MuEG -d ~/TrgEff
+python -i TrgEfficiencies.py -t DoubleTau -s MuEG -d ~/TrgEff
