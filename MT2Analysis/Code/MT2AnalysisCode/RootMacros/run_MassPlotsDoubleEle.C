@@ -189,7 +189,7 @@
    //   tA->MakeCutFlowTable( myChannelCuts );
    //tA->makePlot("misc.MET", cuts, -1, -10, -10, trigger, "MET", 10, 0, 300, false, true, true, true,true, true, 1, true, true, "png",1);
    //      tA->makePlot("doubleEle[0].MT2", cuts, -10, 0, -10, trigger, "MT2", 8, 40, 200, false,true, true, true,true, true, 1, true, true,"png",1);
-      tA->makePlot("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))", cuts, -10, 0, -10, trigger, "#sum_{}^{}m_T^i binII", 10, 200, 700, false,true, true, true,true, true, 1, true, true,"png",1);
+      tA->makePlot("((ele[doubleEle[0].Ele0Ind].MT)+(ele[doubleEle[0].Ele1Ind].MT))", cuts, -10, 0, -10, trigger, "#sum_{}^{}m_{T}^{i}", 10, 200, 700, false,true, true, true,true, true, 1, true, true,"png",1);
   //------------------------------Methods-----------------------------------
       //    int nbins = 1;
       //  double xbin[nbins+1] = {-2000, 2000};      //MT2
