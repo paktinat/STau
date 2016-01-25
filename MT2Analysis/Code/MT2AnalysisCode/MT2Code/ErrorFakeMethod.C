@@ -1,14 +1,33 @@
+//A macro to calculate the errors on Fake Rate method.
 void ErrorFakeMethod(){
   float sys = 0.05;
 
   //EleTau 4 3
   //MuTau 5 6
 
-   //Data
-  float tight = 4;//5;//30;//27;//
+   //Data//twiki comments 2 June 2015
+
+  //EleTau 
+  //No tauMT cut
+  //looseNonTight = 33
+  //tight = 27
+  // tauMT cut
+  //looseNonTight = 3
+  //tight = 4
+  
+  //MuTau 
+  //No tauMT cut
+  //looseNonTight = 20
+  //tight = 30
+  // tauMT cut
+  //looseNonTight = 6
+  //tight = 5
+
+
+  float tight = 5;//4;//30;//27;//
   float tightErr = sqrt(tight);
 
-  float looseNonTight = 3;//6;//20;//33;//
+  float looseNonTight = 6;//3;//20;//33;//
   float looseNonTightErr = sqrt(looseNonTight);
 
   float f = 0.4464;
@@ -84,25 +103,25 @@ void ErrorFakeMethod(){
 
   cout<<Tight.GetBinContent(1)<<" +/- "<<Tight.GetBinError(1)<<endl;
 
-  TH1F tauMTPass("tauMTPass","tauMTPass",1,0,1);
-
-  tauMTPass.SetBinContent(1,0.06136292);
-  tauMTPass.SetBinError(1,0.02594956);
-
-  tauMTPass.SetBinContent(1,1.0);
-  tauMTPass.SetBinError(1,0.00);
-
-  Tight.Multiply(&tauMTPass);
+//   TH1F tauMTPass("tauMTPass","tauMTPass",1,0,1);
+  
+//   tauMTPass.SetBinContent(1,0.06136292);
+//   tauMTPass.SetBinError(1,0.02594956);
+  
+//   tauMTPass.SetBinContent(1,1.0);
+//   tauMTPass.SetBinError(1,0.00001);
+  
+//   Tight.Multiply(&tauMTPass);
   
   cout<<Tight.GetBinContent(1)<<" +/- "<<Tight.GetBinError(1)<<endl;
 
-  float Fake = (tight * TightCoefficient - looseNonTight * LNTCoefficient) * tauMTPass.GetBinContent(1);
+  float Fake = (tight * TightCoefficient - looseNonTight * LNTCoefficient);// * tauMTPass.GetBinContent(1);
 
-  float tauMTSys = (tight * TightCoefficient - looseNonTight * LNTCoefficient) * tauMTPass.GetBinError(1);
+  float tauMTSys = (tight * TightCoefficient - looseNonTight * LNTCoefficient);// * tauMTPass.GetBinError(1);
 
-  float FakeStat0 = sqrt(tightErr * tightErr * TightCoefficient* TightCoefficient + looseNonTightErr  * looseNonTightErr  * LNTCoefficient * LNTCoefficient) * tauMTPass.GetBinContent(1);
+  float FakeStat0 = sqrt(tightErr * tightErr * TightCoefficient* TightCoefficient + looseNonTightErr  * looseNonTightErr  * LNTCoefficient * LNTCoefficient);// * tauMTPass.GetBinContent(1);
 
-  float FakeSys0 = sqrt(Tight.GetBinError(1) * Tight.GetBinError(1) - FakeStat0 * FakeStat0);
+  float FakeSys0 = sqrt(TMath::Max((Tight.GetBinError(1) * Tight.GetBinError(1) - FakeStat0 * FakeStat0), 0.0));
 
   cout<<Fake<<" +- "<<FakeStat0<<" +- "<<FakeSys0<<" tauMTSys = "<<tauMTSys<<endl;
 
@@ -131,15 +150,15 @@ void ErrorFakeMethod(){
 
   cout<<Tight.GetBinContent(1)<<" +/- "<<Tight.GetBinError(1)<<endl;
 
-  Tight.Multiply(&tauMTPass);
+  // Tight.Multiply(&tauMTPass);
   
   cout<<Tight.GetBinContent(1)<<" +/- "<<Tight.GetBinError(1)<<endl;
 
-  float Fakepplusdp = (tight * TightCoefficient - looseNonTight * LNTCoefficient) * tauMTPass.GetBinContent(1);
+  float Fakepplusdp = (tight * TightCoefficient - looseNonTight * LNTCoefficient);// * tauMTPass.GetBinContent(1);
 
-  float FakeStat = sqrt(tightErr * tightErr * TightCoefficient* TightCoefficient + looseNonTightErr * looseNonTightErr * LNTCoefficient * LNTCoefficient) * tauMTPass.GetBinContent(1);
+  float FakeStat = sqrt(tightErr * tightErr * TightCoefficient* TightCoefficient + looseNonTightErr * looseNonTightErr * LNTCoefficient * LNTCoefficient);// * tauMTPass.GetBinContent(1);
 
-  float FakeSys = sqrt(Tight.GetBinError(1) * Tight.GetBinError(1) - FakeStat * FakeStat);
+  float FakeSys = sqrt(TMath::Max((Tight.GetBinError(1) * Tight.GetBinError(1) - FakeStat * FakeStat),0.0));
 
   cout<<Fakepplusdp<<" +- "<<FakeStat<<" +- "<<FakeSys<<endl;
 
@@ -169,15 +188,15 @@ void ErrorFakeMethod(){
 
   cout<<Tight.GetBinContent(1)<<" +/- "<<Tight.GetBinError(1)<<endl;
 
-  Tight.Multiply(&tauMTPass);
+  // Tight.Multiply(&tauMTPass);
   
   cout<<Tight.GetBinContent(1)<<" +/- "<<Tight.GetBinError(1)<<endl;
 
-  float Fakepminusdp = (tight * TightCoefficient - looseNonTight * LNTCoefficient) * tauMTPass.GetBinContent(1);
+  float Fakepminusdp = (tight * TightCoefficient - looseNonTight * LNTCoefficient);// * tauMTPass.GetBinContent(1);
 
-  FakeStat = sqrt(tightErr * tightErr * TightCoefficient* TightCoefficient + looseNonTightErr * looseNonTightErr * LNTCoefficient * LNTCoefficient) * tauMTPass.GetBinContent(1);
+  FakeStat = sqrt(tightErr * tightErr * TightCoefficient* TightCoefficient + looseNonTightErr * looseNonTightErr * LNTCoefficient * LNTCoefficient);//* tauMTPass.GetBinContent(1);
 
-  FakeSys = sqrt(Tight.GetBinError(1) * Tight.GetBinError(1) - FakeStat * FakeStat);
+  FakeSys = sqrt(TMath::Max((Tight.GetBinError(1) * Tight.GetBinError(1) - FakeStat * FakeStat), 0.0));
 
   cout<<Fakepminusdp<<" +- "<<FakeStat<<" +- "<<FakeSys<<endl;
 
@@ -206,15 +225,15 @@ void ErrorFakeMethod(){
 
   cout<<Tight.GetBinContent(1)<<" +/- "<<Tight.GetBinError(1)<<endl;
 
-  Tight.Multiply(&tauMTPass);
+  //  Tight.Multiply(&tauMTPass);
   
   cout<<Tight.GetBinContent(1)<<" +/- "<<Tight.GetBinError(1)<<endl;
 
-  float Fakefplusdf = (tight * TightCoefficient - looseNonTight * LNTCoefficient) * tauMTPass.GetBinContent(1);
+  float Fakefplusdf = (tight * TightCoefficient - looseNonTight * LNTCoefficient);// * tauMTPass.GetBinContent(1);
 
-  FakeStat = sqrt(tightErr * tightErr * TightCoefficient* TightCoefficient + looseNonTightErr * looseNonTightErr * LNTCoefficient * LNTCoefficient) * tauMTPass.GetBinContent(1);
+  FakeStat = sqrt(tightErr * tightErr * TightCoefficient* TightCoefficient + looseNonTightErr * looseNonTightErr * LNTCoefficient * LNTCoefficient);// * tauMTPass.GetBinContent(1);
 
-  FakeSys = sqrt(Tight.GetBinError(1) * Tight.GetBinError(1) - FakeStat * FakeStat);
+  FakeSys = sqrt(TMath::Max((Tight.GetBinError(1) * Tight.GetBinError(1) - FakeStat * FakeStat), 0.0));
 
   cout<<Fakefplusdf<<" +- "<<FakeStat<<" +- "<<FakeSys<<endl;
 
@@ -243,15 +262,15 @@ void ErrorFakeMethod(){
 
   cout<<Tight.GetBinContent(1)<<" +/- "<<Tight.GetBinError(1)<<endl;
 
-  Tight.Multiply(&tauMTPass);
+  //  Tight.Multiply(&tauMTPass);
   
   cout<<Tight.GetBinContent(1)<<" +/- "<<Tight.GetBinError(1)<<endl;
 
-  float Fakefminusdf = (tight * TightCoefficient - looseNonTight * LNTCoefficient) * tauMTPass.GetBinContent(1);
+  float Fakefminusdf = (tight * TightCoefficient - looseNonTight * LNTCoefficient);// * tauMTPass.GetBinContent(1);
 
-  FakeStat = sqrt(tightErr * tightErr * TightCoefficient* TightCoefficient + looseNonTightErr * looseNonTightErr * LNTCoefficient * LNTCoefficient) * tauMTPass.GetBinContent(1);
+  FakeStat = sqrt(tightErr * tightErr * TightCoefficient* TightCoefficient + looseNonTightErr * looseNonTightErr * LNTCoefficient * LNTCoefficient);// * tauMTPass.GetBinContent(1);
 
-  FakeSys = sqrt(Tight.GetBinError(1) * Tight.GetBinError(1) - FakeStat * FakeStat);
+  FakeSys = sqrt(TMath::Max((Tight.GetBinError(1) * Tight.GetBinError(1) - FakeStat * FakeStat), 0.0));
 
   cout<<Fakefminusdf<<" +- "<<FakeStat<<" +- "<<FakeSys<<endl;
 
