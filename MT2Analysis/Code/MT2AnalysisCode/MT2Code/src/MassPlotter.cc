@@ -11216,6 +11216,8 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 
 	myQuantity = fMT2tree->doubleTau[0].GetMT2();
 
+	//****tesSMSplane***
+
 
 //     if (Sample.type == "susy") {
 
@@ -11252,7 +11254,7 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 
 	//   }
 
-
+	//****tesSMSplane***
       	if(Sample.sname == "SUSY")
 	  {
 	    if(fPUReweight) weight = (Sample.kfact * Sample.lumi / (Sample.nevents*Sample.PU_avg_weight)) *  fMT2tree->pileUp.Weight;
@@ -11959,6 +11961,7 @@ else if(status == "etau_pu_up")
 
    }
 
+	//****tesSMSplane***
    if(Sample.sname == "SUSY")
 
      {
