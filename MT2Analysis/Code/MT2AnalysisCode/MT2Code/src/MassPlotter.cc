@@ -5,6 +5,7 @@
 #include "TList.h"
 #include "MassPlotter.hh"
 
+
 #include "TLorentzVector.h"
 #include "TGraphAsymmErrors.h"
 #include "helper/Utilities.hh"
@@ -10684,7 +10685,6 @@ void MassPlotter::eeAnalysis(TString cuts, TString trigger, unsigned int nevents
 
 void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int nevents, TString myfileName, TString giveStatus, TString sampleName ){
 
-
   TH1::SetDefaultSumw2();
 
 
@@ -10707,6 +10707,7 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
   
   TH1F* pileup_data_down_histo = (TH1F*) pileup_data_down->Get("pileup");
 
+
   
   pileup_data_histo->Scale(1.0/pileup_data_histo->Integral());
   pileup_data_up_histo->Scale(1.0/pileup_data_up_histo->Integral());
@@ -10728,7 +10729,6 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
   TString  cnames[NumberOfSamples+1] = {"QCD",     "W",    "ZX",  "Top",       "WW",  "Higgs",   "MC", "susy","data"};
   int      ccolor[NumberOfSamples+1] = { 401,      417,     419,   855,         603,     kRed,    603,      1, 632};
   //-------------------added-------------------
-
 
   //  TString  cnames[NumberOfSamples+1] = { "QCD", "Wjets", "Zjets", "Top", "WWjets",   "MC", "susy","data" };
   //  int      ccolor[NumberOfSamples+1] = { 401  ,     417,     419,   855,      603,    603,      1,  632  };
@@ -10771,6 +10771,7 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
   cout<<" trigger "<<trigger<<endl;
   cout<<" cuts "<<cuts<<endl;
 
+
   for(unsigned int ii = 0; ii < fSamples.size(); ii++)
     {
 
@@ -10780,25 +10781,12 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
     int data = 0;
     sample Sample = fSamples[ii];
 
-    //    if(Sample.sname != "SUSY" || Sample.sname != "DY")
-    //      continue;
-
-
-    //    if (sampleName != "")
-
-    //      {
-    //	if(sampleName != Sample.sname)
-    //          continue;
-    //      }
-
-    //    else
-                                 {
-
     if(Sample.type == "data")
       {
       data = 1;
       myCuts += " && " + trigger;
       }
+
 
     fMT2tree = new MT2tree();
     Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
@@ -10830,13 +10818,14 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
     
     if(fPUReweight) Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents*Sample.PU_avg_weight);
     else            Weight = Sample.xsection * Sample.kfact * Sample.lumi / (Sample.nevents);
+    
 
     for ( unsigned int jentry=0 ; jentry<min(nentries , nevents);jentry++ )
       {
 
       Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
 
-      if ( fVerbose>2 && jentry % 100000 == 0 )
+      if ( fVerbose>2 && jentry % 10 == 0 )
 	{
 	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
 	fflush(stdout);
@@ -11227,9 +11216,53 @@ void MassPlotter::eeAnalysisTESpUsys(TString cuts, TString trigger, unsigned int
 
 	myQuantity = fMT2tree->doubleTau[0].GetMT2();
 
-     }
 
-    //----------------------ditau_bin2_nominal----------------------------
+//     if (Sample.type == "susy") {
+
+//        Double_t weight1 = Sample.lumi / (Sample.nevents*Sample.PU_avg_weight) ;
+
+// 	std::ostringstream cutStream1;
+// 	cutStream1  
+
+// 		  << "tau[doubleTau[0].GetTauIndex0()].lv.Pt() > 45"                            << "&&"
+// 		  << "tau[doubleTau[0].GetTauIndex1()].lv.Pt() > 45"                            << "&&"
+// 		  << "doubleTau[0].GetLV().M() > 15"                                            << "&&"
+// 		  << "!(doubleTau[0].GetLV().M() >= 55 && doubleTau[0].GetLV().M() <= 85)"       << "&&"
+// 		  << "misc.MinMetJetDPhiPt40 > 1.0"                                             << "&&"
+// 		  << "misc.MET > 30"                                                            << "&&"
+// 		  << "doubleTau[0].GetMT2() > 90"                                                ;
+		  
+
+// 	TString cuts1 = cutStream1.str().c_str();
+
+// 	myCuts += "&&" + cuts1 ;
+
+
+//       TString selection = TString::Format("(%.15f*pileUp.Weight) * (%s)", weight1, myCuts.Data());
+//       TString variable = TString::Format("Susy.MassLSP:Susy.MassGlu>>+%s", h_PN_MLSP_MChi->GetName());
+
+//       Sample.tree->Draw(variable, selection, "goff");
+
+//       h_PN_MLSP_MChi->Divide(h_SMSEvents);
+//       TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
+//       h_PN_MLSP_MChi->Multiply(hXsec);
+
+       //      myCuts = myCuts + "fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex0()].lv.Pt() > 45 && fMT2tree->tau[fMT2tree->doubleTau[0].GetTauIndex1()].lv.Pt() > 45 && fMT2tree->doubleTau[0].GetLV().M() > 15 && !(fMT2tree->doubleTau[0].GetLV().M() >= 55 && fMT2tree->doubleTau[0].GetLV().M() <= 85) && fMT2tree->misc.MinMetJetDPhiPt40 > 1.0 && fMT2tree->misc.MET > 30 && fMT2tree->doubleTau[0].GetMT2() > 90";
+	//+ "&&"+ "tau[doubleTau[0].GetTauIndex0()].lv.Pt() > 45 && tau[doubleTau[0].GetTauIndex1()].lv.Pt() > 45 && doubleTau[0].GetLV().M() > 15 && !(doubleTau[0].GetLV().M() >= 55 && doubleTau[0].GetLV().M() <= 85) && misc.MinMetJetDPhiPt40 > 1.0 && misc.MET > 30 && doubleTau[0].GetMT2() > 90";
+
+	//   }
+
+
+      	if(Sample.sname == "SUSY")
+	  {
+	    if(fPUReweight) weight = (Sample.kfact * Sample.lumi / (Sample.nevents*Sample.PU_avg_weight)) *  fMT2tree->pileUp.Weight;
+	    else            weight = (Sample.kfact * Sample.lumi / (Sample.nevents)) *  fMT2tree->pileUp.Weight;
+
+      	    h_PN_MLSP_MChi->Fill(fMT2tree->Susy.MassGlu, fMT2tree->Susy.MassLSP ,  weight);
+      	  }
+      }
+
+    //----------------------Ditau_bin2_nominal----------------------------
     
     else if(status == "ditau_bin2_nominal")
       {
@@ -11796,16 +11829,18 @@ else if(status == "etau_pu_up")
      }
       
       
-
       if(data == 1){
 
   	MT2[8]->Fill(myQuantity, weight);//data
       
        }else{
-	if(Sample.sname == "SUSY")
-	  MT2[7]->Fill(myQuantity, weight);
-	else
 
+	if(Sample.sname == "SUSY")
+
+	  {
+	    MT2[7]->Fill(myQuantity, weight);
+	  }
+	else
 	  MT2[6]->Fill(myQuantity, weight);
       
 	if(Sample.sname == "Top")
@@ -11827,6 +11862,28 @@ else if(status == "etau_pu_up")
 		    MT2[5]->Fill(myQuantity, weight);
       }
 
+
+
+	//To run on CharginoChargino
+      //      h_SMSEvents->Rebin2D(4,4);
+      //	h_PN_MLSP_MChi->Rebin2D(125, 125);
+	//To run on StauStau uncomment the following
+	//h_SMSEvents->Rebin2D(2, 2);
+
+      //      h_PN_MLSP_MChi->Divide(h_SMSEvents);
+  //        h_PN_MLSP_MChi->Rebin2D(125, 125);                                                                                                            
+  //To run on StauStau uncomment the following                                                                                                          
+  //h_SMSEvents->Rebin2D(2, 2);                                                                                                                         
+
+
+  //TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("StSt_8TeV_NLONLL_LSP"); //StauStau   
+
+
+      //	TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");//CharginoChargino
+	//TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("StSt_8TeV_NLONLL_LSP"); //StauStau
+
+	//	TFile::Close();
+
 	  AddOverAndUnderFlow(MT2[0] , true , true);
 	  AddOverAndUnderFlow(MT2[1] , true , true);
 	  AddOverAndUnderFlow(MT2[2] , true , true);
@@ -11836,22 +11893,21 @@ else if(status == "etau_pu_up")
 	  AddOverAndUnderFlow(MT2[6] , true , true);
 	  AddOverAndUnderFlow(MT2[7] , true , true);
 	  AddOverAndUnderFlow(MT2[8] , true , true);
-
-  
-
+	  //  	  AddOverAndUnderFlow(h_PN_MLSP_MChi , true , true);
 
 
-//  		  if(Sample.type=="susy"){
 
-//  		    TString SUSYselection = TString::Format("(%s)", weight, myCuts.Data());
-//  		    TString SUSYvariable = TString::Format("Susy.MassLSP:Susy.MassGlu>>+%s", h_PN_MLSP_MChi->GetName());
-//  		    Sample.tree->Draw(SUSYvariable, SUSYselection, "goff");
+	  //	  if(Sample.type=="susy"){
 
-//  		    SUSYselection = TString::Format(" (%s)", myCuts.Data()); 
-//  		    SUSYvariable = TString::Format("Susy.MassLSP:Susy.MassGlu>>+%s", h_N_MLSP_MChi->GetName());
-//  		    Sample.tree->Draw(SUSYvariable, SUSYselection, "goff");
+	    // 		    TString SUSYselection = TString::Format("(%s)", weight, myCuts.Data());
+	    // 		    TString SUSYvariable = TString::Format("Susy.MassLSP:Susy.MassGlu>>+%s", h_PN_MLSP_MChi->GetName());
+	    // 		    Sample.tree->Draw(SUSYvariable, SUSYselection, "goff");
+
+	  // 		    SUSYselection = TString::Format(" (%s)", myCuts.Data()); 
+	  // 		    SUSYvariable = TString::Format("Susy.MassLSP:Susy.MassGlu>>+%s", h_N_MLSP_MChi->GetName());
+	  // 		    Sample.tree->Draw(SUSYvariable, SUSYselection, "goff");
 		  
-//  		  }
+	  // 		  }
 
 //               if(Sample.name == "DYToLL_M10To50")
 // 		  MT2[0]->Fill(myQuantity, weight);
@@ -11901,15 +11957,33 @@ else if(status == "etau_pu_up")
    cout << "sample:" << cnames[m] << endl;
    cout << "all_content:..."<< e1 << endl;   
 
-   } 
-   
+   }
 
-				 }
-    }
+   if(Sample.sname == "SUSY")
+
+     {
+       h_SMSEvents = (TH2F*) Sample.file->Get("h_SMSEvents");
+       h_SMSEvents->Rebin2D(4, 4);
+       h_PN_MLSP_MChi->Divide(h_SMSEvents);
+       
+       TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");//CharginoChargino                                                       
+       h_PN_MLSP_MChi->Multiply(hXsec);  
+  
+     }
+    
+  }
   //for(samples)
 
 
+  //  h_SMSEvents->Rebin2D(4,4);
+//h_SMSEvents->Rebin2D(2, 2);
+//  h_PN_MLSP_MChi->Divide(h_SMSEvents);
 
+  
+//  TH2* hXsec = (TH2*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");//CharginoChargino                                                  
+//  h_PN_MLSP_MChi->Multiply(hXsec);  
+  
+  
 //  for(int j = 0; j <= NumberOfSamples; j++){
 //    AddOverAndUnderFlow(MT2[j], true, true);
     //     AddOverAndUnderFlow(MT2[j], true, true);
@@ -12018,6 +12092,7 @@ else if(status == "etau_pu_up")
   MT2[6]->Write();
   MT2[7]->Write();
   MT2[8]->Write();
+  h_PN_MLSP_MChi->Write();
   Legend1->Write();
   savefile2->Close();
   std::cout << "Saved histograms in " << savefile2->GetName() << std::endl;

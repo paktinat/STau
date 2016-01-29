@@ -33,19 +33,21 @@
 
   //("(misc.ProcessID!=10 || (Susy.MassGlu  >= 380.0 && Susy.MassGlu  < 400.0 && Susy.MassLSP < 20.0))"); 
  // myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 180.0 && Susy.MassGlu  < 200.0 && Susy.MassLSP >=60 && Susy.MassLSP < 80.0))");
- // myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 240.0 && Susy.MassGlu  < 260.0 && Susy.MassLSP >=40 && Susy.MassLSP < 60.0))");
-
+  //  myChannelCuts.push_back("(misc.ProcessID!=10 || (Susy.MassGlu  >= 220.0 && Susy.MassGlu  < 260.0 && Susy.MassLSP >=20 && Susy.MassLSP < 60.0))");
+  //  myChannelCuts.push_back("(misc.ProcessID!=10 || (  (Susy.MassLSP < 20) && (Susy.MassGlu < 30 )))"); 
 
 
   std::ostringstream preSelCuts;
   preSelCuts << "("
     //  << "(misc.ProcessID!=10 || (abs(Susy.MassGlu - 240) <= 5.0 && abs(Susy.MassLSP - 40) <= 5.0))" << "&&" // X-Section: 0.14986 pb
-    // << "(misc.ProcessID!=10 || (Susy.MassGlu  >= 240.0 && Susy.MassGlu  < 260.0 && Susy.MassLSP >=40 && Susy.MassLSP < 60.0))" << "&&" 
+         << "(misc.ProcessID!=10 || (Susy.MassGlu  < 1000.0 && Susy.MassLSP < 1000.0))" << "&&" 
     //  << "(misc.ProcessID!=10 || (abs(Susy.MassGlu - 240.0) <= 10.0 && abs(Susy.MassLSP - 40) <= 10.0))" << "&&"
+
+
 
     //  <<  "(misc.ProcessID!=10 || (abs(Susy.MassGlu - 240.0) <= 10.0 && abs(Susy.MassLSP - 40) <= 10.0))" << "&&"
     // <<  "(misc.ProcessID!=10 || (abs(Susy.MassGlu - 180.0) <= 10.0 && abs(Susy.MassLSP - 60.0) <= 10.0))" << "&&"
-      <<  "(misc.ProcessID!=10 || (abs(Susy.MassGlu - 380.0) <= 10.0 && abs(Susy.MassLSP - 1) <= 10.0))" << "&&"
+    //        <<  "(misc.ProcessID!=10 || (abs(Susy.MassGlu - 380.0) <= 10.0 && abs(Susy.MassLSP - 1) <= 10.0))" << "&&"
 
   << "doubleTau[0].tau0Ind >= 0" << "&&"
   << "doubleTau[0].tau1Ind >= 0" << "&&"
@@ -60,26 +62,31 @@
   << "tau[doubleTau[0].tau1Ind].MuonRej2>0.5"<< "&&"
 
     //------makePlot-------------
-    //   << "doubleTau[0].lv.M() > 15" << "&&"
-    //   << "(doubleTau[0].lv.M() < 55 || doubleTau[0].lv.M() > 85)" << "&&"
-    //	     << "misc.MinMetJetDPhiPt40 > 1" << "&&"
-    //     << "misc.MET > 30"<< "&&"
-    //      << "doubleTau[0].MT2 > 40.0"<< "&&"
-      << "( 0 == 0 ) " << ")";
+//        << "doubleTau[0].lv.M() > 15" << "&&"
+//        << "(doubleTau[0].lv.M() < 55 || doubleTau[0].lv.M() > 85)" << "&&"
+//      	     << "misc.MinMetJetDPhiPt40 > 1" << "&&"
+//          << "misc.MET > 30"<< "&&"
+//           << "doubleTau[0].MT2 > 40.0"<< "&&"
+
+
+       << "( 0 == 0 ) " << ")";
 
   TString preSelection = preSelCuts.str().c_str();
   myChannelCuts_bin1.push_back(std::string(preSelection));
   myChannelCuts_bin2.push_back(std::string(preSelection));
 
+  myChannelCuts_bin2.push_back("NBJetsCSVM == 0");
+
+
+//------makePlot-------------
 // --- bin1 ---
 //  myChannelCuts_bin1.push_back(std::string(std::string(myChan) + ".MT2 > 90.0 ")); 
 
-
 // --- bin2 ---
-//  myChannelCuts_bin2.push_back("doubleTau[0].MT2 < 90");
-//  myChannelCuts_bin2.push_back("(tau[doubleTau[0].tau0Ind].MT + tau[doubleTau[0].tau1Ind].MT) > 250.0");
-  myChannelCuts_bin2.push_back("NBJetsCSVM == 0");
+// myChannelCuts_bin2.push_back("doubleTau[0].MT2 < 90");
+// myChannelCuts_bin2.push_back("(tau[doubleTau[0].tau0Ind].MT + tau[doubleTau[0].tau1Ind].MT) > 250.0");
 
+  
   std::ostringstream cutStream_1;
   cutStream_1 << " ";
   for(unsigned int iCut = 1; iCut < myChannelCuts_bin1.size(); iCut++){
@@ -119,11 +126,11 @@
 
 
 
-  // tA->makePlot("pileUp.NVertices",cuts_bin1, -10, -10 , -10 , trigger , "M_{T2}"  ,20,0, 60,   true,  true ,  true,   true,  true,  true, 1,true, false, "png", 1);
+  //   tA->makePlot("pileUp.NVertices",cuts_bin1, -10, -10 , -10 , trigger , "M_{T2}"  ,20,0, 60,   true,  true ,  true,   true,  true,  true, 1,true, false, "png", 1);
 
   //     tA->eeZInOut(cuts_bin2, trigger, 100000000000000000000, "wjets_0to90_signal");
  //tA->makePlot("doubleTau[0].MT2",cuts_bin1, -10, 0 , -10 , trigger , "M_{T2}"  ,4,40, 140,   true,  true ,  true,   true,  true,  true, 1,true, false, "png");
-// tA->eeAnalysis(cuts_bin1, trigger, 1000000000000000000, "MT2_ditau_bin1_nominal");
+  // tA->eeAnalysis(cuts_bin1, trigger, 1000000000000000000, "MT2_ditau_bin1_nominal_makePlot");
 // tA->eeAnalysis(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_nominal");
 // tA->eeAnalysisTESsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_down_rejApp");
 
@@ -149,12 +156,15 @@
 
 //------------------------------380 , 1 -----------------------
 //  tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_tes_down_380_1", "ditau_bin1_tes_down", "");
-  //  tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_nominal_380_1", "ditau_bin1_nominal", "");
+// tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_nominal_380_1", "ditau_bin1_nominal", "");
   //  tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_tes_up_380_1", "ditau_bin1_tes_up", "");
 
-  //     tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_tes_down_380_1", "ditau_bin2_tes_down", "");
-    tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 1000000000000000000000000, "MT2_tautau_bin2_nominal", "ditau_bin2_nominal", "");
-    tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_tes_up_380_1", "ditau_bin2_tes_up", "");
 
+
+  //     tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_tes_down_380_1", "ditau_bin2_tes_down", "");
+  //    tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 1000000000000000000000000, "MT2_tautau_bin2_nominal", "ditau_bin2_nominal", "");
+    //    tA->eeAnalysisTESpUsys(cuts_bin2, trigger, 100000000000000000000000000, "MT2_bin2_tes_up_380_1", "ditau_bin2_tes_up", "");
+
+       tA->eeAnalysisTESpUsys(cuts_bin1, trigger, 100000000000000000000000000, "MT2_bin1_nominal_SMSplane", "ditau_bin1_nominal", "");
 
 }
