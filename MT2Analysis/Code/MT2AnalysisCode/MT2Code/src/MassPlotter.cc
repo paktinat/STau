@@ -7299,7 +7299,7 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, bool calcu
 	
 	if(fPUReweight)
 	  weight *= fMT2tree->pileUp.Weight;
-
+	/*
       TLorentzVector LeadingMuon;
       int muIndex = -1;
       int chargeMu = 0;      
@@ -7335,7 +7335,7 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, bool calcu
 
       for(int t=0; t<fMT2tree->NTaus; t++){ 
 
-	if(fMT2tree->tau[t].Isolation == 0 || fMT2tree->tau[t].lv.Pt() < 25)
+	if(fMT2tree->tau[t].Isolation == 0 || fMT2tree->tau[t].lv.Pt() < 25 && fMT2tree->tau[t].PassTau_MuTau != 1)
 	  continue;
 	
 	float deltaR = Util::GetDeltaR(fMT2tree->tau[t].lv.Eta(), LeadingMuon.Eta(), fMT2tree->tau[t].lv.Phi(), LeadingMuon.Phi());
@@ -7364,7 +7364,11 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, bool calcu
 
       if(Mass < 15 || (Mass > 45 && Mass < 75))
 	continue;
-      
+	*/
+	int tauIndex = fMT2tree->muTau[0].GetTauIndex0();
+	int muIndex = fMT2tree->muTau[0].GetMuIndex0();
+
+
 	weight *= fMT2tree->SFWeight.BTagCSV40eq0 * fMT2tree->tau[tauIndex].energySF * fMT2tree->muo[muIndex].idSFmuTau * fMT2tree->muo[muIndex].isoSFmuTau * fMT2tree->muo[muIndex].trgSFmuTau * fMT2tree->tau[tauIndex].trgSFmuTau;
 
 	if(Sample.sname == "Wtolnu")
@@ -7374,7 +7378,7 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, bool calcu
 	if(Sample.type == "data" && Sample.sname != "Wtolnu")
 	  weight = 1;
 
-      float myQuantity = fMT2tree->CalcMT2(0, false, fMT2tree->tau[tauIndex].lv, LeadingMuon, fMT2tree->pfmet[0]);
+      float myQuantity = fMT2tree->CalcMT2(0, false, fMT2tree->tau[tauIndex].lv, fMT2tree->muo[muIndex].lv, fMT2tree->pfmet[0]);
 
 	float tauEta = fMT2tree->tau[tauIndex].lv.Eta();
 
@@ -7402,8 +7406,8 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, bool calcu
 	fakeRate = fakeRateUnCorrected.GetBinContent(1);
 	fakeRateErr = fakeRateUnCorrected.GetBinError(1);
 
-  	fakeRate      = 0.1986;
-	fakeRateErr   = 0.0024;
+   	fakeRate      = 0.542;
+ 	fakeRateErr   = 0.005;
 
 	float SysFR = sqrt(fakeRateErr * fakeRateErr + sysFR * sysFR * fakeRate * fakeRate);
 
@@ -7414,18 +7418,15 @@ void MassPlotter::muTauWJetsEstimation(TString cuts, TString trigger, bool calcu
 	//F * (f - p) = (1 - p) Tight - p * LooseNonTight
 
 	float promptRate = 0.52;// 0.5349 +- 0.0031 QCD To Tight MT2_MuTau_Over_QCDMuTau_SignalSelectionNoZVeto_DYToLL_M50_TauTightIso_DY_PRHistos.root
-	promptRate = 0.65; //0.7659 +- 0.0032  Loose to Tight MT2_MuTauTight_Over_Loose_SignalSelectionNoZVeto_DYToLL_M50_DY_PRHistos.root
+	promptRate = 0.7659; //0.7659 +- 0.0032  Loose to Tight MT2_MuTauTight_Over_Loose_SignalSelectionNoZVeto_DYToLL_M50_DY_PRHistos.root
 
 	float promptRateErr = 0.0032;
 	
-	promptRate = 0.6458;
-	promptRateErr = 0.0018;
-
 	float SysPR = sqrt(promptRateErr * promptRateErr + sysPR * sysPR * promptRate * promptRate);
 
 	int isolated = 0;//fMT2tree->muTau[0].GetIsolated();
 
-	if(fMT2tree->tau[tauIndex].Isolation3Hits == 1. && fMT2tree->tau[tauIndex].PassTau_MuTau == 1)
+	if(fMT2tree->tau[tauIndex].Isolation3Hits == 1.)
 	  isolated = 1;
 
 	float fRweight = FRWeight(fakeRate, promptRate, isolated);

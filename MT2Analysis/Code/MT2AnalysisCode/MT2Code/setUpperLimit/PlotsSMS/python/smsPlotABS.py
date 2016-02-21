@@ -86,7 +86,9 @@ class smsPlotABS(object):
         self.c.graphWhite = graphWhite
         
         # CMS LABEL
-        textCMS = rt.TLatex(0.22,0.98,"CMS %s, %s fb^{-1}, #sqrt{s} = %s TeV" %(self.preliminary, self.lumi, self.energy))
+##        textCMS = rt.TLatex(0.22,0.98,"CMS %s, %s fb^{-1}, #sqrt{s} = %s TeV" %(self.preliminary, self.lumi, self.energy))
+        textCMS = rt.TLatex(0.22,0.98,"CMS %s, 18.1 fb^{-1}, #sqrt{s} = %s TeV" %(self.preliminary, self.energy))
+##        textCMS = rt.TLatex(0.17,0.98,"CMS %s, 18.1-19.6 fb^{-1}, #sqrt{s} = %s TeV" %(self.preliminary, self.energy))
         textCMS.SetNDC()
         textCMS.SetTextAlign(13)
         textCMS.SetTextFont(42)
@@ -129,22 +131,29 @@ class smsPlotABS(object):
         xRange = self.model.Xmax-self.model.Xmin
         yRange = self.model.Ymax-self.model.Ymin
 
-        textModelLabel0 = rt.TLatex(self.model.Xmin+43*xRange/100, self.model.Ymax-0.85*yRange/100*10, "NLO+NLL exclusion")
+##        textModelLabelMinus1 = rt.TLatex(self.model.Xmin+3*xRange/100, self.model.Ymax-0.40*yRange/100*10, "e#tau, #mu#tau and #tau#tau Combined")
+        textModelLabelMinus1 = rt.TLatex(self.model.Xmin+3*xRange/100, self.model.Ymax-0.40*yRange/100*10, "#tau_{had}#tau_{had} Channel")
+        textModelLabelMinus1.SetTextFont(42)
+        textModelLabelMinus1.SetTextSize(0.04)
+        textModelLabelMinus1.Draw()
+        self.c.textModelLabelMinus1 = textModelLabelMinus1
+
+        textModelLabel0 = rt.TLatex(self.model.Xmin+43*xRange/100, self.model.Ymax-1.0*yRange/100*10, "NLO+NLL exclusion")
         textModelLabel0.SetTextFont(42)
         textModelLabel0.SetTextSize(0.030)
         textModelLabel0.Draw()
         self.c.textModelLabel0 = textModelLabel0
-        textModelLabel1 = rt.TLatex(self.model.Xmin+3*xRange/100, self.model.Ymax-0.85*yRange/100*10, "pp #rightarrow #tilde{#chi}^{+} #tilde{#chi}^{-}")
+        textModelLabel1 = rt.TLatex(self.model.Xmin+3*xRange/100, self.model.Ymax-1.0*yRange/100*10, "pp #rightarrow #tilde{#chi}^{+} #tilde{#chi}^{-}")
         textModelLabel1.SetTextFont(42)
         textModelLabel1.SetTextSize(0.030)
         textModelLabel1.Draw()
         self.c.textModelLabel1 = textModelLabel1
-        textModelLabel2 = rt.TLatex(self.model.Xmin+3*xRange/100, self.model.Ymax-1.50*yRange/100*10, "#tilde{#chi}^{#pm} #rightarrow #tilde{#tau}^{#pm} #nu_{#tau},#tilde{#nu}_{#tau} #tau^{#pm}")
+        textModelLabel2 = rt.TLatex(self.model.Xmin+3*xRange/100, self.model.Ymax-1.60*yRange/100*10, "#tilde{#chi}^{#pm} #rightarrow #tilde{#tau}^{#pm} #nu_{#tau},#tilde{#nu}_{#tau} #tau^{#pm}")
         textModelLabel2.SetTextFont(42)
         textModelLabel2.SetTextSize(0.030)
         textModelLabel2.Draw()
         self.c.textModelLabel2 = textModelLabel2
-        textModelLabel3 = rt.TLatex(self.model.Xmin+3*xRange/100, self.model.Ymax-2.15*yRange/100*10, "#tilde{#tau}^{#pm} #rightarrow #tau^{#pm} #tilde{#chi}_{1}^{0}, #tilde{#nu} #rightarrow #nu #tilde{#chi}_{1}^{0}")
+        textModelLabel3 = rt.TLatex(self.model.Xmin+3*xRange/100, self.model.Ymax-2.2*yRange/100*10, "#tilde{#tau}^{#pm} #rightarrow #tau^{#pm} #tilde{#chi}_{1}^{0}, #tilde{#nu} #rightarrow #nu #tilde{#chi}_{1}^{0}")
         textModelLabel3.SetTextFont(42)
         textModelLabel3.SetTextSize(0.030)
         textModelLabel3.Draw()
@@ -177,10 +186,10 @@ class smsPlotABS(object):
         LObsM.SetLineStyle(1)
         LObsM.SetLineWidth(2)
         LObsM.SetMarkerStyle(20)
-        LObsM.SetPoint(0,self.model.Xmin+43*xRange/100, self.model.Ymax-1.50*yRange/100*10)
-        LObsM.SetPoint(1,self.model.Xmin+50*xRange/100, self.model.Ymax-1.50*yRange/100*10)
+        LObsM.SetPoint(0,self.model.Xmin+43*xRange/100, self.model.Ymax-1.60*yRange/100*10)
+        LObsM.SetPoint(1,self.model.Xmin+50*xRange/100, self.model.Ymax-1.60*yRange/100*10)
 
-        textObs = rt.TLatex(self.model.Xmin+51*xRange/100, self.model.Ymax-1.50*yRange/100*10, "Observed #pm 1 #sigma_{theory}")
+        textObs = rt.TLatex(self.model.Xmin+51*xRange/100, self.model.Ymax-1.60*yRange/100*10, "Observed #pm 1 #sigma_{theory}")
         textObs.SetTextFont(42)
         textObs.SetTextSize(0.030)
         textObs.Draw()
@@ -210,10 +219,10 @@ class smsPlotABS(object):
         LExpM.SetLineColor(color(self.EXP['colorLine']))
         LExpM.SetLineStyle(7)
         LExpM.SetLineWidth(2)  
-        LExpM.SetPoint(0,self.model.Xmin+43*xRange/100, self.model.Ymax-2.15*yRange/100*10)
-        LExpM.SetPoint(1,self.model.Xmin+50*xRange/100, self.model.Ymax-2.15*yRange/100*10)
+        LExpM.SetPoint(0,self.model.Xmin+43*xRange/100, self.model.Ymax-2.2*yRange/100*10)
+        LExpM.SetPoint(1,self.model.Xmin+50*xRange/100, self.model.Ymax-2.2*yRange/100*10)
 
-        textExp = rt.TLatex(self.model.Xmin+51*xRange/100, self.model.Ymax-2.15*yRange/100*10, "Expected #pm 1 #sigma_{experiment}")
+        textExp = rt.TLatex(self.model.Xmin+51*xRange/100, self.model.Ymax-2.2*yRange/100*10, "Expected #pm 1 #sigma_{experiment}")
         textExp.SetTextFont(42)
         textExp.SetTextSize(0.030)
         textExp.Draw()

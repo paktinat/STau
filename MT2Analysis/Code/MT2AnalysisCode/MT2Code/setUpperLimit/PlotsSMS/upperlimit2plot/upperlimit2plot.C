@@ -87,13 +87,13 @@ void upperlimit2plot(){
 
 	TH2D* hXsec = (TH2D*) TFile::Open("referenceXSecs.root")->Get("C1C1_8TeV_NLONLL_LSP");
 
-	TH2D* hExp = (TH2D*) TFile::Open("upperLimit4BinsHybridNew_7Oct.root")->Get("hMdn");
-	TH2D* hExpP1 = (TH2D*) TFile::Open("upperLimit4BinsHybridNew_7Oct.root")->Get("hSgmP1");
-	TH2D* hExpM1 = (TH2D*) TFile::Open("upperLimit4BinsHybridNew_7Oct.root")->Get("hSgmM1");
+	TH2D* hExp = (TH2D*) TFile::Open("upperLimitTauTau_2BinsHybridNew_30Jan.root")->Get("hMdn");
+	TH2D* hExpP1 = (TH2D*) TFile::Open("upperLimitTauTau_2BinsHybridNew_30Jan.root")->Get("hSgmP1");
+	TH2D* hExpM1 = (TH2D*) TFile::Open("upperLimitTauTau_2BinsHybridNew_30Jan.root")->Get("hSgmM1");
 	
-	TH2D* hObs = (TH2D*) TFile::Open("upperLimit4BinsHybridNew_7Oct.root")->Get("hObs");
-	TH2D* hObsP1 = (TH2D*) TFile::Open("upperLimit4BinsHybridNew_Obs_Plus1_7Oct2.root")->Get("hSgmP2");
-	TH2D* hObsM1 = (TH2D*) TFile::Open("upperLimit4BinsHybridNew_Obs_Minus1_7Oct2.root")->Get("hSgmP2");
+	TH2D* hObs = (TH2D*) TFile::Open("upperLimitTauTau_2BinsHybridNew_30Jan.root")->Get("hObs");
+	TH2D* hObsP1 = (TH2D*) TFile::Open("upperLimitTauTau_2BinsHybridNew_Obs_Plus1_30Jan.root")->Get("hSgmP2");
+	TH2D* hObsM1 = (TH2D*) TFile::Open("upperLimitTauTau_2BinsHybridNew_Obs_Minus1_30JanUpdated.root")->Get("hSgmP2");
 	
 	TFile* fout = new TFile("upperlimit2plot.root", "RECREATE");
 	fout->cd();

@@ -412,15 +412,15 @@ run_setUpperLimitCorrectCorrelation7Oct() {
 	    
             system("combineCards.py datacard_* > datacard");
 	    system("rm -f datacard_*");
-	    system("combine -M Asymptotic datacard");
+	    //system("combine -M Asymptotic datacard");
 	    //system("combine -M HybridNew  datacard");
-	    //system("combine -M HybridNew --frequentist --rule CLs --testStat LHC datacard -H ProfileLikelihood --fork 10 --expectedFromGrid=0.5");                          
+	    system("combine -M HybridNew --frequentist --rule CLs --testStat LHC datacard -H ProfileLikelihood --fork 10 --expectedFromGrid=0.5");                          
 	    //system("combine -M HybridNew --frequentist --rule CLs --testStat LHC datacard -H ProfileLikelihood --fork 10");  
 
 	    TTree* tree;
-	    TFile * flimit = new TFile("higgsCombineTest.Asymptotic.mH120.root");
+	    //TFile * flimit = new TFile("higgsCombineTest.Asymptotic.mH120.root");
 	    //TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.root");
-	    //TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.quant0.500.root");
+	    TFile * flimit = new TFile("higgsCombineTest.HybridNew.mH120.quant0.500.root");
 
             flimit->GetObject("limit", tree);
 
@@ -450,8 +450,8 @@ run_setUpperLimitCorrectCorrelation7Oct() {
 	    }else
 	      cout<<" There is 0 entry "<<endl;
 // 	    system("mv  roostats-* roostats-*.root");
-	    system("rm -f higgsCombineTest.Asymptotic.mH120.root");
-//	    system("rm -f higgsCombineTest.HybridNew.mH120*.root");
+//	    system("rm -f higgsCombineTest.Asymptotic.mH120.root");
+	    system("rm -f higgsCombineTest.HybridNew.mH120*.root");
  	    system("rm -f datacard");
 	    system("rm -f roostats-*");
 

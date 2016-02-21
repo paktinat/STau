@@ -22,16 +22,32 @@ void ErrorFakeMethod(){
   // tauMT cut
   //looseNonTight = 6
   //tight = 5
+  //bins[nbins+1] = {0.0,20.0,40.0,50.0,70.0,90.0,300.0};    
+// 10 Tight
+// Bin :: 1 0.00 +/- 0.00
+// Bin :: 2 0.00 +/- 0.00
+// Bin :: 3 17.00 +/- 4.12
+// Bin :: 4 36.00 +/- 6.00
+// Bin :: 5 18.00 +/- 4.24
+// Bin :: 6 5.00 +/- 2.24
+// 11 LooseNonTight
+// Bin :: 1 0.00 +/- 0.00
+// Bin :: 2 0.00 +/- 0.00
+// Bin :: 3 17.00 +/- 4.12
+// Bin :: 4 28.00 +/- 5.29
+// Bin :: 5 15.00 +/- 3.87
+// Bin :: 6 6.00 +/- 2.45
 
 
-  float tight = 5;//4;//30;//27;//
+  float tight = 17;//5;//4;//30;//27;//
   float tightErr = sqrt(tight);
 
-  float looseNonTight = 6;//3;//20;//33;//
+  float looseNonTight = 17;//6;//3;//20;//33;//
   float looseNonTightErr = sqrt(looseNonTight);
 
   float f = 0.4464;
   float df = 0.0062;
+
   df = sqrt(df * df + sys * sys * f * f);
   //Data
   /*
@@ -44,7 +60,7 @@ void ErrorFakeMethod(){
   float f = 0.41091;
   float df = 0.0090992;
  */
-  float _p = 0.77;
+  float _p = 0.77;//0.7659; 
   float _dp = 0.0032;
   _dp = sqrt(_dp * _dp + sys * sys * _p * _p);
 
@@ -69,6 +85,14 @@ void ErrorFakeMethod(){
   fakeRateOS_SSCorrection.SetBinError(1, 0.0194);
 
   FakeRate.Multiply(&fakeRateOS_SSCorrection);
+  
+  f = 0.54;
+  df = 0.01;
+ 
+  df = sqrt(df * df + sys * sys * f * f);
+
+  FakeRate.SetBinContent(1,f);
+  FakeRate.SetBinError(1,df);
   
   float _f = FakeRate.GetBinContent(1);
   float _df = FakeRate.GetBinError(1);
@@ -286,6 +310,32 @@ void ErrorFakeMethod(){
   cout<<Fake<<" +- "<<FakeStat0<<" +- "<<sqrt(FakeSys0 * FakeSys0 + FRSys * FRSys + PRSys * PRSys)<<endl;
   cout<<Fake<<" *(1.0 +- "<<FakeStat0/Fake<<"(Stat) +- "<<sqrt(FakeSys0 * FakeSys0 + FRSys * FRSys + PRSys * PRSys)/Fake<<"(Sys))"<<endl;
 
-  cout<<Fake<<" +- "<<sqrt(FakeStat0 * FakeStat0 + FakeSys0 * FakeSys0 + FRSys * FRSys + PRSys * PRSys)<<endl;
+  float EstimationError = sqrt(FakeStat0 * FakeStat0 + FakeSys0 * FakeSys0 + FRSys * FRSys + PRSys * PRSys);
+  cout<<Fake<<" +- "<<EstimationError<<endl;
+
+  TH1F *Estimation = new TH1F("Estimation", "Estimation", 1, 0, 1);
+
+  Estimation->SetBinContent(1, Fake);
+  Estimation->SetBinError(1, FakeStat0);
+
+//   & MT2_QCD & MT2_ZX & MT2_W & MT2_Top & MT2_WW & MT2_Higgs & MT2_MC& MT2_data& MT2_susy\
+//  full selection & 0.51 & 1.10 & 135.56 & 20.50 & 2.70 & 0.35 & 160.73 $pm$ 18.19 & 1561.30 & 0.01\
+// $20.00-40.00$ &      0.00 & 0.03 & 27.04 & 1.86 & 0.21 & 0.08 & 29.23 $pm$ 6.56 & 324.04 & 0.00\
+// $40.00-50.00$ &      0.00 & 0.02 & 9.91 & 0.57 & 0.28 & 0.02 & 10.79 $pm$ 2.30 & 175.82 & 0.00\
+// $50.00-70.00$ &      0.00 & 0.05 & 32.53 & 15.35 & 0.55 & 0.07 & 48.56 $pm$ 13.77 & 409.52 & 0.00\
+// $70.00-90.00$ &      0.00 & 0.00 & 20.45 & 0.63 & 0.35 & 0.03 & 21.46 $pm$ 5.37 & 191.94 & 0.00\
+// $90.00-300.00$ &      0.00 & 0.03 & 0.79 & 0.00 & 0.15 & 0.05 & 1.02 $pm$ 0.48 & 66.64 & 0.01\
+
+
+
+
+  TH1F *MCPrediction = new TH1F("MCPrediction", "MCPrediction", 1, 0, 1);
+
+  MCPrediction->SetBinContent(1, 10.79 );
+  MCPrediction->SetBinError(1, 2.30);
+
+  Estimation->Divide(MCPrediction);
+
+  cout<<"ratio = "<<Estimation->GetBinContent(1)<<" $pm$ "<<Estimation->GetBinError(1)<<endl;
 
 }
