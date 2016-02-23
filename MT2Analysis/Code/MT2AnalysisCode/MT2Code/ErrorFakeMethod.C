@@ -1,6 +1,7 @@
 //A macro to calculate the errors on Fake Rate method.
 void ErrorFakeMethod(){
   float sys = 0.05;
+  float sysfr = 0.05;
 
   //EleTau 4 3
   //MuTau 5 6
@@ -39,16 +40,34 @@ void ErrorFakeMethod(){
 // Bin :: 6 6.00 +/- 2.45
 
 
-  float tight = 17;//5;//4;//30;//27;//
+//MuTau Closure
+// 10 Tight
+// Bin :: 1 39.58 +/- 7.36
+// Bin :: 2 25.46 +/- 6.28
+// Bin :: 3 9.44 +/- 2.20
+// Bin :: 4 30.96 +/- 7.19
+// Bin :: 5 20.13 +/- 5.25
+// Bin :: 6 0.46 +/- 0.35
+// 11 LooseNonTight
+// Bin :: 1 26.42 +/- 5.23
+// Bin :: 2 20.78 +/- 5.11
+// Bin :: 3 28.04 +/- 6.52
+// Bin :: 4 50.20 +/- 8.48
+// Bin :: 5 10.82 +/- 3.27
+// Bin :: 6 1.06 +/- 0.87
+
+
+
+  float tight = 5;//4;//30;//27;//
   float tightErr = sqrt(tight);
 
-  float looseNonTight = 17;//6;//3;//20;//33;//
+  float looseNonTight = 6;//3;//20;//33;//
   float looseNonTightErr = sqrt(looseNonTight);
 
   float f = 0.4464;
   float df = 0.0062;
 
-  df = sqrt(df * df + sys * sys * f * f);
+  df = sqrt(df * df + sysfr * sysfr * f * f);
   //Data
   /*
   float tight = 17.41;
@@ -56,10 +75,10 @@ void ErrorFakeMethod(){
 
   float looseNonTight =  28.36;
   float looseNonTightErr = 9.65;
-
-  float f = 0.41091;
-  float df = 0.0090992;
- */
+*/
+  f = 0.41091;
+  df = 0.0090992;
+ 
   float _p = 0.77;//0.7659; 
   float _dp = 0.0032;
   _dp = sqrt(_dp * _dp + sys * sys * _p * _p);
@@ -89,7 +108,10 @@ void ErrorFakeMethod(){
   f = 0.54;
   df = 0.01;
  
-  df = sqrt(df * df + sys * sys * f * f);
+//   f = 0.471;
+//   df = 0.006;
+ 
+  df = sqrt(df * df + sysfr * sysfr * f * f);
 
   FakeRate.SetBinContent(1,f);
   FakeRate.SetBinError(1,df);
@@ -327,12 +349,21 @@ void ErrorFakeMethod(){
 // $90.00-300.00$ &      0.00 & 0.03 & 0.79 & 0.00 & 0.15 & 0.05 & 1.02 $pm$ 0.48 & 66.64 & 0.01\
 
 
+    //Closure
+//           & MT2_QCD & MT2_ZX & MT2_W & MT2_Top & MT2_WW & MT2_Higgs & MT2_MC& MT2_data& MT2_susy\
+//  full selection & 0.00 & 0.00 & 135.56 & 0.00 & 0.00 & 0.00 & 135.56 $pm$ 13.81 & 19.56 & 0.00\
+// $20.00-40.00$ &      0.00 & 0.00 & 27.04 & 0.00 & 0.00 & 0.00 & 27.04 $pm$ 6.43 & 1.96 & 0.00\
+// $40.00-50.00$ &      0.00 & 0.00 & 9.91 & 0.00 & 0.00 & 0.00 & 9.91 $pm$ 2.26 & 6.56 & 0.00\
+// $50.00-70.00$ &      0.00 & 0.00 & 32.53 & 0.00 & 0.00 & 0.00 & 32.53 $pm$ 7.33 & 9.53 & 0.00\
+// $70.00-90.00$ &      0.00 & 0.00 & 20.45 & 0.00 & 0.00 & 0.00 & 20.45 $pm$ 5.33 & -0.06 & 0.00\
+// $90.00-300.00$ &      0.00 & 0.00 & 0.79 & 0.00 & 0.00 & 0.00 & 0.79 $pm$ 0.47 & 0.23 & 0.00\
+
 
 
   TH1F *MCPrediction = new TH1F("MCPrediction", "MCPrediction", 1, 0, 1);
 
-  MCPrediction->SetBinContent(1, 10.79 );
-  MCPrediction->SetBinError(1, 2.30);
+  MCPrediction->SetBinContent(1, 9.91 );
+  MCPrediction->SetBinError(1, 2.26);
 
   Estimation->Divide(MCPrediction);
 
