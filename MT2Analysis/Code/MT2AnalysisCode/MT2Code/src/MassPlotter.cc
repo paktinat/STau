@@ -4,7 +4,7 @@
 
 #include "TList.h"
 #include "MassPlotter.hh"
-
+#include "Corrector.h"
 
 #include "TLorentzVector.h"
 #include "TGraphAsymmErrors.h"
@@ -18138,7 +18138,9 @@ nextToLeadingTau_pt_eff->Draw();
 }
 
 
-void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts){
+
+void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts, TString channel){
+  //channel = "muTau" or "eleTau"
   
   TH1::SetDefaultSumw2();
 
@@ -18190,7 +18192,10 @@ void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts){
   TH2D *h_SMS_NRec   = new TH2D("h_SMS_NRec",   "h_SMS_NRec",   125, 0, 2500, 125, 0, 2500);
   TH2D *h_SMSMuTau = new TH2D("h_SMSMuTau", "h_SMSMuTau", 125, 0, 2500, 125, 0, 2500);
   TEventList *myEvtList;
+
   cout<<" cuts "<<cuts<<endl;
+  
+  cout<<" channel "<<channel<<endl;
 
   for(size_t i = 0; i < fSamples.size(); ++i){
     sample Sample = fSamples[i];
@@ -18199,38 +18204,31 @@ void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts){
 
     fMT2tree = new MT2tree();
     Sample.tree->SetBranchAddress("MT2tree", &fMT2tree);
-//     unsigned int nentries =  Sample.tree->GetEntries();
 
-//     gROOT->cd();
-    Sample.tree->Draw(">>selList", cuts);
-    myEvtList = (TEventList*)gDirectory->Get("selList");
-    //myEvtList = (TEventList*)TFile::Open("myList.root")->Get("selList");
-   
+    //Sample.tree->Draw(">>selList", cuts);
+    //myEvtList = (TEventList*)gDirectory->Get("selList");
+
+    //To read from a list
+    gROOT->cd();
+    myEvtList = (TEventList*)TFile::Open("myList.root")->Get("selList");
+    //To read from a list
+
     unsigned int nentries = myEvtList->GetN();
  
     for (Long64_t jentry=0; jentry<min(nentries,nEvts);jentry++) {
       
       if ( fVerbose>2 && jentry % 100000 == 0 ){
-	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, min(nentries,nEvts));
 	
 	fflush(stdout);
       }
       
-//       Sample.tree->GetEntry(jentry);
       Sample.tree->GetEntry(myEvtList->GetEntry(jentry));
-
-//       if(fMT2tree->NTaus < 1 || fMT2tree->NMuons < 1)
-// 	continue;
-
-      int genMuTauStatus = fMT2tree->GenLeptonAnalysis(0,1,1);
-
-      //      if(genMuTauStatus != 611 && genMuTauStatus != 621) continue;
-      
 
       // --- Gen-Level -------------------------------------------------------------
       std::vector<TLorentzVector> genTaus;
       std::vector<TLorentzVector> genNeus;
-      int problem = 0;
+
       for(int j = fMT2tree->NGenLepts - 1; j > -1; j--){
 
 	if(abs(fMT2tree->genlept[j].ID) != 15) 
@@ -18275,6 +18273,8 @@ void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts){
       TLorentzVector visibleTau = genTaus[0] - genNeus[0];
 //       visibleTau.Print();
 
+      if(visibleTau.Pt() < 25 || fabs(visibleTau.Eta()) > 2.3)
+	continue;
  
       if (nGenTau > 1 ) 
 	extraTau_pt_all->Fill(genTaus[nGenTau - 1].Pt());
@@ -18285,9 +18285,14 @@ void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts){
 
       genTaus.clear();
 
+      int pId = 13;
+
+      if(channel != "muTau")
+	pId = 11;
+      
       for(int j = 0; j < fMT2tree->NGenLepts; j++){
 
-	if(abs(fMT2tree->genlept[j].ID) != 13 || abs(fMT2tree->genlept[j].MID) != 15) 
+	if(abs(fMT2tree->genlept[j].ID) != pId || abs(fMT2tree->genlept[j].MID) != 15) 
 	  continue;
 	if(fMT2tree->genlept[j].GMStatus != 3) //To kill soft muons from B-mesons! 
 	  continue;
@@ -18310,85 +18315,174 @@ void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts){
 
       if(genTaus.size() == 0)  continue;
       if(genTaus.size() > 1)
-	cout<<" More than 1 muon is found NMuons:: "<<genTaus.size()<<endl;
+	cout<<" More than 1 Lepton is found NLeptons:: "<<genTaus.size()<<endl;
       TLorentzVector genMuon = genTaus[0];
-      //      Mu_pt_all->Fill(genMuon.Pt());
-      leadingTau_pt_all->Fill(visibleTau.Pt()); 
-     
-
-      tauIndex = fMT2tree->muTau[0].GetTauIndex0(); 
-      if(tauIndex < 0 )  continue;                                
-                                                                                                                
-      if(!(fMT2tree->tau[tauIndex].PassTau_MuTau == 1 && fMT2tree->tau[tauIndex].lv.Pt() > 25 && fMT2tree->tau[tauIndex].Isolation3Hits == 1))                               
-       continue;       
-      
-      TLorentzVector recTau = fMT2tree->tau[tauIndex].lv;        
-      
-      double leadingTau_weight = 1.0;//fMT2tree->tau[tauIndex].trgSFmuTau * fMT2tree->tau[tauIndex].energySF;// * fMT2tree->pileUp.Weight/Sample.PU_avg_weight;                   
-      leadingTau_pt_pass->Fill(visibleTau.Pt(),leadingTau_weight);  
-
-      Mu_pt_all->Fill(genMuon.Pt()); 
-       muIndex = fMT2tree->muTau[0].GetMuIndex0();
-       if(muIndex < 0)  continue;
-       if(fMT2tree->muo[muIndex].PassMu0_TauMu != 1) 
-	 continue;
-
-      TLorentzVector recMu = fMT2tree->muo[muIndex].lv;
-      
-      double mu_weight = 1.0;//fMT2tree->muo[muIndex].trgSFmuTau * fMT2tree->muo[muIndex].idSFmuTau * fMT2tree->muo[muIndex].isoSFmuTau;
-      Mu_pt_pass->Fill(genMuon.Pt(),mu_weight);
-      
-      int sumCharge = fMT2tree->muo[muIndex].Charge + fMT2tree->tau[tauIndex].Charge;
-
-      SumCharge->Fill(sumCharge);
-
-      if(sumCharge != 0)
- 	continue;
+ 
+      if(channel != "muTau")
+	{if(genMuon.Pt() < 25 || fabs(genMuon.Eta()) > 2.1)
+	    continue;}
+      else
+	if(genMuon.Pt() < 20 || fabs(genMuon.Eta()) > 2.1)
+	  continue;
 
       TLorentzVector genMET4vector = -(genMuon + visibleTau);
 
       float genMET = genMET4vector.Pt();
 
-      Met_all->Fill(genMET);
+      ////To Fill leptons after tau.
+      if(genMET > 30.0)
+	leadingTau_pt_all->Fill(visibleTau.Pt()); 
 
-//       MetDiff->Fill(genMET - fMT2tree->genmet[0].Pt());
+      tauIndex = fMT2tree->muTau[0].GetTauIndex0(); 
+  
+      if(channel != "muTau")
+	tauIndex = fMT2tree->eleTau[0].GetTauIndex0(); 
+      
+      if(tauIndex < 0 )  continue;                                
+                
+      if(channel != "muTau"){
+	if(!(fMT2tree->tau[tauIndex].PassTau_ElTau == 1 && fMT2tree->tau[tauIndex].lv.Pt() > 25 && fMT2tree->tau[tauIndex].Isolation3Hits == 1))
+	  continue;  
+      }else{
+	if(!(fMT2tree->tau[tauIndex].PassTau_MuTau == 1 && fMT2tree->tau[tauIndex].lv.Pt() > 25 && fMT2tree->tau[tauIndex].Isolation3Hits == 1))
+	  continue;       
+      }
+      
+      TLorentzVector recTau = fMT2tree->tau[tauIndex].lv;        
+      
+      double leadingTau_weight = fMT2tree->tau[tauIndex].trgSFmuTau * fMT2tree->tau[tauIndex].energySF;// * fMT2tree->pileUp.Weight/Sample.PU_avg_weight;     
+
+      if(channel != "muTau")
+        leadingTau_weight =  fMT2tree->tau[tauIndex].trgSFeleTau *  fMT2tree->tau[tauIndex].energySF;
+
+      if(genMET > 30.0)
+	leadingTau_pt_pass->Fill(visibleTau.Pt(),leadingTau_weight);  
+      ////
+
+      if(genMET > 30.0)
+	Mu_pt_all->Fill(genMuon.Pt()); 
+
+      muIndex = fMT2tree->muTau[0].GetMuIndex0();
+
+      if(channel != "muTau")
+	muIndex = fMT2tree->eleTau[0].GetEleIndex0(); 
+      
+      if(muIndex < 0)  continue;
+
+      
+      if(channel != "muTau"){
+	if(fMT2tree->ele[muIndex].IDSelETau != 1 || fMT2tree->ele[muIndex].lv.Pt() < 25) 
+	  continue;	
+      }else{
+	if(fMT2tree->muo[muIndex].PassMu0_TauMu != 1) 
+	  continue;
+      }
+      
+      TLorentzVector recMu = fMT2tree->muo[muIndex].lv;
+
+      if(channel != "muTau")
+	recMu = fMT2tree->ele[muIndex].lv;
+      
+      
+      double mu_weight = fMT2tree->muo[muIndex].trgSFmuTau * fMT2tree->muo[muIndex].idSFmuTau * fMT2tree->muo[muIndex].isoSFmuTau;
+
+      if(channel != "muTau")
+	mu_weight = Eff_ETauTrg_Ele_Data_2012(recMu) * Cor_IDIso_ETau_Ele_2012(recMu);
+
+      if(genMET > 30.0)
+	Mu_pt_pass->Fill(genMuon.Pt(),mu_weight);
+
+      /*
+     ///To Fill taus after lepton.
+      if(genMET > 30.0)
+       leadingTau_pt_all->Fill(visibleTau.Pt()); 
+     
+      tauIndex = fMT2tree->muTau[0].GetTauIndex0(); 
+  
+      if(channel != "muTau")
+	tauIndex = fMT2tree->eleTau[0].GetTauIndex0(); 
+      
+      if(tauIndex < 0 )  continue;                                
+                
+      if(channel != "muTau"){
+	if(!(fMT2tree->tau[tauIndex].PassTau_ElTau == 1 && fMT2tree->tau[tauIndex].lv.Pt() > 25 && fMT2tree->tau[tauIndex].Isolation3Hits == 1))
+	  continue;  
+      }else{
+	if(!(fMT2tree->tau[tauIndex].PassTau_MuTau == 1 && fMT2tree->tau[tauIndex].lv.Pt() > 25 && fMT2tree->tau[tauIndex].Isolation3Hits == 1))
+	  continue;       
+      }
+      
+      TLorentzVector recTau = fMT2tree->tau[tauIndex].lv;        
+      
+      double leadingTau_weight = fMT2tree->tau[tauIndex].trgSFmuTau * fMT2tree->tau[tauIndex].energySF;// * fMT2tree->pileUp.Weight/Sample.PU_avg_weight;     
+
+      if(channel != "muTau")
+        leadingTau_weight =  fMT2tree->tau[tauIndex].trgSFeleTau *  fMT2tree->tau[tauIndex].energySF;
+
+      leadingTau_weight = 1.0;
+
+      if(genMET > 30.0)
+        leadingTau_pt_pass->Fill(visibleTau.Pt(),leadingTau_weight);  
+      ///
+      */
+      
+      Met_all->Fill(genMET);
 
       if(fMT2tree->misc.MET <= 30.0)
  	continue;
-//       if(fMT2tree->misc.MET > 30.0)
+
       Met_pass->Fill(genMET);
+
+      if(genMET <= 30.0)
+ 	continue;
+
+      int sumCharge = fMT2tree->muo[muIndex].Charge + fMT2tree->tau[tauIndex].Charge;
+
+      if(channel != "muTau")
+	sumCharge = fMT2tree->ele[muIndex].Charge + fMT2tree->tau[tauIndex].Charge;
+      
+      SumCharge->Fill(sumCharge);
+
+      if(sumCharge != 0)
+ 	continue;
+
 
       nBJets->Fill(fMT2tree->NBJetsCSVM);      
 
       if(fMT2tree->NBJetsCSVM != 0)
 	continue;
 
-      if(fMT2tree->HasNoVetoElecForMuTau() && fMT2tree->HasNoVetoMuForMuTau())
-	ExtraLepton->Fill(0);
-      else {
-	ExtraLepton->Fill(1);
- 	continue;
+      
+      if(channel != "muTau"){
+	if(fMT2tree->HasNoVetoMuForEleTau() && fMT2tree->HasNoVetoElecForEleTau())
+	  ExtraLepton->Fill(0);
+	else {
+	  ExtraLepton->Fill(1);
+	  continue;
+	}
+      }else{
+	if(fMT2tree->HasNoVetoElecForMuTau() && fMT2tree->HasNoVetoMuForMuTau())
+	  ExtraLepton->Fill(0);
+	else {
+	  ExtraLepton->Fill(1);
+	  continue;
+	}
       }
-
-      if(tauIndex != fMT2tree->muTau[0].GetTauIndex0())
-        cout<<" found Tau "<<tauIndex<<" rec Tau "<<fMT2tree->muTau[0].GetTauIndex0()<<endl;
-
-      if(muIndex != fMT2tree->muTau[0].GetMuIndex0())
-        cout<<" foundMu "<<muIndex<<" recMu "<<fMT2tree->muTau[0].GetMuIndex0()<<endl;
-
 
       float genMass = (genMuon + visibleTau).M();
 
       Mass_all->Fill(genMass);
 
-      //      float Mass = fMT2tree->muTau[0].GetLV().M();
       float Mass = (recMu + recTau).M();
-      MetDiff->Fill(Mass - fMT2tree->muTau[0].GetLV().M() - 500.0);
+
       if(Mass < 15 || (Mass > 45 && Mass < 75))
        	continue;
-      //if((Mass >= 15 && Mass <= 45) || Mass >= 75)
-	Mass_pass->Fill(genMass);
 
+      Mass_pass->Fill(genMass);
+
+      if(genMass < 15 || (genMass > 45 && genMass < 75))
+       	continue;
+      
       minDPhi->Fill(fMT2tree->misc.MinMetJetDPhiPt40);
       if(fMT2tree->misc.MinMetJetDPhiPt40 <= 1)
 	continue;
@@ -18397,25 +18491,26 @@ void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts){
       
       Mt2_all->Fill(genMT2);      
 
-      //    float recMT2 = fMT2tree->muTau[0].GetMT2();
       float recMT2 = fMT2tree->CalcMT2(0, 0, recMu, recTau, fMT2tree->pfmet[0]);       
-      MetDiff->Fill(recMT2 - fMT2tree->muTau[0].GetMT2());
+
       if(recMT2 <= 90)
  	continue;
-      //if(recMT2 > 90)
-	Mt2_pass->Fill(genMT2);
+      
+      Mt2_pass->Fill(genMT2);
+
+      if(genMT2 <= 90)
+ 	continue;  
 
       float genTauMT = fMT2tree->GetMT(visibleTau, genMET4vector); 
 
       tauMT_all->Fill(genTauMT);
       
       float tauMT = fMT2tree->GetMT(recTau, fMT2tree->pfmet[0]);
-      MetDiff->Fill(tauMT - fMT2tree->tau[tauIndex].MT + 500);
+
       if(tauMT <= 200)
  	continue;
 
-     //if(tauMT > 200)
-	tauMT_pass->Fill(genTauMT);
+      tauMT_pass->Fill(genTauMT);
 
     } // loop over events
 
@@ -18546,7 +18641,7 @@ void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts){
     for (Long64_t jentry=0; jentry<min(nentries,nEvts);jentry++) {
 
       if ( fVerbose>2 && jentry % 100000 == 0 ){
-	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, nentries);
+	fprintf(stdout, "\rProcessed events: %6d of %6d ", jentry + 1, min(nentries,nEvts));
 
 	fflush(stdout);
       }
@@ -18555,47 +18650,67 @@ void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts){
       
       h_SMSMuTau->Fill(fMT2tree->Susy.MassGlu, fMT2tree->Susy.MassLSP);
 
+      int LepTau = 0;
       int recFail = 1;
       int muIndex = fMT2tree->muTau[0].GetMuIndex0();
       int tauIndex = fMT2tree->muTau[0].GetTauIndex0();
+      
+      if(channel != "muTau"){
+	muIndex = fMT2tree->eleTau[0].GetEleIndex0();
+	tauIndex = fMT2tree->eleTau[0].GetTauIndex0();
+	if(muIndex >= 0 && fMT2tree->ele[muIndex].IDSelETau == 1 && fMT2tree->ele[muIndex].lv.Pt() > 25 && tauIndex >= 0  && (fMT2tree->tau[tauIndex].PassTau_ElTau == 1 && fMT2tree->tau[tauIndex].lv.Pt() > 25 && fMT2tree->tau[tauIndex].Isolation3Hits == 1))
+	  LepTau = 1;
+      }else{
+	if(muIndex >= 0 && fMT2tree->muo[muIndex].PassMu0_TauMu == 1 && tauIndex >= 0  && (fMT2tree->tau[tauIndex].PassTau_MuTau == 1 && fMT2tree->tau[tauIndex].lv.Pt() > 25 && fMT2tree->tau[tauIndex].Isolation3Hits == 1))
+	  LepTau = 1;
+      }
+	
+      if(LepTau == 1){
+	
+	TLorentzVector recMu = fMT2tree->muo[muIndex].lv;
+	TLorentzVector recTau = fMT2tree->tau[tauIndex].lv;
 
-      if(muIndex >= 0 && fMT2tree->muo[muIndex].PassMu0_TauMu == 1 && tauIndex >= 0  && (fMT2tree->tau[tauIndex].PassTau_MuTau == 1 && fMT2tree->tau[tauIndex].lv.Pt() > 25 && fMT2tree->tau[tauIndex].Isolation3Hits == 1)){
+	int sumCharge = fMT2tree->muo[muIndex].Charge + fMT2tree->tau[tauIndex].Charge;
+	
+	if(channel != "muTau"){
+	  recMu = fMT2tree->ele[muIndex].lv;
+	  sumCharge = fMT2tree->ele[muIndex].Charge + fMT2tree->tau[tauIndex].Charge;
+	  
+	  if(!(fMT2tree->HasNoVetoElecForEleTau() && fMT2tree->HasNoVetoMuForEleTau()))
+	    recFail = 0;	  
+	}else{
+	  if(!(fMT2tree->HasNoVetoElecForMuTau() && fMT2tree->HasNoVetoMuForMuTau()))
+	    recFail = 0;	  
+	}
 
-      TLorentzVector recMu = fMT2tree->muo[muIndex].lv;
-      TLorentzVector recTau = fMT2tree->tau[tauIndex].lv;
+	if(sumCharge != 0)
+	  recFail = 0;
 
-      int sumCharge = fMT2tree->muo[muIndex].Charge + fMT2tree->tau[tauIndex].Charge;
+	if(fMT2tree->misc.MET <= 30.0)
+	  recFail = 0;
 
-      if(sumCharge != 0)
-        recFail = 0;
+	if(fMT2tree->NBJetsCSVM > 0)
+	  recFail = 0;
 
-      if(fMT2tree->misc.MET <= 30.0)
-	recFail = 0;
 
-      if(fMT2tree->NBJetsCSVM > 0)
-        recFail = 0;
+	float Mass = (recMu + recTau).M();
+	if(Mass < 15 || (Mass > 45 && Mass < 75))
+	  recFail = 0;
 
-      if(!(fMT2tree->HasNoVetoElecForMuTau() && fMT2tree->HasNoVetoMuForMuTau()))
-        recFail = 0;
+	if(fMT2tree->misc.MinMetJetDPhiPt40 <= 1)
+	  recFail = 0;
 
-      float Mass = (recMu + recTau).M();
-      if(Mass < 15 || (Mass > 45 && Mass < 75))
-        recFail = 0;
+	float recMT2 = fMT2tree->CalcMT2(0, 0, recMu, recTau, fMT2tree->pfmet[0]);
+	if(recMT2 <= 90)
+	  recFail = 0;
 
-      if(fMT2tree->misc.MinMetJetDPhiPt40 <= 1)
-        recFail = 0;
+	float tauMT = fMT2tree->GetMT(recTau, fMT2tree->pfmet[0]);      
+	if(tauMT <= 200)          
+	  recFail = 0; 
 
-      float recMT2 = fMT2tree->CalcMT2(0, 0, recMu, recTau, fMT2tree->pfmet[0]);
-      if(recMT2 <= 90)
-        recFail = 0;
-
-      float tauMT = fMT2tree->GetMT(recTau, fMT2tree->pfmet[0]);      
-      if(tauMT <= 200)          
-	recFail = 0; 
-
-      if(recFail == 1)
-	h_SMS_NRec->Fill(fMT2tree->Susy.MassGlu, fMT2tree->Susy.MassLSP);
-    }
+	if(recFail == 1)
+	  h_SMS_NRec->Fill(fMT2tree->Susy.MassGlu, fMT2tree->Susy.MassLSP);
+      }
       // --- Gen-Level -------------------------------------------------------------
 
       std::vector<TLorentzVector> genTaus;
@@ -18643,7 +18758,10 @@ void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts){
  
       TLorentzVector visibleTau = genTaus[0] - genNeus[0];
 
-      //      int recFail = 1;
+      //      int recFail = 1;     
+      
+      if(visibleTau.Pt() < 25 || fabs(visibleTau.Eta()) > 2.3)
+	continue;
 
       int binNumber = leadingTau_pt_eff->FindBin(visibleTau.Pt());
       
@@ -18651,9 +18769,14 @@ void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts){
 
       genTaus.clear();
 
+      int pId = 13;
+
+      if(channel != "muTau")
+	pId = 11;
+
       for(int j = 0; j < fMT2tree->NGenLepts; j++){
 
-	if(abs(fMT2tree->genlept[j].ID) != 13 || abs(fMT2tree->genlept[j].MID) != 15) 
+	if(abs(fMT2tree->genlept[j].ID) != pId || abs(fMT2tree->genlept[j].MID) != 15) 
 	  continue;
 	if(fMT2tree->genlept[j].GMStatus != 3) //To kill soft muons from B-mesons! 
 	  continue;
@@ -18671,9 +18794,18 @@ void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts){
 	if (newMu) genTaus.push_back(fMT2tree->genlept[j].lv);
 
       }
+      nGenTau = genTaus.size();	
       if (nGenTau == 0) continue;
 
       TLorentzVector genMuon = genTaus[0];
+
+      if(channel != "muTau")
+	{if(genMuon.Pt() < 25 || fabs(genMuon.Eta()) > 2.1)
+	    continue;}
+      else
+	if(genMuon.Pt() < 20 || fabs(genMuon.Eta()) > 2.1)
+	  continue;
+
 
       binNumber = Mu_pt_eff->FindBin(genMuon.Pt());
       
@@ -18733,6 +18865,9 @@ void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts){
   //h_SMSEff->Divide(h_SMSEvents);
 
   TH2* h_SMSYield = (TH2*) TFile::Open("/home/paktinat/CMSSW_6_1_1/src/MT2_Tau/MT2Analysis/Code/MT2AnalysisCode/MT2Code/setUpperLimit/MuTau_Bin1_HighStat700_NewPUTSChi.root")->Get("h_N_MLSP_MChi");//CharginoChargino
+  if(channel != "muTau")
+    h_SMSYield = (TH2*) TFile::Open("/home/paktinat/CMSSW_6_1_1/src/MT2_Tau/MT2Analysis/Code/MT2AnalysisCode/MT2Code/setUpperLimit/EleTau_Bin1_HighStat700_NewPUTSChi.root")->Get("h_N_MLSP_MChi");//CharginoChargino
+
   h_SMSYield->SetMarkerSize(2.0);
 //   TH2D * h_SMSDif = (TH2D*)h_SMSEff->Clone();
   TH2D * h_SMSDif = (TH2D*)h_SMS->Clone();
@@ -18778,6 +18913,15 @@ void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts){
 
 
 }
+
+
+
+
+
+
+
+
+
 void MassPlotter::getGenEfficienciesTauTau(unsigned int nEvts,TString cuts, bool bin2){
   
   TH1::SetDefaultSumw2();
