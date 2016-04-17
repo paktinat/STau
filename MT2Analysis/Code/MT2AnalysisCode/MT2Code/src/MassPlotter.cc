@@ -18209,8 +18209,10 @@ void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts, TStri
     //myEvtList = (TEventList*)gDirectory->Get("selList");
 
     //To read from a list
-    gROOT->cd();
-    myEvtList = (TEventList*)TFile::Open("myList.root")->Get("selList");
+    //gROOT->cd();
+    myEvtList = (TEventList*)TFile::Open("myList16M.root")->Get("selList");
+    //myEvtList = (TEventList*)TFile::Open("myList1M.root")->Get("selList");
+    //myEvtList = (TEventList*)TFile::Open("myList.root")->Get("selList");
     //To read from a list
 
     unsigned int nentries = myEvtList->GetN();
@@ -18273,8 +18275,8 @@ void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts, TStri
       TLorentzVector visibleTau = genTaus[0] - genNeus[0];
 //       visibleTau.Print();
 
-      if(visibleTau.Pt() < 25 || fabs(visibleTau.Eta()) > 2.3)
-	continue;
+//       if(visibleTau.Pt() < 25 || fabs(visibleTau.Eta()) > 2.3)
+// 	continue;
  
       if (nGenTau > 1 ) 
 	extraTau_pt_all->Fill(genTaus[nGenTau - 1].Pt());
@@ -18318,12 +18320,12 @@ void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts, TStri
 	cout<<" More than 1 Lepton is found NLeptons:: "<<genTaus.size()<<endl;
       TLorentzVector genMuon = genTaus[0];
  
-      if(channel != "muTau")
-	{if(genMuon.Pt() < 25 || fabs(genMuon.Eta()) > 2.1)
-	    continue;}
-      else
-	if(genMuon.Pt() < 20 || fabs(genMuon.Eta()) > 2.1)
-	  continue;
+//       if(channel != "muTau")
+// 	{if(genMuon.Pt() < 25 || fabs(genMuon.Eta()) > 2.1)
+// 	    continue;}
+//       else
+// 	if(genMuon.Pt() < 20 || fabs(genMuon.Eta()) > 2.1)
+// 	  continue;
 
       TLorentzVector genMET4vector = -(genMuon + visibleTau);
 
@@ -18361,14 +18363,13 @@ void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts, TStri
 
       if(genMET > 30.0)
 	Mu_pt_all->Fill(genMuon.Pt()); 
-
+      
       muIndex = fMT2tree->muTau[0].GetMuIndex0();
 
       if(channel != "muTau")
 	muIndex = fMT2tree->eleTau[0].GetEleIndex0(); 
       
       if(muIndex < 0)  continue;
-
       
       if(channel != "muTau"){
 	if(fMT2tree->ele[muIndex].IDSelETau != 1 || fMT2tree->ele[muIndex].lv.Pt() < 25) 
@@ -18381,8 +18382,7 @@ void MassPlotter::getGenEfficienciesMuTau(unsigned int nEvts,TString cuts, TStri
       TLorentzVector recMu = fMT2tree->muo[muIndex].lv;
 
       if(channel != "muTau")
-	recMu = fMT2tree->ele[muIndex].lv;
-      
+	recMu = fMT2tree->ele[muIndex].lv;    
       
       double mu_weight = fMT2tree->muo[muIndex].trgSFmuTau * fMT2tree->muo[muIndex].idSFmuTau * fMT2tree->muo[muIndex].isoSFmuTau;
 
