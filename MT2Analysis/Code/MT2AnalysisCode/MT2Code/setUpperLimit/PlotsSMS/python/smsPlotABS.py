@@ -90,9 +90,9 @@ class smsPlotABS(object):
         # CMS LABEL
 ##        textCMS = rt.TLatex(0.22,0.98,"CMS %s, %s fb^{-1}, #sqrt{s} = %s TeV" %(self.preliminary, self.lumi, self.energy))
 ##        textCMS = rt.TLatex(0.22,0.98,"CMS %s, 18.1 fb^{-1}, #sqrt{s} = %s TeV" %(self.preliminary, self.energy))
-        textCMS = rt.TLatex(0.15,0.98,  "CMS                                     18.1 fb^{-1} (%s TeV)" %(self.energy))
+##        textCMS = rt.TLatex(0.15,0.98,  "CMS                                     18.1 fb^{-1} (%s TeV)" %(self.energy))
 ##        textCMS = rt.TLatex(0.17,0.98,"CMS %s, 18.1-19.6 fb^{-1}, #sqrt{s} = %s TeV" %(self.preliminary, self.energy))
-##        textCMS = rt.TLatex(0.15,0.98,  "CMS                             18.1-19.6 fb^{-1} (%s TeV)" %(self.energy))
+        textCMS = rt.TLatex(0.15,0.98,  "CMS                             18.1-19.6 fb^{-1} (%s TeV)" %(self.energy))
 ##        textCMS = rt.TLatex(0.15,0.98,"CMS             18.1-19.6 fb^{-1}           #sqrt{s} = %s TeV" %(self.energy))
         textCMS.SetNDC()
         textCMS.SetTextAlign(13)
@@ -127,18 +127,28 @@ class smsPlotABS(object):
         textNLONLL.SetTextSize(0.040)
         textNLONLL.Draw()
         #self.c.textNLONLL = textNLONLL
+ 
+        # "LEP excluded
+        textLEPExcl= rt.TLatex(0.16,0.27,"LEP excluded")
+        textLEPExcl.SetNDC()
+        textLEPExcl.SetTextAlign(13)
+        textLEPExcl.SetTextFont(42)
+        textLEPExcl.SetTextSize(0.0275)
+        textLEPExcl.SetTextAngle(-45.);
+        textLEPExcl.Draw()
+        self.c.textLEPExcl = textLEPExcl
 
     def Save(self,label):
         # save the output
         self.c.SaveAs("%s.pdf" %label)
-        # self.c.SaveAs("%s.C" %label)
+        #self.c.SaveAs("%s.C" %label)
         
     def DrawLegend(self):
         xRange = self.model.Xmax-self.model.Xmin
         yRange = self.model.Ymax-self.model.Ymin
 
-##         textModelLabelMinus1 = rt.TLatex(self.model.Xmin+3*xRange/100, self.model.Ymax-0.40*yRange/100*10, "e#tau_{h}, #mu#tau_{h} and #tau_{h}#tau_{h} combined")
-        textModelLabelMinus1 = rt.TLatex(self.model.Xmin+3*xRange/100, self.model.Ymax-0.40*yRange/100*10, "#tau_{h}#tau_{h} channel")
+        textModelLabelMinus1 = rt.TLatex(self.model.Xmin+3*xRange/100, self.model.Ymax-0.40*yRange/100*10, "e#tau_{h}, #mu#tau_{h} and #tau_{h}#tau_{h} combined")
+##        textModelLabelMinus1 = rt.TLatex(self.model.Xmin+3*xRange/100, self.model.Ymax-0.40*yRange/100*10, "#tau_{h}#tau_{h} channel")
         textModelLabelMinus1.SetTextFont(42)
         textModelLabelMinus1.SetTextSize(0.04)
         textModelLabelMinus1.Draw()
