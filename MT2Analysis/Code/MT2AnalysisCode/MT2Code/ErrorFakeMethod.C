@@ -3,6 +3,18 @@ void ErrorFakeMethod(){
   float sys = 0.05;
   float sysfr = 0.05;
 
+  //MuTau MinDPhi Relaxed
+  //Tight 9
+  //LooseNonTight 7
+
+  //MuTau MinDPhi and ExtraLepVeto Relaxed
+  //Tight 20
+  //LooseNonTight 9
+
+  //MuTau MinDPhi and ExtraLepVeto and Charge Relaxed 
+  //Tight 24
+  //LooseNonTight 10
+
   //EleTau 4 3
   //MuTau 5 6
 
@@ -58,10 +70,10 @@ void ErrorFakeMethod(){
 
 
 
-  float tight = 5;//4;//30;//27;//
+  float tight = 24;//4;//30;//27;//
   float tightErr = sqrt(tight);
 
-  float looseNonTight = 6;//3;//20;//33;//
+  float looseNonTight = 10;//3;//20;//33;//
   float looseNonTightErr = sqrt(looseNonTight);
 
   float f = 0.4464;
@@ -125,6 +137,7 @@ void ErrorFakeMethod(){
   float dp = _dp;
   f = _f;
   df = _df;
+  cout<<" p  "<<p<<" +- "<<dp<<endl;
 
   TH1F PromptRate("PromptRate","PromptRate",1,0,1);
 
@@ -141,9 +154,60 @@ void ErrorFakeMethod(){
 
   float LNTCoefficient = f * p/(f - p);
 
-  Tight.Scale(TightCoefficient);
+  TH1F FMinusP = *((TH1F*)FakeRate.Clone());
+
+  FMinusP.Add(&PromptRate, -1);
+
+  cout<<" FMinusP "<<FMinusP.GetBinContent(1)<<" +/- "<<FMinusP.GetBinError(1)<<endl;
   
+  TH1F hLNTCoefficient = *((TH1F*)FakeRate.Clone());
+
+  hLNTCoefficient.Multiply(&PromptRate);
+
+  hLNTCoefficient.Divide(&FMinusP);
+
+  cout<<" hLNTCoefficient "<<hLNTCoefficient.GetBinContent(1)<<" +/- "<<hLNTCoefficient.GetBinError(1)<<endl;
+
+  hLNTCoefficient.Multiply(&LooseNonTight);
+
+  cout<<" hLNTCoefficient * LNT "<<hLNTCoefficient.GetBinContent(1)<<" +/- "<<hLNTCoefficient.GetBinError(1)<<endl;
+
+  TH1F hTightCoefficient("hTightCoefficient","hTightCoefficient",1,0,1);
+  
+  hTightCoefficient.SetBinContent(1,1.0);
+  
+  hTightCoefficient.SetBinError(1,0);
+  
+  hTightCoefficient.Add(&PromptRate, -1);
+
+  hTightCoefficient.Multiply(&FakeRate);
+
+  hTightCoefficient.Divide(&FMinusP);
+
+  cout<<" hTightCoefficient "<<hTightCoefficient.GetBinContent(1)<<" +/- "<<hTightCoefficient.GetBinError(1)<<endl;
+
+  hTightCoefficient.Multiply(&Tight);
+
+  cout<<" hTightCoefficient * Tight "<<hTightCoefficient.GetBinContent(1)<<" +/- "<<hTightCoefficient.GetBinError(1)<<endl;
+  
+  hTightCoefficient.Add(&hLNTCoefficient, -1);
+
+  cout<<" FakeContribution "<<hTightCoefficient.GetBinContent(1)<<" +/- "<<hTightCoefficient.GetBinError(1)<<endl;
+  
+  cout<<" TightCoefficient  "<<TightCoefficient<<endl;
+  
+  cout<<" LNTCoefficient  "<<LNTCoefficient<<endl;
+
+  cout<<" Ori Tight "<<Tight.GetBinContent(1)<<" +/- "<<Tight.GetBinError(1)<<endl;
+  cout<<" Ori LooseNonTight "<<LooseNonTight.GetBinContent(1)<<" +/- "<<LooseNonTight.GetBinError(1)<<endl;
+
+  Tight.Scale(TightCoefficient);
+ 
+  cout<<" Tight * TightCoefficient "<<Tight.GetBinContent(1)<<" +/- "<<Tight.GetBinError(1)<<endl;
+ 
   LooseNonTight.Scale(LNTCoefficient);
+
+  cout<<" LooseNonTight * LNTCoefficient "<<LooseNonTight.GetBinContent(1)<<" +/- "<<LooseNonTight.GetBinError(1)<<endl;
 
   Tight.Add(&LooseNonTight, -1.0);
 

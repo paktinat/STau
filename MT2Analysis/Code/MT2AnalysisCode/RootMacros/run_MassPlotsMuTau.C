@@ -1,6 +1,7 @@
 {
   TString outputdir = "../MassPlots/";
   TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30.dat"; 
+  //TString samples = "./samples/samplesMineTauPlusX_NBJetsCSVM0_MET30BigFiles.dat"; 
   //TString samples = "./samples/samplesMineSmall.dat";
   //TString samples = "./samples/samplesMineTauPlusX_BigFiles_NewPU_Stitching.dat";
 
@@ -63,7 +64,7 @@
 * Define selection cuts and fill the cutflow input vector
 */
 
-
+  
   //You need to specify the channel
   TString myChan = "muTau[0]";
   
@@ -86,7 +87,7 @@
   //myChannelCuts.push_back("misc.MET <= 30"); 
   myChannelCuts.push_back("misc.MET > 30"); 
   myChannelCuts.push_back("NBJetsCSVM == 0");
-  myChannelCuts.push_back(" misc.MinMetJetDPhiPt40 > 1.0 ");
+  myChannelCuts.push_back("misc.MinMetJetDPhiPt40 > 1.0");
  
   //myChannelCuts.push_back(std::string(std::string(myChan) + ".signalMuTau"));
 
@@ -96,32 +97,32 @@
   //myChannelCuts.push_back(std::string(std::string(myChan) + ".chargeSum == 0"));
   
   myChannelCuts.push_back("abs(muTau[0].chargeSum) == 0");
-  //myChannelCuts.push_back("(tau[muTau[0].tau0Ind].Isolation3Hits == 1.)");//Tau Tight ID
+  myChannelCuts.push_back("(tau[muTau[0].tau0Ind].Isolation3Hits == 1.)");//Tau Tight ID
   //myChannelCuts.push_back("(tau[muTau[0].tau0Ind].Isolation3Hits > 1)");//Tau Loose-Non-Tight ID
 
-
+  
   myChannelCuts.push_back(std::string(std::string(myChan) + ".hasNoVetoElec"));
   myChannelCuts.push_back("(muTau[0].hasNoVetoMu && HasNoVetoMuForMuTau() )"); //decreasing the pt threshold of the rejected muons from 15 to 10.
  
-   myChannelCuts.push_back("muTau[0].lv.M() > 15");
-   myChannelCuts.push_back("(muTau[0].lv.M() < 45 || muTau[0].lv.M() > 75)");
-   //myChannelCuts.push_back("(muTau[0].lv.M() > 45 && muTau[0].lv.M() < 75)");
+  myChannelCuts.push_back("muTau[0].lv.M() > 15");
+  myChannelCuts.push_back("(muTau[0].lv.M() < 45 || muTau[0].lv.M() > 75)");
+  //myChannelCuts.push_back("(muTau[0].lv.M() > 45 && muTau[0].lv.M() < 75)");
 
    
-   //myChannelCuts.push_back(" muTau[0].MT2 >= 40 ");
-   //myChannelCuts.push_back(" muTau[0].MT2 < 60 && muTau[0].MT2 > 30 ");
+  //myChannelCuts.push_back(" muTau[0].MT2 >= 40 ");
+  //myChannelCuts.push_back(" muTau[0].MT2 < 60 && muTau[0].MT2 > 30 ");
    
-   //myChannelCuts.push_back("NMuons > 0");
-   //myChannelCuts.push_back("muo[0].lv.Pt() > 25");
+  //myChannelCuts.push_back("NMuons > 0");
+  //myChannelCuts.push_back("muo[0].lv.Pt() > 25");
   
-   //myChannelCuts.push_back("abs(tau[muTau[0].tau0Ind].lv.Eta()) < 1.4 ");
-   myChannelCuts.push_back("(tau[muTau[0].tau0Ind].lv.Pt()) > 25 ");
-   //myChannelCuts.push_back("(muo[muTau[0].mu0Ind].lv.Pt()) > 40 ");
+  //myChannelCuts.push_back("abs(tau[muTau[0].tau0Ind].lv.Eta()) < 1.4 ");
+  myChannelCuts.push_back("(tau[muTau[0].tau0Ind].lv.Pt()) > 25 ");
+  //myChannelCuts.push_back("(muo[muTau[0].mu0Ind].lv.Pt()) > 40 ");
   
   
 //   Bin1
-   //myChannelCuts.push_back(" muTau[0].MT2 >  90 ");
-   myChannelCuts.push_back(" tau[muTau[0].tau0Ind].MT > 200 ");//tauMT
+  myChannelCuts.push_back(" muTau[0].MT2 >  90 ");
+  myChannelCuts.push_back(" tau[muTau[0].tau0Ind].MT > 200 ");//tauMT
    //myChannelCuts.push_back(" tau[muTau[0].tau0Ind].MT > 350 ");//tauMT
 //   myChannelCuts.push_back(" tau[muTau[0].tau0Ind].MT < 90 ");//tauMT
 //   myChannelCuts.push_back(" tau[muTau[0].tau0Ind].MT > 40 ");//tauMT
@@ -132,7 +133,7 @@
 //    myChannelCuts.push_back(" (muo[muTau[0].mu0Ind].MT + tau[muTau[0].tau0Ind].MT) > 250 ");//SumMT
 //    myChannelCuts.push_back(" muTau[0].MT2 >  40 ");
 //    myChannelCuts.push_back(" muTau[0].MT2 <=  90 ");
-  
+
  //myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 180.0) <= 5.0 && abs(Susy.MassLSP - 60) <= 5.0))");//0.119
   //myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 380.0) <= 5.0 && abs(Susy.MassLSP - 0) <= 5.0))"); //0.227
   //myChannelCuts.push_back("(misc.ProcessID!=10 || (abs(Susy.MassGlu - 380.0) <= 5.0 && abs(Susy.MassLSP - 0) <= 5.0)) && (muTau[0].tau0Ind >=0) && (muTau[0].mu0Ind >=0) && (muTau[0].Isolated > 0) && (misc.MET > 30) && (NBJetsCSVM == 0)");// && (muTau[0].chargeSum == 0) && (tau[muTau[0].tau0Ind].Isolation3Hits <= 1.) && (muTau[0].hasNoVetoElec) && (muTau[0].hasNoVetoMu && HasNoVetoMuForMuTau()) && ( muTau[0].MT2 >  20 ) && ( misc.MinMetJetDPhiPt40 > 1.0 ) && (muTau[0].lv.M() > 15) && (muTau[0].lv.M() < 45 || muTau[0].lv.M() > 75)");
@@ -312,7 +313,7 @@
 //    tA->makePlot(vars[iVar], cuts, -10, 0 , -10, trigger, vars[iVar], 20, 0, 200, false, true, true, true, true, true, 1, true, true, "png");
 //  }
 //tA->makePlot("pileUp.NVertices",     cuts,    -10,  0 , -10 ,   trigger , "NVertices"            , 50, 0, 50,          false,        true ,  true,   true,  true,  true, 1,true, false, "C");
-//  tA->makePlot("muTau[0].MT2",     cuts,    -10,  0 , -10 ,   trigger , "MT2"            , 10, 0, 100,          false,        true ,  true,   true,  true,  true, 1,true, false, "C", 2);
+  tA->makePlot("muTau[0].MT2",     cuts,    -10,  0 , -10 ,   trigger , "MT2"            , 10, 0, 100,          false,        true ,  true,   true,  true,  true, 1,true, false, "C", 2);
 
   //tA->makePlot("max(muo[muTau[0].mu0Ind].MT, tau[muTau[0].tau0Ind].MT)",     cuts,    -10,  0 , -10 ,   trigger , "maxMT"            ,10, 100, 300,          false,        true ,  true,   true,  true,  true, 1, true, false, "C", 3);
   //> 200 0.95//minMetJetDPhiPt40 > 1
@@ -452,10 +453,10 @@
 
   //tA->muTauWJetsEstimation(cuts, trigger, "PtEta_MuTauTight_Over_Loose_TauPlusX_SS_ExtraLepVeto_ZVeto_minDPhi_MET_NBJets_Weighted_FRHistos.root", true);
   //tA->muTauWJetsEstimation(cuts, trigger, "PtEta_MuTauTight_Over_Loose_TauPlusX_SS_ExtraLepVeto_MT2gt40_ZVeto_minDPhi_MET_NBJets_Weighted_FRHistos.root", true);
-  tA->muTauWJetsEstimation(cuts, trigger, true);
+  //tA->muTauWJetsEstimation(cuts, trigger, true);
   //tA->TauEfficiency(cuts, 10000000000, "MT2_MuTauTight_Over_Loose_SignalSelectionNoZVeto_DYToLL_M50","DY");
   //tA->LeptonEfficiency(cuts, 10000000000);
-  //tA->getGenEfficienciesMuTau(10000);
+  //tA->getGenEfficienciesMuTau(10000,cuts);
   //tA->getGenEfficienciesMuTau(155370000);
 
 }
