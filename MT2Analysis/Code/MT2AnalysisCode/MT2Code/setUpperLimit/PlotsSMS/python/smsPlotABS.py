@@ -58,11 +58,11 @@ class smsPlotABS(object):
 
         # set y axis
         self.emptyHisto.GetYaxis().SetLabelFont(42)
-        self.emptyHisto.GetYaxis().SetLabelOffset(0.015)
+        self.emptyHisto.GetYaxis().SetLabelOffset(0.01)
         self.emptyHisto.GetYaxis().SetLabelSize(0.04)
         self.emptyHisto.GetYaxis().SetTitleFont(42)
         self.emptyHisto.GetYaxis().SetTitleSize(0.05)
-        self.emptyHisto.GetYaxis().SetTitleOffset(1.35)
+        self.emptyHisto.GetYaxis().SetTitleOffset(1.3)
         self.emptyHisto.GetYaxis().SetTitle(self.model.LSP)
         #self.emptyHisto.GetYaxis().CenterTitle(True)
                 
@@ -80,8 +80,8 @@ class smsPlotABS(object):
         graphWhite.SetLineWidth(3)
         graphWhite.SetPoint(0,self.model.Xmin, self.model.Ymax)
         graphWhite.SetPoint(1,self.model.Xmax, self.model.Ymax)
-        graphWhite.SetPoint(2,self.model.Xmax, self.model.Ymax*0.75)
-        graphWhite.SetPoint(3,self.model.Xmin, self.model.Ymax*0.75)
+        graphWhite.SetPoint(2,self.model.Xmax, self.model.Ymax*0.69)
+        graphWhite.SetPoint(3,self.model.Xmin, self.model.Ymax*0.69)
         graphWhite.SetPoint(4,self.model.Xmin, self.model.Ymax)
         graphWhite.Draw("FSAME")
         graphWhite.Draw("LSAME")
@@ -90,9 +90,9 @@ class smsPlotABS(object):
         # CMS LABEL
 ##        textCMS = rt.TLatex(0.22,0.98,"CMS %s, %s fb^{-1}, #sqrt{s} = %s TeV" %(self.preliminary, self.lumi, self.energy))
 ##        textCMS = rt.TLatex(0.22,0.98,"CMS %s, 18.1 fb^{-1}, #sqrt{s} = %s TeV" %(self.preliminary, self.energy))
-##        textCMS = rt.TLatex(0.15,0.98,  "CMS                                     18.1 fb^{-1} (%s TeV)" %(self.energy))
+        textCMS = rt.TLatex(0.15,0.98,  "CMS                                     18.1 fb^{-1} (%s TeV)" %(self.energy))
 ##        textCMS = rt.TLatex(0.17,0.98,"CMS %s, 18.1-19.6 fb^{-1}, #sqrt{s} = %s TeV" %(self.preliminary, self.energy))
-        textCMS = rt.TLatex(0.15,0.98,  "CMS                             18.1-19.6 fb^{-1} (%s TeV)" %(self.energy))
+##        textCMS = rt.TLatex(0.15,0.98,  "CMS                             18.1-19.6 fb^{-1} (%s TeV)" %(self.energy))
 ##        textCMS = rt.TLatex(0.15,0.98,"CMS             18.1-19.6 fb^{-1}           #sqrt{s} = %s TeV" %(self.energy))
         textCMS.SetNDC()
         textCMS.SetTextAlign(13)
@@ -102,12 +102,12 @@ class smsPlotABS(object):
         self.c.textCMS = textCMS
 
         # Masses LABEL
-        textMass = rt.TLatex(0.05,0.07,"m_{#tilde{#tau}} = m_{#tilde{#nu}_{#tau}} = 0.5 m_{#tilde{#chi}^{#pm}_{1}} + 0.5 m_{#tilde{#chi}^{0}_{1}}")
+        textMass = rt.TLatex(0.05,0.07,"m_{#tilde{#tau}} = m_{#tilde{#nu}_{#tau}} = 0.5 (m_{#tilde{#chi}^{#pm}_{1}} + m_{#tilde{#chi}^{0}_{1}})")
         textMass.SetNDC()
         textMass.SetTextAlign(13)
         textMass.SetTextFont(42)
         textMass.SetTextSize(0.038)
-        textMass.Draw()
+        #textMass.Draw()
         self.c.textMass = textMass
 
         # MODEL LABEL
@@ -147,8 +147,8 @@ class smsPlotABS(object):
         xRange = self.model.Xmax-self.model.Xmin
         yRange = self.model.Ymax-self.model.Ymin
 
-        textModelLabelMinus1 = rt.TLatex(self.model.Xmin+3*xRange/100, self.model.Ymax-0.40*yRange/100*10, "e#tau_{h}, #mu#tau_{h} and #tau_{h}#tau_{h} combined")
-##        textModelLabelMinus1 = rt.TLatex(self.model.Xmin+3*xRange/100, self.model.Ymax-0.40*yRange/100*10, "#tau_{h}#tau_{h} channel")
+##        textModelLabelMinus1 = rt.TLatex(self.model.Xmin+3*xRange/100, self.model.Ymax-0.40*yRange/100*10, "e#tau_{h}, #mu#tau_{h} and #tau_{h}#tau_{h} combined")
+        textModelLabelMinus1 = rt.TLatex(self.model.Xmin+3*xRange/100, self.model.Ymax-0.40*yRange/100*10, "#tau_{h}#tau_{h} channel")
         textModelLabelMinus1.SetTextFont(42)
         textModelLabelMinus1.SetTextSize(0.04)
         textModelLabelMinus1.Draw()
@@ -174,6 +174,14 @@ class smsPlotABS(object):
         textModelLabel3.SetTextSize(0.030)
         textModelLabel3.Draw()
         self.c.textModelLabel3 = textModelLabel3
+ 
+        textMassLabel = rt.TLatex(self.model.Xmin+3*xRange/100, self.model.Ymax-2.7*yRange/100*10,"m_{#tilde{#tau}} = m_{#tilde{#nu}_{#tau}} = 0.5 (m_{#tilde{#chi}^{#pm}_{1}}+ m_{#tilde{#chi}^{0}_{1}})")
+        textMassLabel.SetTextFont(42)
+        textMassLabel.SetTextSize(0.030)
+        textMassLabel.Draw()
+        self.c.textMassLabel = textMassLabel
+
+
         
         LObs = rt.TGraph(2)
         LObs.SetName("LObs")
